@@ -30,3 +30,12 @@
 *.exe
 *.out
 *.app
+
+# Visual c++ cache files
+ipch/
+*.apps
+*.ncb
+*.opendb
+*.opensdf
+*.sdf
+*.cachefile
