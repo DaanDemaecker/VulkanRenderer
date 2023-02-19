@@ -33,6 +33,11 @@ private:
 	//Physical device
 	VkPhysicalDevice m_PhysicalDevice = VK_NULL_HANDLE;
 
+	//Logical device
+	VkDevice m_Device = VK_NULL_HANDLE;
+
+	//Graphics queue
+	VkQueue m_GraphicsQueue;
 
 	//Debug messenger
 	VkDebugUtilsMessengerEXT m_DebugMessenger = VK_NULL_HANDLE;
@@ -58,6 +63,9 @@ private:
 
 	//Logic to find graphics queue family
 	QueueFamilyIndices findQueueFamilies(VkPhysicalDevice device);
+
+	//Creating the logical device
+	void createLogicalDevice();
 
 
 	//Validation layers functions
