@@ -4,6 +4,8 @@
 const uint32_t WIDTH = 800;
 const uint32_t HEIGHT = 600;
 
+
+
 int main() {
 	HelloTriangleApplication app{WIDTH, HEIGHT};
 

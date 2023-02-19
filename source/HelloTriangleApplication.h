@@ -22,7 +22,6 @@ public:
 
 private:
 	//Memeber variables
-
 	//Window and dimensions
 	GLFWwindow* m_pWindow;
 	const uint32_t m_Widht;
@@ -31,6 +30,11 @@ private:
 	//Vulkan instance
 	VkInstance m_Instance;
 
+	//Debug messenger
+	VkDebugUtilsMessengerEXT m_DebugMessenger;
+
+	const std::vector<const char*> m_ValidationLayers = {
+	"VK_LAYER_KHRONOS_validation" };
 
 
 
@@ -44,4 +48,21 @@ private:
 	void mainLoop();
 
 	void cleanup();
+
+
+	//Validation layers functions
+	void populateDebugMessengerCreateInfo(VkDebugUtilsMessengerCreateInfoEXT& createInfo);
+
+	void setupDebugMessenger();
+
+	bool checkValidationLayerSupport();
+
+	std::vector<const char*> getRequiredExtensions();
+
+	static VKAPI_ATTR VkBool32 VKAPI_CALL debugCallback(
+		VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
+		VkDebugUtilsMessageTypeFlagsEXT messageType,
+		const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData,
+		void* pUserData
+		);
 };

@@ -1,0 +1,6 @@
+﻿  HelloTriangleApplication.cpp
+  Generating code
+  Previous IPDB not found, fall back to full compilation.
+  All 140 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  Finished generating code
+  source.vcxproj -> C:\Private projects\VulkanRasterizer\VulkanRasterizer\source\x64\Release\VulkanRasterizer.exe

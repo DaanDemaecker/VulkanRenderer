@@ -5,3 +5,13 @@
 #include <iostream>
 #include <stdexcept>
 #include <cstdlib>
+#include <vector>
+#include <cstring>
+
+#include "Utils.h"
+
+#ifdef NDEBUG
+const bool enableValidationLayers = false;
+#else
+const bool enableValidationLayers = true;
+#endif // NDEBUG
