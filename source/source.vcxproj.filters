@@ -19,6 +19,9 @@
     <Filter Include="Utils">
       <UniqueIdentifier>{3a27e938-8684-4cce-9d9b-0ff2ee97ab3a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="DataTypes">
+      <UniqueIdentifier>{c997c762-336a-4031-a74c-253a3f1eaf8e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -37,6 +40,9 @@
     </ClInclude>
     <ClInclude Include="Utils.h">
       <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Structs.h">
+      <Filter>DataTypes</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -27,6 +27,7 @@ void HelloTriangleApplication::initVulkan()
 {
 	createInstance();
 	setupDebugMessenger();
+	pickPhysicalDevice();
 }
 
 void HelloTriangleApplication::createInstance()
@@ -129,12 +130,49 @@ void HelloTriangleApplication::pickPhysicalDevice()
 	//If no devices were suitable, throw runtime error
 	if (candidates.rbegin()->first > 0)
 	{
-		m_PhysicalDevice = candidates.rbegin()->second;
+		QueueFamilyIndices indices = findQueueFamilies(candidates.rbegin()->second);
+
+		if (indices.isComplete())
+		{
+			m_PhysicalDevice = candidates.rbegin()->second;
+		}
+		else
+		{
+			throw std::runtime_error("failed to find a suitable GPU!");
+		}
 	}
 	else
 	{
 		throw std::runtime_error("failed to find a suitable GPU!");
 	}
+}
+
+QueueFamilyIndices HelloTriangleApplication::findQueueFamilies(VkPhysicalDevice device)
+{
+	QueueFamilyIndices indices;
+
+	uint32_t queueFamilyCount = 0;
+	vkGetPhysicalDeviceQueueFamilyProperties(device, &queueFamilyCount, nullptr);
+
+	std::vector<VkQueueFamilyProperties> queueFamilies(queueFamilyCount);
+	vkGetPhysicalDeviceQueueFamilyProperties(device, &queueFamilyCount, queueFamilies.data());
+
+	//find at least one queue family that supports VK_QUEUE_GRAPHICS_BIT
+	int i = 0;
+	for (const auto& queueFamily : queueFamilies)
+	{
+		if (queueFamily.queueFlags & VK_QUEUE_GRAPHICS_BIT)
+		{
+			indices.graphicsFamily = i;
+		}
+
+		if (indices.isComplete())
+			break;
+
+		i++;
+	}
+
+	return indices;
 }
 
 void HelloTriangleApplication::populateDebugMessengerCreateInfo(VkDebugUtilsMessengerCreateInfoEXT& createInfo)

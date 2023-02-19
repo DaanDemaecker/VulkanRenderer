@@ -53,8 +53,11 @@ private:
 
 	void cleanup();
 
-	//Physical device functions
+	//Logic to find optimal physical device
 	void pickPhysicalDevice();
+
+	//Logic to find graphics queue family
+	QueueFamilyIndices findQueueFamilies(VkPhysicalDevice device);
 
 
 	//Validation layers functions

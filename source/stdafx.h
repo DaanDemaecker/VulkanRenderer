@@ -8,8 +8,10 @@
 #include <vector>
 #include <cstring>
 #include <map>
+#include <optional>
 
 #include "Utils.h"
+#include "Structs.h"
 
 #ifdef NDEBUG
 const bool enableValidationLayers = false;
