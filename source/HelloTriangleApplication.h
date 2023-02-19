@@ -23,15 +23,19 @@ public:
 private:
 	//Memeber variables
 	//Window and dimensions
-	GLFWwindow* m_pWindow;
+	GLFWwindow* m_pWindow{};
 	const uint32_t m_Widht;
 	const uint32_t m_Height;
 
 	//Vulkan instance
-	VkInstance m_Instance;
+	VkInstance m_Instance = VK_NULL_HANDLE;
+
+	//Physical device
+	VkPhysicalDevice m_PhysicalDevice = VK_NULL_HANDLE;
+
 
 	//Debug messenger
-	VkDebugUtilsMessengerEXT m_DebugMessenger;
+	VkDebugUtilsMessengerEXT m_DebugMessenger = VK_NULL_HANDLE;
 
 	const std::vector<const char*> m_ValidationLayers = {
 	"VK_LAYER_KHRONOS_validation" };
@@ -48,6 +52,9 @@ private:
 	void mainLoop();
 
 	void cleanup();
+
+	//Physical device functions
+	void pickPhysicalDevice();
 
 
 	//Validation layers functions

@@ -101,6 +101,42 @@ void HelloTriangleApplication::cleanup()
 	glfwTerminate();
 }
 
+void HelloTriangleApplication::pickPhysicalDevice()
+{
+	//Get number of physical devices that support Vulkan
+	uint32_t deviceCount = 0;
+	vkEnumeratePhysicalDevices(m_Instance, &deviceCount, nullptr);
+
+	//If no physical devices found, throw runtime error
+	if (deviceCount == 0)
+	{
+		throw std::runtime_error("failed to find GPUs with Vulkan support!");
+	}
+
+	//Allocate array to hold physical devices handles
+	std::vector<VkPhysicalDevice> devices(deviceCount);
+	vkEnumeratePhysicalDevices(m_Instance, &deviceCount, devices.data());
+
+	//use an ordered map to automatically sort candidates by increasing score
+	std::multimap<int, VkPhysicalDevice> candidates;
+
+	for (const auto& device : devices)
+	{
+		int score = Utils::RateDeviceSuitability(device);
+		candidates.insert(std::make_pair(score, device));
+	}
+
+	//If no devices were suitable, throw runtime error
+	if (candidates.rbegin()->first > 0)
+	{
+		m_PhysicalDevice = candidates.rbegin()->second;
+	}
+	else
+	{
+		throw std::runtime_error("failed to find a suitable GPU!");
+	}
+}
+
 void HelloTriangleApplication::populateDebugMessengerCreateInfo(VkDebugUtilsMessengerCreateInfoEXT& createInfo)
 {
 	createInfo = {};
