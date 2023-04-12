@@ -43,6 +43,12 @@ private:
 	VkDebugUtilsMessengerEXT m_DebugMessenger = VK_NULL_HANDLE;
 
 	const std::vector<const char*> m_ValidationLayers = {"VK_LAYER_KHRONOS_validation"};
+	
+	//Surface
+	VkSurfaceKHR m_Surface{};
+
+	//Present queue
+	VkQueue m_PresentQueue{};
 
 
 
@@ -56,6 +62,9 @@ private:
 	void mainLoop();
 
 	void cleanup();
+
+	//Create vulkan surface
+	void CreateSurface();
 
 	//Logic to find optimal physical device
 	void pickPhysicalDevice();
@@ -83,3 +92,4 @@ private:
 		void* pUserData
 		);
 };
+
