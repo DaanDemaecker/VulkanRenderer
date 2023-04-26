@@ -97,7 +97,7 @@ void Renderer::cleanup()
 
 	if (enableValidationLayers)
 	{
-		Utils::DestroyDebugUtilsMessegerEXT(m_Instance, m_DebugMessenger, nullptr);
+		DestroyDebugUtilsMessegerEXT(m_Instance, m_DebugMessenger, nullptr);
 	}
 
 	vkDestroySurfaceKHR(m_Instance, m_Surface, nullptr);
@@ -138,25 +138,14 @@ void Renderer::pickPhysicalDevice()
 
 	for (const auto& device : devices)
 	{
-		int score = Utils::RateDeviceSuitability(device);
-		candidates.insert(std::make_pair(score, device));
-	}
-
-	//If no devices were suitable, throw runtime error
-	if (candidates.rbegin()->first > 0)
-	{
-		QueueFamilyIndices indices = findQueueFamilies(candidates.rbegin()->second);
-
-		if (indices.isComplete())
+		if (IsDeviceSuitable(device))
 		{
-			m_PhysicalDevice = candidates.rbegin()->second;
-		}
-		else
-		{
-			throw std::runtime_error("failed to find a suitable GPU!");
+			m_PhysicalDevice = device;
+			break;
 		}
 	}
-	else
+
+	if (m_PhysicalDevice == VK_NULL_HANDLE)
 	{
 		throw std::runtime_error("failed to find a suitable GPU!");
 	}
@@ -270,7 +259,7 @@ void Renderer::setupDebugMessenger()
 	VkDebugUtilsMessengerCreateInfoEXT createInfo{};
 	populateDebugMessengerCreateInfo(createInfo);
 
-	if (Utils::CreateDebugUtilsMessengerEXT(m_Instance, &createInfo, nullptr, &m_DebugMessenger) != VK_SUCCESS)
+	if (CreateDebugUtilsMessengerEXT(m_Instance, &createInfo, nullptr, &m_DebugMessenger) != VK_SUCCESS)
 	{
 		throw std::runtime_error("failed to set up debug messenger!");
 	}
@@ -322,9 +311,48 @@ std::vector<const char*> Renderer::getRequiredExtensions()
 	return extensions;
 }
 
+
+bool Renderer::IsDeviceSuitable(VkPhysicalDevice device)
+{
+	VkPhysicalDeviceProperties deviceProperties;
+	VkPhysicalDeviceFeatures deviceFeatures;
+
+	vkGetPhysicalDeviceProperties(device, &deviceProperties);
+	vkGetPhysicalDeviceFeatures(device, &deviceFeatures);
+
+	return deviceProperties.deviceType == VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU &&
+		deviceFeatures.geometryShader;
+}
+
+
 VKAPI_ATTR VkBool32 VKAPI_CALL Renderer::debugCallback(VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity, VkDebugUtilsMessageTypeFlagsEXT messageType, const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData, void* pUserData)
 {
 	std::cerr << "validation layer: " << pCallbackData->pMessage << std::endl;
 
 	return VK_FALSE;
+}
+
+VkResult Renderer::CreateDebugUtilsMessengerEXT(VkInstance instance, const VkDebugUtilsMessengerCreateInfoEXT* pCreateInfo,
+	const VkAllocationCallbacks* pAllocator, VkDebugUtilsMessengerEXT* pDebugMessenger)
+{
+	auto func = (PFN_vkCreateDebugUtilsMessengerEXT)vkGetInstanceProcAddr(instance, "vkCreateDebugUtilsMessengerEXT");
+
+	if (func != nullptr)
+	{
+		return func(instance, pCreateInfo, pAllocator, pDebugMessenger);
+	}
+	else
+	{
+		return VK_ERROR_EXTENSION_NOT_PRESENT;
+	}
+}
+
+void Renderer::DestroyDebugUtilsMessegerEXT(VkInstance instance, VkDebugUtilsMessengerEXT debugMessenger, const VkAllocationCallbacks* pAllocator)
+{
+	auto func = (PFN_vkDestroyDebugUtilsMessengerEXT)vkGetInstanceProcAddr(instance, "vkDestroyDebugUtilsMessengerEXT");
+
+	if (func != nullptr)
+	{
+		func(instance, debugMessenger, pAllocator);
+	}
 }

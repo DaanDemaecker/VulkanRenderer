@@ -1,4 +1,4 @@
 ﻿  Renderer.cpp
-C:\Private projects\VulkanRasterizer\VulkanRasterizer\source\Renderer.cpp(230,59): warning C4267: '=': conversion from 'size_t' to 'uint32_t', possible loss of data
+C:\Private projects\VulkanRasterizer\VulkanRasterizer\source\Renderer.cpp(219,59): warning C4267: '=': conversion from 'size_t' to 'uint32_t', possible loss of data
   main.cpp
   source.vcxproj -> C:\Private projects\VulkanRasterizer\VulkanRasterizer\source\x64\Debug\VulkanRasterizer.exe
