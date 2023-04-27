@@ -51,8 +51,16 @@ private:
 	VkQueue m_PresentQueue{};
 
 	//DeviceExtensions
-
 	const std::vector<const char*> m_DeviceExtensions = { VK_KHR_SWAPCHAIN_EXTENSION_NAME };
+
+	//SwapChain
+	VkSwapchainKHR m_SwapChain = VK_NULL_HANDLE;
+
+	std::vector<VkImage> m_SwapChainImages;
+
+	VkFormat m_SwapChainImageFormat{};
+
+	VkExtent2D m_SwapChainExtent{};
 
 
 	//Member functions
@@ -77,6 +85,9 @@ private:
 
 	//Creating the logical device
 	void createLogicalDevice();
+
+	//Creating the swapchain
+	void createSwapChain();
 
 	//Functions for checking suitability of the swap chain
 	SwapChainSupportDetails querySwapChainSupport(VkPhysicalDevice device);
