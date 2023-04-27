@@ -56,11 +56,14 @@ private:
 	//SwapChain
 	VkSwapchainKHR m_SwapChain = VK_NULL_HANDLE;
 
-	std::vector<VkImage> m_SwapChainImages;
+	std::vector<VkImage> m_SwapChainImages{};
 
 	VkFormat m_SwapChainImageFormat{};
 
 	VkExtent2D m_SwapChainExtent{};
+
+	//Images
+	std::vector<VkImageView> m_SwapChainImageViews{};
 
 
 	//Member functions
@@ -98,6 +101,14 @@ private:
 	VkPresentModeKHR chooseSwapPresentMode(const std::vector<VkPresentModeKHR>& availablePresentModes);
 
 	VkExtent2D chooseSwapExtent(const VkSurfaceCapabilitiesKHR& capabilities);
+
+	//ImageView
+	void createImageViews();
+
+	//Graphics pipeline
+	void createGraphicsPipeline();
+
+
 
 
 	//Validation layers functions
