@@ -15,7 +15,7 @@ public:
 	Renderer& operator=(Renderer& rhs) = delete;
 	Renderer& operator=(Renderer&& rhs) = delete;
 
-	
+
 
 	void run();
 
@@ -42,8 +42,8 @@ private:
 	//Debug messenger
 	VkDebugUtilsMessengerEXT m_DebugMessenger = VK_NULL_HANDLE;
 
-	const std::vector<const char*> m_ValidationLayers = {"VK_LAYER_KHRONOS_validation"};
-	
+	const std::vector<const char*> m_ValidationLayers = { "VK_LAYER_KHRONOS_validation" };
+
 	//Surface
 	VkSurfaceKHR m_Surface{};
 
@@ -64,7 +64,6 @@ private:
 
 	//Images
 	std::vector<VkImageView> m_SwapChainImageViews{};
-
 
 	//Member functions
 	void initWindow();
@@ -108,7 +107,8 @@ private:
 	//Graphics pipeline
 	void createGraphicsPipeline();
 
-
+	//Shader modules
+	VkShaderModule createShaderModule(const std::vector<char>& code);
 
 
 	//Validation layers functions

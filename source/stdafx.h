@@ -10,7 +10,6 @@
 #include <map>
 #include <optional>
 
-#include "Utils.h"
 #include "Structs.h"
 
 #ifdef NDEBUG

@@ -30,6 +30,9 @@
     <ClCompile Include="Renderer.cpp">
       <Filter>Application</Filter>
     </ClCompile>
+    <ClCompile Include="Utils.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
