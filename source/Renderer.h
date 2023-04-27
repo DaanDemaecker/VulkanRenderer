@@ -50,6 +50,9 @@ private:
 	//Present queue
 	VkQueue m_PresentQueue{};
 
+	//DeviceExtensions
+
+	const std::vector<const char*> m_DeviceExtensions = { VK_KHR_SWAPCHAIN_EXTENSION_NAME };
 
 
 	//Member functions
@@ -75,6 +78,16 @@ private:
 	//Creating the logical device
 	void createLogicalDevice();
 
+	//Functions for checking suitability of the swap chain
+	SwapChainSupportDetails querySwapChainSupport(VkPhysicalDevice device);
+
+	//Functions for getting the right swapchain settings
+	VkSurfaceFormatKHR chooseSwapSurfaceFormat(const std::vector<VkSurfaceFormatKHR>& availableFormats);
+
+	VkPresentModeKHR chooseSwapPresentMode(const std::vector<VkPresentModeKHR>& availablePresentModes);
+
+	VkExtent2D chooseSwapExtent(const VkSurfaceCapabilitiesKHR& capabilities);
+
 
 	//Validation layers functions
 	void populateDebugMessengerCreateInfo(VkDebugUtilsMessengerCreateInfoEXT& createInfo);
@@ -94,6 +107,8 @@ private:
 
 	//Helper functions 
 	bool IsDeviceSuitable(VkPhysicalDevice device);
+
+	bool checkDeviceExtensionSupport(VkPhysicalDevice device);
 
 	VkResult CreateDebugUtilsMessengerEXT(VkInstance instance, const VkDebugUtilsMessengerCreateInfoEXT* pCreateInfo,
 		const VkAllocationCallbacks* pAllocator, VkDebugUtilsMessengerEXT* pDebugMessenger);
