@@ -65,8 +65,11 @@ private:
 	//Images
 	std::vector<VkImageView> m_SwapChainImageViews{};
 
+	//Renderpass
+	VkRenderPass m_RenderPass{};
+
 	//PipelineLayout
-	VkPipelineLayout m_PipeLineLayout;
+	VkPipelineLayout m_PipeLineLayout{};
 
 	//Member functions
 	void initWindow();
@@ -112,6 +115,9 @@ private:
 
 	//Shader modules
 	VkShaderModule createShaderModule(const std::vector<char>& code);
+
+	//RenderPass
+	void createRenderPass();
 
 
 	//Validation layers functions
