@@ -65,6 +65,9 @@ private:
 	//Images
 	std::vector<VkImageView> m_SwapChainImageViews{};
 
+	//PipelineLayout
+	VkPipelineLayout m_PipeLineLayout;
+
 	//Member functions
 	void initWindow();
 

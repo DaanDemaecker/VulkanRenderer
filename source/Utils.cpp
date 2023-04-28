@@ -22,7 +22,5 @@ std::vector<char> Utils::readFile(const std::string& filename)
 
 	file.close();
 
-	std::cout << fileSize << std::endl;
-
 	return buffer;
 }
