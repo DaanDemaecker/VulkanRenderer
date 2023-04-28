@@ -101,6 +101,8 @@ void Renderer::mainLoop()
 
 void Renderer::cleanup()
 {
+	vkDestroyPipeline(m_Device, m_GraphicsPipeline, nullptr);
+
 	vkDestroyPipelineLayout(m_Device, m_PipeLineLayout, nullptr);
 
 	vkDestroyRenderPass(m_Device, m_RenderPass, nullptr);
@@ -436,10 +438,6 @@ void Renderer::createGraphicsPipeline()
 	VkShaderModule vertShaderModule = createShaderModule(vertShaderCode);
 	VkShaderModule fragShaderModule = createShaderModule(fragShaderCode);
 
-	vkDestroyShaderModule(m_Device, fragShaderModule, nullptr);
-	vkDestroyShaderModule(m_Device, vertShaderModule, nullptr);
-
-
 	VkPipelineShaderStageCreateInfo vertShaderStageInfo{};
 	vertShaderStageInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
 	vertShaderStageInfo.stage = VK_SHADER_STAGE_VERTEX_BIT;
@@ -466,22 +464,10 @@ void Renderer::createGraphicsPipeline()
 	inputAssembly.topology = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
 	inputAssembly.primitiveRestartEnable = VK_FALSE;
 
-	VkViewport viewport{};
-	viewport.x = 0.0f;
-	viewport.y = 0.0f;
-	viewport.width = static_cast<float>(m_SwapChainExtent.width);
-	viewport.height = static_cast<float>(m_SwapChainExtent.height);
-	viewport.minDepth = 0.0f;
-	viewport.maxDepth = 1.0f;
-
-	VkRect2D scissor{};
-	scissor.offset = { 0,0 };
-	scissor.extent = m_SwapChainExtent;
-
 
 	//--Dynamic viewport--
 
-	/*std::vector<VkDynamicState> dynamicStates = {
+	std::vector<VkDynamicState> dynamicStates = {
 		VK_DYNAMIC_STATE_VIEWPORT,
 		VK_DYNAMIC_STATE_SCISSOR
 	};
@@ -494,17 +480,29 @@ void Renderer::createGraphicsPipeline()
 	VkPipelineViewportStateCreateInfo viewportState{};
 	viewportState.sType = VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO;
 	viewportState.viewportCount = 1;
-	viewportState.scissorCount = 1;*/
+	viewportState.scissorCount = 1;
 
 
 	//--Static viewport--
 
-	VkPipelineViewportStateCreateInfo viewportState{};
+	/*VkViewport viewport{};
+	viewport.x = 0.0f;
+	viewport.y = 0.0f;
+	viewport.width = static_cast<float>(m_SwapChainExtent.width);
+	viewport.height = static_cast<float>(m_SwapChainExtent.height);
+	viewport.minDepth = 0.0f;
+	viewport.maxDepth = 1.0f;
+
+	VkRect2D scissor{};
+	scissor.offset = { 0,0 };
+	scissor.extent = m_SwapChainExtent;*/
+
+	/*VkPipelineViewportStateCreateInfo viewportState{};
 	viewportState.sType = VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO;
 	viewportState.viewportCount = 1;
 	viewportState.pViewports = &viewport;
 	viewportState.scissorCount = 1;
-	viewportState.pScissors = &scissor;
+	viewportState.pScissors = &scissor;*/
 
 	VkPipelineRasterizationStateCreateInfo rasterizer{};
 	rasterizer.sType = VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO;
@@ -547,7 +545,7 @@ void Renderer::createGraphicsPipeline()
 	colorBlending.blendConstants[0] = 0.0f; //Optional
 	colorBlending.blendConstants[1] = 0.0f; //Optional
 	colorBlending.blendConstants[2] = 0.0f; //Optional
-	colorBlending.blendConstants[3] = 0.0f; //
+	colorBlending.blendConstants[3] = 0.0f; //Otional
 
 	VkPipelineLayoutCreateInfo pipelineLayoutInfo{};
 	pipelineLayoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
@@ -560,6 +558,32 @@ void Renderer::createGraphicsPipeline()
 	{
 		throw std::runtime_error("Failed to create pipeline layout!");
 	}
+
+	VkGraphicsPipelineCreateInfo pipelineInfo{};
+	pipelineInfo.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
+	pipelineInfo.stageCount = 2;
+	pipelineInfo.pStages = shaderStages;
+	pipelineInfo.pVertexInputState = &vertexInputInfo;
+	pipelineInfo.pInputAssemblyState = &inputAssembly;
+	pipelineInfo.pViewportState = &viewportState;
+	pipelineInfo.pRasterizationState = &rasterizer;
+	pipelineInfo.pMultisampleState = &multisampling;
+	pipelineInfo.pDepthStencilState = nullptr; //Optional
+	pipelineInfo.pColorBlendState = &colorBlending;
+	pipelineInfo.pDynamicState = &dynamicState;
+	pipelineInfo.layout = m_PipeLineLayout;
+	pipelineInfo.renderPass = m_RenderPass;
+	pipelineInfo.subpass = 0;
+	pipelineInfo.basePipelineHandle = VK_NULL_HANDLE;
+	pipelineInfo.basePipelineIndex = -1;
+
+	if (vkCreateGraphicsPipelines(m_Device, VK_NULL_HANDLE, 1, &pipelineInfo, nullptr, &m_GraphicsPipeline) != VK_SUCCESS)
+	{
+		throw std::runtime_error("failed to create graphics pipeline!");
+	}
+
+	vkDestroyShaderModule(m_Device, fragShaderModule, nullptr);
+	vkDestroyShaderModule(m_Device, vertShaderModule, nullptr);
 }
 
 VkShaderModule Renderer::createShaderModule(const std::vector<char>& code)

@@ -71,6 +71,9 @@ private:
 	//PipelineLayout
 	VkPipelineLayout m_PipeLineLayout{};
 
+	//GraphicsPipeline
+	VkPipeline m_GraphicsPipeline{};
+
 	//Member functions
 	void initWindow();
 
