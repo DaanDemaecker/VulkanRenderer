@@ -77,6 +77,13 @@ private:
 	//Swapchainframebuffers
 	std::vector<VkFramebuffer> m_SwapChainFramebuffers{};
 
+	//CommandPool
+	VkCommandPool m_CommandPool{};
+
+	//CommandBuffer
+	VkCommandBuffer m_CommandBuffer{};
+
+
 	//Member functions
 	void initWindow();
 
@@ -127,6 +134,15 @@ private:
 
 	//Framebuffers
 	void createFramebuffers();
+
+	//Commandpool
+	void createCommandPool();
+
+	//CommandBuffer
+	void createCommandBuffer();
+
+	void recordCommandBuffer(VkCommandBuffer& commandBuffer, uint32_t imageIndex);
+
 
 
 	//Validation layers functions
