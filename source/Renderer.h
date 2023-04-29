@@ -74,6 +74,9 @@ private:
 	//GraphicsPipeline
 	VkPipeline m_GraphicsPipeline{};
 
+	//Swapchainframebuffers
+	std::vector<VkFramebuffer> m_SwapChainFramebuffers{};
+
 	//Member functions
 	void initWindow();
 
@@ -121,6 +124,9 @@ private:
 
 	//RenderPass
 	void createRenderPass();
+
+	//Framebuffers
+	void createFramebuffers();
 
 
 	//Validation layers functions
