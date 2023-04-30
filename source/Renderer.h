@@ -80,6 +80,11 @@ private:
 	//CommandBuffer
 	VkCommandBuffer m_CommandBuffer{};
 
+	//Sync objects
+	VkSemaphore m_ImageAvailableSemaphore{};
+	VkSemaphore m_RenderFinishedSemaphore{};
+	VkFence m_InFlightFence{};
+
 
 	//Member functions
 	void initWindow();
@@ -137,6 +142,9 @@ private:
 	void createCommandBuffer();
 
 	void recordCommandBuffer(VkCommandBuffer& commandBuffer, uint32_t imageIndex);
+
+	//Sync objects
+	void createSyncObjects();
 
 
 
