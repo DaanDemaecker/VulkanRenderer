@@ -3,11 +3,8 @@
 
 class Renderer {
 public:
-	Renderer(const uint32_t width, const uint32_t height)
-		:m_Widht{ width }, m_Height{ height }
-	{
-
-	}
+	Renderer(const uint32_t& width, const uint32_t& height);
+	~Renderer();
 
 	Renderer(Renderer& rhs) = delete;
 	Renderer(Renderer&& rhs) = delete;
@@ -15,9 +12,9 @@ public:
 	Renderer& operator=(Renderer& rhs) = delete;
 	Renderer& operator=(Renderer&& rhs) = delete;
 
+	bool WindowShouldClose();
 
-
-	void run();
+	void DrawFrame();
 
 
 private:
@@ -90,8 +87,6 @@ private:
 	void initVulkan();
 
 	void createInstance();
-
-	void mainLoop();
 
 	void cleanup();
 

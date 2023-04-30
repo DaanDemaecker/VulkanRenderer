@@ -9,6 +9,7 @@
 #include <cstring>
 #include <map>
 #include <optional>
+#include <memory>
 
 #include "Structs.h"
 

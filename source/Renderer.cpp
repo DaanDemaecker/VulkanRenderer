@@ -6,12 +6,25 @@
 #include <algorithm>
 #include "Utils.h"
 
-void Renderer::run()
+Renderer::Renderer(const uint32_t& width, const uint32_t& height)
+	: m_Widht{ width }, m_Height{ height }
 {
 	initWindow();
 	initVulkan();
-	mainLoop();
+}
+
+Renderer::~Renderer()
+{
 	cleanup();
+}
+
+bool Renderer::WindowShouldClose()
+{
+	return glfwWindowShouldClose(m_pWindow);
+}
+
+void Renderer::DrawFrame()
+{
 }
 
 void Renderer::initWindow()
@@ -94,13 +107,6 @@ void Renderer::createInstance()
 
 }
 
-void Renderer::mainLoop()
-{
-	while (!glfwWindowShouldClose(m_pWindow))
-	{
-		glfwPollEvents();
-	}
-}
 
 void Renderer::cleanup()
 {
