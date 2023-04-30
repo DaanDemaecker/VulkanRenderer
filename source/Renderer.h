@@ -3,7 +3,7 @@
 
 class Renderer {
 public:
-	Renderer(const uint32_t& width, const uint32_t& height);
+	Renderer(int width, int height);
 	~Renderer();
 
 	Renderer(Renderer& rhs) = delete;
@@ -16,13 +16,16 @@ public:
 
 	void DrawFrame();
 
+	void RecreateSwapChain();
+
+	static void framebufferResizeCallback(GLFWwindow* pWindow, int width, int height);
 
 private:
 	//Memeber variables
 	//Window and dimensions
 	GLFWwindow* m_pWindow{};
-	const uint32_t m_Widht;
-	const uint32_t m_Height;
+	int m_Widht;
+	int m_Height;
 
 	//Vulkan instance
 	VkInstance m_Instance = VK_NULL_HANDLE;
@@ -78,12 +81,18 @@ private:
 	VkCommandPool m_CommandPool{};
 
 	//CommandBuffer
-	VkCommandBuffer m_CommandBuffer{};
+	std::vector<VkCommandBuffer> m_CommandBuffers{};
 
 	//Sync objects
-	VkSemaphore m_ImageAvailableSemaphore{};
-	VkSemaphore m_RenderFinishedSemaphore{};
-	VkFence m_InFlightFence{};
+	std::vector<VkSemaphore> m_ImageAvailableSemaphores{};
+	std::vector<VkSemaphore> m_RenderFinishedSemaphores{};
+	std::vector<VkFence> m_InFlightFences{};
+
+	//Resize flag
+	bool m_FrameBufferResized = false;
+
+	//Current frame
+	uint32_t m_CurrentFrame = 0;
 
 
 	//Member functions
@@ -107,8 +116,9 @@ private:
 	//Creating the logical device
 	void createLogicalDevice();
 
-	//Creating the swapchain
+	//Creating and cleaning up the swapchain
 	void createSwapChain();
+	void cleanupSwapChain();
 
 	//Functions for checking suitability of the swap chain
 	SwapChainSupportDetails querySwapChainSupport(VkPhysicalDevice device);
@@ -139,7 +149,7 @@ private:
 	void createCommandPool();
 
 	//CommandBuffer
-	void createCommandBuffer();
+	void createCommandBuffers();
 
 	void recordCommandBuffer(VkCommandBuffer& commandBuffer, uint32_t imageIndex);
 

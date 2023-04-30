@@ -18,3 +18,4 @@ const bool enableValidationLayers = false;
 #else
 const bool enableValidationLayers = true;
 #endif // NDEBUG
+const int MAX_FRAMES_IN_FLIGHT = 2;
