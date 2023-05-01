@@ -100,6 +100,10 @@ private:
 	//Current frame
 	uint32_t m_CurrentFrame = 0;
 
+	//Vertex buffer
+	VkBuffer m_VertexBuffer{};
+	VkDeviceMemory m_VertexBufferMemory{};
+
 
 	//Member functions
 	void initWindow();
@@ -162,6 +166,9 @@ private:
 	//Sync objects
 	void createSyncObjects();
 
+	//Vertex buffer
+	void createVertexBuffer();
+
 
 
 	//Validation layers functions
@@ -189,5 +196,7 @@ private:
 		const VkAllocationCallbacks* pAllocator, VkDebugUtilsMessengerEXT* pDebugMessenger);
 
 	void DestroyDebugUtilsMessegerEXT(VkInstance instance, VkDebugUtilsMessengerEXT debugMessenger, const VkAllocationCallbacks* pAllocator);
+
+	uint32_t findMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties);
 };
 
