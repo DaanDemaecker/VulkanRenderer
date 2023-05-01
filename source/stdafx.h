@@ -11,6 +11,8 @@
 #include <optional>
 #include <memory>
 
+#include <glm/glm.hpp>
+
 #include "Structs.h"
 
 #ifdef NDEBUG
