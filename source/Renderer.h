@@ -27,11 +27,26 @@ private:
 	int m_Widht;
 	int m_Height;
 
-	const std::vector<Vertex> m_Vertices = {
-	{{0.0f, -0.5f}, {1.0f, 0.0f, 0.0f}},
-	{{0.5f, 0.5f}, {0.0f, 1.0f, 0.0f}},
-	{{-0.5f, 0.5f}, {0.0f, 0.0f, 1.0f}}
+	const std::vector<Vertex> m_Vertices =
+	{
+		{{-0.5f, -0.5f}, {1.0f, 0.0f, 0.0f}},
+		{{0.5f, -0.5f}, {0.0f, 1.0f, 0.0f}},
+		{{0.5f, 0.5f}, {0.0f, 0.0f, 1.0f}},
+		{{-0.5f, 0.5f}, {1.0f, 1.0f, 1.0f}}
 	};
+
+	const std::vector<uint16_t> m_Indices =
+	{
+		0, 1, 2, 2, 3, 0
+	};
+
+	//Vertex buffer
+	VkBuffer m_VertexBuffer{};
+	VkDeviceMemory m_VertexBufferMemory{};
+
+	//Index buffer
+	VkBuffer m_IndexBuffer{};
+	VkDeviceMemory m_IndexBufferMemory{};
 
 	//Vulkan instance
 	VkInstance m_Instance = VK_NULL_HANDLE;
@@ -100,10 +115,6 @@ private:
 	//Current frame
 	uint32_t m_CurrentFrame = 0;
 
-	//Vertex buffer
-	VkBuffer m_VertexBuffer{};
-	VkDeviceMemory m_VertexBufferMemory{};
-
 
 	//Member functions
 	void initWindow();
@@ -168,6 +179,7 @@ private:
 
 	//Buffer
 	void createVertexBuffer();
+	void createIndexBuffer();
 	
 	void createBuffer(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VkBuffer& buffer, VkDeviceMemory& bufferMemory);
 
