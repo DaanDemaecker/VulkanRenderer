@@ -166,8 +166,12 @@ private:
 	//Sync objects
 	void createSyncObjects();
 
-	//Vertex buffer
+	//Buffer
 	void createVertexBuffer();
+	
+	void createBuffer(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VkBuffer& buffer, VkDeviceMemory& bufferMemory);
+
+	void copyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size);
 
 
 
