@@ -48,6 +48,11 @@ private:
 	VkBuffer m_IndexBuffer{};
 	VkDeviceMemory m_IndexBufferMemory{};
 
+	//Uniform buffer
+	std::vector<VkBuffer> m_UniformBuffers{};
+	std::vector<VkDeviceMemory> m_UniformBuffersMemory{};
+	std::vector<void*> m_UniformBuffersMapped{};
+
 	//Vulkan instance
 	VkInstance m_Instance = VK_NULL_HANDLE;
 
@@ -114,6 +119,9 @@ private:
 
 	//Current frame
 	uint32_t m_CurrentFrame = 0;
+	
+	//Descriptorlayout
+	VkDescriptorSetLayout m_DescriptorSetLayout{};
 
 
 	//Member functions
@@ -180,11 +188,17 @@ private:
 	//Buffer
 	void createVertexBuffer();
 	void createIndexBuffer();
+	void createUniformBuffers();
 	
 	void createBuffer(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VkBuffer& buffer, VkDeviceMemory& bufferMemory);
 
 	void copyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size);
 
+	//Descriptor layout
+	void createDescriptorLayout();
+
+	//Update uniform buffer
+	void updateUniformBuffer(uint32_t currentImage);
 
 
 	//Validation layers functions
