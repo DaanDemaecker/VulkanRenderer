@@ -123,6 +123,10 @@ private:
 	//Descriptorlayout
 	VkDescriptorSetLayout m_DescriptorSetLayout{};
 
+	//Descriptorpool
+	VkDescriptorPool m_DescriptorPool{};
+	std::vector<VkDescriptorSet> m_DescriptorSets{};
+
 
 	//Member functions
 	void initWindow();
@@ -196,6 +200,10 @@ private:
 
 	//Descriptor layout
 	void createDescriptorLayout();
+	
+	//DescriptorPool
+	void createDescriptorPool();
+	void createDescriptorSets();
 
 	//Update uniform buffer
 	void updateUniformBuffer(uint32_t currentImage);
