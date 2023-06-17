@@ -1,0 +1,6 @@
+﻿  Renderer.cpp
+C:\Private projects\VulkanRasterizer\VulkanRasterizer\source\Renderer.cpp(164,29): error C2220: the following warning is treated as an error
+C:\Private projects\VulkanRasterizer\VulkanRasterizer\source\Renderer.cpp(164,29): warning C4127: conditional expression is constant
+C:\Private projects\VulkanRasterizer\VulkanRasterizer\source\Renderer.cpp(164,62): message : consider using 'if constexpr' statement instead
+  main.cpp
+  Utils.cpp

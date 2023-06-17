@@ -224,8 +224,6 @@ void Renderer::cleanup()
 		vkFreeMemory(m_Device, m_UniformBuffersMemory[i], nullptr);
 	}
 
-	vkDestroyDescriptorSetLayout(m_Device, m_DescriptorSetLayout, nullptr);
-
 	vkDestroyBuffer(m_Device, m_IndexBuffer, nullptr);
 	vkFreeMemory(m_Device, m_IndexBufferMemory, nullptr);
 
