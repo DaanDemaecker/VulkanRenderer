@@ -1,3 +1,7 @@
-﻿Renderer.obj : warning LNK4075: ignoring '/EDITANDCONTINUE' due to '/INCREMENTAL:NO' specification
+﻿  Renderer.cpp
+  main.cpp
+  Utils.cpp
+  Generating Code...
+Renderer.obj : warning LNK4075: ignoring '/EDITANDCONTINUE' due to '/INCREMENTAL:NO' specification
 LINK : warning LNK4098: defaultlib 'LIBCMT' conflicts with use of other libs; use /NODEFAULTLIB:library
   source.vcxproj -> C:\Private projects\VulkanRasterizer\VulkanRasterizer\source\Debug\VulkanRasterizer.exe
