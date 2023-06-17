@@ -161,10 +161,13 @@ void Renderer::initVulkan()
 
 void Renderer::createInstance()
 {
+
+#ifndef NDEBUG
 	if (enableValidationLayers && !checkValidationLayerSupport())
 	{
 		throw std::runtime_error("validation layers requested, but not available!");
 	}
+#endif
 
 	//provide usefull information to the driver to optimize application
 	VkApplicationInfo appInfo{};
