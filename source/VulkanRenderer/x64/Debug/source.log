@@ -1,2 +1,5 @@
 ﻿  Renderer.cpp
+  main.cpp
+  Utils.cpp
+Renderer.obj : warning LNK4075: ignoring '/EDITANDCONTINUE' due to '/INCREMENTAL:NO' specification
   source.vcxproj -> C:\Private projects\VulkanRasterizer\VulkanRasterizer\source\x64\Debug\VulkanRasterizer.exe
