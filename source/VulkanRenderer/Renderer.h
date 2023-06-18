@@ -131,6 +131,9 @@ private:
 	VkImage m_TextureImage{};
 	VkDeviceMemory m_TextureImageMemory{};
 
+	VkImageView m_TextureImageView{};
+	VkSampler m_TextureSampler{};
+
 
 	//Member functions
 	void initWindow();
@@ -240,10 +243,14 @@ private:
 	void DestroyDebugUtilsMessegerEXT(VkInstance instance, VkDebugUtilsMessengerEXT debugMessenger, const VkAllocationCallbacks* pAllocator);
 
 	uint32_t findMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties);
-
+	
+	VkImageView createImageView(VkImage image, VkFormat format);
 
 	//Texture functions
 	void createTextureImage();
+	void createTextureImageView();
+	void createTextureSampler();
+
 	void createImage(uint32_t width, uint32_t height, VkFormat format, VkImageTiling tiling, VkImageUsageFlags usage, VkMemoryPropertyFlags properties, VkImage& image, VkDeviceMemory& imageMemory);
 
 	VkCommandBuffer beginSingleTimeCommands();
