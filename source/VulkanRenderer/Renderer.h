@@ -127,6 +127,10 @@ private:
 	VkDescriptorPool m_DescriptorPool{};
 	std::vector<VkDescriptorSet> m_DescriptorSets{};
 
+	//Texture
+	VkImage m_TextureImage{};
+	VkDeviceMemory m_TextureImageMemory{};
+
 
 	//Member functions
 	void initWindow();
@@ -236,5 +240,17 @@ private:
 	void DestroyDebugUtilsMessegerEXT(VkInstance instance, VkDebugUtilsMessengerEXT debugMessenger, const VkAllocationCallbacks* pAllocator);
 
 	uint32_t findMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties);
+
+
+	//Texture functions
+	void createTextureImage();
+	void createImage(uint32_t width, uint32_t height, VkFormat format, VkImageTiling tiling, VkImageUsageFlags usage, VkMemoryPropertyFlags properties, VkImage& image, VkDeviceMemory& imageMemory);
+
+	VkCommandBuffer beginSingleTimeCommands();
+	void endSingleTimeCommands(VkCommandBuffer comandBuffer);
+
+	void transitionImageLayout(VkImage image, VkFormat format, VkImageLayout oldLayout, VkImageLayout newLayout);
+
+	void copyBufferToImage(VkBuffer buffer, VkImage image, uint32_t width, uint32_t height);
 };
 

@@ -1,6 +1,4 @@
 ﻿  Renderer.cpp
-  Utils.cpp
-  main.cpp
 Renderer.obj : warning LNK4075: ignoring '/EDITANDCONTINUE' due to '/INCREMENTAL:NO' specification
 LINK : warning LNK4098: defaultlib 'LIBCMT' conflicts with use of other libs; use /NODEFAULTLIB:library
   source.vcxproj -> C:\Private projects\VulkanRasterizer\VulkanRasterizer\source\x64\Debug\VulkanRasterizer.exe
