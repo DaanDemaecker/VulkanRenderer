@@ -1,10 +1,10 @@
 ﻿  Renderer.cpp
-  Utils.cpp
   main.cpp
+  Utils.cpp
 LINK : warning LNK4098: defaultlib 'LIBCMT' conflicts with use of other libs; use /NODEFAULTLIB:library
   Generating code
-  127 of 1833 functions ( 6.9%) were compiled, the rest were copied from previous compilation.
-    60 functions were new in current compilation
-    134 functions had inline decision re-evaluated but remain unchanged
+  2149 of 3396 functions (63.3%) were compiled, the rest were copied from previous compilation.
+    1633 functions were new in current compilation
+    178 functions had inline decision re-evaluated but remain unchanged
   Finished generating code
   source.vcxproj -> C:\Private projects\VulkanRasterizer\VulkanRasterizer\source\x64\Release\VulkanRasterizer.exe

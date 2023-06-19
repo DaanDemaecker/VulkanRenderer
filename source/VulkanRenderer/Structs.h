@@ -4,6 +4,14 @@
 #include <optional>
 #include <array>
 
+#include <glm/glm.hpp>
+
+#define GLM_ENABLE_EXPERIMENTAL
+#pragma warning(push)
+#pragma warning(disable : 4201)
+#include <glm/gtx/hash.hpp>
+#pragma warning(pop)
+
 
 struct QueueFamilyIndices
 {
@@ -61,6 +69,11 @@ struct Vertex
 
 		return attributeDescriptions;
 	}
+
+	bool operator==(const Vertex& other) const
+	{
+		return pos == other.pos && color == other.color && texCoord == other.texCoord;
+	}
 };
 
 struct UniformBufferObject {
@@ -68,3 +81,17 @@ struct UniformBufferObject {
 	glm::mat4 view;
 	glm::mat4 proj;
 };
+
+
+namespace std
+{
+	template<> struct hash<Vertex>
+	{
+		size_t operator()(Vertex const& vertex) const
+		{
+			return ((hash<glm::vec3>()(vertex.pos) ^
+				(hash<glm::vec3>()(vertex.color) << 1)) >> 1) ^
+				(hash<glm::vec2>()(vertex.texCoord) << 1 );
+		}
+	};
+}

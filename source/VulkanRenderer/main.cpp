@@ -1,10 +1,6 @@
 #include "stdafx.h"
 #include "Renderer.h"
 
-
-
-
-
 int main() {
 
 	const uint32_t width = 800;
