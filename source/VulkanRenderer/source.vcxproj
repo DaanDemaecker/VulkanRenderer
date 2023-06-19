@@ -24,7 +24,7 @@
     <ProjectGuid>{51e92293-4415-4c74-a654-e18ed2113be4}</ProjectGuid>
     <RootNamespace>source</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
-    <ProjectName>VulkanRasterizer</ProjectName>
+    <ProjectName>VulkanRenderer</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
