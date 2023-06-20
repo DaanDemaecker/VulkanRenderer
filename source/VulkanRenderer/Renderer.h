@@ -123,6 +123,7 @@ private:
 
 	VkImageView m_TextureImageView{};
 	VkSampler m_TextureSampler{};
+	VkSampleCountFlagBits m_MsaaSamples = VK_SAMPLE_COUNT_1_BIT;
 
 	uint32_t m_MipLevels{};
 
@@ -131,6 +132,10 @@ private:
 	VkDeviceMemory m_DepthImageMemory{};
 	VkImageView m_DepthImageView{};
 
+	//MultiSampling
+	VkImage m_ColorImage{};
+	VkDeviceMemory m_ColorImageMemory{};
+	VkImageView m_ColorImageView{};
 
 	//Member functions
 	void initWindow();
@@ -248,7 +253,8 @@ private:
 	void createTextureImageView();
 	void createTextureSampler();
 
-	void createImage(uint32_t width, uint32_t height, uint32_t mipLevels, VkFormat format, VkImageTiling tiling, VkImageUsageFlags usage, VkMemoryPropertyFlags properties, VkImage& image, VkDeviceMemory& imageMemory);
+	void createImage(uint32_t width, uint32_t height, uint32_t mipLevels, VkSampleCountFlagBits numSamples,
+		VkFormat format, VkImageTiling tiling, VkImageUsageFlags usage, VkMemoryPropertyFlags properties, VkImage& image, VkDeviceMemory& imageMemory);
 
 	VkCommandBuffer beginSingleTimeCommands();
 	void endSingleTimeCommands(VkCommandBuffer comandBuffer);
@@ -270,5 +276,10 @@ private:
 
 	//Model
 	void LoadModel();
+
+	//MultiSampling
+	VkSampleCountFlagBits getMaxUsableSampleCount();
+
+	void createColorResources();
 };
 
