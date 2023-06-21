@@ -11,13 +11,21 @@
 
 #ifndef STB_IMAGE_IMPLEMENTATION
 #define STB_IMAGE_IMPLEMENTATION
+#pragma warning(push)
+#pragma warning(disable : 26451)
+#pragma warning(disable : 6262)
 #include <stb_image.h>
+#pragma warning(pop)
 #endif
 
 
 #ifndef  TINYOBJLOADER_IMPLEMENTATION
 #define TINYOBJLOADER_IMPLEMENTATION
+#pragma warning(push)
+#pragma warning(disable : 26495)
+#pragma warning(disable : 26498)
 #include <tiny_obj_loader.h>
+#pragma warning(pop)
 #endif
 
 
