@@ -1,0 +1,285 @@
+#pragma once
+#include "stdafx.h"
+
+class Application {
+public:
+	Application(int width, int height);
+	~Application();
+
+	Application(Application& rhs) = delete;
+	Application(Application&& rhs) = delete;
+
+	Application& operator=(Application& rhs) = delete;
+	Application& operator=(Application&& rhs) = delete;
+
+	bool WindowShouldClose();
+
+	void DrawFrame();
+
+	void RecreateSwapChain();
+
+	static void framebufferResizeCallback(GLFWwindow* pWindow, int width, int height);
+
+private:
+	//Memeber variables
+	//Window and dimensions
+	GLFWwindow* m_pWindow{};
+	int m_Widht;
+	int m_Height;
+
+	std::vector<Vertex> m_Vertices{};
+	std::vector<uint32_t> m_Indices{};
+
+	//Vertex buffer
+	VkBuffer m_VertexBuffer{};
+	VkDeviceMemory m_VertexBufferMemory{};
+
+	//Index buffer
+	VkBuffer m_IndexBuffer{};
+	VkDeviceMemory m_IndexBufferMemory{};
+
+	//Uniform buffer
+	std::vector<VkBuffer> m_UniformBuffers{};
+	std::vector<VkDeviceMemory> m_UniformBuffersMemory{};
+	std::vector<void*> m_UniformBuffersMapped{};
+
+	//Vulkan instance
+	VkInstance m_Instance = VK_NULL_HANDLE;
+
+	//Physical device
+	VkPhysicalDevice m_PhysicalDevice = VK_NULL_HANDLE;
+
+	//Logical device
+	VkDevice m_Device = VK_NULL_HANDLE;
+
+	//Graphics queue
+	VkQueue m_GraphicsQueue{};
+
+	//Debug messenger
+	VkDebugUtilsMessengerEXT m_DebugMessenger = VK_NULL_HANDLE;
+
+	const std::vector<const char*> m_ValidationLayers = { "VK_LAYER_KHRONOS_validation" };
+
+	//Surface
+	VkSurfaceKHR m_Surface{};
+
+	//Present queue
+	VkQueue m_PresentQueue{};
+
+	//DeviceExtensions
+	const std::vector<const char*> m_DeviceExtensions = { VK_KHR_SWAPCHAIN_EXTENSION_NAME };
+
+	//SwapChain
+	VkSwapchainKHR m_SwapChain = VK_NULL_HANDLE;
+
+	std::vector<VkImage> m_SwapChainImages{};
+
+	VkFormat m_SwapChainImageFormat{};
+
+	VkExtent2D m_SwapChainExtent{};
+
+	//Images
+	std::vector<VkImageView> m_SwapChainImageViews{};
+
+	//Renderpass
+	VkRenderPass m_RenderPass{};
+
+	//PipelineLayout
+	VkPipelineLayout m_PipeLineLayout{};
+
+	//GraphicsPipeline
+	VkPipeline m_GraphicsPipeline{};
+
+	//Swapchainframebuffers
+	std::vector<VkFramebuffer> m_SwapChainFramebuffers{};
+
+	//CommandPool
+	VkCommandPool m_CommandPool{};
+
+	//CommandBuffer
+	std::vector<VkCommandBuffer> m_CommandBuffers{};
+
+	//Sync objects
+	std::vector<VkSemaphore> m_ImageAvailableSemaphores{};
+	std::vector<VkSemaphore> m_RenderFinishedSemaphores{};
+	std::vector<VkFence> m_InFlightFences{};
+
+	//Resize flag
+	bool m_FrameBufferResized = false;
+
+	//Current frame
+	uint32_t m_CurrentFrame = 0;
+	
+	//Descriptorlayout
+	VkDescriptorSetLayout m_DescriptorSetLayout{};
+
+	//Descriptorpool
+	VkDescriptorPool m_DescriptorPool{};
+	std::vector<VkDescriptorSet> m_DescriptorSets{};
+
+	//Texture
+	VkImage m_TextureImage{};
+	VkDeviceMemory m_TextureImageMemory{};
+
+	VkImageView m_TextureImageView{};
+	VkSampler m_TextureSampler{};
+	VkSampleCountFlagBits m_MsaaSamples = VK_SAMPLE_COUNT_1_BIT;
+
+	uint32_t m_MipLevels{};
+
+	//Depth
+	VkImage m_DepthImage{};
+	VkDeviceMemory m_DepthImageMemory{};
+	VkImageView m_DepthImageView{};
+
+	//MultiSampling
+	VkImage m_ColorImage{};
+	VkDeviceMemory m_ColorImageMemory{};
+	VkImageView m_ColorImageView{};
+
+	//Member functions
+	void initWindow();
+
+	void initVulkan();
+
+	void createInstance();
+
+	void cleanup();
+
+	//Create vulkan surface
+	void CreateSurface();
+
+	//Logic to find optimal physical device
+	void pickPhysicalDevice();
+
+	//Logic to find graphics queue family
+	QueueFamilyIndices findQueueFamilies(VkPhysicalDevice device);
+
+	//Creating the logical device
+	void createLogicalDevice();
+
+	//Creating and cleaning up the swapchain
+	void createSwapChain();
+	void cleanupSwapChain();
+
+	//Functions for checking suitability of the swap chain
+	SwapChainSupportDetails querySwapChainSupport(VkPhysicalDevice device);
+
+	//Functions for getting the right swapchain settings
+	VkSurfaceFormatKHR chooseSwapSurfaceFormat(const std::vector<VkSurfaceFormatKHR>& availableFormats);
+
+	VkPresentModeKHR chooseSwapPresentMode(const std::vector<VkPresentModeKHR>& availablePresentModes);
+
+	VkExtent2D chooseSwapExtent(const VkSurfaceCapabilitiesKHR& capabilities);
+
+	//ImageView
+	void createImageViews();
+
+	//Graphics pipeline
+	void createGraphicsPipeline();
+
+	//Shader modules
+	VkShaderModule createShaderModule(const std::vector<char>& code);
+
+	//RenderPass
+	void createRenderPass();
+
+	//Framebuffers
+	void createFramebuffers();
+
+	//Commandpool
+	void createCommandPool();
+
+	//CommandBuffer
+	void createCommandBuffers();
+
+	void recordCommandBuffer(VkCommandBuffer& commandBuffer, uint32_t imageIndex);
+
+	//Sync objects
+	void createSyncObjects();
+
+	//Buffer
+	void createVertexBuffer();
+	void createIndexBuffer();
+	void createUniformBuffers();
+	
+	void createBuffer(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VkBuffer& buffer, VkDeviceMemory& bufferMemory);
+
+	void copyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size);
+
+	//Descriptor layout
+	void createDescriptorLayout();
+	
+	//DescriptorPool
+	void createDescriptorPool();
+	void createDescriptorSets();
+
+	//Update uniform buffer
+	void updateUniformBuffer(uint32_t currentImage);
+
+
+	//Validation layers functions
+	void populateDebugMessengerCreateInfo(VkDebugUtilsMessengerCreateInfoEXT& createInfo);
+
+	void setupDebugMessenger();
+
+	bool checkValidationLayerSupport();
+
+	std::vector<const char*> getRequiredExtensions();
+
+	static VKAPI_ATTR VkBool32 VKAPI_CALL debugCallback(
+		VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
+		VkDebugUtilsMessageTypeFlagsEXT messageType,
+		const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData,
+		void* pUserData
+		);
+
+	//Helper functions 
+	bool IsDeviceSuitable(VkPhysicalDevice device);
+
+	bool checkDeviceExtensionSupport(VkPhysicalDevice device);
+
+	VkResult CreateDebugUtilsMessengerEXT(VkInstance instance, const VkDebugUtilsMessengerCreateInfoEXT* pCreateInfo,
+		const VkAllocationCallbacks* pAllocator, VkDebugUtilsMessengerEXT* pDebugMessenger);
+
+	void DestroyDebugUtilsMessegerEXT(VkInstance instance, VkDebugUtilsMessengerEXT debugMessenger, const VkAllocationCallbacks* pAllocator);
+
+	uint32_t findMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties);
+	
+	VkImageView createImageView(VkImage image, VkFormat format, VkImageAspectFlags aspectFlags, uint32_t mipLevels);
+
+	//Texture functions
+	void createTextureImage();
+	void createTextureImageView();
+	void createTextureSampler();
+
+	void createImage(uint32_t width, uint32_t height, uint32_t mipLevels, VkSampleCountFlagBits numSamples,
+		VkFormat format, VkImageTiling tiling, VkImageUsageFlags usage, VkMemoryPropertyFlags properties, VkImage& image, VkDeviceMemory& imageMemory);
+
+	VkCommandBuffer beginSingleTimeCommands();
+	void endSingleTimeCommands(VkCommandBuffer comandBuffer);
+
+	void transitionImageLayout(VkImage image, VkFormat format, VkImageLayout oldLayout, VkImageLayout newLayout, uint32_t mipLevels);
+
+	void copyBufferToImage(VkBuffer buffer, VkImage image, uint32_t width, uint32_t height);
+
+	void generateMipmaps(VkImage image, VkFormat imageFormat, int32_t texWidth, int32_t texHeight, uint32_t mipLevels);
+
+	//Depth functions
+	void createDepthResources();
+
+	VkFormat findSupportedFormat(const std::vector<VkFormat>& candidates, VkImageTiling tiling, VkFormatFeatureFlags features);
+
+	VkFormat findDepthFormat();
+
+	bool hasStencilComponent(VkFormat format);
+
+	//Model
+	void LoadModel();
+
+	//MultiSampling
+	VkSampleCountFlagBits getMaxUsableSampleCount();
+
+	void createColorResources();
+};
+

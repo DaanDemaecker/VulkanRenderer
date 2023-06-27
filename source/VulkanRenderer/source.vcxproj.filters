@@ -22,23 +22,32 @@
     <Filter Include="DataTypes">
       <UniqueIdentifier>{c997c762-336a-4031-a74c-253a3f1eaf8e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ServiceLocator">
+      <UniqueIdentifier>{c7cdca10-c543-43a7-9aa2-c08897597ac8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ServiceLocator\Renderer">
+      <UniqueIdentifier>{52c70d2a-2ed9-40a2-8edb-eafb755e119a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Renderer.cpp">
+    <ClCompile Include="Application.cpp">
       <Filter>Application</Filter>
     </ClCompile>
     <ClCompile Include="Utils.cpp">
       <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="ServiceLocator.cpp">
+      <Filter>ServiceLocator</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Renderer.h">
+    <ClInclude Include="Application.h">
       <Filter>Application</Filter>
     </ClInclude>
     <ClInclude Include="Utils.h">
@@ -46,6 +55,9 @@
     </ClInclude>
     <ClInclude Include="Structs.h">
       <Filter>DataTypes</Filter>
+    </ClInclude>
+    <ClInclude Include="ServiceLocator.h">
+      <Filter>ServiceLocator</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

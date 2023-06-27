@@ -1,12 +1,12 @@
 #include "stdafx.h"
-#include "Renderer.h"
+#include "Application.h"
 
 int main() {
 
 	const uint32_t width = 800;
 	const uint32_t height = 600;
 
-	std::unique_ptr<Renderer> pRenderer{ std::make_unique<Renderer>(width, height)};
+	std::unique_ptr<Application> pRenderer{ std::make_unique<Application>(width, height)};
 
 	while (!pRenderer->WindowShouldClose())
 	{

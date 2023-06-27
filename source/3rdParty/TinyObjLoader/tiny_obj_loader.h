@@ -1417,7 +1417,7 @@ static int pnpoly(int nvert, T *vertx, T *verty, T testx, T testy) {
         (testx <
          (vertx[j] - vertx[i]) * (testy - verty[i]) / (verty[j] - verty[i]) +
              vertx[i]))
-      c = !c;
+      c = ~c;
   }
   return c;
 }
