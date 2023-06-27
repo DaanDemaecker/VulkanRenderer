@@ -1,5 +1,8 @@
 #include "stdafx.h"
 #include "Application.h"
+
+#include "D3DEngine.h"
+
 #include "ServiceLocator.h"
 #include "VulkanRenderer.h"
 
@@ -11,18 +14,20 @@ void load()
 
 int main()
 {
-
 	const uint32_t width = 800;
 	const uint32_t height = 600;
 
-	std::unique_ptr<Application> pRenderer{ std::make_unique<Application>(width, height)};
+	D3D::D3DEngine engine(static_cast<int>(width), static_cast<int>(height));
+	engine.Run(load);
+
+	/*std::unique_ptr<Application> pRenderer{ std::make_unique<Application>(width, height)};
 
 	while (!pRenderer->WindowShouldClose())
 	{
 		glfwPollEvents();
 
 		pRenderer->DrawFrame();
-	}
+	}*/
 
 	return EXIT_SUCCESS;
 }
