@@ -1,7 +1,16 @@
 #include "stdafx.h"
 #include "Application.h"
+#include "ServiceLocator.h"
+#include "VulkanRenderer.h"
 
-int main() {
+void load()
+{
+	D3D::ServiceLocator::RegisterRenderer(std::make_unique<D3D::VulkanRenderer>());
+}
+
+
+int main()
+{
 
 	const uint32_t width = 800;
 	const uint32_t height = 600;

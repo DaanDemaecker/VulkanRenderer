@@ -28,6 +28,9 @@
     <Filter Include="ServiceLocator\Renderer">
       <UniqueIdentifier>{52c70d2a-2ed9-40a2-8edb-eafb755e119a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine">
+      <UniqueIdentifier>{ac6196b5-e229-4146-aa2a-8214ae3e0322}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -41,6 +44,12 @@
     </ClCompile>
     <ClCompile Include="ServiceLocator.cpp">
       <Filter>ServiceLocator</Filter>
+    </ClCompile>
+    <ClCompile Include="VulkanRenderer.cpp">
+      <Filter>ServiceLocator\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="D3DEngine.cpp">
+      <Filter>Engine</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -58,6 +67,15 @@
     </ClInclude>
     <ClInclude Include="ServiceLocator.h">
       <Filter>ServiceLocator</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer.h">
+      <Filter>ServiceLocator\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="VulkanRenderer.h">
+      <Filter>ServiceLocator\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="D3DEngine.h">
+      <Filter>Engine</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

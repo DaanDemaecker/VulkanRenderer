@@ -167,17 +167,21 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Application.cpp" />
+    <ClCompile Include="D3DEngine.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="ServiceLocator.cpp" />
     <ClCompile Include="Utils.cpp" />
+    <ClCompile Include="VulkanRenderer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
+    <ClInclude Include="D3DEngine.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="ServiceLocator.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="Structs.h" />
     <ClInclude Include="Utils.h" />
+    <ClInclude Include="VulkanRenderer.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
