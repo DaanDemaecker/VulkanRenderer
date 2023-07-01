@@ -12,11 +12,20 @@ D3D::D3DEngine::D3DEngine(int width, int height)
 
 D3D::D3DEngine::~D3DEngine()
 {
+	glfwDestroyWindow(g_pWindow.pWindow);
+	glfwTerminate();
 }
 
 void D3D::D3DEngine::Run(const std::function<void()>& load)
 {
 	load();
+
+	bool shouldQuit{false};
+
+	while (!shouldQuit)
+	{
+		shouldQuit = glfwWindowShouldClose(g_pWindow.pWindow);
+	}
 }
 
 void D3D::D3DEngine::InitWindow()

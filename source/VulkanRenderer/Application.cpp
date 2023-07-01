@@ -177,6 +177,7 @@ void Application::initVulkan()
 	createColorResources();
 	createDepthResources();
 	createFramebuffers();
+
 	LoadModel();
 	createVertexBuffer();
 	createIndexBuffer();
@@ -1141,8 +1142,6 @@ void Application::createDescriptorLayout()
 	{
 		throw std::runtime_error("failed to create descriptor set layout!");
 	}
-
-	
 }
 
 void Application::createDescriptorPool()
