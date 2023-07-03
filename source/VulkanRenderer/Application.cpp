@@ -19,16 +19,6 @@
 #endif
 
 
-#ifndef  TINYOBJLOADER_IMPLEMENTATION
-#define TINYOBJLOADER_IMPLEMENTATION
-#pragma warning(push)
-#pragma warning(disable : 26495)
-#pragma warning(disable : 26498)
-#include <tiny_obj_loader.h>
-#pragma warning(pop)
-#endif
-
-
 Application::Application(int width, int height)
 	: m_Widht{ width }, m_Height{ height }
 {
@@ -178,7 +168,7 @@ void Application::initVulkan()
 	createDepthResources();
 	createFramebuffers();
 
-	LoadModel();
+	Utils::LoadModel(m_Vertices, m_Indices);
 	createVertexBuffer();
 	createIndexBuffer();
 	createUniformBuffers();
@@ -1818,54 +1808,6 @@ VkFormat Application::findDepthFormat()
 bool Application::hasStencilComponent(VkFormat format)
 {
 	return format == VK_FORMAT_D32_SFLOAT_S8_UINT || format == VK_FORMAT_D24_UNORM_S8_UINT;
-}
-
-void Application::LoadModel()
-{
-	m_Vertices.clear();
-	m_Indices.clear();
-
-	tinyobj::attrib_t attrib{};
-	std::vector<tinyobj::shape_t> shapes{};
-	std::vector<tinyobj::material_t> materials{};
-
-	std::string warn, err;
-
-	if (!tinyobj::LoadObj(&attrib, &shapes, &materials, &warn, &err, MODEL_PATH.c_str()))
-	{
-		throw std::runtime_error(warn + err);
-	}
-
-	std::unordered_map<Vertex, uint32_t> uniqueVertices{};
-
-	for (const auto& shape : shapes)
-	{
-		for (const auto& index : shape.mesh.indices)
-		{
-			Vertex vertex{};
-
-			vertex.pos = {
-				attrib.vertices[static_cast<uint64_t>(3) * index.vertex_index],
-				attrib.vertices[static_cast<uint64_t>(3) * index.vertex_index + static_cast<uint64_t>(1)],
-				attrib.vertices[static_cast<uint64_t>(3) * index.vertex_index + static_cast<uint64_t>(2)]
-			};
-
-			vertex.texCoord = {
-				attrib.texcoords[static_cast<uint64_t>(2) * index.texcoord_index + 0],
-				1.0f - attrib.texcoords[static_cast<uint64_t>(2) * index.texcoord_index + 1]
-			};
-
-			vertex.color = { 1.0f, 1.0f, 1.0f };
-
-			if (uniqueVertices.count(vertex) == 0)
-			{
-				uniqueVertices[vertex] = static_cast<uint32_t>(m_Vertices.size());
-				m_Vertices.push_back(vertex);
-			}
-
-			m_Indices.push_back(uniqueVertices[vertex]);
-		}
-	}
 }
 
 VkSampleCountFlagBits Application::getMaxUsableSampleCount()

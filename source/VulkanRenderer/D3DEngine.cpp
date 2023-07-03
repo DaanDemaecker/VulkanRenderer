@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "D3DEngine.h"
+#include "Model.h"
 
 D3D::Window g_pWindow{};
 
@@ -19,6 +20,9 @@ D3D::D3DEngine::~D3DEngine()
 void D3D::D3DEngine::Run(const std::function<void()>& load)
 {
 	load();
+
+	std::unique_ptr<Model> pModel{std::make_unique<Model>()};
+
 
 	bool shouldQuit{false};
 

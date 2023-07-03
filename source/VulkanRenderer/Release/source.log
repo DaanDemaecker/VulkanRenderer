@@ -1,11 +1,14 @@
 ﻿  Application.cpp
+  D3DEngine.cpp
   main.cpp
+  Model.cpp
+  Utils.cpp
   VulkanRenderer.cpp
 LINK : warning LNK4075: ignoring '/INCREMENTAL' due to '/LTCG' specification
 LINK : warning LNK4098: defaultlib 'LIBCMT' conflicts with use of other libs; use /NODEFAULTLIB:library
   Generating code
-  219 of 1610 functions (13.6%) were compiled, the rest were copied from previous compilation.
-    16 functions were new in current compilation
-    46 functions had inline decision re-evaluated but remain unchanged
+  1904 of 2784 functions (68.4%) were compiled, the rest were copied from previous compilation.
+    39 functions were new in current compilation
+    57 functions had inline decision re-evaluated but remain unchanged
   Finished generating code
   source.vcxproj -> C:\Private projects\VulkanRenderer\VulkanRenderer\source\Release\VulkanRenderer.exe

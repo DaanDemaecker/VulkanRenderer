@@ -1,13 +1,30 @@
 #pragma once
-#include "Renderer.h"
+#include "Singleton.h"
 
 namespace D3D
 {
-    class VulkanRenderer final : public Renderer
+    class Model;
+
+    class VulkanRenderer final : public Singleton<VulkanRenderer>
     {
     public:
         VulkanRenderer();
         ~VulkanRenderer();
+
+        VulkanRenderer(VulkanRenderer& other) = delete;
+        VulkanRenderer(VulkanRenderer&& other) = delete;
+
+        VulkanRenderer& operator=(VulkanRenderer& other) = delete;
+        VulkanRenderer& operator=(VulkanRenderer&& other) = delete;
+
+        VkDevice& GetDevice() {return m_Device; }
+
+        //Public Helpers
+        uint32_t FindMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties);
+        VkCommandBuffer BeginSingleTimeCommands();
+        void EndSingleTimeCommands(VkCommandBuffer comandBuffer);
+        void CreateBuffer(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VkBuffer& buffer, VkDeviceMemory& bufferMemory);
+        void CopyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size);
 
     private:
         //----Member variables----
@@ -165,15 +182,6 @@ namespace D3D
 
         //--Framebuffers--
         void CreateFramebuffers();
-
-        //--Descriptor Sets--
-        void CreateDescriptorSets();
-
-        //--Command Buffers--
-        void CreateCommandBuffers();
-        
-        //--Sync Objects--
-        void CreateSyncObjects();
         
 
         //--General helpers--
@@ -181,10 +189,7 @@ namespace D3D
             VkFormat format, VkImageTiling tiling, VkImageUsageFlags usage, VkMemoryPropertyFlags properties, VkImage& image, VkDeviceMemory& imageMemory);
         VkImageView CreateImageView(VkImage image, VkFormat format, VkImageAspectFlags aspectFlags, uint32_t mipLevels);
         VkFormat FindSupportedFormat(const std::vector<VkFormat>& candidates, VkImageTiling tiling, VkFormatFeatureFlags features);
-        uint32_t FindMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties);
         void TransitionImageLayout(VkImage image, VkFormat format, VkImageLayout oldLayout, VkImageLayout newLayout, uint32_t mipLevels);
-        VkCommandBuffer BeginSingleTimeCommands();
-        void EndSingleTimeCommands(VkCommandBuffer comandBuffer);
         bool HasStencilComponent(VkFormat format);
     };
 }

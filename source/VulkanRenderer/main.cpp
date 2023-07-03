@@ -2,8 +2,6 @@
 #include "Application.h"
 
 #include "D3DEngine.h"
-
-#include "ServiceLocator.h"
 #include "VulkanRenderer.h"
 
 //#define OLD
@@ -11,7 +9,7 @@
 
 void load()
 {
-	D3D::ServiceLocator::RegisterRenderer(std::make_unique<D3D::VulkanRenderer>());
+	//auto& renderer{ D3D::VulkanRenderer::GetInstance() };
 }
 
 

@@ -274,9 +274,6 @@ private:
 
 	bool hasStencilComponent(VkFormat format);
 
-	//Model
-	void LoadModel();
-
 	//MultiSampling
 	VkSampleCountFlagBits getMaxUsableSampleCount();
 
