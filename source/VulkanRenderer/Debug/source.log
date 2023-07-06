@@ -1,9 +1,9 @@
 ﻿  Application.cpp
   D3DEngine.cpp
-  main.cpp
   Model.cpp
   Utils.cpp
   VulkanRenderer.cpp
+  main.cpp
   Generating Code...
 LINK : warning LNK4098: defaultlib 'LIBCMT' conflicts with use of other libs; use /NODEFAULTLIB:library
   source.vcxproj -> C:\Private projects\VulkanRenderer\VulkanRenderer\source\Debug\VulkanRenderer.exe

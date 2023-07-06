@@ -8,15 +8,14 @@
 
 #include "Utils.h"
 
-
-#ifndef STB_IMAGE_IMPLEMENTATION
-#define STB_IMAGE_IMPLEMENTATION
-#pragma warning(push)
-#pragma warning(disable : 26451)
-#pragma warning(disable : 6262)
-#include <stb_image.h>
-#pragma warning(pop)
-#endif
+//#ifndef STB_IMAGE_IMPLEMENTATION
+//#define STB_IMAGE_IMPLEMENTATION
+//#pragma warning(push)
+//#pragma warning(disable : 26451)
+//#pragma warning(disable : 6262)
+//#include <stb_image.h>
+//#pragma warning(pop)
+//#endif
 
 
 Application::Application(int width, int height)
@@ -1203,8 +1202,7 @@ void Application::createDescriptorSets()
 
 void Application::updateUniformBuffer(uint32_t currentImage)
 {
-	static auto startTime = std::chrono::high_resolution_clock::now()
-		;
+	static auto startTime = std::chrono::high_resolution_clock::now();
 
 	auto currentTime = std::chrono::high_resolution_clock::now();
 	float time = std::chrono::duration<float, std::chrono::seconds::period>(currentTime - startTime).count();
@@ -1406,7 +1404,7 @@ VkImageView Application::createImageView(VkImage image, VkFormat format, VkImage
 
 void Application::createTextureImage()
 {
-	int texWidth, texHeight, texChannels;
+	/*int texWidth, texHeight, texChannels;
 
 	stbi_uc* pixels = stbi_load(Texture_PATH.c_str(), &texWidth, &texHeight, &texChannels, STBI_rgb_alpha);
 
@@ -1445,7 +1443,7 @@ void Application::createTextureImage()
 	vkDestroyBuffer(m_Device, stagingBuffer, nullptr);
 	vkFreeMemory(m_Device, stagingBufferMemory, nullptr);
 	
-	generateMipmaps(m_TextureImage, VK_FORMAT_R8G8B8A8_SRGB, texWidth, texHeight, m_MipLevels);
+	generateMipmaps(m_TextureImage, VK_FORMAT_R8G8B8A8_SRGB, texWidth, texHeight, m_MipLevels);*/
 }
 
 void Application::createTextureImageView()

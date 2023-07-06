@@ -22,9 +22,14 @@ D3D::Model::~Model()
 	vkFreeMemory(device, m_VertexBufferMemory, nullptr);
 }
 
+void D3D::Model::Render(VkCommandBuffer& commandBuffer)
+{
+	VulkanRenderer::GetInstance().Render(this, commandBuffer);
+}
+
 void D3D::Model::CreateVertexBuffer()
 {
-	auto& renderer{ D3D::VulkanRenderer::GetInstance() };
+	auto& renderer{ VulkanRenderer::GetInstance() };
 	auto device = renderer.GetDevice();
 
 	VkDeviceSize bufferSize = sizeof(m_Vertices[0]) * m_Vertices.size();
@@ -50,7 +55,7 @@ void D3D::Model::CreateVertexBuffer()
 
 void D3D::Model::CreateIndexBuffer()
 {
-	auto& renderer{ D3D::VulkanRenderer::GetInstance() };
+	auto& renderer{ VulkanRenderer::GetInstance() };
 	auto device = renderer.GetDevice();
 
 	VkDeviceSize bufferSize = sizeof(m_Indices[0]) * m_Indices.size();

@@ -14,6 +14,13 @@ namespace D3D
 		Model& operator=(Model& other) = delete;
 		Model& operator=(Model&& other) = delete;
 
+		void Render(VkCommandBuffer& commandBuffer);
+
+		const VkBuffer& GetVertexBuffer() const { return m_VertexBuffer; }
+		const VkBuffer& GetIndexBuffer() const { return m_IndexBuffer; }
+
+		size_t GetIndexAmount() const { return m_Indices.size(); }
+
 	private:
 		//Member variables
 		std::vector<Vertex> m_Vertices{};

@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "D3DEngine.h"
-#include "Model.h"
+#include "VulkanRenderer.h"
 
 D3D::Window g_pWindow{};
 
@@ -21,13 +21,16 @@ void D3D::D3DEngine::Run(const std::function<void()>& load)
 {
 	load();
 
-	std::unique_ptr<Model> pModel{std::make_unique<Model>()};
+	auto& renderer{ VulkanRenderer::GetInstance() };
 
+	renderer.LoadModel();
 
 	bool shouldQuit{false};
 
 	while (!shouldQuit)
 	{
+		renderer.Render();
+
 		shouldQuit = glfwWindowShouldClose(g_pWindow.pWindow);
 	}
 }
