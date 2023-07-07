@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "D3DEngine.h"
 #include "VulkanRenderer.h"
+#include "Model.h"
 
 D3D::Window g_pWindow{};
 
@@ -23,13 +24,16 @@ void D3D::D3DEngine::Run(const std::function<void()>& load)
 
 	auto& renderer{ VulkanRenderer::GetInstance() };
 
-	renderer.LoadModel();
+	std::vector<std::unique_ptr<Model>> pModels{};
+	pModels.push_back(std::make_unique<Model>());
 
 	bool shouldQuit{false};
 
 	while (!shouldQuit)
 	{
-		renderer.Render();
+		glfwPollEvents();
+
+		renderer.Render(pModels);
 
 		shouldQuit = glfwWindowShouldClose(g_pWindow.pWindow);
 	}
@@ -46,5 +50,10 @@ void D3D::D3DEngine::InitWindow()
 	//Initialize the window
 	g_pWindow.pWindow = glfwCreateWindow(g_pWindow.Width, g_pWindow.Height, "Vulkan", nullptr, nullptr);
 	glfwSetWindowUserPointer(g_pWindow.pWindow, this);
-	//glfwSetFramebufferSizeCallback(g_pWindow.pWindow, framebufferResizeCallback);
+	glfwSetFramebufferSizeCallback(g_pWindow.pWindow, FramebufferResizeCallback);
+}
+
+void D3D::D3DEngine::FramebufferResizeCallback(GLFWwindow* /*pWindow*/, int /*width*/, int /*height*/)
+{
+	g_pWindow.FrameBufferResized = true;
 }

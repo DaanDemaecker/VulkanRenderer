@@ -15,6 +15,8 @@ D3D::Model::~Model()
 {
 	auto device = D3D::VulkanRenderer::GetInstance().GetDevice();
 
+	vkDeviceWaitIdle(device);
+
 	vkDestroyBuffer(device, m_IndexBuffer, nullptr);
 	vkFreeMemory(device, m_IndexBufferMemory, nullptr);
 

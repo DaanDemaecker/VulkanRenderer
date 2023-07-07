@@ -17,9 +17,7 @@ namespace D3D
         VulkanRenderer& operator=(VulkanRenderer& other) = delete;
         VulkanRenderer& operator=(VulkanRenderer&& other) = delete;
 
-        void LoadModel();
-
-        void Render();
+        void Render(std::vector<std::unique_ptr<Model>>& pModels);
 
         void Render(Model* pModel, VkCommandBuffer& commandBuffer);
 
@@ -141,10 +139,12 @@ namespace D3D
 
         uint32_t m_MipLevels{};
 
-        std::unique_ptr<Model> m_pModel{};
-
 
         //----Member Functions----
+        //--- Cleanup ---
+        void Cleanup();
+         
+        
         //---Vulkan Initialization---
         void InitVulkan();
 
@@ -237,7 +237,7 @@ namespace D3D
 
         //--CommandBuffers--
         void CreateCommandBuffers();
-        void RecordCommandBuffer(VkCommandBuffer& commandBuffer, uint32_t imageIndex);
+        void RecordCommandBuffer(VkCommandBuffer& commandBuffer, uint32_t imageIndex, std::vector<std::unique_ptr<Model>>& pModels);
 
         //--Sync Objects--
         void CreateSyncObjects();
@@ -261,7 +261,7 @@ namespace D3D
         void CopyBufferToImage(VkBuffer buffer, VkImage image, uint32_t width, uint32_t height);
         void GenerateMipmaps(VkImage image, VkFormat imageFormat, int32_t texWidth, int32_t texHeight, uint32_t mipLevels);
 
-        void updateUniformBuffer(uint32_t currentImage);
+        void updateUniformBuffer(uint32_t currentImage, int direction);
     };
 }
 

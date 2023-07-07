@@ -18,6 +18,7 @@ namespace D3D
 
 	private:
 		void InitWindow();
+		static void FramebufferResizeCallback(GLFWwindow* pWindow, int width, int height);
 	};
 
 
@@ -26,5 +27,6 @@ namespace D3D
 		GLFWwindow* pWindow{};
 		int Width;
 		int Height;
+		bool FrameBufferResized = false;
 	};
 }

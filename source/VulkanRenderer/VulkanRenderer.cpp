@@ -29,12 +29,46 @@ D3D::VulkanRenderer::~VulkanRenderer()
 {
 	vkDeviceWaitIdle(m_Device);
 
+	Cleanup();
+}
+
+void D3D::VulkanRenderer::Cleanup()
+{
 	CleanupSwapChain();
+
+	vkDestroySampler(m_Device, m_TextureSampler, nullptr);
+	vkDestroyImageView(m_Device, m_TextureImageView, nullptr);
+	vkDestroyImage(m_Device, m_TextureImage, nullptr);
+	vkFreeMemory(m_Device, m_TextureImageMemory, nullptr);
+
+	vkDestroyDescriptorPool(m_Device, m_DescriptorPool, nullptr);
+
+	vkDestroyDescriptorSetLayout(m_Device, m_DescriptorSetLayout, nullptr);
+
+	for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; ++i)
+	{
+		vkDestroyBuffer(m_Device, m_UniformBuffers[i], nullptr);
+		vkFreeMemory(m_Device, m_UniformBuffersMemory[i], nullptr);
+	}
+
+	vkDestroyPipeline(m_Device, m_GraphicsPipeline, nullptr);
+
+	vkDestroyPipelineLayout(m_Device, m_PipeLineLayout, nullptr);
 
 	vkDestroyRenderPass(m_Device, m_RenderPass, nullptr);
 
+	for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; ++i)
+	{
+		vkDestroySemaphore(m_Device, m_ImageAvailableSemaphores[i], nullptr);
+		vkDestroySemaphore(m_Device, m_RenderFinishedSemaphores[i], nullptr);
+		vkDestroyFence(m_Device, m_InFlightFences[i], nullptr);
+	}
+
+	vkDestroyCommandPool(m_Device, m_CommandPool, nullptr);
+
 	vkDestroyDevice(m_Device, nullptr);
-	if (m_EnableValidationLayers)
+
+	if (enableValidationLayers)
 	{
 		DestroyDebugUtilsMessegerEXT(m_Instance, m_DebugMessenger, nullptr);
 	}
@@ -72,12 +106,7 @@ void D3D::VulkanRenderer::InitVulkan()
 	CreateSyncObjects();
 }
 
-void D3D::VulkanRenderer::LoadModel()
-{
-	m_pModel = std::make_unique<Model>();
-}
-
-void D3D::VulkanRenderer::Render()
+void D3D::VulkanRenderer::Render(std::vector<std::unique_ptr<Model>>& pModels)
 {
 	vkWaitForFences(m_Device, 1, &m_InFlightFences[m_CurrentFrame], VK_TRUE, UINT64_MAX);
 
@@ -99,7 +128,7 @@ void D3D::VulkanRenderer::Render()
 	vkResetFences(m_Device, 1, &m_InFlightFences[m_CurrentFrame]);
 
 	vkResetCommandBuffer(m_CommandBuffers[m_CurrentFrame], 0);
-	RecordCommandBuffer(m_CommandBuffers[m_CurrentFrame], imageIndex);
+	RecordCommandBuffer(m_CommandBuffers[m_CurrentFrame], imageIndex, pModels);
 
 
 	VkSubmitInfo submitInfo{};
@@ -138,9 +167,10 @@ void D3D::VulkanRenderer::Render()
 
 	result = vkQueuePresentKHR(m_PresentQueue, &presentInfo);
 
-	if (result == VK_ERROR_OUT_OF_DATE_KHR || result == VK_SUBOPTIMAL_KHR)
+	if (result == VK_ERROR_OUT_OF_DATE_KHR || result == VK_SUBOPTIMAL_KHR || g_pWindow.FrameBufferResized)
 	{
 		RecreateSwapChain();
+		g_pWindow.FrameBufferResized = false;
 	}
 	else if (result != VK_SUCCESS)
 	{
@@ -150,7 +180,7 @@ void D3D::VulkanRenderer::Render()
 	++m_CurrentFrame %= MAX_FRAMES_IN_FLIGHT;
 }
 
-void D3D::VulkanRenderer::RecordCommandBuffer(VkCommandBuffer& commandBuffer, uint32_t imageIndex)
+void D3D::VulkanRenderer::RecordCommandBuffer(VkCommandBuffer& commandBuffer, uint32_t imageIndex, std::vector<std::unique_ptr<Model>>& pModels)
 {
 
 	VkCommandBufferBeginInfo beginInfo{};
@@ -196,8 +226,13 @@ void D3D::VulkanRenderer::RecordCommandBuffer(VkCommandBuffer& commandBuffer, ui
 	scissor.extent = m_SwapChainExtent;
 	vkCmdSetScissor(commandBuffer, 0, 1, &scissor);
 
-	updateUniformBuffer(m_CurrentFrame);
-	m_pModel->Render(commandBuffer);
+
+	for (size_t i{}; i < pModels.size(); ++i)
+	{
+		updateUniformBuffer(m_CurrentFrame, (i % 2) * 2 - 1);
+		pModels[i]->Render(commandBuffer);
+	}
+
 
 	vkCmdEndRenderPass(commandBuffer);
 
@@ -692,10 +727,10 @@ VkExtent2D D3D::VulkanRenderer::ChooseSwapExtent(const VkSurfaceCapabilitiesKHR&
 
 void D3D::VulkanRenderer::CleanupSwapChain()
 {
-	/*for (size_t i = 0; i < m_SwapChainFramebuffers.size(); ++i)
+	for (size_t i = 0; i < m_SwapChainFramebuffers.size(); ++i)
 	{
 		vkDestroyFramebuffer(m_Device, m_SwapChainFramebuffers[i], nullptr);
-	}*/
+	}
 
 	for (size_t i = 0; i < m_SwapChainImageViews.size(); ++i)
 	{
@@ -704,13 +739,13 @@ void D3D::VulkanRenderer::CleanupSwapChain()
 
 	vkDestroySwapchainKHR(m_Device, m_SwapChain, nullptr);
 
-	//vkDestroyImageView(m_Device, m_DepthImageView, nullptr);
-	//vkDestroyImage(m_Device, m_DepthImage, nullptr);
-	//vkFreeMemory(m_Device, m_DepthImageMemory, nullptr);
+	vkDestroyImageView(m_Device, m_DepthImageView, nullptr);
+	vkDestroyImage(m_Device, m_DepthImage, nullptr);
+	vkFreeMemory(m_Device, m_DepthImageMemory, nullptr);
 
-	//vkDestroyImageView(m_Device, m_ColorImageView, nullptr);
-	//vkDestroyImage(m_Device, m_ColorImage, nullptr);
-	//vkFreeMemory(m_Device, m_ColorImageMemory, nullptr);
+	vkDestroyImageView(m_Device, m_ColorImageView, nullptr);
+	vkDestroyImage(m_Device, m_ColorImage, nullptr);
+	vkFreeMemory(m_Device, m_ColorImageMemory, nullptr);
 }
 
 void D3D::VulkanRenderer::RecreateSwapChain()
@@ -1726,7 +1761,7 @@ void D3D::VulkanRenderer::GenerateMipmaps(VkImage image, VkFormat imageFormat, i
 	EndSingleTimeCommands(commandBuffer);
 }
 
-void D3D::VulkanRenderer::updateUniformBuffer(uint32_t currentImage)
+void D3D::VulkanRenderer::updateUniformBuffer(uint32_t currentImage, int direction)
 {
 	static auto startTime = std::chrono::high_resolution_clock::now();
 
@@ -1734,7 +1769,7 @@ void D3D::VulkanRenderer::updateUniformBuffer(uint32_t currentImage)
 	float time = std::chrono::duration<float, std::chrono::seconds::period>(currentTime - startTime).count();
 
 	UniformBufferObject ubo{};
-	ubo.model = glm::rotate(glm::mat4(1.0f), time * glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+	ubo.model = glm::rotate(glm::mat4(1.0f), direction * time * glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
 	ubo.view = glm::lookAt(glm::vec3(2.0, 2.0, 2.0), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
 	ubo.proj = glm::perspective(glm::radians(45.0f), m_SwapChainExtent.width / static_cast<float>(m_SwapChainExtent.height), 0.1f, 10.0f);
 	ubo.proj[1][1] *= -1;
