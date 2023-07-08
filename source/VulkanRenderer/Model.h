@@ -5,7 +5,7 @@ namespace D3D
 	class Model
 	{
 	public:
-		Model();
+		Model(bool normal = true);
 		~Model();
 
 		Model(Model& other) = delete;
@@ -33,7 +33,6 @@ namespace D3D
 		//Index buffer
 		VkBuffer m_IndexBuffer{};
 		VkDeviceMemory m_IndexBufferMemory{};
-
 
 		//Initialization functions
 		void CreateVertexBuffer();

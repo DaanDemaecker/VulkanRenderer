@@ -35,7 +35,7 @@ std::vector<char> Utils::readFile(const std::string& filename)
 	return buffer;
 }
 
-void Utils::LoadModel(std::vector<Vertex>& vertices, std::vector<uint32_t>& indices)
+void Utils::LoadModel(const std::string& filename, std::vector<Vertex>& vertices, std::vector<uint32_t>& indices)
 {
 	vertices.clear();
 	indices.clear();
@@ -46,7 +46,7 @@ void Utils::LoadModel(std::vector<Vertex>& vertices, std::vector<uint32_t>& indi
 
 	std::string warn, err;
 
-	if (!tinyobj::LoadObj(&attrib, &shapes, &materials, &warn, &err, MODEL_PATH.c_str()))
+	if (!tinyobj::LoadObj(&attrib, &shapes, &materials, &warn, &err, filename.c_str()))
 	{
 		throw std::runtime_error(warn + err);
 	}

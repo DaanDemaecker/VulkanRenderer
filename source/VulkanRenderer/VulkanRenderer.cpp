@@ -182,11 +182,10 @@ void D3D::VulkanRenderer::Render(std::vector<std::unique_ptr<Model>>& pModels)
 
 void D3D::VulkanRenderer::RecordCommandBuffer(VkCommandBuffer& commandBuffer, uint32_t imageIndex, std::vector<std::unique_ptr<Model>>& pModels)
 {
-
 	VkCommandBufferBeginInfo beginInfo{};
 	beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
-	beginInfo.flags = 0;//Optional
-	beginInfo.pInheritanceInfo = nullptr;//Optional
+	beginInfo.flags = VK_COMMAND_BUFFER_USAGE_RENDER_PASS_CONTINUE_BIT; // Optional
+	beginInfo.pInheritanceInfo = nullptr; // Optional
 
 	if (vkBeginCommandBuffer(commandBuffer, &beginInfo) != VK_SUCCESS)
 	{
@@ -222,17 +221,15 @@ void D3D::VulkanRenderer::RecordCommandBuffer(VkCommandBuffer& commandBuffer, ui
 	vkCmdSetViewport(commandBuffer, 0, 1, &viewport);
 
 	VkRect2D scissor{};
-	scissor.offset = { 0,0 };
+	scissor.offset = { 0, 0 };
 	scissor.extent = m_SwapChainExtent;
 	vkCmdSetScissor(commandBuffer, 0, 1, &scissor);
 
-
-	for (size_t i{}; i < pModels.size(); ++i)
+	for (size_t i = 0; i < pModels.size(); ++i)
 	{
 		updateUniformBuffer(m_CurrentFrame, (i % 2) * 2 - 1);
-		pModels[i]->Render(commandBuffer);
+		Render(pModels[i].get(), commandBuffer);
 	}
-
 
 	vkCmdEndRenderPass(commandBuffer);
 
@@ -244,10 +241,12 @@ void D3D::VulkanRenderer::RecordCommandBuffer(VkCommandBuffer& commandBuffer, ui
 
 void D3D::VulkanRenderer::Render(Model* pModel, VkCommandBuffer& commandBuffer)
 {
+	vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, m_GraphicsPipeline);
+
 	VkBuffer vertexBuffers[] = { pModel->GetVertexBuffer() };
 	VkDeviceSize offsets[] = { 0 };
-
 	vkCmdBindVertexBuffers(commandBuffer, 0, 1, vertexBuffers, offsets);
+
 	vkCmdBindIndexBuffer(commandBuffer, pModel->GetIndexBuffer(), 0, VK_INDEX_TYPE_UINT32);
 
 	vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, m_PipeLineLayout, 0, 1, &m_DescriptorSets[m_CurrentFrame], 0, nullptr);

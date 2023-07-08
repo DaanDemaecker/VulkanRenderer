@@ -22,6 +22,7 @@ namespace D3D
         void Render(Model* pModel, VkCommandBuffer& commandBuffer);
 
         VkDevice& GetDevice() {return m_Device; }
+        VkCommandPool& GetCommandPool() { return m_CommandPool; }
 
         //Public Helpers
         uint32_t FindMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties);
@@ -34,7 +35,10 @@ namespace D3D
         //----Member variables----
         //---Validation layers---
         bool m_EnableValidationLayers{true};
-        const std::vector<const char*> m_ValidationLayers = { "VK_LAYER_KHRONOS_validation" };
+        const std::vector<const char*> m_ValidationLayers =
+        { 
+            "VK_LAYER_KHRONOS_validation"
+        };
         VkDebugUtilsMessengerEXT m_DebugMessenger = VK_NULL_HANDLE;
 
 
@@ -78,6 +82,9 @@ namespace D3D
 
         //--Renderpass--
         VkRenderPass m_RenderPass{};
+
+        //-RenderpassInfo-
+        VkRenderPassBeginInfo m_RenderpassInfo{};
 
         //--Descriptorlayout--
         VkDescriptorSetLayout m_DescriptorSetLayout{};

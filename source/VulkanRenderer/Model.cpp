@@ -4,9 +4,16 @@
 #include "VulkanRenderer.h"
 #include "Utils.h"
 
-D3D::Model::Model()
+D3D::Model::Model(bool normal)
 {
-	Utils::LoadModel(m_Vertices, m_Indices);
+	if (normal)
+	{
+		Utils::LoadModel("../Resources/Models/viking_room.obj", m_Vertices, m_Indices);
+	}
+	else
+	{
+		Utils::LoadModel("../Resources/Models/vehicle.obj", m_Vertices, m_Indices);
+	}
 	CreateVertexBuffer();
 	CreateIndexBuffer();
 }

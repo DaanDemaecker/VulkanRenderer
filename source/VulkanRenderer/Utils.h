@@ -9,5 +9,5 @@ namespace Utils
 {
 	std::vector<char> readFile(const std::string& filename);
 
-	void LoadModel(std::vector<Vertex>& vertices, std::vector<uint32_t>& indices);
+	void LoadModel(const std::string& filename, std::vector<Vertex>& vertices, std::vector<uint32_t>& indices);
 }

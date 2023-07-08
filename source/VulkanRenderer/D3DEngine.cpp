@@ -26,6 +26,7 @@ void D3D::D3DEngine::Run(const std::function<void()>& load)
 
 	std::vector<std::unique_ptr<Model>> pModels{};
 	pModels.push_back(std::make_unique<Model>());
+	pModels.push_back(std::make_unique<Model>(false));
 
 	bool shouldQuit{false};
 

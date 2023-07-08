@@ -167,7 +167,7 @@ void Application::initVulkan()
 	createDepthResources();
 	createFramebuffers();
 
-	Utils::LoadModel(m_Vertices, m_Indices);
+	Utils::LoadModel(MODEL_PATH, m_Vertices, m_Indices);
 	createVertexBuffer();
 	createIndexBuffer();
 	createUniformBuffers();
