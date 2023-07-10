@@ -1,5 +1,4 @@
 #include "stdafx.h"
-#include "Application.h"
 
 #include "D3DEngine.h"
 #include "VulkanRenderer.h"
