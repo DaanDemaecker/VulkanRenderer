@@ -19,17 +19,23 @@ namespace D3D
 
         void Render(std::vector<std::unique_ptr<Model>>& pModels);
 
-        void Render(Model* pModel, VkCommandBuffer& commandBuffer);
+        void Render(Model* pModel, VkCommandBuffer& commandBuffer, const VkDescriptorSet* descriptorSet);
 
+
+        //Public getters
         VkDevice& GetDevice() {return m_Device; }
         VkCommandPool& GetCommandPool() { return m_CommandPool; }
+        VkDescriptorSetLayout& GetDescriptorSetLayout() { return m_DescriptorSetLayout; }
+        VkDescriptorPool& GetDescriptorPool() { return m_DescriptorPool; }
+        VkImageView& GetImageView() { return m_TextureImageView; }
+        VkSampler& GetSampler() { return m_TextureSampler; }
 
         //Public Helpers
-        uint32_t FindMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties);
-        VkCommandBuffer BeginSingleTimeCommands();
-        void EndSingleTimeCommands(VkCommandBuffer comandBuffer);
         void CreateBuffer(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VkBuffer& buffer, VkDeviceMemory& bufferMemory);
         void CopyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size);
+        
+
+        void UpdateUniformBuffer(UniformBufferObject& buffer);
 
     private:
         //----Member variables----
@@ -123,6 +129,7 @@ namespace D3D
 
         //--Descriptorpool--
         VkDescriptorPool m_DescriptorPool{};
+        uint32_t m_MaxDescriptorSets{10};
         
         //--DescriptorSets--
         std::vector<VkDescriptorSet> m_DescriptorSets{};
@@ -269,6 +276,12 @@ namespace D3D
         void GenerateMipmaps(VkImage image, VkFormat imageFormat, int32_t texWidth, int32_t texHeight, uint32_t mipLevels);
 
         void updateUniformBuffer(uint32_t currentImage, int direction);
+
+
+        uint32_t FindMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties);
+        VkCommandBuffer BeginSingleTimeCommands();
+        void EndSingleTimeCommands(VkCommandBuffer comandBuffer);
+        
     };
 }
 

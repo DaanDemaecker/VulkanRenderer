@@ -228,7 +228,7 @@ void D3D::VulkanRenderer::RecordCommandBuffer(VkCommandBuffer& commandBuffer, ui
 	for (size_t i = 0; i < pModels.size(); ++i)
 	{
 		updateUniformBuffer(m_CurrentFrame, (i % 2) * 2 - 1);
-		Render(pModels[i].get(), commandBuffer);
+		pModels[i]->Render(commandBuffer, m_CurrentFrame, &m_DescriptorSets[m_CurrentFrame]);
 	}
 
 	vkCmdEndRenderPass(commandBuffer);
@@ -239,7 +239,7 @@ void D3D::VulkanRenderer::RecordCommandBuffer(VkCommandBuffer& commandBuffer, ui
 	}
 }
 
-void D3D::VulkanRenderer::Render(Model* pModel, VkCommandBuffer& commandBuffer)
+void D3D::VulkanRenderer::Render(Model* pModel, VkCommandBuffer& commandBuffer, const VkDescriptorSet* descriptorSet)
 {
 	vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, m_GraphicsPipeline);
 
@@ -249,7 +249,7 @@ void D3D::VulkanRenderer::Render(Model* pModel, VkCommandBuffer& commandBuffer)
 
 	vkCmdBindIndexBuffer(commandBuffer, pModel->GetIndexBuffer(), 0, VK_INDEX_TYPE_UINT32);
 
-	vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, m_PipeLineLayout, 0, 1, &m_DescriptorSets[m_CurrentFrame], 0, nullptr);
+	vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, m_PipeLineLayout, 0, 1, descriptorSet, 0, nullptr);
 
 	vkCmdDrawIndexed(commandBuffer, static_cast<uint32_t>(pModel->GetIndexAmount()), 1, 0, 0, 0);
 }
@@ -1155,15 +1155,15 @@ void D3D::VulkanRenderer::CreateDescriptorPool()
 {
 	std::array<VkDescriptorPoolSize, 2> poolSizes{};
 	poolSizes[0].type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-	poolSizes[0].descriptorCount = static_cast<uint32_t>(MAX_FRAMES_IN_FLIGHT);
+	poolSizes[0].descriptorCount = static_cast<uint32_t>(MAX_FRAMES_IN_FLIGHT * m_MaxDescriptorSets);
 	poolSizes[1].type = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
-	poolSizes[1].descriptorCount = static_cast<uint32_t>(MAX_FRAMES_IN_FLIGHT);
+	poolSizes[1].descriptorCount = static_cast<uint32_t>(MAX_FRAMES_IN_FLIGHT * m_MaxDescriptorSets);
 
 	VkDescriptorPoolCreateInfo poolInfo{};
 	poolInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
 	poolInfo.poolSizeCount = static_cast<uint32_t>(poolSizes.size());
 	poolInfo.pPoolSizes = poolSizes.data();
-	poolInfo.maxSets = static_cast<uint32_t>(MAX_FRAMES_IN_FLIGHT);
+	poolInfo.maxSets = static_cast<uint32_t>(MAX_FRAMES_IN_FLIGHT * m_MaxDescriptorSets);
 
 	if (vkCreateDescriptorPool(m_Device, &poolInfo, nullptr, &m_DescriptorPool) != VK_SUCCESS) {
 		throw std::runtime_error("failed to create descriptor pool!");
@@ -1547,6 +1547,28 @@ void D3D::VulkanRenderer::CopyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkD
 	vkCmdCopyBuffer(commandBuffer, srcBuffer, dstBuffer, 1, &copyRegion);
 
 	EndSingleTimeCommands(commandBuffer);
+}
+
+void D3D::VulkanRenderer::UpdateUniformBuffer(UniformBufferObject& buffer)
+{
+	glm::vec3 cameraPosition(0.0f, 0.0f, 0.0f);
+	glm::vec3 cameraScale(1.0f, 1.0f, 1.0f);
+	glm::vec3 cameraRotation(0.0f, 0.0f, 0.0f);
+
+	buffer.view = glm::mat4{ 1.0f }; // Identity matrix
+
+	// Apply translation
+	buffer.view = glm::translate(buffer.view, cameraPosition);
+
+	// Apply scaling
+	buffer.view = glm::scale(buffer.view, cameraScale);
+
+	// Apply rotation
+	buffer.view = glm::rotate(buffer.view, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+
+
+	buffer.proj = glm::perspective(glm::radians(45.0f), m_SwapChainExtent.width / static_cast<float>(m_SwapChainExtent.height), 0.1f, 10.0f);
+	buffer.proj[1][1] *= -1;
 }
 
 bool D3D::VulkanRenderer::HasStencilComponent(VkFormat format)
