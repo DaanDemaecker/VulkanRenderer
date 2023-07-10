@@ -1,4 +1,6 @@
-#pragma once
+#ifndef SingletonIncluded
+#define SingletonIncluded
+
 namespace D3D
 {
 	template <typename T>
@@ -21,3 +23,5 @@ namespace D3D
 		Singleton() = default;
 	};
 }
+
+#endif // !SingletonIncluded

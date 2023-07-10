@@ -1,4 +1,6 @@
-#pragma once
+#ifndef VulkanRendererIncluded
+#define VulkanRendererIncluded
+
 #include "Singleton.h"
 
 namespace D3D
@@ -269,3 +271,4 @@ namespace D3D
     };
 }
 
+#endif // !VulkanRendererIncluded

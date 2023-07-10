@@ -1,4 +1,6 @@
-#pragma once
+#ifndef ModelIncluded
+#define ModelIncluded
+
 
 namespace D3D
 {
@@ -63,3 +65,4 @@ namespace D3D
 	};
 }
 
+#endif // !ModelIncluded

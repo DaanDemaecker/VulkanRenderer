@@ -1,4 +1,7 @@
-#pragma once
+#ifndef D3DEngineIncluded
+#define D3DEngineIncluded
+
+
 #include <string>
 #include <functional>
 
@@ -30,3 +33,5 @@ namespace D3D
 		bool FrameBufferResized = false;
 	};
 }
+
+#endif // !D3DEngineIncluded
