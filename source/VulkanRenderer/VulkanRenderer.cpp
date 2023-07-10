@@ -45,12 +45,6 @@ void D3D::VulkanRenderer::Cleanup()
 
 	vkDestroyDescriptorSetLayout(m_Device, m_DescriptorSetLayout, nullptr);
 
-	for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; ++i)
-	{
-		vkDestroyBuffer(m_Device, m_UniformBuffers[i], nullptr);
-		vkFreeMemory(m_Device, m_UniformBuffersMemory[i], nullptr);
-	}
-
 	vkDestroyPipeline(m_Device, m_GraphicsPipeline, nullptr);
 
 	vkDestroyPipelineLayout(m_Device, m_PipeLineLayout, nullptr);
@@ -94,14 +88,12 @@ void D3D::VulkanRenderer::InitVulkan()
 	CreateDepthResources();
 	CreateFramebuffers();
 
-	CreateUniformBuffers();
 	CreateDescriptorPool();
 
 	CreateTextureImage();
 	CreateTextureImageView();
 	CreateTextureSampler();
 
-	CreateDescriptorSets();
 	CreateCommandBuffers();
 	CreateSyncObjects();
 }
@@ -227,8 +219,7 @@ void D3D::VulkanRenderer::RecordCommandBuffer(VkCommandBuffer& commandBuffer, ui
 
 	for (size_t i = 0; i < pModels.size(); ++i)
 	{
-		updateUniformBuffer(m_CurrentFrame, (i % 2) * 2 - 1);
-		pModels[i]->Render(commandBuffer, m_CurrentFrame, &m_DescriptorSets[m_CurrentFrame]);
+		pModels[i]->Render(commandBuffer, m_CurrentFrame);
 	}
 
 	vkCmdEndRenderPass(commandBuffer);
@@ -1134,23 +1125,6 @@ void D3D::VulkanRenderer::CreateFramebuffers()
 	}
 }
 
-void D3D::VulkanRenderer::CreateUniformBuffers()
-{
-	VkDeviceSize bufferSize = sizeof(UniformBufferObject);
-
-	m_UniformBuffers.resize(MAX_FRAMES_IN_FLIGHT);
-	m_UniformBuffersMemory.resize(MAX_FRAMES_IN_FLIGHT);
-	m_UniformBuffersMapped.resize(MAX_FRAMES_IN_FLIGHT);
-
-	for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; ++i)
-	{
-		CreateBuffer(bufferSize, VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
-			m_UniformBuffers[i], m_UniformBuffersMemory[i]);
-
-		vkMapMemory(m_Device, m_UniformBuffersMemory[i], 0, bufferSize, 0, &m_UniformBuffersMapped[i]);
-	}
-}
-
 void D3D::VulkanRenderer::CreateDescriptorPool()
 {
 	std::array<VkDescriptorPoolSize, 2> poolSizes{};
@@ -1167,54 +1141,6 @@ void D3D::VulkanRenderer::CreateDescriptorPool()
 
 	if (vkCreateDescriptorPool(m_Device, &poolInfo, nullptr, &m_DescriptorPool) != VK_SUCCESS) {
 		throw std::runtime_error("failed to create descriptor pool!");
-	}
-}
-
-void D3D::VulkanRenderer::CreateDescriptorSets()
-{
-	std::vector<VkDescriptorSetLayout> layouts(MAX_FRAMES_IN_FLIGHT, m_DescriptorSetLayout);
-	VkDescriptorSetAllocateInfo allocInfo{};
-	allocInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
-	allocInfo.descriptorPool = m_DescriptorPool;
-	allocInfo.descriptorSetCount = static_cast<uint32_t>(MAX_FRAMES_IN_FLIGHT);
-	allocInfo.pSetLayouts = layouts.data();
-
-	m_DescriptorSets.resize(MAX_FRAMES_IN_FLIGHT);
-	if (vkAllocateDescriptorSets(m_Device, &allocInfo, m_DescriptorSets.data()) != VK_SUCCESS)
-	{
-		throw std::runtime_error("failed to allocate descriptor sets!");
-	}
-
-	for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++) {
-		VkDescriptorBufferInfo bufferInfo{};
-		bufferInfo.buffer = m_UniformBuffers[i];
-		bufferInfo.offset = 0;
-		bufferInfo.range = sizeof(UniformBufferObject);
-
-		VkDescriptorImageInfo imageInfo{};
-		imageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
-		imageInfo.imageView = m_TextureImageView;
-		imageInfo.sampler = m_TextureSampler;
-
-		std::array<VkWriteDescriptorSet, 2> descriptorWrites{};
-
-		descriptorWrites[0].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-		descriptorWrites[0].dstSet = m_DescriptorSets[i];
-		descriptorWrites[0].dstBinding = 0;
-		descriptorWrites[0].dstArrayElement = 0;
-		descriptorWrites[0].descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-		descriptorWrites[0].descriptorCount = 1;
-		descriptorWrites[0].pBufferInfo = &bufferInfo;
-
-		descriptorWrites[1].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-		descriptorWrites[1].dstSet = m_DescriptorSets[i];
-		descriptorWrites[1].dstBinding = 1;
-		descriptorWrites[1].dstArrayElement = 0;
-		descriptorWrites[1].descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
-		descriptorWrites[1].descriptorCount = 1;
-		descriptorWrites[1].pImageInfo = &imageInfo;
-
-		vkUpdateDescriptorSets(m_Device, static_cast<uint32_t>(descriptorWrites.size()), descriptorWrites.data(), 0, nullptr);
 	}
 }
 
@@ -1780,20 +1706,4 @@ void D3D::VulkanRenderer::GenerateMipmaps(VkImage image, VkFormat imageFormat, i
 		1, &barrier);
 
 	EndSingleTimeCommands(commandBuffer);
-}
-
-void D3D::VulkanRenderer::updateUniformBuffer(uint32_t currentImage, int direction)
-{
-	static auto startTime = std::chrono::high_resolution_clock::now();
-
-	auto currentTime = std::chrono::high_resolution_clock::now();
-	float time = std::chrono::duration<float, std::chrono::seconds::period>(currentTime - startTime).count();
-
-	UniformBufferObject ubo{};
-	ubo.model = glm::rotate(glm::mat4(1.0f), direction * time * glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
-	ubo.view = glm::lookAt(glm::vec3(2.0, 2.0, 2.0), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
-	ubo.proj = glm::perspective(glm::radians(45.0f), m_SwapChainExtent.width / static_cast<float>(m_SwapChainExtent.height), 0.1f, 10.0f);
-	ubo.proj[1][1] *= -1;
-
-	memcpy(m_UniformBuffersMapped[currentImage], &ubo, sizeof(ubo));
 }

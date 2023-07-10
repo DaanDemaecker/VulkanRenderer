@@ -122,17 +122,9 @@ namespace D3D
         //--Framebuffers--
         std::vector<VkFramebuffer> m_SwapChainFramebuffers{};
 
-        //--Uniform buffers--
-        std::vector<VkBuffer> m_UniformBuffers{};
-        std::vector<VkDeviceMemory> m_UniformBuffersMemory{};
-        std::vector<void*> m_UniformBuffersMapped{};
-
         //--Descriptorpool--
         VkDescriptorPool m_DescriptorPool{};
-        uint32_t m_MaxDescriptorSets{10};
-        
-        //--DescriptorSets--
-        std::vector<VkDescriptorSet> m_DescriptorSets{};
+        uint32_t m_MaxDescriptorSets{8};
 
         //--Sync objects--
         std::vector<VkSemaphore> m_ImageAvailableSemaphores{};
@@ -240,14 +232,8 @@ namespace D3D
         //--Framebuffers--
         void CreateFramebuffers();
 
-        //--Uniform Buffers--
-        void CreateUniformBuffers();
-
         //--DescriptorPool--
         void CreateDescriptorPool();
-        
-        //--DescriptorSets--
-        void CreateDescriptorSets();
 
         //--CommandBuffers--
         void CreateCommandBuffers();
@@ -274,8 +260,6 @@ namespace D3D
         //Texture helpers
         void CopyBufferToImage(VkBuffer buffer, VkImage image, uint32_t width, uint32_t height);
         void GenerateMipmaps(VkImage image, VkFormat imageFormat, int32_t texWidth, int32_t texHeight, uint32_t mipLevels);
-
-        void updateUniformBuffer(uint32_t currentImage, int direction);
 
 
         uint32_t FindMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties);

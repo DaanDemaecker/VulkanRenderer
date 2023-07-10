@@ -43,7 +43,7 @@ D3D::Model::~Model()
 	}
 }
 
-void D3D::Model::Render(VkCommandBuffer& commandBuffer, uint32_t frame, const VkDescriptorSet* /*descriptorSet*/)
+void D3D::Model::Render(VkCommandBuffer& commandBuffer, uint32_t frame)
 {
 	if (m_UboChanged[frame])
 	{

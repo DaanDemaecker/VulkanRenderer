@@ -14,7 +14,7 @@ namespace D3D
 		Model& operator=(Model& other) = delete;
 		Model& operator=(Model&& other) = delete;
 
-		void Render(VkCommandBuffer& commandBuffer, uint32_t frame, const VkDescriptorSet* descriptorSet);
+		void Render(VkCommandBuffer& commandBuffer, uint32_t frame);
 
 		//Getters for rendering
 		const VkBuffer& GetVertexBuffer() const { return m_VertexBuffer; }
