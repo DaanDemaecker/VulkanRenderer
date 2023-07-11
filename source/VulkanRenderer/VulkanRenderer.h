@@ -29,7 +29,7 @@ namespace D3D
         VkCommandPool& GetCommandPool() { return m_CommandPool; }
         VkDescriptorSetLayout& GetDescriptorSetLayout() { return m_DescriptorSetLayout; }
         VkDescriptorPool& GetDescriptorPool() { return m_DescriptorPool; }
-        VkImageView& GetImageView() { return m_TextureImageView; }
+        VkImageView& GetDefaultImageView() { return m_DefaultTextureImageView; }
         VkSampler& GetSampler() { return m_TextureSampler; }
 
         //Public Helpers
@@ -143,14 +143,17 @@ namespace D3D
         uint32_t m_CurrentFrame = 0;
 
 
-        //Texture
-        VkImage m_TextureImage{};
-        VkDeviceMemory m_TextureImageMemory{};
-
-        VkImageView m_TextureImageView{};
-        VkSampler m_TextureSampler{};
-
+        //DefaultTexture
+        VkImage m_DefaultTextureImage{};
+        VkDeviceMemory m_DefaultTextureImageMemory{};
+        VkImageView m_DefaultTextureImageView{};
         uint32_t m_MipLevels{};
+
+        const std::string m_DefaultTextureName{ "../resources/DefaultResources/DefaultTexture.png" };
+        
+
+
+        VkSampler m_TextureSampler{};
 
 
         //----Member Functions----

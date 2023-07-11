@@ -212,7 +212,7 @@ VkImageView& D3D::Model::GetImageView()
 		return m_pMaterial->GetImageView();
 	}
 
-	return VulkanRenderer::GetInstance().GetImageView();
+	return VulkanRenderer::GetInstance().GetDefaultImageView();
 }
 
 VkSampler& D3D::Model::GetSampler()

@@ -36,9 +36,9 @@ void D3D::VulkanRenderer::Cleanup()
 	CleanupSwapChain();
 
 	vkDestroySampler(m_Device, m_TextureSampler, nullptr);
-	vkDestroyImageView(m_Device, m_TextureImageView, nullptr);
-	vkDestroyImage(m_Device, m_TextureImage, nullptr);
-	vkFreeMemory(m_Device, m_TextureImageMemory, nullptr);
+	vkDestroyImageView(m_Device, m_DefaultTextureImageView, nullptr);
+	vkDestroyImage(m_Device, m_DefaultTextureImage, nullptr);
+	vkFreeMemory(m_Device, m_DefaultTextureImageMemory, nullptr);
 
 	vkDestroyDescriptorPool(m_Device, m_DescriptorPool, nullptr);
 
@@ -61,7 +61,7 @@ void D3D::VulkanRenderer::Cleanup()
 
 	vkDestroyDevice(m_Device, nullptr);
 
-	if (enableValidationLayers)
+	if (m_EnableValidationLayers)
 	{
 		DestroyDebugUtilsMessegerEXT(m_Instance, m_DebugMessenger, nullptr);
 	}
@@ -273,7 +273,7 @@ void D3D::VulkanRenderer::CreateInstance()
 	createInfo.ppEnabledExtensionNames = extensions.data();
 
 	VkDebugUtilsMessengerCreateInfoEXT debugCreateInfo{};
-	if (enableValidationLayers)
+	if (m_EnableValidationLayers)
 	{
 		createInfo.enabledLayerCount = static_cast<uint32_t>(m_ValidationLayers.size());
 		createInfo.ppEnabledLayerNames = m_ValidationLayers.data();
@@ -345,7 +345,7 @@ VKAPI_ATTR VkBool32 VKAPI_CALL D3D::VulkanRenderer::debugCallback(VkDebugUtilsMe
 
 void D3D::VulkanRenderer::SetupDebugMessenger()
 {
-	if (!enableValidationLayers)
+	if (!m_EnableValidationLayers)
 		return;
 
 	VkDebugUtilsMessengerCreateInfoEXT createInfo{};
@@ -390,7 +390,7 @@ std::vector<const char*> D3D::VulkanRenderer::GetRequiredExtensions()
 
 	std::vector<const char*> extensions(glfwExtensions, glfwExtensions + glfwExtensionCount);
 
-	if (enableValidationLayers)
+	if (m_EnableValidationLayers)
 	{
 		extensions.push_back(VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
 	}
@@ -583,7 +583,7 @@ void D3D::VulkanRenderer::CreateLogicalDevice()
 	createInfo.enabledExtensionCount = static_cast<uint32_t>(m_DeviceExtensions.size());
 	createInfo.ppEnabledExtensionNames = m_DeviceExtensions.data();
 
-	if (enableValidationLayers)
+	if (m_EnableValidationLayers)
 	{
 		createInfo.enabledLayerCount = static_cast<uint32_t>(m_ValidationLayers.size());
 		createInfo.ppEnabledLayerNames = m_ValidationLayers.data();
@@ -1505,7 +1505,7 @@ void D3D::VulkanRenderer::CreateTextureImage()
 {
 	int texWidth, texHeight, texChannels;
 
-	stbi_uc* pixels = stbi_load(Texture_PATH.c_str(), &texWidth, &texHeight, &texChannels, STBI_rgb_alpha);
+	stbi_uc* pixels = stbi_load(m_DefaultTextureName.c_str(), &texWidth, &texHeight, &texChannels, STBI_rgb_alpha);
 
 	m_MipLevels = static_cast<uint32_t>(std::floor(std::log2(std::max(texWidth, texHeight)))) + 1;
 
@@ -1532,22 +1532,22 @@ void D3D::VulkanRenderer::CreateTextureImage()
 
 	CreateImage(texWidth, texHeight, m_MipLevels, VK_SAMPLE_COUNT_1_BIT, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_TILING_OPTIMAL,
 		VK_IMAGE_USAGE_TRANSFER_SRC_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT,
-		m_TextureImage, m_TextureImageMemory);
+		m_DefaultTextureImage, m_DefaultTextureImageMemory);
 
-	TransitionImageLayout(m_TextureImage, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, m_MipLevels);
-	CopyBufferToImage(stagingBuffer, m_TextureImage, static_cast<uint32_t>(texWidth), static_cast<uint32_t>(texHeight));
+	TransitionImageLayout(m_DefaultTextureImage, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, m_MipLevels);
+	CopyBufferToImage(stagingBuffer, m_DefaultTextureImage, static_cast<uint32_t>(texWidth), static_cast<uint32_t>(texHeight));
 
 	///transitionImageLayout(m_TextureImage, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, m_MipLevels);
 
 	vkDestroyBuffer(m_Device, stagingBuffer, nullptr);
 	vkFreeMemory(m_Device, stagingBufferMemory, nullptr);
 
-	GenerateMipmaps(m_TextureImage, VK_FORMAT_R8G8B8A8_SRGB, texWidth, texHeight, m_MipLevels);
+	GenerateMipmaps(m_DefaultTextureImage, VK_FORMAT_R8G8B8A8_SRGB, texWidth, texHeight, m_MipLevels);
 }
 
 void D3D::VulkanRenderer::CreateTextureImageView()
 {
-	m_TextureImageView = CreateImageView(m_TextureImage, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_ASPECT_COLOR_BIT, m_MipLevels);
+	m_DefaultTextureImageView = CreateImageView(m_DefaultTextureImage, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_ASPECT_COLOR_BIT, m_MipLevels);
 }
 
 void D3D::VulkanRenderer::CreateTextureSampler()

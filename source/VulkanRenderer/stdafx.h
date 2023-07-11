@@ -20,12 +20,4 @@
 
 #include "Structs.h"
 
-#ifdef NDEBUG
-const bool enableValidationLayers = false;
-#else
-const bool enableValidationLayers = true;
-#endif // NDEBUG
 const int MAX_FRAMES_IN_FLIGHT = 2;
-
-const std::string MODEL_PATH = "../Resources/Models/viking_room.obj";
-const std::string Texture_PATH = "../Resources/Images/viking_room.png";
