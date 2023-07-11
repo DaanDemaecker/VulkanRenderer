@@ -4,6 +4,8 @@
 
 namespace D3D
 {
+	class Material;
+
 	class Model
 	{
 	public:
@@ -15,6 +17,8 @@ namespace D3D
 
 		Model& operator=(Model& other) = delete;
 		Model& operator=(Model&& other) = delete;
+
+		void SetMaterial(std::shared_ptr<Material> pMaterial);
 
 		void Render(VkCommandBuffer& commandBuffer, uint32_t frame);
 
@@ -55,13 +59,23 @@ namespace D3D
 		VkBuffer m_IndexBuffer{};
 		VkDeviceMemory m_IndexBufferMemory{};
 
+		//Material
+		std::shared_ptr<Material> m_pMaterial{};
+
 		//Initialization functions
 		void CreateVertexBuffer();
 		void CreateIndexBuffer();
 		void CreateUniformBuffers();
 		void CreateDescriptorSets();
 
+		void UpdateDescriptorSets();
+
 		void UpdateUniformBuffer(uint32_t frame);
+
+
+		//Texture functions
+		VkImageView& GetImageView();
+		VkSampler& GetSampler();
 	};
 }
 

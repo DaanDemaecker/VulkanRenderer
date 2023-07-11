@@ -2,6 +2,7 @@
 #include "D3DEngine.h"
 #include "VulkanRenderer.h"
 #include "Model.h"
+#include "Material.h"
 
 D3D::Window g_pWindow{};
 
@@ -24,12 +25,17 @@ void D3D::D3DEngine::Run(const std::function<void()>& load)
 
 	auto& renderer{ VulkanRenderer::GetInstance() };
 
+	std::shared_ptr<D3D::Material> pVikingMaterial{ std::make_shared<D3D::Material>("../resources/images/viking_room.png") };
+	std::shared_ptr<D3D::Material> pVehicleMaterial{std::make_shared<D3D::Material>("../resources/images/vehicle_diffuse.png")};
+
 	std::vector<std::unique_ptr<Model>> pModels{};
 	pModels.push_back(std::make_unique<Model>());
+	pModels[0]->SetMaterial(pVikingMaterial);
 	pModels[0]->SetPosition(1.f, -0.2f, 5.f);
 	pModels[0]->SetRotation(glm::radians(-90.0f), glm::radians(45.0f), 0.f);
 	pModels[0]->SetScale(0.75f, 0.75f, 0.75f);
 	pModels.push_back(std::make_unique<Model>(false));
+	pModels[1]->SetMaterial(pVehicleMaterial);
 	pModels[1]->SetPosition(-1.f, 0, 5.f);
 	pModels[1]->SetRotation(0.f, glm::radians(75.0f), 0.f);
 	pModels[1]->SetScale(0.05f, 0.05f, 0.05f);

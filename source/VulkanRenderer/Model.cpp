@@ -3,6 +3,7 @@
 #include "VulkanHelpers.h"
 #include "VulkanRenderer.h"
 #include "Utils.h"
+#include "Material.h"
 
 #include <memory>
 
@@ -41,6 +42,12 @@ D3D::Model::~Model()
 		vkDestroyBuffer(device, m_UboBuffers[i], nullptr);
 		vkFreeMemory(device, m_UbosMemory[i], nullptr);
 	}
+}
+
+void D3D::Model::SetMaterial(std::shared_ptr<Material> pMaterial)
+{
+	m_pMaterial = pMaterial;
+	UpdateDescriptorSets();
 }
 
 void D3D::Model::Render(VkCommandBuffer& commandBuffer, uint32_t frame)
@@ -143,6 +150,11 @@ void D3D::Model::CreateDescriptorSets()
 		throw std::runtime_error("failed to allocate descriptor sets!");
 	}
 
+	UpdateDescriptorSets();
+}
+
+void D3D::Model::UpdateDescriptorSets()
+{
 	for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++) {
 		VkDescriptorBufferInfo bufferInfo{};
 		bufferInfo.buffer = m_UboBuffers[i];
@@ -151,8 +163,8 @@ void D3D::Model::CreateDescriptorSets()
 
 		VkDescriptorImageInfo imageInfo{};
 		imageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
-		imageInfo.imageView = renderer.GetImageView();
-		imageInfo.sampler = renderer.GetSampler();
+		imageInfo.imageView = GetImageView();
+		imageInfo.sampler = GetSampler();
 
 		std::array<VkWriteDescriptorSet, 2> descriptorWrites{};
 
@@ -172,7 +184,7 @@ void D3D::Model::CreateDescriptorSets()
 		descriptorWrites[1].descriptorCount = 1;
 		descriptorWrites[1].pImageInfo = &imageInfo;
 
-		vkUpdateDescriptorSets(renderer.GetDevice(), static_cast<uint32_t>(descriptorWrites.size()), descriptorWrites.data(), 0, nullptr);
+		vkUpdateDescriptorSets(VulkanRenderer::GetInstance().GetDevice(), static_cast<uint32_t>(descriptorWrites.size()), descriptorWrites.data(), 0, nullptr);
 	}
 }
 
@@ -193,4 +205,19 @@ void D3D::Model::UpdateUniformBuffer(uint32_t frame)
 	m_UboChanged[frame] = false;
 
 	memcpy(m_UbosMapped[frame], &m_Ubos[frame], sizeof(m_Ubos[frame]));
+}
+
+VkImageView& D3D::Model::GetImageView()
+{
+	if (m_pMaterial != nullptr)
+	{
+		return m_pMaterial->GetImageView();
+	}
+
+	return VulkanRenderer::GetInstance().GetImageView();
+}
+
+VkSampler& D3D::Model::GetSampler()
+{
+	return VulkanRenderer::GetInstance().GetSampler();
 }
