@@ -30,11 +30,14 @@ void D3D::D3DEngine::Run(const std::function<void()>& load)
 
 	std::vector<std::unique_ptr<Model>> pModels{};
 	pModels.push_back(std::make_unique<Model>());
+	pModels[0]->LoadModel("../Resources/Models/viking_room.obj");
 	pModels[0]->SetMaterial(pVikingMaterial);
 	pModels[0]->SetPosition(1.f, -0.2f, 5.f);
 	pModels[0]->SetRotation(glm::radians(-90.0f), glm::radians(45.0f), 0.f);
 	pModels[0]->SetScale(0.75f, 0.75f, 0.75f);
-	pModels.push_back(std::make_unique<Model>(false));
+
+	pModels.push_back(std::make_unique<Model>());
+	pModels[1]->LoadModel("../Resources/Models/vehicle.obj");
 	pModels[1]->SetMaterial(pVehicleMaterial);
 	pModels[1]->SetPosition(-1.f, 0, 5.f);
 	pModels[1]->SetRotation(0.f, glm::radians(75.0f), 0.f);

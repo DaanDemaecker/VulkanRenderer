@@ -9,7 +9,7 @@ namespace D3D
 	class Model
 	{
 	public:
-		Model(bool normal = true);
+		Model();
 		~Model();
 
 		Model(Model& other) = delete;
@@ -18,6 +18,7 @@ namespace D3D
 		Model& operator=(Model& other) = delete;
 		Model& operator=(Model&& other) = delete;
 
+		void LoadModel(const std::string& textPath);
 		void SetMaterial(std::shared_ptr<Material> pMaterial);
 
 		void Render(VkCommandBuffer& commandBuffer, uint32_t frame);
@@ -34,6 +35,8 @@ namespace D3D
 
 	private:
 		//Member variables
+		bool m_Initialized{ false };
+
 		glm::vec3 m_Rotation{};
 		glm::vec3 m_Position{};
 		glm::vec3 m_Scale{ 1, 1, 1 };
@@ -76,6 +79,8 @@ namespace D3D
 		//Texture functions
 		VkImageView& GetImageView();
 		VkSampler& GetSampler();
+
+		void Cleanup();
 	};
 }
 

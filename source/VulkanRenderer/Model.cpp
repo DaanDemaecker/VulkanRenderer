@@ -7,51 +7,49 @@
 
 #include <memory>
 
-D3D::Model::Model(bool normal)
+D3D::Model::Model()
 {
-	if (normal)
-	{
-		Utils::LoadModel("../Resources/Models/viking_room.obj", m_Vertices, m_Indices);
-	}
-	else
-	{
-		Utils::LoadModel("../Resources/Models/vehicle.obj", m_Vertices, m_Indices);
-	}
-	CreateVertexBuffer();
-	CreateIndexBuffer();
-
-	CreateUniformBuffers();
-
-	CreateDescriptorSets();
 }
 
 D3D::Model::~Model()
 {
-	auto device = D3D::VulkanRenderer::GetInstance().GetDevice();
-
-	vkDeviceWaitIdle(device);
-
-	vkDestroyBuffer(device, m_IndexBuffer, nullptr);
-	vkFreeMemory(device, m_IndexBufferMemory, nullptr);
-
-	vkDestroyBuffer(device, m_VertexBuffer, nullptr);
-	vkFreeMemory(device, m_VertexBufferMemory, nullptr);
-
-	for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; ++i)
+	if (m_Initialized)
 	{
-		vkDestroyBuffer(device, m_UboBuffers[i], nullptr);
-		vkFreeMemory(device, m_UbosMemory[i], nullptr);
+		Cleanup();
 	}
+}
+
+void D3D::Model::LoadModel(const std::string& textPath)
+{
+	if (m_Initialized)
+	{
+		m_Initialized = false;
+		Cleanup();
+	}
+
+	Utils::LoadModel(textPath, m_Vertices, m_Indices);
+	CreateVertexBuffer();
+	CreateIndexBuffer();
+	CreateUniformBuffers();
+	CreateDescriptorSets();
+
+	m_Initialized = true;
 }
 
 void D3D::Model::SetMaterial(std::shared_ptr<Material> pMaterial)
 {
 	m_pMaterial = pMaterial;
-	UpdateDescriptorSets();
+	if (m_Initialized)
+	{
+		UpdateDescriptorSets();
+	}
 }
 
 void D3D::Model::Render(VkCommandBuffer& commandBuffer, uint32_t frame)
 {
+	if (!m_Initialized)
+		return;
+
 	if (m_UboChanged[frame])
 	{
 		UpdateUniformBuffer(frame);
@@ -220,4 +218,23 @@ VkImageView& D3D::Model::GetImageView()
 VkSampler& D3D::Model::GetSampler()
 {
 	return VulkanRenderer::GetInstance().GetSampler();
+}
+
+void D3D::Model::Cleanup()
+{
+	auto device = D3D::VulkanRenderer::GetInstance().GetDevice();
+
+	vkDeviceWaitIdle(device);
+
+	vkDestroyBuffer(device, m_IndexBuffer, nullptr);
+	vkFreeMemory(device, m_IndexBufferMemory, nullptr);
+
+	vkDestroyBuffer(device, m_VertexBuffer, nullptr);
+	vkFreeMemory(device, m_VertexBufferMemory, nullptr);
+
+	for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; ++i)
+	{
+		vkDestroyBuffer(device, m_UboBuffers[i], nullptr);
+		vkFreeMemory(device, m_UbosMemory[i], nullptr);
+	}
 }
