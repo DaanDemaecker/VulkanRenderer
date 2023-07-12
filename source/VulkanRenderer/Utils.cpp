@@ -66,8 +66,14 @@ void Utils::LoadModel(const std::string& filename, std::vector<Vertex>& vertices
 			};
 
 			vertex.texCoord = {
-				attrib.texcoords[static_cast<uint64_t>(2) * index.texcoord_index + 0],
+				attrib.texcoords[static_cast<uint64_t>(2) * index.texcoord_index],
 				1.0f - attrib.texcoords[static_cast<uint64_t>(2) * index.texcoord_index + 1]
+			};
+
+			vertex.normal = {
+				attrib.normals[static_cast<uint64_t>(3) * index.normal_index],
+				attrib.normals[static_cast<uint64_t>(3) * index.normal_index + static_cast<uint64_t>(1)],
+				attrib.normals[static_cast<uint64_t>(3) * index.normal_index + static_cast<uint64_t>(2)]
 			};
 
 			vertex.color = { 1.0f, 1.0f, 1.0f };

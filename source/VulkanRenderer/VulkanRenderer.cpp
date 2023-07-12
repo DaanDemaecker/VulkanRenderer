@@ -200,8 +200,6 @@ void D3D::VulkanRenderer::RecordCommandBuffer(VkCommandBuffer& commandBuffer, ui
 
 	vkCmdBeginRenderPass(commandBuffer, &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
 
-	vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, m_GraphicsPipeline);
-
 	VkViewport viewport{};
 	viewport.x = 0.0f;
 	viewport.y = 0.0f;
