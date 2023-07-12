@@ -76,7 +76,7 @@ void Utils::LoadModel(const std::string& filename, std::vector<Vertex>& vertices
 				attrib.normals[static_cast<uint64_t>(3) * index.normal_index + static_cast<uint64_t>(2)]
 			};
 
-			vertex.color = { 1.0f, 1.0f, 1.0f };
+			vertex.color = { 1.0f, 0.0f, 0.0f };
 
 			if (uniqueVertices.count(vertex) == 0)
 			{

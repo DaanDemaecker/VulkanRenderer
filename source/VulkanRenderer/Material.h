@@ -7,7 +7,7 @@ namespace D3D
 	class Material
 	{
 	public:
-		Material(const std::string& filePath);
+		Material(const std::string& filePath, const std::string& pipelineName = "Default");
 		~Material();
 
 		Material() = delete;
@@ -20,6 +20,7 @@ namespace D3D
 	
 		VkImageView& GetImageView() { return m_TextureImageView; }
 		VkSampler& GetSampler() { return m_TextureSampler; }
+		PipelinePair& GetPipeline() { return m_PipelinePair; }
 
 	private:
 		VkImage m_TextureImage{};
@@ -29,6 +30,8 @@ namespace D3D
 		VkSampler m_TextureSampler{};
 
 		uint32_t m_MipLevels{};
+
+		PipelinePair m_PipelinePair{};
 
 		//Initialization functions
 		void CreateTextureImage(const std::string& filePath);

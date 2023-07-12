@@ -34,6 +34,12 @@ struct SwapChainSupportDetails
 	std::vector<VkPresentModeKHR> presentModes{};
 };
 
+struct PipelinePair
+{
+	VkPipeline pipeline{};
+	VkPipelineLayout pipelineLayout{};
+};
+
 struct Vertex
 {
 	glm::vec3 pos;

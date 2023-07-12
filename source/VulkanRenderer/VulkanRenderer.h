@@ -21,8 +21,9 @@ namespace D3D
 
         void Render(std::vector<std::unique_ptr<Model>>& pModels);
 
-        void Render(Model* pModel, VkCommandBuffer& commandBuffer, const VkDescriptorSet* descriptorSet);
-
+        void Render(Model* pModel, VkCommandBuffer& commandBuffer, const VkDescriptorSet* descriptorSet, const PipelinePair& pipeline);
+        
+        void AddGraphicsPipeline(const std::string& pipelineName, const std::string& vertShaderName, const std::string& fragShaderName);
 
         //Public getters
         VkDevice& GetDevice() {return m_Device; }
@@ -31,6 +32,7 @@ namespace D3D
         VkDescriptorPool& GetDescriptorPool() { return m_DescriptorPool; }
         VkImageView& GetDefaultImageView() { return m_DefaultTextureImageView; }
         VkSampler& GetSampler() { return m_TextureSampler; }
+        PipelinePair& GetPipeline(const std::string& name = "Default");
 
         //Public Helpers
         void CreateBuffer(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VkBuffer& buffer, VkDeviceMemory& bufferMemory);
@@ -103,10 +105,12 @@ namespace D3D
         VkDescriptorSetLayout m_DescriptorSetLayout{};
 
         //--GraphicsPipeline--
-        VkPipeline m_GraphicsPipeline{};
+        //VkPipeline m_GraphicsPipeline{};
+        std::map<std::string, PipelinePair> m_GraphicPipelines{};
 
-        //-PipelineLayout-
-        VkPipelineLayout m_PipeLineLayout{};
+        const std::string m_DefaultPipelineName{"Default"};
+        const std::string m_DefaultVertName{ "../resources/DefaultResources/DefaultVert.spv" };
+        const std::string m_DefaultFragName{ "../resources/DefaultResources/DefaultFrag.spv" };
 
         //--CommandPool--
         VkCommandPool m_CommandPool{};
@@ -217,9 +221,6 @@ namespace D3D
 
         //--Descriptor Layout
         void CreateDescriptorLayout();
-
-        //--Graphics Pipeline--
-        void CreateGraphicsPipeline();
 
         //-Shader Module-
         VkShaderModule CreateShaderModule(const std::vector<char>& code);

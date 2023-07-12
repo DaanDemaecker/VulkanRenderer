@@ -5,8 +5,10 @@
 
 #include <stb_image.h>
 
-D3D::Material::Material(const std::string& filePath)
+D3D::Material::Material(const std::string& filePath, const std::string& pipelineName)
 {
+	m_PipelinePair = VulkanRenderer::GetInstance().GetPipeline(pipelineName);
+
 	CreateTextureImage(filePath);
 	CreateTextureImageView();
 	CreateTextureSampler();

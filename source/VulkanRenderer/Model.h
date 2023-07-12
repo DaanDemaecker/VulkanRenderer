@@ -79,6 +79,7 @@ namespace D3D
 		//Texture functions
 		VkImageView& GetImageView();
 		VkSampler& GetSampler();
+		PipelinePair& GetPipeline();
 
 		void Cleanup();
 	};

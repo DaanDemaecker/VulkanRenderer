@@ -54,7 +54,8 @@ void D3D::Model::Render(VkCommandBuffer& commandBuffer, uint32_t frame)
 	{
 		UpdateUniformBuffer(frame);
 	}
-	VulkanRenderer::GetInstance().Render(this, commandBuffer, &m_DescriptorSets[frame]);
+
+	VulkanRenderer::GetInstance().Render(this, commandBuffer, &m_DescriptorSets[frame], GetPipeline());
 }
 
 void D3D::Model::CreateVertexBuffer()
@@ -218,6 +219,16 @@ VkImageView& D3D::Model::GetImageView()
 VkSampler& D3D::Model::GetSampler()
 {
 	return VulkanRenderer::GetInstance().GetSampler();
+}
+
+PipelinePair& D3D::Model::GetPipeline()
+{
+	if (m_pMaterial != nullptr)
+	{
+		return m_pMaterial->GetPipeline();
+	}
+
+	return VulkanRenderer::GetInstance().GetPipeline();
 }
 
 void D3D::Model::Cleanup()
