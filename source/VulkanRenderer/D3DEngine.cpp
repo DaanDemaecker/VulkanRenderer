@@ -25,11 +25,7 @@ void D3D::D3DEngine::Run(const std::function<void()>& load)
 
 	auto& renderer{ VulkanRenderer::GetInstance() };
 
-	std::string diffusePipelineName{"Diffuse"};
-
-	renderer.AddGraphicsPipeline(diffusePipelineName, "../Resources/Shaders/vert.spv", "../Resources/Shaders/frag.spv");
-
-	std::shared_ptr<D3D::Material> pVikingMaterial{ std::make_shared<D3D::Material>("../resources/images/viking_room.png", diffusePipelineName) };
+	std::shared_ptr<D3D::Material> pVikingMaterial{ std::make_shared<D3D::Material>("../resources/images/viking_room.png") };
 	std::shared_ptr<D3D::Material> pVehicleMaterial{std::make_shared<D3D::Material>("../resources/images/vehicle_diffuse.png")};
 
 	std::vector<std::unique_ptr<Model>> pModels{};
