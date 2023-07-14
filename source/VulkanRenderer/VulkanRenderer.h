@@ -109,8 +109,8 @@ namespace D3D
         std::map<std::string, PipelinePair> m_GraphicPipelines{};
 
         const std::string m_DefaultPipelineName{"Default"};
-        const std::string m_DefaultVertName{ "../resources/DefaultResources/DefaultVert.spv" };
-        const std::string m_DefaultFragName{ "../resources/DefaultResources/DefaultFrag.spv" };
+        const std::string m_DefaultVertName{ "../resources/DefaultResources/Default.Vert.spv" };
+        const std::string m_DefaultFragName{ "../resources/DefaultResources/Default.Frag.spv" };
 
         //--CommandPool--
         VkCommandPool m_CommandPool{};
