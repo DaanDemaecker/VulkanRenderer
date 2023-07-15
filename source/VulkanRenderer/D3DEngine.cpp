@@ -1,8 +1,10 @@
 #include "stdafx.h"
 #include "D3DEngine.h"
 #include "VulkanRenderer.h"
+#include "TimeManager.h"
 #include "Model.h"
 #include "Material.h"
+#include <chrono>
 
 D3D::Window g_pWindow{};
 
@@ -43,15 +45,49 @@ void D3D::D3DEngine::Run(const std::function<void()>& load)
 	pModels[1]->SetRotation(0.f, glm::radians(75.0f), 0.f);
 	pModels[1]->SetScale(0.05f, 0.05f, 0.05f);
 
+	auto& time{ TimeManager::GetInstance() };
+
+
+	auto lastTime = std::chrono::high_resolution_clock::now();
+
+	//float lag = 0.0f;
+	constexpr float fixedTimeStep = 0.02f;
+
+	time.SetFixedTime(fixedTimeStep);
+
+	bool capFrameRate{ true };
+	constexpr float desiredFrameRate = 144;
+	constexpr float desiredFrameDuration = 1000.f / desiredFrameRate;
+
 	bool shouldQuit{false};
 
 	while (!shouldQuit)
 	{
+		const auto currentTime = std::chrono::high_resolution_clock::now();
+		const float deltaTime = std::chrono::duration<float>(currentTime - lastTime).count();
+
+		lastTime = currentTime;
+
+		time.SetDeltaTime(deltaTime);
+
 		glfwPollEvents();
+
+		for (auto& pModel : pModels)
+		{
+			pModel->Update();
+		}
 
 		renderer.Render(pModels);
 
 		shouldQuit = glfwWindowShouldClose(g_pWindow.pWindow);
+
+
+		if (capFrameRate)
+		{
+			const auto frameDuration{ std::chrono::high_resolution_clock::now() - lastTime };
+			const auto sleepTime{ std::chrono::milliseconds(static_cast<int>(desiredFrameDuration)) - frameDuration };
+			std::this_thread::sleep_for(sleepTime);
+		}
 	}
 }
 

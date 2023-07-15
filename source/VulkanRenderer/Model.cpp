@@ -1,9 +1,9 @@
 #include "stdafx.h"
 #include "Model.h"
-#include "VulkanHelpers.h"
 #include "VulkanRenderer.h"
 #include "Utils.h"
 #include "Material.h"
+#include "TimeManager.h"
 
 #include <memory>
 
@@ -45,6 +45,15 @@ void D3D::Model::SetMaterial(std::shared_ptr<Material> pMaterial)
 	}
 }
 
+void D3D::Model::Update()
+{
+	constexpr float rotSpeed{glm::radians(90.f)};
+
+	float rotAmount{rotSpeed * TimeManager::GetInstance().GetDeltaTime()};
+
+	SetRotation(m_Rotation.x, m_Rotation.y + rotAmount , m_Rotation.z);
+}
+
 void D3D::Model::Render(VkCommandBuffer& commandBuffer, uint32_t frame)
 {
 	if (!m_Initialized)
@@ -56,6 +65,24 @@ void D3D::Model::Render(VkCommandBuffer& commandBuffer, uint32_t frame)
 	}
 
 	VulkanRenderer::GetInstance().Render(this, commandBuffer, &m_DescriptorSets[frame], GetPipeline());
+}
+
+void D3D::Model::SetPosition(float x, float y, float z)
+{
+	m_Position = { x, y, z };
+	SetDirtyFlags();
+}
+
+void D3D::Model::SetRotation(float x, float y, float z)
+{
+	m_Rotation = { x, y, z };
+	SetDirtyFlags();
+}
+
+void D3D::Model::SetScale(float x, float y, float z)
+{
+	m_Scale = { x, y, z };
+	SetDirtyFlags();
 }
 
 void D3D::Model::CreateVertexBuffer()
@@ -120,7 +147,7 @@ void D3D::Model::CreateUniformBuffers()
 	m_Ubos.resize(MAX_FRAMES_IN_FLIGHT);
 	m_UboChanged.resize(MAX_FRAMES_IN_FLIGHT);
 
-	std::fill(m_UboChanged.begin(), m_UboChanged.end(), true);
+	SetDirtyFlags();
 
 
 	for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; ++i)
@@ -248,4 +275,9 @@ void D3D::Model::Cleanup()
 		vkDestroyBuffer(device, m_UboBuffers[i], nullptr);
 		vkFreeMemory(device, m_UbosMemory[i], nullptr);
 	}
+}
+
+void D3D::Model::SetDirtyFlags()
+{
+	std::fill(m_UboChanged.begin(), m_UboChanged.end(), true);
 }

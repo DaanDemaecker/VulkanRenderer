@@ -170,6 +170,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Material.cpp" />
     <ClCompile Include="Model.cpp" />
+    <ClCompile Include="TimeManager.cpp" />
     <ClCompile Include="Utils.cpp" />
     <ClCompile Include="VulkanRenderer.cpp" />
   </ItemGroup>
@@ -180,6 +181,7 @@
     <ClInclude Include="Singleton.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="Structs.h" />
+    <ClInclude Include="TimeManager.h" />
     <ClInclude Include="Utils.h" />
     <ClInclude Include="VulkanRenderer.h" />
   </ItemGroup>

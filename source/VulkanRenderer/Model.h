@@ -21,6 +21,8 @@ namespace D3D
 		void LoadModel(const std::string& textPath);
 		void SetMaterial(std::shared_ptr<Material> pMaterial);
 
+		void Update();
+
 		void Render(VkCommandBuffer& commandBuffer, uint32_t frame);
 
 		//Getters for rendering
@@ -29,9 +31,9 @@ namespace D3D
 		size_t GetIndexAmount() const { return m_Indices.size(); }
 
 		//Transform functions
-		void SetPosition(float x, float y, float z) { m_Position = { x, y, z }; }
-		void SetRotation(float x, float y, float z) { m_Rotation = { x, y, z }; }
-		void SetScale(float x, float y, float z) { m_Scale = { x, y, z }; }
+		void SetPosition(float x, float y, float z);
+		void SetRotation(float x, float y, float z);
+		void SetScale(float x, float y, float z);
 
 	private:
 		//Member variables
@@ -82,6 +84,8 @@ namespace D3D
 		PipelinePair& GetPipeline();
 
 		void Cleanup();
+
+		void SetDirtyFlags();
 	};
 }
 
