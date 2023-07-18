@@ -33,6 +33,8 @@ namespace D3D
         VkImageView& GetDefaultImageView() { return m_DefaultTextureImageView; }
         VkSampler& GetSampler() { return m_TextureSampler; }
         PipelinePair& GetPipeline(const std::string& name = "Default");
+        VkCommandBuffer& GetCurrentCommandBuffer() { return m_CommandBuffers[m_CurrentFrame]; }
+        uint32_t GetCurrentFrame() const { return  m_CurrentFrame; }
 
         //Public Helpers
         void CreateBuffer(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VkBuffer& buffer, VkDeviceMemory& bufferMemory);
@@ -154,10 +156,9 @@ namespace D3D
         uint32_t m_MipLevels{};
 
         const std::string m_DefaultTextureName{ "../resources/DefaultResources/DefaultTexture.png" };
-        
-
 
         VkSampler m_TextureSampler{};
+
 
 
         //----Member Functions----

@@ -393,7 +393,7 @@ void D3D::VulkanRenderer::RecordCommandBuffer(VkCommandBuffer& commandBuffer, ui
 
 	for (size_t i = 0; i < pModels.size(); ++i)
 	{
-		pModels[i]->Render(commandBuffer, m_CurrentFrame);
+		pModels[i]->Render();
 	}
 
 	vkCmdEndRenderPass(commandBuffer);

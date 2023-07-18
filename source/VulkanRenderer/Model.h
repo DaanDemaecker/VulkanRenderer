@@ -23,7 +23,7 @@ namespace D3D
 
 		void Update();
 
-		void Render(VkCommandBuffer& commandBuffer, uint32_t frame);
+		void Render();
 
 		//Getters for rendering
 		const VkBuffer& GetVertexBuffer() const { return m_VertexBuffer; }
