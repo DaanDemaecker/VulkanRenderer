@@ -70,6 +70,8 @@ void D3D::D3DEngine::Run(const std::function<void()>& load)
 
 		time.SetDeltaTime(deltaTime);
 
+		std::cout << time.GetFps() << std::endl;
+
 		glfwPollEvents();
 
 		for (auto& pModel : pModels)
