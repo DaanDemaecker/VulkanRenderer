@@ -3,7 +3,6 @@
 #include "D3DEngine.h"
 #include "VulkanRenderer.h"
 
-
 void load()
 {
 	//auto& renderer{ D3D::VulkanRenderer::GetInstance() };
