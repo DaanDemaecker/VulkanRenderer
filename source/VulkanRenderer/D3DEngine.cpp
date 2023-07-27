@@ -28,11 +28,10 @@ void D3D::D3DEngine::Run(const std::function<void()>& load)
 
 	auto& renderer{ VulkanRenderer::GetInstance() };
 
-	std::shared_ptr<D3D::DiffuseMaterial> pVikingMaterial{ std::make_shared<D3D::DiffuseMaterial>("../resources/images/viking_room.png") };
-	std::shared_ptr<D3D::DiffuseMaterial> pVehicleMaterial{std::make_shared<D3D::DiffuseMaterial>("../resources/images/vehicle_diffuse.png")};
+	renderer.AddGraphicsPipeline("Diffuse", "../Resources/Shaders/Diffuse.Vert.spv", "../Resources/Shaders/Diffuse.Frag.spv");
 
-	//std::shared_ptr<D3D::Material> pVikingMaterial{ std::make_shared<D3D::Material>() };
-	//std::shared_ptr<D3D::Material> pVehicleMaterial{ std::make_shared<D3D::Material>() };
+	std::shared_ptr<D3D::DiffuseMaterial> pVikingMaterial{ std::make_shared<D3D::DiffuseMaterial>("../resources/images/viking_room.png", "Diffuse")};
+	std::shared_ptr<D3D::DiffuseMaterial> pVehicleMaterial{std::make_shared<D3D::DiffuseMaterial>("../resources/images/vehicle_diffuse.png")};
 
 	std::vector<std::unique_ptr<Model>> pModels{};
 	pModels.push_back(std::make_unique<Model>());
