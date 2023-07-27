@@ -4,6 +4,7 @@
 #include "TimeManager.h"
 #include "Model.h"
 #include "Material.h"
+#include "DiffuseMaterial.h"
 #include <chrono>
 
 D3D::Window g_pWindow{};
@@ -27,8 +28,11 @@ void D3D::D3DEngine::Run(const std::function<void()>& load)
 
 	auto& renderer{ VulkanRenderer::GetInstance() };
 
-	std::shared_ptr<D3D::Material> pVikingMaterial{ std::make_shared<D3D::Material>("../resources/images/viking_room.png") };
-	std::shared_ptr<D3D::Material> pVehicleMaterial{std::make_shared<D3D::Material>("../resources/images/vehicle_diffuse.png")};
+	std::shared_ptr<D3D::DiffuseMaterial> pVikingMaterial{ std::make_shared<D3D::DiffuseMaterial>("../resources/images/viking_room.png") };
+	std::shared_ptr<D3D::DiffuseMaterial> pVehicleMaterial{std::make_shared<D3D::DiffuseMaterial>("../resources/images/vehicle_diffuse.png")};
+
+	//std::shared_ptr<D3D::Material> pVikingMaterial{ std::make_shared<D3D::Material>() };
+	//std::shared_ptr<D3D::Material> pVehicleMaterial{ std::make_shared<D3D::Material>() };
 
 	std::vector<std::unique_ptr<Model>> pModels{};
 	pModels.push_back(std::make_unique<Model>());

@@ -77,10 +77,7 @@ namespace D3D
 
 		void UpdateUniformBuffer(uint32_t frame);
 
-
 		//Texture functions
-		VkImageView& GetImageView();
-		VkSampler& GetSampler();
 		PipelinePair& GetPipeline();
 
 		void Cleanup();

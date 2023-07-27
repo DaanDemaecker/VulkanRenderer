@@ -35,6 +35,7 @@ D3D::VulkanRenderer::~VulkanRenderer()
 	vkDeviceWaitIdle(m_Device);
 
 	CleanupImGui();
+
 	CleanupVulkan();
 }
 

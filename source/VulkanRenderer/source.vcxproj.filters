@@ -72,6 +72,9 @@
     <ClCompile Include="..\3rdParty\Imgui\imgui_widgets.cpp">
       <Filter>ImGui</Filter>
     </ClCompile>
+    <ClCompile Include="DiffuseMaterial.cpp">
+      <Filter>DataTypes</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -124,6 +127,9 @@
     </ClInclude>
     <ClInclude Include="..\3rdParty\Imgui\imstb_truetype.h">
       <Filter>ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="DiffuseMaterial.h">
+      <Filter>DataTypes</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
