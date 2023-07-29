@@ -49,6 +49,8 @@ namespace D3D
         void UpdateUniformBuffer(UniformBufferObject& buffer);
 
     private:
+        LightObject m_Test{};
+
         //----Member variables----
         //---Validation layers---
         bool m_EnableValidationLayers{true};
