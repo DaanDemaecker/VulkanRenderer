@@ -460,7 +460,7 @@ void D3D::VulkanRenderer::RecordCommandBuffer(VkCommandBuffer& commandBuffer, ui
 
 void D3D::VulkanRenderer::Render(Model* pModel, VkCommandBuffer& commandBuffer, const VkDescriptorSet* descriptorSet, const PipelinePair& pipeline)
 {
-	m_Test.direction = glm::vec3{ 0, 1, 0 };
+	m_Test.direction = glm::normalize(glm::vec3{ .577f, -.577f, .577f});
 	m_Test.color = glm::vec3{ 1.f, 0.f, 0.f};
 	m_Test.intensity = 0.5f;
 
