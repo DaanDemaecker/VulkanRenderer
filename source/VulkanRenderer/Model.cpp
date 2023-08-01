@@ -48,7 +48,7 @@ void D3D::Model::SetMaterial(std::shared_ptr<Material> pMaterial)
 
 void D3D::Model::Update()
 {
-	constexpr float rotSpeed{glm::radians(10.f)};
+	constexpr float rotSpeed{-glm::radians(15.f)};
 
 	float rotAmount{rotSpeed * TimeManager::GetInstance().GetDeltaTime()};
 

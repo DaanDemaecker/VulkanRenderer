@@ -85,7 +85,7 @@ void Utils::LoadModel(const std::string& filename, std::vector<Vertex>& vertices
 				attrib.normals[static_cast<uint64_t>(3) * index.normal_index + static_cast<uint64_t>(2)]
 			};
 
-			vertex.color = { 1.0f, 0.0f, 0.0f };
+			vertex.color = { 1.0f, 1.0f, 1.0f };
 
 			if (uniqueVertices.count(vertex) == 0)
 			{
@@ -97,36 +97,33 @@ void Utils::LoadModel(const std::string& filename, std::vector<Vertex>& vertices
 		}
 	}
 
-	//Cheap Tangent Calculations
-	for (uint32_t i = 0; i < indices.size(); i += 3)
+	for (size_t i = 0; i < indices.size(); i += 3)
 	{
 		uint32_t index0 = indices[i];
-		uint32_t index1 = indices[size_t(i) + 1];
-		uint32_t index2 = indices[size_t(i) + 2];
+		uint32_t index1 = indices[i + 1];
+		uint32_t index2 = indices[i + 2];
 
-		const glm::vec3& p0 = vertices[index0].pos;
-		const glm::vec3& p1 = vertices[index1].pos;
-		const glm::vec3& p2 = vertices[index2].pos;
-		const glm::vec2& uv0 = vertices[index0].texCoord;
-		const glm::vec2& uv1 = vertices[index1].texCoord;
-		const glm::vec2& uv2 = vertices[index2].texCoord;
+		Vertex& v0 = vertices[index0];
+		Vertex& v1 = vertices[index1];
+		Vertex& v2 = vertices[index2];
 
-		const glm::vec3 edge0 = p1 - p0;
-		const glm::vec3 edge1 = p2 - p0;
-		const glm::vec2 diffX = glm::vec2(uv1.x - uv0.x, uv2.x - uv0.x);
-		const glm::vec2 diffY = glm::vec2(uv1.y - uv0.y, uv2.y - uv0.y);
-		float r = 1.f / Cross(diffX, diffY);
+		glm::vec3 edge1 = v1.pos - v0.pos;
+		glm::vec3 edge2 = v2.pos - v0.pos;
 
-		glm::vec3 tangent = (edge0 * diffY.y - edge1 * diffY.x) * r;
-		vertices[index0].tangent += tangent;
-		vertices[index1].tangent += tangent;
-		vertices[index2].tangent += tangent;
+		glm::vec2 deltaUV1 = v1.texCoord - v0.texCoord;
+		glm::vec2 deltaUV2 = v2.texCoord - v0.texCoord;
+
+		float r = 1.0f / (deltaUV1.x * deltaUV2.y - deltaUV1.y * deltaUV2.x);
+		glm::vec3 tangent = (edge1 * deltaUV2.y - edge2 * deltaUV1.y) * r;
+
+		v0.tangent += tangent;
+		v1.tangent += tangent;
+		v2.tangent += tangent;
 	}
 
-	//Create the Tangents (reject)
 	for (auto& v : vertices)
 	{
-		v.tangent = glm::normalize(Reject(v.tangent, v.normal));
+		v.tangent = glm::normalize(v.tangent);
 	}
 }
 
