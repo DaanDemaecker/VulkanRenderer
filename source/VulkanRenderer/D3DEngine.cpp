@@ -4,7 +4,7 @@
 #include "TimeManager.h"
 #include "Model.h"
 #include "Material.h"
-#include "DiffuseMaterial.h"
+#include "TexturedMaterial.h"
 #include <chrono>
 
 D3D::Window g_pWindow{};
@@ -28,12 +28,16 @@ void D3D::D3DEngine::Run(const std::function<void()>& load)
 
 	auto& renderer{ VulkanRenderer::GetInstance() };
 
-	renderer.AddGraphicsPipeline("Diffuse", "../Resources/Shaders/Diffuse.Vert.spv", "../Resources/Shaders/Diffuse.Frag.spv");
-	renderer.AddGraphicsPipeline("NormalMap", "../Resources/Shaders/NormalMap.Vert.spv", "../Resources/Shaders/NormalMap.Frag.spv");
+	renderer.AddGraphicsPipeline("Diffuse", "../Resources/Shaders/Diffuse.Vert.spv", "../Resources/Shaders/Diffuse.Frag.spv", 1);
+	renderer.AddGraphicsPipeline("NormalMap", "../Resources/Shaders/NormalMap.Vert.spv", "../Resources/Shaders/NormalMap.Frag.spv", 1);
+	renderer.AddGraphicsPipeline("Test", "../Resources/Shaders/Test.Vert.spv", "../Resources/Shaders/Test.Frag.spv", 2);
 
-	std::shared_ptr<D3D::DiffuseMaterial> pVikingMaterial{ std::make_shared<D3D::DiffuseMaterial>("../resources/images/viking_room.png", "Diffuse")};
-	std::shared_ptr<D3D::DiffuseMaterial> pVehicleMaterial{std::make_shared<D3D::DiffuseMaterial>("../resources/images/vehicle_normal.png", "NormalMap")};
-	std::shared_ptr<D3D::Material> pVehicle2Material{ std::make_shared<D3D::DiffuseMaterial>("../resources/images/vehicle_diffuse.png", "Diffuse")};
+	std::shared_ptr<D3D::TexturedMaterial> pVikingMaterial{ std::make_shared<D3D::TexturedMaterial>(std::initializer_list<const std::string>{"../resources/images/viking_room.png"}, "Diffuse") };
+	std::shared_ptr<D3D::TexturedMaterial> pVehicleMaterial{ std::make_shared<D3D::TexturedMaterial>(std::initializer_list<const std::string>{"../resources/images/vehicle_normal.png"}, "NormalMap") };
+	std::shared_ptr<D3D::Material> pVehicle2Material{ std::make_shared<D3D::TexturedMaterial>
+		(std::initializer_list<const std::string>{"../resources/images/vehicle_diffuse.png", "../resources/images/vehicle_normal.png"}, "Test") };
+
+
 
 	std::vector<std::unique_ptr<Model>> pModels{};
 	/*pModels.push_back(std::make_unique<Model>());
@@ -43,7 +47,7 @@ void D3D::D3DEngine::Run(const std::function<void()>& load)
 	pModels[0]->SetRotation(glm::radians(-90.0f), glm::radians(45.0f), 0.f);
 	pModels[0]->SetScale(0.75f, 0.75f, 0.75f);*/
 
-	pModels.push_back(std::make_unique<Model>());
+	pModels.push_back(std::make_unique<Model>());{}
 	pModels[0]->LoadModel("../Resources/Models/vehicle.obj");
 	pModels[0]->SetMaterial(pVehicle2Material);
 	pModels[0]->SetPosition(1.f, 0, 5.f);

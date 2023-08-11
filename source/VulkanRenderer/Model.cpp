@@ -40,10 +40,12 @@ void D3D::Model::LoadModel(const std::string& textPath)
 void D3D::Model::SetMaterial(std::shared_ptr<Material> pMaterial)
 {
 	m_pMaterial = pMaterial;
-	if (m_Initialized)
+	/*if (m_Initialized)
 	{
+		CreateDescriptorSets();
 		UpdateDescriptorSets();
-	}
+	}*/
+	CreateDescriptorSets();
 }
 
 void D3D::Model::Update()
@@ -168,7 +170,7 @@ void D3D::Model::CreateDescriptorSets()
 {
 	auto& renderer{ VulkanRenderer::GetInstance() };
 
-	std::vector<VkDescriptorSetLayout> layouts(MAX_FRAMES_IN_FLIGHT, renderer.GetDescriptorSetLayout());
+	std::vector<VkDescriptorSetLayout> layouts(MAX_FRAMES_IN_FLIGHT, *m_pMaterial->GetDescriptorLayout());
 	VkDescriptorSetAllocateInfo allocInfo{};
 	allocInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
 	allocInfo.descriptorPool = renderer.GetDescriptorPool();

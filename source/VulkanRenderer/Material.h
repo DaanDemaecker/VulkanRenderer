@@ -20,6 +20,8 @@ namespace D3D
 
 		virtual void UpdateDescriptorSets(std::vector<VkBuffer>& uboBuffers, std::vector<VkDescriptorSet>& descriptorSets);
 
+		virtual VkDescriptorSetLayout* GetDescriptorLayout();
+
 	protected:
 		PipelinePair m_PipelinePair{};
 	};

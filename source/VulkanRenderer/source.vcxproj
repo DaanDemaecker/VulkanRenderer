@@ -176,7 +176,7 @@
     <ClCompile Include="..\3rdParty\Imgui\imgui_tables.cpp" />
     <ClCompile Include="..\3rdParty\Imgui\imgui_widgets.cpp" />
     <ClCompile Include="D3DEngine.cpp" />
-    <ClCompile Include="DiffuseMaterial.cpp" />
+    <ClCompile Include="TexturedMaterial.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Material.cpp" />
     <ClCompile Include="Model.cpp" />
@@ -194,7 +194,7 @@
     <ClInclude Include="..\3rdParty\Imgui\imstb_textedit.h" />
     <ClInclude Include="..\3rdParty\Imgui\imstb_truetype.h" />
     <ClInclude Include="D3DEngine.h" />
-    <ClInclude Include="DiffuseMaterial.h" />
+    <ClInclude Include="TexturedMaterial.h" />
     <ClInclude Include="Material.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="Singleton.h" />

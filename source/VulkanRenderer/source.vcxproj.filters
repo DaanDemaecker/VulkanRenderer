@@ -28,6 +28,9 @@
     <Filter Include="ImGui\Backends">
       <UniqueIdentifier>{2586ffb5-fbc9-4746-9b72-a80ccf33bedf}</UniqueIdentifier>
     </Filter>
+    <Filter Include="DataTypes\Materials">
+      <UniqueIdentifier>{d0104ec1-9ca2-40e5-bcb4-9c5c20e25661}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -44,9 +47,6 @@
     </ClCompile>
     <ClCompile Include="VulkanRenderer.cpp">
       <Filter>Engine</Filter>
-    </ClCompile>
-    <ClCompile Include="Material.cpp">
-      <Filter>DataTypes</Filter>
     </ClCompile>
     <ClCompile Include="TimeManager.cpp">
       <Filter>Engine</Filter>
@@ -72,8 +72,11 @@
     <ClCompile Include="..\3rdParty\Imgui\imgui_widgets.cpp">
       <Filter>ImGui</Filter>
     </ClCompile>
-    <ClCompile Include="DiffuseMaterial.cpp">
-      <Filter>DataTypes</Filter>
+    <ClCompile Include="TexturedMaterial.cpp">
+      <Filter>DataTypes\Materials</Filter>
+    </ClCompile>
+    <ClCompile Include="Material.cpp">
+      <Filter>DataTypes\Materials</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -97,9 +100,6 @@
     </ClInclude>
     <ClInclude Include="VulkanRenderer.h">
       <Filter>Engine</Filter>
-    </ClInclude>
-    <ClInclude Include="Material.h">
-      <Filter>DataTypes</Filter>
     </ClInclude>
     <ClInclude Include="TimeManager.h">
       <Filter>Engine</Filter>
@@ -128,8 +128,11 @@
     <ClInclude Include="..\3rdParty\Imgui\imstb_truetype.h">
       <Filter>ImGui</Filter>
     </ClInclude>
-    <ClInclude Include="DiffuseMaterial.h">
-      <Filter>DataTypes</Filter>
+    <ClInclude Include="TexturedMaterial.h">
+      <Filter>DataTypes\Materials</Filter>
+    </ClInclude>
+    <ClInclude Include="Material.h">
+      <Filter>DataTypes\Materials</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

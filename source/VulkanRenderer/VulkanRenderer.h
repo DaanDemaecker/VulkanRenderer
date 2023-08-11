@@ -23,12 +23,11 @@ namespace D3D
 
         void Render(Model* pModel, VkCommandBuffer& commandBuffer, const VkDescriptorSet* descriptorSet, const PipelinePair& pipeline);
         
-        void AddGraphicsPipeline(const std::string& pipelineName, const std::string& vertShaderName, const std::string& fragShaderName);
+        void AddGraphicsPipeline(const std::string& pipelineName, const std::string& vertShaderName, const std::string& fragShaderName, int textureAmount);
 
         //Public getters
         VkDevice& GetDevice() {return m_Device; }
         VkCommandPool& GetCommandPool() { return m_CommandPool; }
-        VkDescriptorSetLayout& GetDescriptorSetLayout() { return m_DescriptorSetLayout; }
         VkDescriptorPool& GetDescriptorPool() { return m_DescriptorPool; }
         VkImageView& GetDefaultImageView() { return m_DefaultTextureImageView; }
         VkSampler& GetSampler() { return m_TextureSampler; }
@@ -47,6 +46,8 @@ namespace D3D
         VkImageView CreateImageView(VkImage image, VkFormat format, VkImageAspectFlags aspectFlags, uint32_t mipLevels);
 
         void UpdateUniformBuffer(UniformBufferObject& buffer);
+
+        VkDescriptorSetLayout* GetDescriptorSetLayout(int textureAmount);
 
     private:
         LightObject m_Test{};
@@ -112,7 +113,7 @@ namespace D3D
         VkRenderPassBeginInfo m_RenderpassInfo{};
 
         //--Descriptorlayout--
-        VkDescriptorSetLayout m_DescriptorSetLayout{};
+        std::map<int, VkDescriptorSetLayout> m_DescriptorSetLayouts{};
 
         //--GraphicsPipeline--
         //VkPipeline m_GraphicsPipeline{};
@@ -234,7 +235,7 @@ namespace D3D
         void CreateRenderPass();
 
         //--Descriptor Layout
-        void CreateDescriptorLayout();
+        void CreateDescriptorLayout(int textureAmount);
 
         //-Shader Module-
         VkShaderModule CreateShaderModule(const std::vector<char>& code);

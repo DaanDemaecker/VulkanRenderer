@@ -50,7 +50,12 @@ void D3D::VulkanRenderer::CleanupVulkan()
 
 	vkDestroyDescriptorPool(m_Device, m_DescriptorPool, nullptr);
 
-	vkDestroyDescriptorSetLayout(m_Device, m_DescriptorSetLayout, nullptr);
+	
+
+	for (auto& pair : m_DescriptorSetLayouts)
+	{
+		vkDestroyDescriptorSetLayout(m_Device, pair.second, nullptr);
+	}
 
 	for (auto& pipeline : m_GraphicPipelines)
 	{
@@ -98,9 +103,8 @@ void D3D::VulkanRenderer::InitVulkan()
 	CreateSwapChain();
 	CreateImageViews();
 	CreateRenderPass();
-	CreateDescriptorLayout();
 
-	AddGraphicsPipeline(m_DefaultPipelineName, m_DefaultVertName, m_DefaultFragName);
+	AddGraphicsPipeline(m_DefaultPipelineName, m_DefaultVertName, m_DefaultFragName, 0);
 
 	CreateCommandPool();
 	CreateColorResources();
@@ -145,7 +149,7 @@ void D3D::VulkanRenderer::InitImGui()
 	EndSingleTimeCommands(commandBuffer);
 }
 
-void D3D::VulkanRenderer::AddGraphicsPipeline(const std::string& pipelineName, const std::string& vertShaderName, const std::string& fragShaderName)
+void D3D::VulkanRenderer::AddGraphicsPipeline(const std::string& pipelineName, const std::string& vertShaderName, const std::string& fragShaderName, int textureAmount)
 {
 	if (m_GraphicPipelines.contains(pipelineName))
 	{
@@ -292,7 +296,7 @@ void D3D::VulkanRenderer::AddGraphicsPipeline(const std::string& pipelineName, c
 	VkPipelineLayoutCreateInfo pipelineLayoutInfo{};
 	pipelineLayoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
 	pipelineLayoutInfo.setLayoutCount = 1;
-	pipelineLayoutInfo.pSetLayouts = &m_DescriptorSetLayout;
+	pipelineLayoutInfo.pSetLayouts = GetDescriptorSetLayout(textureAmount);
 	pipelineLayoutInfo.pushConstantRangeCount = 1; // Number of push constant ranges used by the pipeline
 	pipelineLayoutInfo.pPushConstantRanges = &pushConstantRange; // Array of push constant ranges used by the pipeline
 
@@ -1098,8 +1102,10 @@ void D3D::VulkanRenderer::CreateRenderPass()
 	}
 }
 
-void D3D::VulkanRenderer::CreateDescriptorLayout()
+void D3D::VulkanRenderer::CreateDescriptorLayout(int textureAmount)
 {
+	std::vector<VkDescriptorSetLayoutBinding> bindings{};
+
 	VkDescriptorSetLayoutBinding uboLayoutBinding{};
 	uboLayoutBinding.binding = 0;
 	uboLayoutBinding.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
@@ -1107,20 +1113,28 @@ void D3D::VulkanRenderer::CreateDescriptorLayout()
 	uboLayoutBinding.stageFlags = VK_SHADER_STAGE_VERTEX_BIT;
 	uboLayoutBinding.pImmutableSamplers = nullptr;
 
-	VkDescriptorSetLayoutBinding samplerLayoutBinding{};
-	samplerLayoutBinding.binding = 1;
-	samplerLayoutBinding.descriptorCount = 1;
-	samplerLayoutBinding.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
-	samplerLayoutBinding.pImmutableSamplers = nullptr;
-	samplerLayoutBinding.stageFlags = VK_SHADER_STAGE_FRAGMENT_BIT;
+	bindings.push_back(uboLayoutBinding);
 
-	std::array<VkDescriptorSetLayoutBinding, 2> bindings = { uboLayoutBinding, samplerLayoutBinding };
+	for (int i{}; i < textureAmount; ++i)
+	{
+		VkDescriptorSetLayoutBinding samplerLayoutBinding{};
+		samplerLayoutBinding.binding = i + 1;
+		samplerLayoutBinding.descriptorCount = 1;
+		samplerLayoutBinding.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+		samplerLayoutBinding.pImmutableSamplers = nullptr;
+		samplerLayoutBinding.stageFlags = VK_SHADER_STAGE_FRAGMENT_BIT;
+
+		bindings.push_back(samplerLayoutBinding);
+	}
+
 	VkDescriptorSetLayoutCreateInfo layoutInfo{};
 	layoutInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
 	layoutInfo.bindingCount = static_cast<uint32_t>(bindings.size());
 	layoutInfo.pBindings = bindings.data();
 
-	if (vkCreateDescriptorSetLayout(m_Device, &layoutInfo, nullptr, &m_DescriptorSetLayout) != VK_SUCCESS)
+	m_DescriptorSetLayouts[textureAmount] = VkDescriptorSetLayout{};
+
+	if (vkCreateDescriptorSetLayout(m_Device, &layoutInfo, nullptr, &m_DescriptorSetLayouts[textureAmount]) != VK_SUCCESS)
 	{
 		throw std::runtime_error("failed to create descriptor set layout!");
 	}
@@ -1576,6 +1590,14 @@ void D3D::VulkanRenderer::UpdateUniformBuffer(UniformBufferObject& buffer)
 
 	buffer.proj = glm::perspective(glm::radians(45.0f), m_SwapChainExtent.width / static_cast<float>(m_SwapChainExtent.height), 0.1f, 10.0f);
 	buffer.proj[1][1] *= -1;
+}
+
+VkDescriptorSetLayout* D3D::VulkanRenderer::GetDescriptorSetLayout(int textureAmount)
+{
+	if (!m_DescriptorSetLayouts.contains(textureAmount))
+		CreateDescriptorLayout(textureAmount);
+
+	return &m_DescriptorSetLayouts[textureAmount];
 }
 
 bool D3D::VulkanRenderer::HasStencilComponent(VkFormat format)
