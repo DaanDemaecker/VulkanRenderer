@@ -124,6 +124,9 @@ void Utils::LoadModel(const std::string& filename, std::vector<Vertex>& vertices
 	for (auto& v : vertices)
 	{
 		v.tangent = glm::normalize(v.tangent);
+
+		v.normal.z *= -1.f;
+		//v.tangent.z *= -1.f;
 	}
 }
 

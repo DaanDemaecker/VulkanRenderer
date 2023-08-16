@@ -40,11 +40,6 @@ void D3D::Model::LoadModel(const std::string& textPath)
 void D3D::Model::SetMaterial(std::shared_ptr<Material> pMaterial)
 {
 	m_pMaterial = pMaterial;
-	/*if (m_Initialized)
-	{
-		CreateDescriptorSets();
-		UpdateDescriptorSets();
-	}*/
 	CreateDescriptorSets();
 }
 
