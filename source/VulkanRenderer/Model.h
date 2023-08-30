@@ -6,7 +6,7 @@ namespace D3D
 {
 	class Material;
 
-	class Model
+	class Model : public std::enable_shared_from_this<Model>
 	{
 	public:
 		Model();
@@ -34,6 +34,8 @@ namespace D3D
 		void SetPosition(float x, float y, float z);
 		void SetRotation(float x, float y, float z);
 		void SetScale(float x, float y, float z);
+
+		void CreateDescriptorSets();
 
 	private:
 		//Member variables
@@ -71,7 +73,6 @@ namespace D3D
 		void CreateVertexBuffer();
 		void CreateIndexBuffer();
 		void CreateUniformBuffers();
-		void CreateDescriptorSets();
 
 		void UpdateDescriptorSets();
 

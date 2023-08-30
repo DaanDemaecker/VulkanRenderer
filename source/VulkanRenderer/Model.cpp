@@ -168,7 +168,7 @@ void D3D::Model::CreateDescriptorSets()
 	std::vector<VkDescriptorSetLayout> layouts(MAX_FRAMES_IN_FLIGHT, *m_pMaterial->GetDescriptorLayout());
 	VkDescriptorSetAllocateInfo allocInfo{};
 	allocInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
-	allocInfo.descriptorPool = renderer.GetDescriptorPool();
+	allocInfo.descriptorPool = m_pMaterial->GetDescriptorPool();
 	allocInfo.descriptorSetCount = static_cast<uint32_t>(MAX_FRAMES_IN_FLIGHT);
 	allocInfo.pSetLayouts = layouts.data();
 

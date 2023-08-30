@@ -22,6 +22,8 @@ namespace D3D
 
 		virtual VkDescriptorSetLayout* GetDescriptorLayout();
 
+		virtual VkDescriptorPool& GetDescriptorPool();
+
 	protected:
 		PipelinePair m_PipelinePair{};
 	};

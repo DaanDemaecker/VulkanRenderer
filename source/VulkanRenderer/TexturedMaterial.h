@@ -17,6 +17,8 @@ namespace D3D
 
 		virtual VkDescriptorSetLayout* GetDescriptorLayout() override;
 
+		virtual VkDescriptorPool& GetDescriptorPool() override;
+
 	private:
 		std::vector<VkImage> m_TextureImages{};
 		std::vector<VkDeviceMemory> m_TextureImageMemories{};

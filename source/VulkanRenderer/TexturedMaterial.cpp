@@ -98,6 +98,11 @@ VkDescriptorSetLayout* D3D::TexturedMaterial::GetDescriptorLayout()
 	return VulkanRenderer::GetInstance().GetDescriptorSetLayout(static_cast<int>(m_TextureImages.size()));
 }
 
+VkDescriptorPool& D3D::TexturedMaterial::GetDescriptorPool()
+{
+	return D3D::VulkanRenderer::GetInstance().GetDescriptorPool();
+}
+
 void D3D::TexturedMaterial::CreateTextureImage(const std::string& filePath, int index)
 {
 	auto& renderer{ VulkanRenderer::GetInstance() };

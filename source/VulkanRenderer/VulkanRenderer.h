@@ -28,6 +28,7 @@ namespace D3D
         //Public getters
         VkDevice& GetDevice() {return m_Device; }
         VkCommandPool& GetCommandPool() { return m_CommandPool; }
+        VkDescriptorPool& GetDefaultDescriptorPool() { return m_DefaultDescriptorPool; }
         VkDescriptorPool& GetDescriptorPool() { return m_DescriptorPool; }
         VkImageView& GetDefaultImageView() { return m_DefaultTextureImageView; }
         VkSampler& GetSampler() { return m_TextureSampler; }
@@ -145,8 +146,13 @@ namespace D3D
         std::vector<VkFramebuffer> m_SwapChainFramebuffers{};
 
         //--Descriptorpool--
+        VkDescriptorPool m_DefaultDescriptorPool{};
+        uint32_t m_MaxDefaultDescriptorSets{8};
+
         VkDescriptorPool m_DescriptorPool{};
-        uint32_t m_MaxDescriptorSets{8};
+        uint32_t m_MaxDescriptorSets{ 8 };
+
+        const uint32_t m_DescriptorSetTextureMultiplier{ 2 };
 
         //--Sync objects--
         std::vector<VkSemaphore> m_ImageAvailableSemaphores{};
@@ -259,6 +265,7 @@ namespace D3D
         void CreateFramebuffers();
 
         //--DescriptorPool--
+        void CreateDefaultDescriptorPool();
         void CreateDescriptorPool();
 
         //--CommandBuffers--
@@ -283,6 +290,8 @@ namespace D3D
 
         //ImGUI Functions
         void RenderImGui(VkCommandBuffer commandBuffer);
+
+        bool CheckExtensionSupport(const char* extensionName);
     };
 }
 

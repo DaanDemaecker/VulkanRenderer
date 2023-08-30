@@ -176,6 +176,8 @@
     <ClCompile Include="..\3rdParty\Imgui\imgui_tables.cpp" />
     <ClCompile Include="..\3rdParty\Imgui\imgui_widgets.cpp" />
     <ClCompile Include="D3DEngine.cpp" />
+    <ClCompile Include="DescriptorPoolManager.cpp" />
+    <ClCompile Include="DescriptorPoolWrapper.cpp" />
     <ClCompile Include="TexturedMaterial.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Material.cpp" />
@@ -194,6 +196,8 @@
     <ClInclude Include="..\3rdParty\Imgui\imstb_textedit.h" />
     <ClInclude Include="..\3rdParty\Imgui\imstb_truetype.h" />
     <ClInclude Include="D3DEngine.h" />
+    <ClInclude Include="DescriptorPoolManager.h" />
+    <ClInclude Include="DescriptorPoolWrapper.h" />
     <ClInclude Include="TexturedMaterial.h" />
     <ClInclude Include="Material.h" />
     <ClInclude Include="Model.h" />

@@ -51,3 +51,8 @@ VkDescriptorSetLayout* D3D::Material::GetDescriptorLayout()
 {
 	return VulkanRenderer::GetInstance().GetDescriptorSetLayout(0);
 }
+
+VkDescriptorPool& D3D::Material::GetDescriptorPool()
+{
+	return D3D::VulkanRenderer::GetInstance().GetDefaultDescriptorPool();
+}
