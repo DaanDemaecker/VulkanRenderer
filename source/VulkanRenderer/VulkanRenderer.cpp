@@ -3,6 +3,7 @@
 #include "D3DEngine.h"
 #include "Utils.h"
 #include <set>
+#include <algorithm>
 #include "Model.h"
 
 #ifndef STB_IMAGE_IMPLEMENTATION

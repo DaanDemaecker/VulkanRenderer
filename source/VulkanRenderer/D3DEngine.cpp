@@ -38,7 +38,7 @@ void D3D::D3DEngine::Run(const std::function<void()>& load)
 		(std::initializer_list<const std::string>{"../resources/images/vehicle_diffuse.png", "../resources/images/vehicle_normal.png"}, "DiffNorm") };
 
 
-	{
+	
 		std::vector<std::unique_ptr<Model>> pModels{};
 		/*pModels.push_back(std::make_unique<Model>());
 		pModels[0]->LoadModel("../Resources/Models/viking_room.obj");
@@ -60,18 +60,18 @@ void D3D::D3DEngine::Run(const std::function<void()>& load)
 		pModels[1]->SetPosition(-1.f, 0, 5.f);
 		pModels[1]->SetRotation(0.f, glm::radians(75.0f), 0.f);
 		pModels[1]->SetScale(0.05f, 0.05f, 0.05f);
-	}
+	
 
-	std::vector<std::unique_ptr<Model>> pModels{};
+	//std::vector<std::unique_ptr<Model>> pModels{};
 
-	for (int i{}; i < 20; ++i)
+	/*for (int i{}; i < 20; ++i)
 	{
 		std::unique_ptr<Model> pModel{std::make_unique<Model>()};
 		pModel->LoadModel("../Resources/Models/vehicle.obj");
 		pModel->SetMaterial(pVehicleMaterial);
 
 		pModels.push_back(std::move(pModel));
-	}
+	}*/
 
 	auto& time{ TimeManager::GetInstance() };
 
