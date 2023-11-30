@@ -2,15 +2,19 @@
 #include "TexturedMaterial.h"
 #include "VulkanRenderer.h"
 #include "Utils.h"
+#include "DescriptorPoolManager.h"
+#include "DescriptorPoolWrapper.h"
 
 #include <stb_image.h>
 
 D3D::TexturedMaterial::TexturedMaterial(std::initializer_list<const std::string> filePaths, const std::string& pipelineName)
 	:Material(pipelineName)
 {
-	m_TextureImages.resize(filePaths.size());
-	m_TextureImageViews.resize(filePaths.size());
-	m_TextureImageMemories.resize(filePaths.size());
+	m_TextureAmount = static_cast<int>(filePaths.size());
+
+	m_TextureImages.resize(m_TextureAmount);
+	m_TextureImageViews.resize(m_TextureAmount);
+	m_TextureImageMemories.resize(m_TextureAmount);
 
 	int index{};
 
@@ -43,54 +47,17 @@ D3D::TexturedMaterial::~TexturedMaterial()
 	}
 }
 
+void D3D::TexturedMaterial::CreateDescriptorSets(Model* pModel, std::vector<VkDescriptorSet>& descriptorSets)
+{
+	auto descriptorPool = GetDescriptorPool();
+	descriptorPool->AddModel(pModel);
+	descriptorPool->CreateDescriptorSets(*GetDescriptorLayout(), descriptorSets);
+}
+
 void D3D::TexturedMaterial::UpdateDescriptorSets(std::vector<VkBuffer>& uboBuffers, std::vector<VkDescriptorSet>& descriptorSets)
 {
-	auto& renderer{ D3D::VulkanRenderer::GetInstance() };
-
-	for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++)
-	{
-		std::vector<VkWriteDescriptorSet> descriptorWrites{};
-		descriptorWrites.resize(m_TextureImageViews.size() + 1);
-
-		VkDescriptorBufferInfo bufferInfo{};
-		bufferInfo.buffer = uboBuffers[i];
-		bufferInfo.offset = 0;
-		bufferInfo.range = sizeof(UniformBufferObject);
-
-		std::vector<VkDescriptorImageInfo> imageInfos{};
-		imageInfos.reserve(m_TextureImageViews.size());
-
-		for (auto& imageView : m_TextureImageViews)
-		{
-			VkDescriptorImageInfo imageInfo{};
-			imageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
-			imageInfo.imageView = imageView;
-			imageInfo.sampler = renderer.GetSampler();
-
-			imageInfos.push_back(imageInfo);
-		}
-
-		descriptorWrites[0].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-		descriptorWrites[0].dstSet = descriptorSets[i];
-		descriptorWrites[0].dstBinding = 0;
-		descriptorWrites[0].dstArrayElement = 0;
-		descriptorWrites[0].descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-		descriptorWrites[0].descriptorCount = 1;
-		descriptorWrites[0].pBufferInfo = &bufferInfo;
-
-		for (int j{1}; j <= m_TextureImageViews.size(); ++j)
-		{
-			descriptorWrites[j].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-			descriptorWrites[j].dstSet = descriptorSets[i];
-			descriptorWrites[j].dstBinding = j;
-			descriptorWrites[j].dstArrayElement = 0;
-			descriptorWrites[j].descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
-			descriptorWrites[j].descriptorCount = 1;
-			descriptorWrites[j].pImageInfo = &imageInfos[j-1];
-		}
-
-		vkUpdateDescriptorSets(VulkanRenderer::GetInstance().GetDevice(), static_cast<uint32_t>(descriptorWrites.size()), descriptorWrites.data(), 0, nullptr);
-	}
+	auto descriptorPool = GetDescriptorPool();
+	descriptorPool->UpdateDescriptorSets(uboBuffers, descriptorSets, m_TextureImageViews);
 }
 
 VkDescriptorSetLayout* D3D::TexturedMaterial::GetDescriptorLayout()
@@ -98,9 +65,9 @@ VkDescriptorSetLayout* D3D::TexturedMaterial::GetDescriptorLayout()
 	return VulkanRenderer::GetInstance().GetDescriptorSetLayout(static_cast<int>(m_TextureImages.size()));
 }
 
-VkDescriptorPool& D3D::TexturedMaterial::GetDescriptorPool()
+D3D::DescriptorPoolWrapper* D3D::TexturedMaterial::GetDescriptorPool()
 {
-	return D3D::VulkanRenderer::GetInstance().GetDescriptorPool();
+	return D3D::VulkanRenderer::GetInstance().GetDescriptorPoolManager()->GetDescriptorPool(1, m_TextureAmount);
 }
 
 void D3D::TexturedMaterial::CreateTextureImage(const std::string& filePath, int index)

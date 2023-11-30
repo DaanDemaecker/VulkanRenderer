@@ -5,6 +5,8 @@
 #include <set>
 #include <algorithm>
 #include "Model.h"
+#include "DescriptorPoolManager.h"
+#include "DescriptorPoolWrapper.h"
 
 #ifndef STB_IMAGE_IMPLEMENTATION
 #define STB_IMAGE_IMPLEMENTATION
@@ -48,6 +50,8 @@ void D3D::VulkanRenderer::CleanupVulkan()
 	vkDestroyImageView(m_Device, m_DefaultTextureImageView, nullptr);
 	vkDestroyImage(m_Device, m_DefaultTextureImage, nullptr);
 	vkFreeMemory(m_Device, m_DefaultTextureImageMemory, nullptr);
+
+	m_pDescriptorPoolManager->Cleanup(m_Device);
 
 	vkDestroyDescriptorPool(m_Device, m_DefaultDescriptorPool, nullptr);
 	vkDestroyDescriptorPool(m_Device, m_DescriptorPool, nullptr);
@@ -113,6 +117,8 @@ void D3D::VulkanRenderer::InitVulkan()
 
 	CreateDefaultDescriptorPool();
 	CreateDescriptorPool();
+
+	m_pDescriptorPoolManager = std::make_unique<DescriptorPoolManager>();
 
 	CreateTextureImage();
 	CreateTextureImageView();
@@ -494,6 +500,11 @@ PipelinePair& D3D::VulkanRenderer::GetPipeline(const std::string& name)
 	{
 		return m_GraphicPipelines[m_DefaultPipelineName];
 	}
+}
+
+D3D::DescriptorPoolManager* D3D::VulkanRenderer::GetDescriptorPoolManager() const
+{
+	return m_pDescriptorPoolManager.get();
 }
 
 void D3D::VulkanRenderer::CreateInstance()

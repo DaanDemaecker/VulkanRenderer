@@ -4,6 +4,7 @@
 #include "Utils.h"
 #include "Material.h"
 #include "TimeManager.h"
+#include "DescriptorPoolWrapper.h"
 
 #include <memory>
 
@@ -39,6 +40,7 @@ void D3D::Model::LoadModel(const std::string& textPath)
 
 void D3D::Model::SetMaterial(std::shared_ptr<Material> pMaterial)
 {
+	m_pMaterial->GetDescriptorPool()->RemoveModel(this);
 	m_pMaterial = pMaterial;
 	CreateDescriptorSets();
 }
@@ -163,21 +165,7 @@ void D3D::Model::CreateUniformBuffers()
 
 void D3D::Model::CreateDescriptorSets()
 {
-	auto& renderer{ VulkanRenderer::GetInstance() };
-
-	std::vector<VkDescriptorSetLayout> layouts(MAX_FRAMES_IN_FLIGHT, *m_pMaterial->GetDescriptorLayout());
-	VkDescriptorSetAllocateInfo allocInfo{};
-	allocInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
-	allocInfo.descriptorPool = m_pMaterial->GetDescriptorPool();
-	allocInfo.descriptorSetCount = static_cast<uint32_t>(MAX_FRAMES_IN_FLIGHT);
-	allocInfo.pSetLayouts = layouts.data();
-
-	m_DescriptorSets.resize(MAX_FRAMES_IN_FLIGHT);
-	if (vkAllocateDescriptorSets(renderer.GetDevice(), &allocInfo, m_DescriptorSets.data()) != VK_SUCCESS)
-	{
-		throw std::runtime_error("failed to allocate descriptor sets!");
-	}
-
+	m_pMaterial->CreateDescriptorSets(this, m_DescriptorSets);
 	UpdateDescriptorSets();
 }
 

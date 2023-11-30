@@ -5,10 +5,12 @@
 
 namespace D3D
 {
+	class Model;
+
 	class DescriptorPoolWrapper
 	{
 	public:
-		DescriptorPoolWrapper() = default;
+		DescriptorPoolWrapper(uint32_t uboAmount, uint32_t textureAmount);
 		~DescriptorPoolWrapper() = default;
 
 		DescriptorPoolWrapper(DescriptorPoolWrapper& other) = delete;
@@ -17,18 +19,33 @@ namespace D3D
 		DescriptorPoolWrapper& operator=(DescriptorPoolWrapper& other) = delete;
 		DescriptorPoolWrapper& operator=(DescriptorPoolWrapper&& other) = delete;
 
-		VkDescriptorPool GetDescriptorPool() { return m_DescriptorPool; }
+
+		void Cleanup(VkDevice device);
+
+		void AddModel(Model* pModel);
+		void RemoveModel(Model* pModel);
+
+		void CreateDescriptorSets(VkDescriptorSetLayout layout, std::vector<VkDescriptorSet>& descriptorSets);
+		
+		void UpdateDescriptorSets(std::vector<VkBuffer>& uboBuffers, std::vector<VkDescriptorSet>& descriptorSets);
+
+		void UpdateDescriptorSets(std::vector<VkBuffer>& uboBuffers, std::vector<VkDescriptorSet>& descriptorSets, std::vector<VkImageView>& imageViews);
 
 	private:
-		uint32_t m_UboAmount{};
-		uint32_t m_TextureAmount{};
+		const uint32_t m_UboAmount;
+		const uint32_t m_TextureAmount;
 
-		int m_MaxDescriptorSets{8};
+		int m_MaxDescriptorSets{ 8 };
 		int m_IncreaseFactor{ 2 };
 
+		int m_AllocatedDescriptorSets{};
 
 		VkDescriptorPool m_DescriptorPool{};
+		
+		std::vector<Model*> m_pModels{};
 
+		void InitDescriptorPool();
+		void ResizeDescriptorPool();
 	};
 }
 

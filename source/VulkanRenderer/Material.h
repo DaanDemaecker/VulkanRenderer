@@ -4,6 +4,9 @@
 
 namespace D3D
 {
+	class DescriptorPoolWrapper;
+	class Model;
+
 	class Material
 	{
 	public:
@@ -14,15 +17,17 @@ namespace D3D
 		Material(Material&& other) = delete;
 
 		Material& operator=(Material& other) = delete;
-		Material& operator=(Material&& other) = delete;
+		Material& operator=(Material&& other) = delete; 
 
 		PipelinePair& GetPipeline() { return m_PipelinePair; }
+
+		virtual void CreateDescriptorSets(Model* pModel, std::vector<VkDescriptorSet>& descriptorSets);
 
 		virtual void UpdateDescriptorSets(std::vector<VkBuffer>& uboBuffers, std::vector<VkDescriptorSet>& descriptorSets);
 
 		virtual VkDescriptorSetLayout* GetDescriptorLayout();
 
-		virtual VkDescriptorPool& GetDescriptorPool();
+		virtual DescriptorPoolWrapper* GetDescriptorPool();
 
 	protected:
 		PipelinePair m_PipelinePair{};

@@ -6,6 +6,7 @@
 namespace D3D
 {
     class Model;
+    class DescriptorPoolManager;
 
     class VulkanRenderer final : public Singleton<VulkanRenderer>
     {
@@ -35,6 +36,8 @@ namespace D3D
         PipelinePair& GetPipeline(const std::string& name = "Default");
         VkCommandBuffer& GetCurrentCommandBuffer() { return m_CommandBuffers[m_CurrentFrame]; }
         uint32_t GetCurrentFrame() const { return  m_CurrentFrame; }
+        DescriptorPoolManager* GetDescriptorPoolManager() const;
+
 
         //Public Helpers
         void CreateBuffer(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VkBuffer& buffer, VkDeviceMemory& bufferMemory);
@@ -42,7 +45,7 @@ namespace D3D
         void CopyBufferToImage(VkBuffer buffer, VkImage image, uint32_t width, uint32_t height);
         void GenerateMipmaps(VkImage image, VkFormat imageFormat, int32_t texWidth, int32_t texHeight, uint32_t mipLevels);
         void CreateImage(uint32_t width, uint32_t height, uint32_t mipLevels, VkSampleCountFlagBits numSamples,
-            VkFormat format, VkImageTiling tiling, VkImageUsageFlags usage, VkMemoryPropertyFlags properties, VkImage& image, VkDeviceMemory& imageMemory);
+        VkFormat format, VkImageTiling tiling, VkImageUsageFlags usage, VkMemoryPropertyFlags properties, VkImage& image, VkDeviceMemory& imageMemory);
         void TransitionImageLayout(VkImage image, VkFormat format, VkImageLayout oldLayout, VkImageLayout newLayout, uint32_t mipLevels);
         VkImageView CreateImageView(VkImage image, VkFormat format, VkImageAspectFlags aspectFlags, uint32_t mipLevels);
 
@@ -146,6 +149,8 @@ namespace D3D
         std::vector<VkFramebuffer> m_SwapChainFramebuffers{};
 
         //--Descriptorpool--
+        std::unique_ptr<DescriptorPoolManager> m_pDescriptorPoolManager{};
+
         VkDescriptorPool m_DefaultDescriptorPool{};
         uint32_t m_MaxDefaultDescriptorSets{8};
 

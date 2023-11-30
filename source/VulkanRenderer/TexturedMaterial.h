@@ -13,13 +13,17 @@ namespace D3D
 
 		PipelinePair& GetPipeline() { return m_PipelinePair; }
 
+		virtual void CreateDescriptorSets(Model* pModel, std::vector<VkDescriptorSet>& descriptorSets) override;
+
 		virtual void UpdateDescriptorSets(std::vector<VkBuffer>& uboBuffers, std::vector<VkDescriptorSet>& descriptorSets) override;
 
 		virtual VkDescriptorSetLayout* GetDescriptorLayout() override;
 
-		virtual VkDescriptorPool& GetDescriptorPool() override;
+		virtual DescriptorPoolWrapper* GetDescriptorPool() override;
 
 	private:
+		int m_TextureAmount{};
+
 		std::vector<VkImage> m_TextureImages{};
 		std::vector<VkDeviceMemory> m_TextureImageMemories{};
 

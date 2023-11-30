@@ -39,7 +39,7 @@ void D3D::D3DEngine::Run(const std::function<void()>& load)
 
 
 	
-		std::vector<std::unique_ptr<Model>> pModels{};
+		//std::vector<std::unique_ptr<Model>> pModels{};
 		/*pModels.push_back(std::make_unique<Model>());
 		pModels[0]->LoadModel("../Resources/Models/viking_room.obj");
 		pModels[0]->SetMaterial(pVikingMaterial);
@@ -47,7 +47,7 @@ void D3D::D3DEngine::Run(const std::function<void()>& load)
 		pModels[0]->SetRotation(glm::radians(-90.0f), glm::radians(45.0f), 0.f);
 		pModels[0]->SetScale(0.75f, 0.75f, 0.75f);*/
 
-		pModels.push_back(std::make_unique<Model>());
+		/*pModels.push_back(std::make_unique<Model>());
 		pModels[0]->LoadModel("../Resources/Models/vehicle.obj");
 		pModels[0]->SetMaterial(pVehicle2Material);
 		pModels[0]->SetPosition(1.f, 0, 5.f);
@@ -59,23 +59,23 @@ void D3D::D3DEngine::Run(const std::function<void()>& load)
 		pModels[1]->SetMaterial(pVehicleMaterial);
 		pModels[1]->SetPosition(-1.f, 0, 5.f);
 		pModels[1]->SetRotation(0.f, glm::radians(75.0f), 0.f);
-		pModels[1]->SetScale(0.05f, 0.05f, 0.05f);
+		pModels[1]->SetScale(0.05f, 0.05f, 0.05f);*/
 	
 
-	//std::vector<std::unique_ptr<Model>> pModels{};
+	std::vector<std::unique_ptr<Model>> pModels{};
 
-	/*for (int i{}; i < 20; ++i)
+	for (int i{}; i < 20; ++i)
 	{
 		std::unique_ptr<Model> pModel{std::make_unique<Model>()};
 		pModel->LoadModel("../Resources/Models/vehicle.obj");
 		pModel->SetMaterial(pVehicleMaterial);
 
 		pModels.push_back(std::move(pModel));
-	}*/
+	}
 
 	auto& time{ TimeManager::GetInstance() };
 
-
+	 
 	auto lastTime = std::chrono::high_resolution_clock::now();
 
 	//float lag = 0.0f;
