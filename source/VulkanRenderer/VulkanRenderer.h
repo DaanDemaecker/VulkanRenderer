@@ -29,8 +29,6 @@ namespace D3D
         //Public getters
         VkDevice& GetDevice() {return m_Device; }
         VkCommandPool& GetCommandPool() { return m_CommandPool; }
-        VkDescriptorPool& GetDefaultDescriptorPool() { return m_DefaultDescriptorPool; }
-        VkDescriptorPool& GetDescriptorPool() { return m_DescriptorPool; }
         VkImageView& GetDefaultImageView() { return m_DefaultTextureImageView; }
         VkSampler& GetSampler() { return m_TextureSampler; }
         PipelinePair& GetPipeline(const std::string& name = "Default");
@@ -151,13 +149,7 @@ namespace D3D
         //--Descriptorpool--
         std::unique_ptr<DescriptorPoolManager> m_pDescriptorPoolManager{};
 
-        VkDescriptorPool m_DefaultDescriptorPool{};
-        uint32_t m_MaxDefaultDescriptorSets{8};
-
-        VkDescriptorPool m_DescriptorPool{};
-        uint32_t m_MaxDescriptorSets{ 8 };
-
-        const uint32_t m_DescriptorSetTextureMultiplier{ 2 };
+        VkDescriptorPool m_IMguiDescriptorPool{};
 
         //--Sync objects--
         std::vector<VkSemaphore> m_ImageAvailableSemaphores{};
@@ -270,8 +262,7 @@ namespace D3D
         void CreateFramebuffers();
 
         //--DescriptorPool--
-        void CreateDefaultDescriptorPool();
-        void CreateDescriptorPool();
+        void CreateIMguiDescriptorPool();
 
         //--CommandBuffers--
         void CreateCommandBuffers();

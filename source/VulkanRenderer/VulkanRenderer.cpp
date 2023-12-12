@@ -53,8 +53,7 @@ void D3D::VulkanRenderer::CleanupVulkan()
 
 	m_pDescriptorPoolManager->Cleanup(m_Device);
 
-	vkDestroyDescriptorPool(m_Device, m_DefaultDescriptorPool, nullptr);
-	vkDestroyDescriptorPool(m_Device, m_DescriptorPool, nullptr);
+	vkDestroyDescriptorPool(m_Device, m_IMguiDescriptorPool, nullptr);
 
 	for (auto& pair : m_DescriptorSetLayouts)
 	{
@@ -115,8 +114,7 @@ void D3D::VulkanRenderer::InitVulkan()
 	CreateDepthResources();
 	CreateFramebuffers();
 
-	CreateDefaultDescriptorPool();
-	CreateDescriptorPool();
+	CreateIMguiDescriptorPool();
 
 	m_pDescriptorPoolManager = std::make_unique<DescriptorPoolManager>();
 
@@ -142,7 +140,7 @@ void D3D::VulkanRenderer::InitImGui()
 	init_info.QueueFamily = m_GraphicsQueueIndex; // The index of your Vulkan queue family that supports graphics operations
 	init_info.Queue = m_GraphicsQueue; // Your Vulkan graphics queue
 	init_info.PipelineCache = VK_NULL_HANDLE;
-	init_info.DescriptorPool = m_DescriptorPool; // Your Vulkan descriptor pool
+	init_info.DescriptorPool = m_IMguiDescriptorPool; // Your Vulkan descriptor pool
 	init_info.Allocator = VK_NULL_HANDLE;
 	init_info.MinImageCount = m_MinImageCount; // Minimum number of swapchain images
 	init_info.ImageCount = MAX_FRAMES_IN_FLIGHT; // Number of swapchain images
@@ -1237,38 +1235,21 @@ void D3D::VulkanRenderer::CreateFramebuffers()
 	}
 }
 
-void D3D::VulkanRenderer::CreateDefaultDescriptorPool()
-{
-	VkDescriptorPoolSize poolSize{};
-	poolSize.type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-	poolSize.descriptorCount = static_cast<uint32_t>(MAX_FRAMES_IN_FLIGHT * m_MaxDefaultDescriptorSets);
-
-	VkDescriptorPoolCreateInfo poolInfo{};
-	poolInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
-	poolInfo.poolSizeCount = 1;
-	poolInfo.pPoolSizes = &poolSize;
-	poolInfo.maxSets = static_cast<uint32_t>(MAX_FRAMES_IN_FLIGHT * m_MaxDefaultDescriptorSets);
-
-	if (vkCreateDescriptorPool(m_Device, &poolInfo, nullptr, &m_DefaultDescriptorPool) != VK_SUCCESS) {
-		throw std::runtime_error("failed to create descriptor pool!");
-	}
-}
-
-void D3D::VulkanRenderer::CreateDescriptorPool()
+void D3D::VulkanRenderer::CreateIMguiDescriptorPool()
 {
 	std::array<VkDescriptorPoolSize, 2> poolSizes{};
 	poolSizes[0].type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-	poolSizes[0].descriptorCount = static_cast<uint32_t>(MAX_FRAMES_IN_FLIGHT * m_MaxDescriptorSets);
+	poolSizes[0].descriptorCount = static_cast<uint32_t>(MAX_FRAMES_IN_FLIGHT);
 	poolSizes[1].type = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
-	poolSizes[1].descriptorCount = static_cast<uint32_t>(MAX_FRAMES_IN_FLIGHT * m_MaxDescriptorSets * m_DescriptorSetTextureMultiplier);
+	poolSizes[1].descriptorCount = static_cast<uint32_t>(MAX_FRAMES_IN_FLIGHT);
 
 	VkDescriptorPoolCreateInfo poolInfo{};
 	poolInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
 	poolInfo.poolSizeCount = static_cast<uint32_t>(poolSizes.size());
 	poolInfo.pPoolSizes = poolSizes.data();
-	poolInfo.maxSets = static_cast<uint32_t>(MAX_FRAMES_IN_FLIGHT * m_MaxDefaultDescriptorSets);
+	poolInfo.maxSets = static_cast<uint32_t>(MAX_FRAMES_IN_FLIGHT);
 
-	if (vkCreateDescriptorPool(m_Device, &poolInfo, nullptr, &m_DescriptorPool) != VK_SUCCESS) {
+	if (vkCreateDescriptorPool(m_Device, &poolInfo, nullptr, &m_IMguiDescriptorPool) != VK_SUCCESS) {
 		throw std::runtime_error("failed to create descriptor pool!");
 	}
 }
