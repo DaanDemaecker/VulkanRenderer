@@ -33,8 +33,11 @@ void D3D::D3DEngine::Run(const std::function<void()>& load)
 	renderer.AddGraphicsPipeline("DiffNorm", "../Resources/Shaders/DiffNorm.Vert.spv", "../Resources/Shaders/DiffNorm.Frag.spv", 2);
 	renderer.AddGraphicsPipeline("Test", "../Resources/Shaders/Test.Vert.spv", "../Resources/Shaders/Test.Frag.spv", 2);
 
+	
 	std::shared_ptr<D3D::TexturedMaterial> pVikingMaterial{ std::make_shared<D3D::TexturedMaterial>(std::initializer_list<const std::string>{"../resources/images/viking_room.png"}, "Diffuse") };
 	std::shared_ptr<D3D::TexturedMaterial> pVehicleMaterial{ std::make_shared<D3D::TexturedMaterial>(std::initializer_list<const std::string>{"../resources/images/vehicle_diffuse.png"}, "Diffuse") };
+	std::shared_ptr<D3D::TexturedMaterial> pFireMaterial{ std::make_shared<D3D::TexturedMaterial>(std::initializer_list<const std::string>{"../resources/images/fireFX_diffuse.png"}, "Diffuse") };
+
 	std::shared_ptr<D3D::Material> pVehicle2Material{ std::make_shared<D3D::TexturedMaterial>
 		(std::initializer_list<const std::string>{"../resources/images/vehicle_diffuse.png", "../resources/images/vehicle_normal.png"}, "DiffNorm") };
 
@@ -58,12 +61,18 @@ void D3D::D3DEngine::Run(const std::function<void()>& load)
 
 		pModels.push_back(std::make_unique<Model>());
 		pModels[1]->LoadModel("../Resources/Models/vehicle.obj");
-		//pModels[1]->SetMaterial(pVehicleMaterial);
-		pModels[1]->SetMaterial(pTestMaterial);
+		pModels[1]->SetMaterial(pVehicleMaterial);
+		//pModels[1]->SetMaterial(pTestMaterial);
 		pModels[1]->SetPosition(-1.f, 0, 5.f);
 		pModels[1]->SetRotation(0.f, glm::radians(75.0f), 0.f);
 		pModels[1]->SetScale(0.05f, 0.05f, 0.05f);
 	
+		pModels.push_back(std::make_unique<Model>());
+		pModels[2]->LoadModel("../Resources/Models/fireFX.obj");
+		pModels[2]->SetMaterial(pFireMaterial);
+		pModels[2]->SetPosition(-1.f, 0, 5.f);
+		pModels[2]->SetRotation(0.f, glm::radians(75.0f), 0.f);
+		pModels[2]->SetScale(0.05f, 0.05f, 0.05f);
 
 
 	/*for (int i{}; i < 20; ++i)
@@ -75,14 +84,14 @@ void D3D::D3DEngine::Run(const std::function<void()>& load)
 		pModels.push_back(std::move(pModel));
 	}*/
 
-	/*{
+	{
 		std::unique_ptr<Model> pModel{ std::make_unique<D3D::Model>() };
 		pModel->LoadModel("../Resources/Models/Cube.obj");
 		pModel->SetMaterial(pVikingMaterial);
 		pModel->SetPosition(0, 0, 5.f);
-		pModel->SetScale(50, 50, 50);
+		pModel->SetScale(1000, 1000, 1000);
 		pModels.push_back(std::move(pModel));
-	}*/
+	}
 
 	auto& time{ TimeManager::GetInstance() };
 
