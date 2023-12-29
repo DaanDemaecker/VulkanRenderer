@@ -1,7 +1,8 @@
 #ifndef UtilsIncluded
 #define UtilsIncluded
 
-#include "stdafx.h"
+#include "Structs.h"
+
 #define GLFW_INCLUDE_VULKAN
 #include <GLFW/glfw3.h>
 #include <vector>

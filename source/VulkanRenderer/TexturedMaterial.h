@@ -1,7 +1,10 @@
 #ifndef TexturedMaterialIncluded
 #define TexturedMaterialIncluded
+
 #include "Material.h"
+
 #include <initializer_list>
+#include <iostream>
 
 namespace D3D
 {

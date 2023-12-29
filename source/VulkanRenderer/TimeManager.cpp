@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "TimeManager.h"
 
 void D3D::TimeManager::SetDeltaTime(float dt)

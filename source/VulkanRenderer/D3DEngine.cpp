@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "D3DEngine.h"
 #include "VulkanRenderer.h"
 #include "TimeManager.h"

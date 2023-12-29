@@ -1,6 +1,12 @@
 #ifndef ModelIncluded
 #define ModelIncluded
 
+#include "GLFWIncludes.h"
+#include "GLMIncludes.h"
+#include "Structs.h"
+
+#include <memory>
+#include <iostream>
 
 namespace D3D
 {

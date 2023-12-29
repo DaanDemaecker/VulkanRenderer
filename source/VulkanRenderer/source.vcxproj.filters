@@ -5,10 +5,6 @@
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
-    <Filter Include="Header Files">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
-    </Filter>
     <Filter Include="Resource Files">
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
@@ -33,6 +29,9 @@
     </Filter>
     <Filter Include="Vulkan">
       <UniqueIdentifier>{b0372c84-5682-47e9-b1a5-765fd75797de}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Includes">
+      <UniqueIdentifier>{4aeb2f0b-2e4c-484a-a934-3ab2e74b9015}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -87,11 +86,14 @@
     <ClCompile Include="DescriptorPoolManager.cpp">
       <Filter>Vulkan</Filter>
     </ClCompile>
+    <ClCompile Include="GLFWIncludes.h">
+      <Filter>Includes</Filter>
+    </ClCompile>
+    <ClCompile Include="STBIncludes.h">
+      <Filter>Includes</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="stdafx.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Utils.h">
       <Filter>Utils</Filter>
     </ClInclude>
@@ -148,6 +150,9 @@
     </ClInclude>
     <ClInclude Include="DescriptorPoolManager.h">
       <Filter>Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="GLMIncludes.h">
+      <Filter>Includes</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

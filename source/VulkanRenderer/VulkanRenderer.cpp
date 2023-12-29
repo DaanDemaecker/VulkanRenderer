@@ -1,9 +1,6 @@
-#include "stdafx.h"
 #include "VulkanRenderer.h"
 #include "D3DEngine.h"
 #include "Utils.h"
-#include <set>
-#include <algorithm>
 #include "Model.h"
 #include "DescriptorPoolManager.h"
 #include "DescriptorPoolWrapper.h"
@@ -19,6 +16,10 @@
 #include <imgui.h>
 #include <backends/imgui_impl_vulkan.h>
 #include <backends/imgui_impl_glfw.h>
+
+#include <set>
+#include <algorithm>
+#include <iostream>
 
 extern D3D::Window g_pWindow;
 
@@ -68,7 +69,7 @@ void D3D::VulkanRenderer::CleanupVulkan()
 
 	vkDestroyRenderPass(m_Device, m_RenderPass, nullptr);
 
-	for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; ++i)
+	for (size_t i = 0; i < m_MaxFramesInFlight; ++i)
 	{
 		vkDestroySemaphore(m_Device, m_ImageAvailableSemaphores[i], nullptr);
 		vkDestroySemaphore(m_Device, m_RenderFinishedSemaphores[i], nullptr);
@@ -143,7 +144,7 @@ void D3D::VulkanRenderer::InitImGui()
 	init_info.DescriptorPool = m_IMguiDescriptorPool; // Your Vulkan descriptor pool
 	init_info.Allocator = VK_NULL_HANDLE;
 	init_info.MinImageCount = m_MinImageCount; // Minimum number of swapchain images
-	init_info.ImageCount = MAX_FRAMES_IN_FLIGHT; // Number of swapchain images
+	init_info.ImageCount = m_MaxFramesInFlight; // Number of swapchain images
 	init_info.CheckVkResultFn = [](VkResult /*err*/) { /* Implement your own error handling */ };
 	init_info.MSAASamples = m_MsaaSamples;
 
@@ -406,7 +407,7 @@ void D3D::VulkanRenderer::Render(std::vector<std::unique_ptr<Model>>& pModels)
 		throw std::runtime_error("failed to present swap chain image!");
 	}
 
-	++m_CurrentFrame %= MAX_FRAMES_IN_FLIGHT;
+	++m_CurrentFrame %= m_MaxFramesInFlight;
 }
 
 void D3D::VulkanRenderer::RecordCommandBuffer(VkCommandBuffer& commandBuffer, uint32_t imageIndex, std::vector<std::unique_ptr<Model>>& pModels)
@@ -1240,15 +1241,15 @@ void D3D::VulkanRenderer::CreateIMguiDescriptorPool()
 {
 	std::array<VkDescriptorPoolSize, 2> poolSizes{};
 	poolSizes[0].type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-	poolSizes[0].descriptorCount = static_cast<uint32_t>(MAX_FRAMES_IN_FLIGHT);
+	poolSizes[0].descriptorCount = static_cast<uint32_t>(m_MaxFramesInFlight);
 	poolSizes[1].type = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
-	poolSizes[1].descriptorCount = static_cast<uint32_t>(MAX_FRAMES_IN_FLIGHT);
+	poolSizes[1].descriptorCount = static_cast<uint32_t>(m_MaxFramesInFlight);
 
 	VkDescriptorPoolCreateInfo poolInfo{};
 	poolInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
 	poolInfo.poolSizeCount = static_cast<uint32_t>(poolSizes.size());
 	poolInfo.pPoolSizes = poolSizes.data();
-	poolInfo.maxSets = static_cast<uint32_t>(MAX_FRAMES_IN_FLIGHT);
+	poolInfo.maxSets = static_cast<uint32_t>(m_MaxFramesInFlight);
 
 	if (vkCreateDescriptorPool(m_Device, &poolInfo, nullptr, &m_IMguiDescriptorPool) != VK_SUCCESS) {
 		throw std::runtime_error("failed to create descriptor pool!");
@@ -1257,7 +1258,7 @@ void D3D::VulkanRenderer::CreateIMguiDescriptorPool()
 
 void D3D::VulkanRenderer::CreateCommandBuffers()
 {
-	m_CommandBuffers.resize(MAX_FRAMES_IN_FLIGHT);
+	m_CommandBuffers.resize(m_MaxFramesInFlight);
 
 	VkCommandBufferAllocateInfo allocInfo{};
 	allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
@@ -1275,9 +1276,9 @@ void D3D::VulkanRenderer::CreateCommandBuffers()
 
 void D3D::VulkanRenderer::CreateSyncObjects()
 {
-	m_ImageAvailableSemaphores.resize(MAX_FRAMES_IN_FLIGHT);
-	m_RenderFinishedSemaphores.resize(MAX_FRAMES_IN_FLIGHT);
-	m_InFlightFences.resize(MAX_FRAMES_IN_FLIGHT);
+	m_ImageAvailableSemaphores.resize(m_MaxFramesInFlight);
+	m_RenderFinishedSemaphores.resize(m_MaxFramesInFlight);
+	m_InFlightFences.resize(m_MaxFramesInFlight);
 
 
 	VkSemaphoreCreateInfo semaphoreInfo{};
@@ -1288,7 +1289,7 @@ void D3D::VulkanRenderer::CreateSyncObjects()
 	fenceInfo.flags = VK_FENCE_CREATE_SIGNALED_BIT;
 
 
-	for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; ++i)
+	for (size_t i = 0; i < m_MaxFramesInFlight; ++i)
 	{
 		if (vkCreateSemaphore(m_Device, &semaphoreInfo, nullptr, &m_ImageAvailableSemaphores[i]) != VK_SUCCESS ||
 			vkCreateSemaphore(m_Device, &semaphoreInfo, nullptr, &m_RenderFinishedSemaphores[i]) != VK_SUCCESS ||

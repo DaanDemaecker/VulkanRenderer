@@ -1,7 +1,9 @@
 #ifndef DescriptorPoolWrapperIncluded
 #define DescriptorPoolWrapperIncluded
 
-#include "stdafx.h"
+#include "GLFWIncludes.h"
+
+#include <vector>
 
 namespace D3D
 {
@@ -32,6 +34,8 @@ namespace D3D
 		void UpdateDescriptorSets(std::vector<VkBuffer>& uboBuffers, std::vector<VkDescriptorSet>& descriptorSets, std::vector<VkImageView>& imageViews);
 
 	private:
+		int m_MaxFramesInFlight{};
+
 		const uint32_t m_UboAmount;
 		const uint32_t m_TextureAmount;
 

@@ -1,6 +1,8 @@
 #ifndef MaterialIncluded
 #define MaterialIncluded
 
+#include "Structs.h"
+#include <iostream>
 
 namespace D3D
 {

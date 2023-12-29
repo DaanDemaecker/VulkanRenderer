@@ -1,19 +1,13 @@
 #ifndef StructsIncluded
 #define StructsIncluded
 
-
-#define GLFW_INCLUDE_VULKAN
-#include <GLFW/glfw3.h>
 #include <optional>
 #include <array>
 
-#include <glm/glm.hpp>
+#include "GLMIncludes.h"
+#include "GLFWIncludes.h"
 
-#define GLM_ENABLE_EXPERIMENTAL
-#pragma warning(push)
-#pragma warning(disable : 4201)
-#include <glm/gtx/hash.hpp>
-#pragma warning(pop)
+
 
 
 struct QueueFamilyIndices

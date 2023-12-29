@@ -1,10 +1,11 @@
 #ifndef DescriptorPoolManagerIncluded
 #define DescriptorPoolManagerIncluded
 
+#include "GLFWIncludes.h"
+
 #include <utility>
 #include <map>
-
-#include "stdafx.h"
+#include <memory>
 
 namespace D3D
 {

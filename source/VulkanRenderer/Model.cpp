@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "Model.h"
 #include "VulkanRenderer.h"
 #include "Utils.h"
@@ -144,17 +143,17 @@ void D3D::Model::CreateUniformBuffers()
 
 	VkDeviceSize bufferSize = sizeof(UniformBufferObject);
 
-	m_UboBuffers.resize(MAX_FRAMES_IN_FLIGHT);
-	m_UbosMemory.resize(MAX_FRAMES_IN_FLIGHT);
-	m_UbosMapped.resize(MAX_FRAMES_IN_FLIGHT);
+	m_UboBuffers.resize(renderer.GetMaxFrames());
+	m_UbosMemory.resize(renderer.GetMaxFrames());
+	m_UbosMapped.resize(renderer.GetMaxFrames());
 
-	m_Ubos.resize(MAX_FRAMES_IN_FLIGHT);
-	m_UboChanged.resize(MAX_FRAMES_IN_FLIGHT);
+	m_Ubos.resize(renderer.GetMaxFrames());
+	m_UboChanged.resize(renderer.GetMaxFrames());
 
 	SetDirtyFlags();
 
 
-	for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; ++i)
+	for (size_t i = 0; i < renderer.GetMaxFrames(); ++i)
 	{
 		renderer.CreateBuffer(bufferSize, VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
 			m_UboBuffers[i], m_UbosMemory[i]);
@@ -205,7 +204,9 @@ PipelinePair& D3D::Model::GetPipeline()
 
 void D3D::Model::Cleanup()
 {
-	auto device = D3D::VulkanRenderer::GetInstance().GetDevice();
+	auto& renderer = D3D::VulkanRenderer::GetInstance();
+
+	auto device = renderer.GetDevice();
 
 	vkDeviceWaitIdle(device);
 
@@ -215,7 +216,7 @@ void D3D::Model::Cleanup()
 	vkDestroyBuffer(device, m_VertexBuffer, nullptr);
 	vkFreeMemory(device, m_VertexBufferMemory, nullptr);
 
-	for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; ++i)
+	for (size_t i = 0; i < renderer.GetMaxFrames(); ++i)
 	{
 		vkDestroyBuffer(device, m_UboBuffers[i], nullptr);
 		vkFreeMemory(device, m_UbosMemory[i], nullptr);

@@ -2,6 +2,12 @@
 #define VulkanRendererIncluded
 
 #include "Singleton.h"
+#include "Structs.h"
+
+#include <memory>
+#include <vector>
+#include <map>
+#include <iostream>
 
 namespace D3D
 {
@@ -27,6 +33,7 @@ namespace D3D
         void AddGraphicsPipeline(const std::string& pipelineName, const std::string& vertShaderName, const std::string& fragShaderName, int textureAmount);
 
         //Public getters
+        int GetMaxFrames() const { return m_MaxFramesInFlight; }
         VkDevice& GetDevice() {return m_Device; }
         VkCommandPool& GetCommandPool() { return m_CommandPool; }
         VkImageView& GetDefaultImageView() { return m_DefaultTextureImageView; }
@@ -53,6 +60,8 @@ namespace D3D
 
     private:
         LightObject m_Test{};
+
+        const int m_MaxFramesInFlight{ 2 };
 
         //----Member variables----
         //---Validation layers---

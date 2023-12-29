@@ -1,11 +1,9 @@
-#include "stdafx.h"
 #include "TexturedMaterial.h"
 #include "VulkanRenderer.h"
 #include "Utils.h"
 #include "DescriptorPoolManager.h"
 #include "DescriptorPoolWrapper.h"
-
-#include <stb_image.h>
+#include "STBIncludes.h"
 
 D3D::TexturedMaterial::TexturedMaterial(std::initializer_list<const std::string> filePaths, const std::string& pipelineName)
 	:Material(pipelineName)

@@ -178,6 +178,8 @@
     <ClCompile Include="D3DEngine.cpp" />
     <ClCompile Include="DescriptorPoolManager.cpp" />
     <ClCompile Include="DescriptorPoolWrapper.cpp" />
+    <ClCompile Include="GLFWIncludes.h" />
+    <ClCompile Include="STBIncludes.h" />
     <ClCompile Include="TexturedMaterial.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Material.cpp" />
@@ -202,10 +204,10 @@
     <ClInclude Include="Material.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="Singleton.h" />
-    <ClInclude Include="stdafx.h" />
     <ClInclude Include="Structs.h" />
     <ClInclude Include="TimeManager.h" />
     <ClInclude Include="Utils.h" />
+    <ClInclude Include="GLMIncludes.h" />
     <ClInclude Include="VulkanRenderer.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

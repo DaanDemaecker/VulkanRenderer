@@ -1,11 +1,12 @@
 #include "DescriptorPoolWrapper.h"
 #include "VulkanRenderer.h"
 #include "Model.h"
-#include "stdafx.h"
 
 D3D::DescriptorPoolWrapper::DescriptorPoolWrapper(uint32_t uboAmount, uint32_t textureAmount)
 	:m_UboAmount{uboAmount}, m_TextureAmount{textureAmount}
 {
+	m_MaxFramesInFlight = VulkanRenderer::GetInstance().GetMaxFrames();
+
 	InitDescriptorPool();
 }
 
@@ -40,14 +41,14 @@ void D3D::DescriptorPoolWrapper::CreateDescriptorSets(VkDescriptorSetLayout layo
 
 	auto& renderer{ VulkanRenderer::GetInstance() };
 
-	std::vector<VkDescriptorSetLayout> layouts(MAX_FRAMES_IN_FLIGHT, layout);
+	std::vector<VkDescriptorSetLayout> layouts(m_MaxFramesInFlight, layout);
 	VkDescriptorSetAllocateInfo allocInfo{};
 	allocInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
 	allocInfo.descriptorPool = m_DescriptorPool;
-	allocInfo.descriptorSetCount = static_cast<uint32_t>(MAX_FRAMES_IN_FLIGHT);
+	allocInfo.descriptorSetCount = static_cast<uint32_t>(m_MaxFramesInFlight);
 	allocInfo.pSetLayouts = layouts.data();
 
-	descriptorSets.resize(MAX_FRAMES_IN_FLIGHT);
+	descriptorSets.resize(m_MaxFramesInFlight);
 	if (vkAllocateDescriptorSets(renderer.GetDevice(), &allocInfo, descriptorSets.data()) != VK_SUCCESS)
 	{
 		throw std::runtime_error("failed to allocate descriptor sets!");
@@ -56,7 +57,9 @@ void D3D::DescriptorPoolWrapper::CreateDescriptorSets(VkDescriptorSetLayout layo
 
 void D3D::DescriptorPoolWrapper::UpdateDescriptorSets(std::vector<VkBuffer>& uboBuffers, std::vector<VkDescriptorSet>& descriptorSets)
 {
-	for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++)
+	
+
+	for (size_t i = 0; i < m_MaxFramesInFlight; i++)
 	{
 		std::vector<VkWriteDescriptorSet> descriptorWrites{};
 		descriptorWrites.resize(m_UboAmount);
@@ -82,7 +85,7 @@ void D3D::DescriptorPoolWrapper::UpdateDescriptorSets(std::vector<VkBuffer>& ubo
 {
 	auto& renderer{ D3D::VulkanRenderer::GetInstance() };
 
-	for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++)
+	for (size_t i = 0; i < m_MaxFramesInFlight; i++)
 	{
 		std::vector<VkWriteDescriptorSet> descriptorWrites{};
 		descriptorWrites.resize(m_UboAmount + m_TextureAmount);
@@ -150,15 +153,15 @@ void D3D::DescriptorPoolWrapper::InitDescriptorPool()
 	{
 		std::array<VkDescriptorPoolSize, 2> poolSizes{};
 		poolSizes[0].type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-		poolSizes[0].descriptorCount = static_cast<uint32_t>(MAX_FRAMES_IN_FLIGHT * m_MaxDescriptorSets * m_UboAmount);
+		poolSizes[0].descriptorCount = static_cast<uint32_t>(m_MaxFramesInFlight * m_MaxDescriptorSets * m_UboAmount);
 		poolSizes[1].type = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
-		poolSizes[1].descriptorCount = static_cast<uint32_t>(MAX_FRAMES_IN_FLIGHT * m_MaxDescriptorSets * m_TextureAmount);
+		poolSizes[1].descriptorCount = static_cast<uint32_t>(m_MaxFramesInFlight * m_MaxDescriptorSets * m_TextureAmount);
 
 		VkDescriptorPoolCreateInfo poolInfo{};
 		poolInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
 		poolInfo.poolSizeCount = static_cast<uint32_t>(poolSizes.size());
 		poolInfo.pPoolSizes = poolSizes.data();
-		poolInfo.maxSets = static_cast<uint32_t>(MAX_FRAMES_IN_FLIGHT * m_MaxDescriptorSets);
+		poolInfo.maxSets = static_cast<uint32_t>(m_MaxFramesInFlight * m_MaxDescriptorSets);
 
 		if (vkCreateDescriptorPool(renderer.GetDevice(), &poolInfo, nullptr, &m_DescriptorPool) != VK_SUCCESS) {
 			throw std::runtime_error("failed to create descriptor pool!");
@@ -168,13 +171,13 @@ void D3D::DescriptorPoolWrapper::InitDescriptorPool()
 	{
 		VkDescriptorPoolSize poolSize{};
 		poolSize.type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-		poolSize.descriptorCount = static_cast<uint32_t>(MAX_FRAMES_IN_FLIGHT * m_MaxDescriptorSets * m_UboAmount);
+		poolSize.descriptorCount = static_cast<uint32_t>(m_MaxFramesInFlight * m_MaxDescriptorSets * m_UboAmount);
 
 		VkDescriptorPoolCreateInfo poolInfo{};
 		poolInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
 		poolInfo.poolSizeCount = 1;
 		poolInfo.pPoolSizes = &poolSize;
-		poolInfo.maxSets = static_cast<uint32_t>(MAX_FRAMES_IN_FLIGHT * m_MaxDescriptorSets);
+		poolInfo.maxSets = static_cast<uint32_t>(m_MaxFramesInFlight * m_MaxDescriptorSets);
 
 		if (vkCreateDescriptorPool(renderer.GetDevice(), &poolInfo, nullptr, &m_DescriptorPool) != VK_SUCCESS) {
 			throw std::runtime_error("failed to create descriptor pool!");
