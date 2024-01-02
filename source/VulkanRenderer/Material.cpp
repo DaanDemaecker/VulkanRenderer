@@ -20,7 +20,12 @@ void D3D::Material::CreateDescriptorSets(Model* pModel, std::vector<VkDescriptor
 void D3D::Material::UpdateDescriptorSets(std::vector<VkBuffer>& uboBuffers, std::vector<VkDescriptorSet>& descriptorSets)
 {
 	auto descriptorPool = GetDescriptorPool();
-	descriptorPool->UpdateDescriptorSets(uboBuffers, descriptorSets);
+	std::vector<std::vector<VkBuffer>> uboBuffferList{ uboBuffers };
+
+	std::vector<VkDeviceSize> uboSizes(1);
+	uboSizes[0] = sizeof(UniformBufferObject);
+
+	descriptorPool->UpdateDescriptorSets(uboBuffferList, uboSizes, descriptorSets);
 }
 
 VkDescriptorSetLayout* D3D::Material::GetDescriptorLayout()

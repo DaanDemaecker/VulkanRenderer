@@ -55,7 +55,12 @@ void D3D::TexturedMaterial::CreateDescriptorSets(Model* pModel, std::vector<VkDe
 void D3D::TexturedMaterial::UpdateDescriptorSets(std::vector<VkBuffer>& uboBuffers, std::vector<VkDescriptorSet>& descriptorSets)
 {
 	auto descriptorPool = GetDescriptorPool();
-	descriptorPool->UpdateDescriptorSets(uboBuffers, descriptorSets, m_TextureImageViews);
+	std::vector<std::vector<VkBuffer>> uboBuffferList{ uboBuffers };
+
+	std::vector<VkDeviceSize> uboSizes(1);
+	uboSizes[0] = sizeof(UniformBufferObject);
+
+	descriptorPool->UpdateDescriptorSets(uboBuffferList, uboSizes, descriptorSets, m_TextureImageViews);
 }
 
 VkDescriptorSetLayout* D3D::TexturedMaterial::GetDescriptorLayout()

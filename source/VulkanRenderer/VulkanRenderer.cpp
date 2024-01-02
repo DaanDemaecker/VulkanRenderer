@@ -32,6 +32,10 @@ D3D::VulkanRenderer::VulkanRenderer()
 	InitVulkan();
 
 	InitImGui();
+
+	m_GlobalLight.direction = glm::normalize(glm::vec3{ -.577, -.577f, 0 });
+	m_GlobalLight.color = glm::vec3{ 1.f, 1.f, 1.f };
+	m_GlobalLight.intensity = 1.f;
 }
 
 D3D::VulkanRenderer::~VulkanRenderer()
@@ -470,13 +474,9 @@ void D3D::VulkanRenderer::RecordCommandBuffer(VkCommandBuffer& commandBuffer, ui
 
 void D3D::VulkanRenderer::Render(Model* pModel, VkCommandBuffer& commandBuffer, const VkDescriptorSet* descriptorSet, const PipelinePair& pipeline)
 {
-	m_Test.direction = glm::normalize(glm::vec3{ -.577, -.577f, 0});
-	m_Test.color = glm::vec3{ 1.f, 1.f, 1.f};
-	m_Test.intensity = 1.f;
-
 	vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline.pipeline);
 
-	vkCmdPushConstants(commandBuffer, pipeline.pipelineLayout, VK_SHADER_STAGE_FRAGMENT_BIT, 0, sizeof(LightObject), &m_Test);
+	vkCmdPushConstants(commandBuffer, pipeline.pipelineLayout, VK_SHADER_STAGE_FRAGMENT_BIT, 0, sizeof(LightObject), &m_GlobalLight);
 
 	VkBuffer vertexBuffers[] = { pModel->GetVertexBuffer() };
 	VkDeviceSize offsets[] = { 0 };

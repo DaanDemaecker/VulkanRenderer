@@ -87,7 +87,7 @@ struct Vertex
 
 	bool operator==(const Vertex& other) const
 	{
-		return pos == other.pos && color == other.color && texCoord == other.texCoord;
+		return pos == other.pos && color == other.color && texCoord == other.texCoord && normal == other.normal;
 	}
 };
 
@@ -101,8 +101,8 @@ struct UniformBufferObject
 struct LightObject
 {
 	glm::vec3 direction{};
-	float intensity{};
 	glm::vec3 color{};
+	float intensity{};
 };
 
 

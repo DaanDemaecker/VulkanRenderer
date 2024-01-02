@@ -42,6 +42,7 @@ namespace D3D
         VkCommandBuffer& GetCurrentCommandBuffer() { return m_CommandBuffers[m_CurrentFrame]; }
         uint32_t GetCurrentFrame() const { return  m_CurrentFrame; }
         DescriptorPoolManager* GetDescriptorPoolManager() const;
+        const LightObject& GetGlobalLight() const { return m_GlobalLight; }
 
 
         //Public Helpers
@@ -59,7 +60,7 @@ namespace D3D
         VkDescriptorSetLayout* GetDescriptorSetLayout(int textureAmount);
 
     private:
-        LightObject m_Test{};
+        LightObject m_GlobalLight{};
 
         const int m_MaxFramesInFlight{ 2 };
 
