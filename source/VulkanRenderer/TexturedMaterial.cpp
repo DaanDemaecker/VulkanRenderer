@@ -55,22 +55,23 @@ void D3D::TexturedMaterial::CreateDescriptorSets(Model* pModel, std::vector<VkDe
 void D3D::TexturedMaterial::UpdateDescriptorSets(std::vector<VkBuffer>& uboBuffers, std::vector<VkDescriptorSet>& descriptorSets)
 {
 	auto descriptorPool = GetDescriptorPool();
-	std::vector<std::vector<VkBuffer>> uboBuffferList{ uboBuffers };
+	std::vector<std::vector<VkBuffer>> uboBuffferList{ uboBuffers, D3D::VulkanRenderer::GetInstance().GetLightBuffers() };
 
-	std::vector<VkDeviceSize> uboSizes(1);
+	std::vector<VkDeviceSize> uboSizes(2);
 	uboSizes[0] = sizeof(UniformBufferObject);
+	uboSizes[1] = sizeof(LightObject);
 
 	descriptorPool->UpdateDescriptorSets(uboBuffferList, uboSizes, descriptorSets, m_TextureImageViews);
 }
 
 VkDescriptorSetLayout* D3D::TexturedMaterial::GetDescriptorLayout()
 {
-	return VulkanRenderer::GetInstance().GetDescriptorSetLayout(static_cast<int>(m_TextureImages.size()));
+	return VulkanRenderer::GetInstance().GetDescriptorSetLayout(1, 1, static_cast<int>(m_TextureImages.size()));
 }
 
 D3D::DescriptorPoolWrapper* D3D::TexturedMaterial::GetDescriptorPool()
 {
-	return D3D::VulkanRenderer::GetInstance().GetDescriptorPoolManager()->GetDescriptorPool(1, m_TextureAmount);
+	return D3D::VulkanRenderer::GetInstance().GetDescriptorPoolManager()->GetDescriptorPool(2, m_TextureAmount);
 }
 
 void D3D::TexturedMaterial::CreateTextureImage(const std::string& filePath, int index)

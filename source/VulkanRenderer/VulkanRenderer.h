@@ -9,6 +9,7 @@
 #include <map>
 #include <iostream>
 
+
 namespace D3D
 {
     class Model;
@@ -29,12 +30,12 @@ namespace D3D
         void Render(std::vector<std::unique_ptr<Model>>& pModels);
 
         void Render(Model* pModel, VkCommandBuffer& commandBuffer, const VkDescriptorSet* descriptorSet, const PipelinePair& pipeline);
-        
-        void AddGraphicsPipeline(const std::string& pipelineName, const std::string& vertShaderName, const std::string& fragShaderName, int textureAmount);
+
+        void AddGraphicsPipeline(const std::string& pipelineName, const std::string& vertShaderName, const std::string& fragShaderName, int vertexUbos, int fragmentUbos, int textureAmount);
 
         //Public getters
-        int GetMaxFrames() const { return m_MaxFramesInFlight; }
-        VkDevice& GetDevice() {return m_Device; }
+        size_t GetMaxFrames() const { return m_MaxFramesInFlight; }
+        VkDevice& GetDevice() { return m_Device; }
         VkCommandPool& GetCommandPool() { return m_CommandPool; }
         VkImageView& GetDefaultImageView() { return m_DefaultTextureImageView; }
         VkSampler& GetSampler() { return m_TextureSampler; }
@@ -43,6 +44,7 @@ namespace D3D
         uint32_t GetCurrentFrame() const { return  m_CurrentFrame; }
         DescriptorPoolManager* GetDescriptorPoolManager() const;
         const LightObject& GetGlobalLight() const { return m_GlobalLight; }
+        std::vector<VkBuffer>& GetLightBuffers() { return m_LightBuffers; }
 
 
         //Public Helpers
@@ -51,18 +53,22 @@ namespace D3D
         void CopyBufferToImage(VkBuffer buffer, VkImage image, uint32_t width, uint32_t height);
         void GenerateMipmaps(VkImage image, VkFormat imageFormat, int32_t texWidth, int32_t texHeight, uint32_t mipLevels);
         void CreateImage(uint32_t width, uint32_t height, uint32_t mipLevels, VkSampleCountFlagBits numSamples,
-        VkFormat format, VkImageTiling tiling, VkImageUsageFlags usage, VkMemoryPropertyFlags properties, VkImage& image, VkDeviceMemory& imageMemory);
+            VkFormat format, VkImageTiling tiling, VkImageUsageFlags usage, VkMemoryPropertyFlags properties, VkImage& image, VkDeviceMemory& imageMemory);
         void TransitionImageLayout(VkImage image, VkFormat format, VkImageLayout oldLayout, VkImageLayout newLayout, uint32_t mipLevels);
         VkImageView CreateImageView(VkImage image, VkFormat format, VkImageAspectFlags aspectFlags, uint32_t mipLevels);
 
         void UpdateUniformBuffer(UniformBufferObject& buffer);
 
-        VkDescriptorSetLayout* GetDescriptorSetLayout(int textureAmount);
-
+        VkDescriptorSetLayout* GetDescriptorSetLayout(int vertexUbos, int fragmentUbos, int textureAmount);
     private:
-        LightObject m_GlobalLight{};
+        const size_t m_MaxFramesInFlight{ 2 };
 
-        const int m_MaxFramesInFlight{ 2 };
+        LightObject m_GlobalLight{};
+        std::vector<bool> m_LightChanged{};
+
+        std::vector<VkBuffer> m_LightBuffers{};
+        std::vector<VkDeviceMemory> m_LightMemory{};
+        std::vector<void*> m_LightMapped{};
 
         //----Member variables----
         //---Validation layers---
@@ -125,7 +131,7 @@ namespace D3D
         VkRenderPassBeginInfo m_RenderpassInfo{};
 
         //--Descriptorlayout--
-        std::map<int, VkDescriptorSetLayout> m_DescriptorSetLayouts{};
+        std::map<std::tuple<int, int, int>, VkDescriptorSetLayout> m_DescriptorSetLayouts{};
 
         //--GraphicsPipeline--
         //VkPipeline m_GraphicsPipeline{};
@@ -248,7 +254,7 @@ namespace D3D
         void CreateRenderPass();
 
         //--Descriptor Layout
-        void CreateDescriptorLayout(int textureAmount);
+        void CreateDescriptorLayout(int vertexUbos, int fragmentUbos, int textureAmount);
 
         //-Shader Module-
         VkShaderModule CreateShaderModule(const std::vector<char>& code);
@@ -280,7 +286,10 @@ namespace D3D
 
         //--Sync Objects--
         void CreateSyncObjects();
-        
+
+        //--LightBuffers--
+        void CreateLightBuffer();
+        void UpdateLightBuffer(int frame);
 
         //--General helpers--
         VkFormat FindSupportedFormat(const std::vector<VkFormat>& candidates, VkImageTiling tiling, VkFormatFeatureFlags features);

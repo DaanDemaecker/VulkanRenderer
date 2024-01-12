@@ -29,13 +29,13 @@ D3D::VulkanRenderer::VulkanRenderer()
 	m_EnableValidationLayers = false;
 #endif
 
-	InitVulkan();
-
-	InitImGui();
-
 	m_GlobalLight.direction = glm::normalize(glm::vec3{ -.577, -.577f, 0 });
 	m_GlobalLight.color = glm::vec3{ 1.f, 1.f, 1.f };
 	m_GlobalLight.intensity = 1.f;
+
+	InitVulkan();
+
+	InitImGui();
 }
 
 D3D::VulkanRenderer::~VulkanRenderer()
@@ -55,6 +55,12 @@ void D3D::VulkanRenderer::CleanupVulkan()
 	vkDestroyImageView(m_Device, m_DefaultTextureImageView, nullptr);
 	vkDestroyImage(m_Device, m_DefaultTextureImage, nullptr);
 	vkFreeMemory(m_Device, m_DefaultTextureImageMemory, nullptr);
+
+	for(size_t i{}; i < m_MaxFramesInFlight; i++)
+	{
+		vkDestroyBuffer(m_Device, m_LightBuffers[i], nullptr);
+		vkFreeMemory(m_Device, m_LightMemory[i], nullptr);
+	}
 
 	m_pDescriptorPoolManager->Cleanup(m_Device);
 
@@ -112,7 +118,9 @@ void D3D::VulkanRenderer::InitVulkan()
 	CreateImageViews();
 	CreateRenderPass();
 
-	AddGraphicsPipeline(m_DefaultPipelineName, m_DefaultVertName, m_DefaultFragName, 0);
+	CreateLightBuffer();
+
+	AddGraphicsPipeline(m_DefaultPipelineName, m_DefaultVertName, m_DefaultFragName, 1, 1, 0);
 
 	CreateCommandPool();
 	CreateColorResources();
@@ -128,6 +136,9 @@ void D3D::VulkanRenderer::InitVulkan()
 	CreateTextureSampler();
 
 	CreateCommandBuffers();
+
+	
+
 	CreateSyncObjects();
 }
 
@@ -148,7 +159,7 @@ void D3D::VulkanRenderer::InitImGui()
 	init_info.DescriptorPool = m_IMguiDescriptorPool; // Your Vulkan descriptor pool
 	init_info.Allocator = VK_NULL_HANDLE;
 	init_info.MinImageCount = m_MinImageCount; // Minimum number of swapchain images
-	init_info.ImageCount = m_MaxFramesInFlight; // Number of swapchain images
+	init_info.ImageCount = static_cast<uint32_t>(m_MaxFramesInFlight); // Number of swapchain images
 	init_info.CheckVkResultFn = [](VkResult /*err*/) { /* Implement your own error handling */ };
 	init_info.MSAASamples = m_MsaaSamples;
 
@@ -159,7 +170,7 @@ void D3D::VulkanRenderer::InitImGui()
 	EndSingleTimeCommands(commandBuffer);
 }
 
-void D3D::VulkanRenderer::AddGraphicsPipeline(const std::string& pipelineName, const std::string& vertShaderName, const std::string& fragShaderName, int textureAmount)
+void D3D::VulkanRenderer::AddGraphicsPipeline(const std::string& pipelineName, const std::string& vertShaderName, const std::string& fragShaderName, int vertexUbos, int fragmentUbos, int textureAmount)
 {
 	if (m_GraphicPipelines.contains(pipelineName))
 	{
@@ -298,17 +309,17 @@ void D3D::VulkanRenderer::AddGraphicsPipeline(const std::string& pipelineName, c
 	colorBlending.blendConstants[2] = 0.0f; //Optional
 	colorBlending.blendConstants[3] = 0.0f; //Otional
 
-	VkPushConstantRange pushConstantRange = {};
+	/*VkPushConstantRange pushConstantRange = {};
 	pushConstantRange.stageFlags = VK_SHADER_STAGE_FRAGMENT_BIT;
 	pushConstantRange.offset = 0;
-	pushConstantRange.size = sizeof(LightObject);
+	pushConstantRange.size = sizeof(LightObject);*/
 
 	VkPipelineLayoutCreateInfo pipelineLayoutInfo{};
 	pipelineLayoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
 	pipelineLayoutInfo.setLayoutCount = 1;
-	pipelineLayoutInfo.pSetLayouts = GetDescriptorSetLayout(textureAmount);
-	pipelineLayoutInfo.pushConstantRangeCount = 1; // Number of push constant ranges used by the pipeline
-	pipelineLayoutInfo.pPushConstantRanges = &pushConstantRange; // Array of push constant ranges used by the pipeline
+	pipelineLayoutInfo.pSetLayouts = GetDescriptorSetLayout(vertexUbos, fragmentUbos, textureAmount);
+	//pipelineLayoutInfo.pushConstantRangeCount = 1; // Number of push constant ranges used by the pipeline
+	//pipelineLayoutInfo.pPushConstantRanges = &pushConstantRange; // Array of push constant ranges used by the pipeline
 
 	if (vkCreatePipelineLayout(m_Device, &pipelineLayoutInfo, nullptr, &m_GraphicPipelines[pipelineName].pipelineLayout) != VK_SUCCESS) {
 		throw std::runtime_error("failed to create pipeline layout!");
@@ -457,6 +468,8 @@ void D3D::VulkanRenderer::RecordCommandBuffer(VkCommandBuffer& commandBuffer, ui
 	scissor.extent = m_SwapChainExtent;
 	vkCmdSetScissor(commandBuffer, 0, 1, &scissor);
 
+	UpdateLightBuffer(m_CurrentFrame);
+
 	for (size_t i = 0; i < pModels.size(); ++i)
 	{
 		pModels[i]->Render();
@@ -476,7 +489,7 @@ void D3D::VulkanRenderer::Render(Model* pModel, VkCommandBuffer& commandBuffer, 
 {
 	vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline.pipeline);
 
-	vkCmdPushConstants(commandBuffer, pipeline.pipelineLayout, VK_SHADER_STAGE_FRAGMENT_BIT, 0, sizeof(LightObject), &m_GlobalLight);
+	//vkCmdPushConstants(commandBuffer, pipeline.pipelineLayout, VK_SHADER_STAGE_FRAGMENT_BIT, 0, sizeof(LightObject), &m_GlobalLight);
 
 	VkBuffer vertexBuffers[] = { pModel->GetVertexBuffer() };
 	VkDeviceSize offsets[] = { 0 };
@@ -1119,29 +1132,45 @@ void D3D::VulkanRenderer::CreateRenderPass()
 	}
 }
 
-void D3D::VulkanRenderer::CreateDescriptorLayout(int textureAmount)
+void D3D::VulkanRenderer::CreateDescriptorLayout(int vertexUbos, int fragmentUbos, int textureAmount)
 {
-	std::vector<VkDescriptorSetLayoutBinding> bindings{};
+	std::vector<VkDescriptorSetLayoutBinding> bindings(vertexUbos + fragmentUbos + textureAmount);
 
-	VkDescriptorSetLayoutBinding uboLayoutBinding{};
-	uboLayoutBinding.binding = 0;
-	uboLayoutBinding.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-	uboLayoutBinding.descriptorCount = 1;
-	uboLayoutBinding.stageFlags = VK_SHADER_STAGE_VERTEX_BIT;
-	uboLayoutBinding.pImmutableSamplers = nullptr;
+	for (int i{}; i < vertexUbos; ++i)
+	{
+		VkDescriptorSetLayoutBinding uboLayoutBinding{};
+		uboLayoutBinding.binding = i;
+		uboLayoutBinding.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+		uboLayoutBinding.descriptorCount = 1;
+		uboLayoutBinding.stageFlags = VK_SHADER_STAGE_VERTEX_BIT;
+		uboLayoutBinding.pImmutableSamplers = nullptr;
 
-	bindings.push_back(uboLayoutBinding);
+		bindings[i] = uboLayoutBinding;
+	}
 
-	for (int i{}; i < textureAmount; ++i)
+	for (int i{ vertexUbos }; i < fragmentUbos + vertexUbos; ++i)
+	{
+		VkDescriptorSetLayoutBinding uboLayoutBinding{};
+		uboLayoutBinding.binding = i;
+		uboLayoutBinding.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+		uboLayoutBinding.descriptorCount = 1;
+		uboLayoutBinding.stageFlags = VK_SHADER_STAGE_FRAGMENT_BIT;
+		uboLayoutBinding.pImmutableSamplers = nullptr;
+
+		bindings[i] = uboLayoutBinding;
+	}
+
+
+	for (int i{ vertexUbos + fragmentUbos }; i < vertexUbos + fragmentUbos + textureAmount; ++i)
 	{
 		VkDescriptorSetLayoutBinding samplerLayoutBinding{};
-		samplerLayoutBinding.binding = i + 1;
+		samplerLayoutBinding.binding = i;
 		samplerLayoutBinding.descriptorCount = 1;
 		samplerLayoutBinding.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
 		samplerLayoutBinding.pImmutableSamplers = nullptr;
 		samplerLayoutBinding.stageFlags = VK_SHADER_STAGE_FRAGMENT_BIT;
 
-		bindings.push_back(samplerLayoutBinding);
+		bindings[i] = samplerLayoutBinding;
 	}
 
 	VkDescriptorSetLayoutCreateInfo layoutInfo{};
@@ -1149,9 +1178,11 @@ void D3D::VulkanRenderer::CreateDescriptorLayout(int textureAmount)
 	layoutInfo.bindingCount = static_cast<uint32_t>(bindings.size());
 	layoutInfo.pBindings = bindings.data();
 
-	m_DescriptorSetLayouts[textureAmount] = VkDescriptorSetLayout{};
+	std::tuple<int, int, int> tuple{vertexUbos, fragmentUbos, textureAmount};
 
-	if (vkCreateDescriptorSetLayout(m_Device, &layoutInfo, nullptr, &m_DescriptorSetLayouts[textureAmount]) != VK_SUCCESS)
+	m_DescriptorSetLayouts[tuple] = VK_NULL_HANDLE;
+
+	if (vkCreateDescriptorSetLayout(m_Device, &layoutInfo, nullptr, &m_DescriptorSetLayouts[tuple]) != VK_SUCCESS)
 	{
 		throw std::runtime_error("failed to create descriptor set layout!");
 	}
@@ -1298,6 +1329,40 @@ void D3D::VulkanRenderer::CreateSyncObjects()
 			throw std::runtime_error("failed to create sync objects!");
 		}
 	}
+}
+
+void D3D::VulkanRenderer::CreateLightBuffer()
+{
+	VkDeviceSize bufferSize = sizeof(LightObject);
+
+	m_LightBuffers.resize(m_MaxFramesInFlight);
+	m_LightMemory.resize(m_MaxFramesInFlight);
+	m_LightMapped.resize(m_MaxFramesInFlight);
+
+	m_LightChanged.resize(m_MaxFramesInFlight);
+	std::fill(m_LightChanged.begin(), m_LightChanged.end(), true);
+
+
+
+	for (size_t i = 0; i < m_MaxFramesInFlight; ++i)
+	{
+		CreateBuffer(bufferSize, VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
+			m_LightBuffers[i], m_LightMemory[i]);
+
+		vkMapMemory(m_Device, m_LightMemory[i], 0, bufferSize, 0, &m_LightMapped[i]);
+
+		UpdateLightBuffer(static_cast<int>(i));
+	}
+}
+
+void D3D::VulkanRenderer::UpdateLightBuffer(int frame)
+{
+	//if (!m_LightChanged[frame])
+	//	return;
+
+	m_LightChanged[frame] = false;
+
+	memcpy(m_LightMapped[frame], &m_GlobalLight, sizeof(m_GlobalLight));
 }
 
 VkSampleCountFlagBits D3D::VulkanRenderer::GetMaxUsableSampleCount()
@@ -1609,12 +1674,14 @@ void D3D::VulkanRenderer::UpdateUniformBuffer(UniformBufferObject& buffer)
 	buffer.proj[1][1] *= -1;
 }
 
-VkDescriptorSetLayout* D3D::VulkanRenderer::GetDescriptorSetLayout(int textureAmount)
+VkDescriptorSetLayout* D3D::VulkanRenderer::GetDescriptorSetLayout(int vertexUbos, int fragmentUbos, int textureAmount)
 {
-	if (!m_DescriptorSetLayouts.contains(textureAmount))
-		CreateDescriptorLayout(textureAmount);
+	std::tuple<int, int, int> tuple{ vertexUbos, fragmentUbos, textureAmount };
 
-	return &m_DescriptorSetLayouts[textureAmount];
+	if (!m_DescriptorSetLayouts.contains(tuple))
+		CreateDescriptorLayout(vertexUbos, fragmentUbos, textureAmount);
+
+	return &m_DescriptorSetLayouts[tuple];
 }
 
 bool D3D::VulkanRenderer::HasStencilComponent(VkFormat format)

@@ -27,10 +27,10 @@ void D3D::D3DEngine::Run(const std::function<void()>& load)
 
 	auto& renderer{ VulkanRenderer::GetInstance() };
 
-	renderer.AddGraphicsPipeline("Diffuse", "../Resources/Shaders/Diffuse.Vert.spv", "../Resources/Shaders/Diffuse.Frag.spv", 1);
-	renderer.AddGraphicsPipeline("NormalMap", "../Resources/Shaders/NormalMap.Vert.spv", "../Resources/Shaders/NormalMap.Frag.spv", 1);
-	renderer.AddGraphicsPipeline("DiffNorm", "../Resources/Shaders/DiffNorm.Vert.spv", "../Resources/Shaders/DiffNorm.Frag.spv", 2);
-	renderer.AddGraphicsPipeline("Test", "../Resources/Shaders/Test.Vert.spv", "../Resources/Shaders/Test.Frag.spv", 2);
+	renderer.AddGraphicsPipeline("Diffuse", "../Resources/Shaders/Diffuse.Vert.spv", "../Resources/Shaders/Diffuse.Frag.spv",1, 1, 1);
+	renderer.AddGraphicsPipeline("NormalMap", "../Resources/Shaders/NormalMap.Vert.spv", "../Resources/Shaders/NormalMap.Frag.spv", 1, 1, 1);
+	renderer.AddGraphicsPipeline("DiffNorm", "../Resources/Shaders/DiffNorm.Vert.spv", "../Resources/Shaders/DiffNorm.Frag.spv", 1, 1, 2);
+	renderer.AddGraphicsPipeline("Test", "../Resources/Shaders/Test.Vert.spv", "../Resources/Shaders/Test.Frag.spv", 1, 1, 2);
 
 	
 	std::shared_ptr<D3D::TexturedMaterial> pVikingMaterial{ std::make_shared<D3D::TexturedMaterial>(std::initializer_list<const std::string>{"../resources/images/viking_room.png"}, "Diffuse") };

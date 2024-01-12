@@ -55,28 +55,25 @@ void D3D::DescriptorPoolWrapper::CreateDescriptorSets(VkDescriptorSetLayout layo
 	}
 }
 
-void D3D::DescriptorPoolWrapper::UpdateDescriptorSets(std::vector<std::vector<VkBuffer>>& uboBuffers, std::vector<VkDeviceSize> uboSizes, std::vector<VkDescriptorSet>& descriptorSets)
+void D3D::DescriptorPoolWrapper::UpdateDescriptorSets(std::vector<std::vector<VkBuffer>>& uboBuffers, std::vector<VkDeviceSize>& uboSizes, std::vector<VkDescriptorSet>& descriptorSets)
 {
 	for (size_t i = 0; i < m_MaxFramesInFlight; i++)
 	{
 		std::vector<VkWriteDescriptorSet> descriptorWrites(m_UboAmount + m_TextureAmount);
 
 		std::vector<VkDescriptorBufferInfo> bufferInfos{ m_UboAmount };
+		
+		//VkDeviceSize offset{};
+
 
 		for (uint32_t j{ 0 }; j < m_UboAmount; ++j)
 		{
 			VkDescriptorBufferInfo bufferInfo{};
 			bufferInfo.buffer = uboBuffers[j][i];
+			bufferInfo.offset = 0; //offset;
+			bufferInfo.range = uboSizes[j];
 
-			VkDeviceSize offset{};
-
-			for (uint32_t k{}; k < j; k++)
-			{
-				offset += uboSizes[k];
-			}
-
-			bufferInfo.offset = offset;
-			bufferInfo.range = sizeof(uboSizes[j]);
+			//offset += uboSizes[j];
 
 			bufferInfos[j] = bufferInfo;
 		}
@@ -90,13 +87,15 @@ void D3D::DescriptorPoolWrapper::UpdateDescriptorSets(std::vector<std::vector<Vk
 			descriptorWrites[j].descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
 			descriptorWrites[j].descriptorCount = 1;
 			descriptorWrites[j].pBufferInfo = &bufferInfos[j];
+			descriptorWrites[j].pImageInfo = nullptr;
+			descriptorWrites[j].pTexelBufferView = nullptr;
 		}
 
 		vkUpdateDescriptorSets(VulkanRenderer::GetInstance().GetDevice(), static_cast<uint32_t>(descriptorWrites.size()), descriptorWrites.data(), 0, nullptr);
 	}
 }
 
-void D3D::DescriptorPoolWrapper::UpdateDescriptorSets(std::vector<std::vector<VkBuffer>>& uboBuffers, std::vector<VkDeviceSize> uboSizes, std::vector<VkDescriptorSet>& descriptorSets, std::vector<VkImageView>& imageViews)
+void D3D::DescriptorPoolWrapper::UpdateDescriptorSets(std::vector<std::vector<VkBuffer>>& uboBuffers, std::vector<VkDeviceSize>& uboSizes, std::vector<VkDescriptorSet>& descriptorSets, std::vector<VkImageView>& imageViews)
 {
 	auto& renderer{ D3D::VulkanRenderer::GetInstance() };
 
@@ -106,20 +105,17 @@ void D3D::DescriptorPoolWrapper::UpdateDescriptorSets(std::vector<std::vector<Vk
 
 		std::vector<VkDescriptorBufferInfo> bufferInfos{ m_UboAmount };
 
+		//VkDeviceSize offset{};
+
+
 		for (uint32_t j{ 0 }; j < m_UboAmount; ++j)
 		{
 			VkDescriptorBufferInfo bufferInfo{};
 			bufferInfo.buffer = uboBuffers[j][i];
+			bufferInfo.offset = 0; //offset;
+			bufferInfo.range = uboSizes[j];
 
-			VkDeviceSize offset{};
-
-			for (uint32_t k{}; k < j; k++)
-			{
-				offset += uboSizes[k];
-			}
-
-			bufferInfo.offset = offset;
-			bufferInfo.range = sizeof(uboSizes[j]);
+			//offset += uboSizes[j];
 
 			bufferInfos[j] = bufferInfo;
 		}

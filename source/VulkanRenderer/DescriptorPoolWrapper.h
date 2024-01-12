@@ -29,12 +29,12 @@ namespace D3D
 
 		void CreateDescriptorSets(VkDescriptorSetLayout layout, std::vector<VkDescriptorSet>& descriptorSets);
 		
-		void UpdateDescriptorSets(std::vector<std::vector<VkBuffer>>& uboBuffers, std::vector<VkDeviceSize> uboSizes, std::vector<VkDescriptorSet>& descriptorSets);
+		void UpdateDescriptorSets(std::vector<std::vector<VkBuffer>>& uboBuffers, std::vector<VkDeviceSize>& uboSizes, std::vector<VkDescriptorSet>& descriptorSets);
 
-		void UpdateDescriptorSets(std::vector<std::vector<VkBuffer>>& uboBuffers, std::vector<VkDeviceSize> uboSizes, std::vector<VkDescriptorSet>& descriptorSets, std::vector<VkImageView>& imageViews);
+		void UpdateDescriptorSets(std::vector<std::vector<VkBuffer>>& uboBuffers, std::vector<VkDeviceSize>& uboSizes, std::vector<VkDescriptorSet>& descriptorSets, std::vector<VkImageView>& imageViews);
 
 	private:
-		int m_MaxFramesInFlight{};
+		size_t m_MaxFramesInFlight{};
 
 		const uint32_t m_UboAmount;
 		const uint32_t m_TextureAmount;

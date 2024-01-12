@@ -98,12 +98,15 @@ struct UniformBufferObject
 	glm::mat4 proj{};
 };
 
+#pragma warning(push)
+#pragma warning(disable : 4324)
 struct LightObject
 {
-	glm::vec3 direction{};
-	glm::vec3 color{};
-	float intensity{};
+	alignas(16) glm::vec3 direction;
+	alignas(16) glm::vec3 color;
+	alignas(4) float intensity;
 };
+#pragma warning(pop)
 
 
 namespace std
