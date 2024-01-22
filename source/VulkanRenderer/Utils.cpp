@@ -1,15 +1,7 @@
 #include "Utils.h"
 #include <iostream>
 
-#ifndef  TINYOBJLOADER_IMPLEMENTATION
-#define TINYOBJLOADER_IMPLEMENTATION
-#pragma warning(push)
-#pragma warning(disable : 26495)
-#pragma warning(disable : 26498)
-#pragma warning(disable : 26451)
-#include <tiny_obj_loader.h>
-#pragma warning(pop)
-#endif
+#include "TinyObjLoaderIncludes.h"
 
 std::vector<char> Utils::readFile(const std::string& filename);
 
