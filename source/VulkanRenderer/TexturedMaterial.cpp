@@ -3,6 +3,7 @@
 #include "Utils.h"
 #include "DescriptorPoolManager.h"
 #include "DescriptorPoolWrapper.h"
+
 #include "STBIncludes.h"
 
 D3D::TexturedMaterial::TexturedMaterial(std::initializer_list<const std::string> filePaths, const std::string& pipelineName)

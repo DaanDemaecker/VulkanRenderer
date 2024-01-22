@@ -5,13 +5,7 @@
 #include "DescriptorPoolManager.h"
 #include "DescriptorPoolWrapper.h"
 
-#ifndef STB_IMAGE_IMPLEMENTATION
-#define STB_IMAGE_IMPLEMENTATION
-#pragma warning(push)
-#pragma warning(disable : 26451)
-#pragma warning(disable : 6262)
-#include <stb_image.h>
-#endif
+#include "STBIncludes.h"
 
 #include <imgui.h>
 #include <backends/imgui_impl_vulkan.h>

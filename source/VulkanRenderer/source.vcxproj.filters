@@ -5,10 +5,6 @@
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
-    <Filter Include="Resource Files">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
-    </Filter>
     <Filter Include="Utils">
       <UniqueIdentifier>{3a27e938-8684-4cce-9d9b-0ff2ee97ab3a}</UniqueIdentifier>
     </Filter>
@@ -32,6 +28,10 @@
     </Filter>
     <Filter Include="Includes">
       <UniqueIdentifier>{4aeb2f0b-2e4c-484a-a934-3ab2e74b9015}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -90,6 +90,9 @@
       <Filter>Includes</Filter>
     </ClCompile>
     <ClCompile Include="STBIncludes.h">
+      <Filter>Includes</Filter>
+    </ClCompile>
+    <ClCompile Include="STBIncludes.cpp">
       <Filter>Includes</Filter>
     </ClCompile>
   </ItemGroup>

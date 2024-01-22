@@ -179,6 +179,7 @@
     <ClCompile Include="DescriptorPoolManager.cpp" />
     <ClCompile Include="DescriptorPoolWrapper.cpp" />
     <ClCompile Include="GLFWIncludes.h" />
+    <ClCompile Include="STBIncludes.cpp" />
     <ClCompile Include="STBIncludes.h" />
     <ClCompile Include="TexturedMaterial.cpp" />
     <ClCompile Include="main.cpp" />
