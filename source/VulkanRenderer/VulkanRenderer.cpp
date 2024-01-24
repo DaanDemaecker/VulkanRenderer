@@ -23,7 +23,7 @@ D3D::VulkanRenderer::VulkanRenderer()
 	m_EnableValidationLayers = false;
 #endif
 
-	m_GlobalLight.direction = glm::normalize(glm::vec3{ -.577, -.577f, 0 });
+	m_GlobalLight.direction = glm::normalize(glm::vec3{ -.577, -.577f, .577 });
 	m_GlobalLight.color = glm::vec3{ 1.f, 1.f, 1.f };
 	m_GlobalLight.intensity = 1.f;
 
@@ -130,8 +130,6 @@ void D3D::VulkanRenderer::InitVulkan()
 	CreateTextureSampler();
 
 	CreateCommandBuffers();
-
-	
 
 	CreateSyncObjects();
 }
@@ -1664,7 +1662,7 @@ void D3D::VulkanRenderer::UpdateUniformBuffer(UniformBufferObject& buffer)
 	buffer.view = glm::rotate(buffer.view, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 
 
-	buffer.proj = glm::perspective(glm::radians(45.0f), m_SwapChainExtent.width / static_cast<float>(m_SwapChainExtent.height), 0.1f, 10.0f);
+	buffer.proj = glm::perspective(glm::radians(45.0f), m_SwapChainExtent.width / static_cast<float>(m_SwapChainExtent.height), 0.1f, 100.0f);
 	buffer.proj[1][1] *= -1;
 }
 

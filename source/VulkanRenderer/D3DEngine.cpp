@@ -51,27 +51,40 @@ void D3D::D3DEngine::Run(const std::function<void()>& load)
 		pModels[0]->SetRotation(glm::radians(-90.0f), glm::radians(45.0f), 0.f);
 		pModels[0]->SetScale(0.75f, 0.75f, 0.75f);*/
 
-		pModels.push_back(std::make_unique<Model>());
-		pModels[0]->LoadModel("../Resources/Models/vehicle.obj");
-		pModels[0]->SetMaterial(pVehicle2Material);
-		pModels[0]->SetPosition(1.f, 0, 5.f);
-		pModels[0]->SetRotation(0.f, glm::radians(75.0f), 0.f);
-		pModels[0]->SetScale(0.05f, 0.05f, 0.05f);
+		std::unique_ptr<Model> pCurrModel{};
 
-		pModels.push_back(std::make_unique<Model>());
-		pModels[1]->LoadModel("../Resources/Models/vehicle.obj");
-		pModels[1]->SetMaterial(pVehicleMaterial);
-		//pModels[1]->SetMaterial(pTestMaterial);
-		pModels[1]->SetPosition(-1.f, 0, 5.f);
-		pModels[1]->SetRotation(0.f, glm::radians(75.0f), 0.f);
-		pModels[1]->SetScale(0.05f, 0.05f, 0.05f);
-	
-		pModels.push_back(std::make_unique<Model>());
-		pModels[2]->LoadModel("../Resources/Models/fireFX.obj");
-		pModels[2]->SetMaterial(pFireMaterial);
-		pModels[2]->SetPosition(-1.f, 0, 5.f);
-		pModels[2]->SetRotation(0.f, glm::radians(75.0f), 0.f);
-		pModels[2]->SetScale(0.05f, 0.05f, 0.05f);
+		/*pCurrModel = std::make_unique<Model>();
+
+		pCurrModel->LoadModel("../Resources/Models/vehicle.obj");
+		pCurrModel->SetMaterial(pVehicle2Material);
+		pCurrModel->SetPosition(1.f, 0, 5.f);
+		pCurrModel->SetRotation(0.f, glm::radians(75.0f), 0.f);
+		pCurrModel->SetScale(0.05f, 0.05f, 0.05f);
+
+		pModels.push_back(std::move(pCurrModel));*/
+
+
+		pCurrModel = std::make_unique<Model>();
+
+		pCurrModel->LoadModel("../Resources/Models/vehicle.obj");
+		pCurrModel->SetMaterial(pVehicleMaterial);
+		//pModel->SetMaterial(pTestMaterial);
+		pCurrModel->SetPosition(0.f, 0, 10.f);
+		pCurrModel->SetRotation(0.f, glm::radians(75.0f), 0.f);
+		pCurrModel->SetScale(0.25f, 0.25f, 0.25f);
+
+		pModels.push_back(std::move(pCurrModel));
+
+
+		pCurrModel = std::make_unique<Model>();
+
+		pCurrModel->LoadModel("../Resources/Models/fireFX.obj");
+		pCurrModel->SetMaterial(pFireMaterial);
+		pCurrModel->SetPosition(0.f, 0, 10.f);
+		pCurrModel->SetRotation(0.f, glm::radians(75.0f), 0.f);
+		pCurrModel->SetScale(0.25f, 0.25f, 0.25f);
+
+		pModels.push_back(std::move(pCurrModel));
 
 
 	/*for (int i{}; i < 20; ++i)
@@ -83,14 +96,14 @@ void D3D::D3DEngine::Run(const std::function<void()>& load)
 		pModels.push_back(std::move(pModel));
 	}*/
 
-	{
+	/*{
 		std::unique_ptr<Model> pModel{ std::make_unique<D3D::Model>() };
 		pModel->LoadModel("../Resources/Models/Cube.obj");
 		pModel->SetMaterial(pVikingMaterial);
 		pModel->SetPosition(0, 0, 5.f);
 		pModel->SetScale(1000, 1000, 1000);
 		pModels.push_back(std::move(pModel));
-	}
+	}*/
 
 	auto& time{ TimeManager::GetInstance() };
 
@@ -103,21 +116,26 @@ void D3D::D3DEngine::Run(const std::function<void()>& load)
 	time.SetFixedTime(fixedTimeStep);
 
 	bool capFrameRate{ true };
-	constexpr float desiredFrameRate = 144;
-	constexpr float desiredFrameDuration = 1000.f / desiredFrameRate;
+	const int desiredFramerate = 60;
+	float secondsPerFrame = 1.0f / static_cast<float>(desiredFramerate);
+	auto desiredFrameDuration = std::chrono::duration<float>(secondsPerFrame);
+
+	const std::chrono::milliseconds millisecondsPerFrame(1000 / desiredFramerate);
 
 	bool shouldQuit{false};
 
 	while (!shouldQuit)
 	{
-		const auto currentTime = std::chrono::high_resolution_clock::now();
-		const float deltaTime = std::chrono::duration<float>(currentTime - lastTime).count();
+		const auto frameStart = std::chrono::high_resolution_clock::now();
+		auto duration = std::chrono::duration_cast<std::chrono::duration<double>>(frameStart - lastTime);
 
-		lastTime = currentTime;
+		float deltaTime = static_cast<float>(duration.count());
+
+		lastTime = frameStart;
 
 		time.SetDeltaTime(deltaTime);
 
-		//std::cout << time.GetFps() << std::endl;
+		std::cout << time.GetFps() << std::endl;
 
 		glfwPollEvents();
 
@@ -133,9 +151,12 @@ void D3D::D3DEngine::Run(const std::function<void()>& load)
 
 		if (capFrameRate)
 		{
-			const auto frameDuration{ std::chrono::high_resolution_clock::now() - lastTime };
-			const auto sleepTime{ std::chrono::milliseconds(static_cast<int>(desiredFrameDuration)) - frameDuration };
+			auto frameTime = std::chrono::high_resolution_clock::now() - frameStart;
+			auto sleepTime = millisecondsPerFrame - std::chrono::duration_cast<std::chrono::milliseconds>(frameTime);
 			std::this_thread::sleep_for(sleepTime);
+
+			//const auto frameEnd{frameStart + desiredFrameDuration };
+			//std::this_thread::sleep_until(frameEnd);
 		}
 	}
 }

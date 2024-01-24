@@ -133,10 +133,4 @@ void Utils::LoadModel(const std::string& filename, std::vector<Vertex>& vertices
 		v1.tangent += tangent;
 		v2.tangent += tangent;
 	}
-
-	// Flip the Z attribute of all normals as we are using a left handed coordinate system and the obj uses right handed
-	for (auto& v : vertices)
-	{
-		v.normal.z *= -1.f;
-	}
 }

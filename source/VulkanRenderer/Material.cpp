@@ -1,8 +1,10 @@
 #include "Material.h"
 #include "VulkanRenderer.h"
 #include "Utils.h"
+
 #include "DescriptorPoolWrapper.h"
 #include "DescriptorPoolManager.h"
+
 #include "STBIncludes.h"
 
 D3D::Material::Material(const std::string& pipelineName)
