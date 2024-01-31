@@ -1,28 +1,40 @@
+// File includes
 #include "D3DEngine.h"
 #include "VulkanRenderer.h"
 #include "TimeManager.h"
 #include "Model.h"
 #include "Material.h"
 #include "TexturedMaterial.h"
+
+// Standard library includes
 #include <chrono>
 
+// Global variable that holds the window
 D3D::Window g_pWindow{};
 
 D3D::D3DEngine::D3DEngine(int width, int height)
 {
+	// Set the window width and height
 	g_pWindow.Width = width;
 	g_pWindow.Height = height;
+
+	// Initialize the window
 	InitWindow();
 }
 
 D3D::D3DEngine::~D3DEngine()
 {
+	// Destroy the window
 	glfwDestroyWindow(g_pWindow.pWindow);
+
+	// Terminate glfw
 	glfwTerminate();
 }
 
+// This function will run the gameloop for the duration of the app
 void D3D::D3DEngine::Run(const std::function<void()>& load)
 {
+	// Run the load function
 	load();
 
 	auto& renderer{ VulkanRenderer::GetInstance() };
@@ -104,58 +116,80 @@ void D3D::D3DEngine::Run(const std::function<void()>& load)
 		pModel->SetScale(1000, 1000, 1000);
 		pModels.push_back(std::move(pModel));
 	}*/
+	
 
+	// Get the timemanager locally to prevent calling it every frame
 	auto& time{ TimeManager::GetInstance() };
 
-	 
+	// Get current time for later use
 	auto lastTime = std::chrono::high_resolution_clock::now();
 
-	//float lag = 0.0f;
-	constexpr float fixedTimeStep = 0.02f;
 
-	time.SetFixedTime(fixedTimeStep);
-
+	// Variable that will indicate if framerate should be capped or or not
 	bool capFrameRate{ true };
-	const int desiredFramerate = 60;
-	float secondsPerFrame = 1.0f / static_cast<float>(desiredFramerate);
-	auto desiredFrameDuration = std::chrono::duration<float>(secondsPerFrame);
 
+	// Set desired framerate
+	const int desiredFramerate = 60;
+
+	// Calculate the duratinno of a single frame in milliseconds
 	const std::chrono::milliseconds millisecondsPerFrame(1000 / desiredFramerate);
 
+	// Variable that will indicate when the gameloop should stop running
 	bool shouldQuit{false};
 
+	// As long as the app shouldn't quit, the gameloop will run
 	while (!shouldQuit)
 	{
+		// Get the current time
 		const auto frameStart = std::chrono::high_resolution_clock::now();
+
+		// Calculate the duration of last frame by subtracting the time start time from last frame from the starting time from this frame
 		auto duration = std::chrono::duration_cast<std::chrono::duration<double>>(frameStart - lastTime);
 
+		// Calculate in seconds how long last frame lasted
 		float deltaTime = static_cast<float>(duration.count());
 
+		// Set lastTime to start of current frame for next iteration
 		lastTime = frameStart;
 
+		// Set current deltaTime in the timeManager
 		time.SetDeltaTime(deltaTime);
 
+		// Print FPS
 		std::cout << time.GetFps() << std::endl;
 
+		// Poll input for the window
 		glfwPollEvents();
 
+		// Update all models
 		for (auto& pModel : pModels)
 		{
 			pModel->Update();
 		}
 
+		// Render all models
 		renderer.Render(pModels);
 
+		// Check if aplication should quit
 		shouldQuit = glfwWindowShouldClose(g_pWindow.pWindow);
 
-
+		// If cap framerate, sleep the appropriate amount of time
 		if (capFrameRate)
 		{
+			// Calculate duration of the current frame
 			auto frameTime = std::chrono::high_resolution_clock::now() - frameStart;
+
+			// Calculate how long the thread should sleep
 			auto sleepTime = millisecondsPerFrame - std::chrono::duration_cast<std::chrono::milliseconds>(frameTime);
+
+			// Make the thread sleep for the right amount of time
 			std::this_thread::sleep_for(sleepTime);
 
+
+			// Calculate the moment the thread should wake up and continue
 			//const auto frameEnd{frameStart + desiredFrameDuration };
+			
+			// Make the thread sleep until the desired time
 			//std::this_thread::sleep_until(frameEnd);
 		}
 	}
@@ -175,7 +209,11 @@ void D3D::D3DEngine::InitWindow()
 	glfwSetFramebufferSizeCallback(g_pWindow.pWindow, FramebufferResizeCallback);
 }
 
-void D3D::D3DEngine::FramebufferResizeCallback(GLFWwindow* /*pWindow*/, int /*width*/, int /*height*/)
+void D3D::D3DEngine::FramebufferResizeCallback(GLFWwindow* pWindow, int width, int height)
 {
+	// Update values of global window variable after resizing
 	g_pWindow.FrameBufferResized = true;
+	g_pWindow.pWindow = pWindow;
+	g_pWindow.Width = width;
+	g_pWindow.Height = height;
 }
