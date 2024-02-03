@@ -20,7 +20,7 @@ namespace D3D
 
 		virtual void UpdateDescriptorSets(std::vector<VkBuffer>& uboBuffers, std::vector<VkDescriptorSet>& descriptorSets) override;
 
-		virtual VkDescriptorSetLayout* GetDescriptorLayout() override;
+		virtual std::vector<VkDescriptorSetLayout>& GetDescriptorLayout() override;
 
 		virtual DescriptorPoolWrapper* GetDescriptorPool() override;
 

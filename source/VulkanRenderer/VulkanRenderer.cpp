@@ -62,7 +62,7 @@ void D3D::VulkanRenderer::CleanupVulkan()
 
 	for (auto& pair : m_DescriptorSetLayouts)
 	{
-		vkDestroyDescriptorSetLayout(m_Device, pair.second, nullptr);
+			vkDestroyDescriptorSetLayout(m_Device, pair.second[0], nullptr);
 	}
 
 	for (auto& pipeline : m_GraphicPipelines)
@@ -309,7 +309,7 @@ void D3D::VulkanRenderer::AddGraphicsPipeline(const std::string& pipelineName, c
 	VkPipelineLayoutCreateInfo pipelineLayoutInfo{};
 	pipelineLayoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
 	pipelineLayoutInfo.setLayoutCount = 1;
-	pipelineLayoutInfo.pSetLayouts = GetDescriptorSetLayout(vertexUbos, fragmentUbos, textureAmount);
+	pipelineLayoutInfo.pSetLayouts = &GetDescriptorSetLayout(vertexUbos, fragmentUbos, textureAmount)[0];
 	//pipelineLayoutInfo.pushConstantRangeCount = 1; // Number of push constant ranges used by the pipeline
 	//pipelineLayoutInfo.pPushConstantRanges = &pushConstantRange; // Array of push constant ranges used by the pipeline
 
@@ -360,13 +360,11 @@ void D3D::VulkanRenderer::Render(std::vector<std::unique_ptr<Model>>& pModels)
 		throw std::runtime_error("failed to acquire swap chain image!");
 	}
 
-	
-
 	vkResetFences(m_Device, 1, &m_InFlightFences[m_CurrentFrame]);
 
 	vkResetCommandBuffer(m_CommandBuffers[m_CurrentFrame], 0);
-	RecordCommandBuffer(m_CommandBuffers[m_CurrentFrame], imageIndex, pModels);
 
+	RecordCommandBuffer(m_CommandBuffers[m_CurrentFrame], imageIndex, pModels);
 
 	VkSubmitInfo submitInfo{};
 	submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
@@ -1172,12 +1170,14 @@ void D3D::VulkanRenderer::CreateDescriptorLayout(int vertexUbos, int fragmentUbo
 
 	std::tuple<int, int, int> tuple{vertexUbos, fragmentUbos, textureAmount};
 
-	m_DescriptorSetLayouts[tuple] = VK_NULL_HANDLE;
+	VkDescriptorSetLayout layout = VK_NULL_HANDLE;
 
-	if (vkCreateDescriptorSetLayout(m_Device, &layoutInfo, nullptr, &m_DescriptorSetLayouts[tuple]) != VK_SUCCESS)
+	if (vkCreateDescriptorSetLayout(m_Device, &layoutInfo, nullptr, &layout) != VK_SUCCESS)
 	{
 		throw std::runtime_error("failed to create descriptor set layout!");
 	}
+
+	m_DescriptorSetLayouts[tuple] = std::vector<VkDescriptorSetLayout>(m_MaxFramesInFlight, layout);
 }
 
 VkShaderModule D3D::VulkanRenderer::CreateShaderModule(const std::vector<char>& code)
@@ -1666,14 +1666,14 @@ void D3D::VulkanRenderer::UpdateUniformBuffer(UniformBufferObject& buffer)
 	buffer.proj[1][1] *= -1;
 }
 
-VkDescriptorSetLayout* D3D::VulkanRenderer::GetDescriptorSetLayout(int vertexUbos, int fragmentUbos, int textureAmount)
+std::vector<VkDescriptorSetLayout>& D3D::VulkanRenderer::GetDescriptorSetLayout(int vertexUbos, int fragmentUbos, int textureAmount)
 {
 	std::tuple<int, int, int> tuple{ vertexUbos, fragmentUbos, textureAmount };
 
 	if (!m_DescriptorSetLayouts.contains(tuple))
 		CreateDescriptorLayout(vertexUbos, fragmentUbos, textureAmount);
 
-	return &m_DescriptorSetLayouts[tuple];
+	return m_DescriptorSetLayouts[tuple];
 }
 
 bool D3D::VulkanRenderer::HasStencilComponent(VkFormat format)

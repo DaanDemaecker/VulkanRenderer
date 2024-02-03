@@ -16,7 +16,7 @@ void D3D::Material::CreateDescriptorSets(Model* pModel, std::vector<VkDescriptor
 {
 	auto descriptorPool = GetDescriptorPool();
 	descriptorPool->AddModel(pModel);
-	descriptorPool->CreateDescriptorSets(*GetDescriptorLayout(), descriptorSets);
+	descriptorPool->CreateDescriptorSets(GetDescriptorLayout(), descriptorSets);
 }
 
 void D3D::Material::UpdateDescriptorSets(std::vector<VkBuffer>& uboBuffers, std::vector<VkDescriptorSet>& descriptorSets)
@@ -28,10 +28,10 @@ void D3D::Material::UpdateDescriptorSets(std::vector<VkBuffer>& uboBuffers, std:
 	uboSizes[0] = sizeof(UniformBufferObject);
 	uboSizes[1] = sizeof(LightObject);
 
-	descriptorPool->UpdateDescriptorSets(uboList, uboSizes, descriptorSets);
+	descriptorPool->UpdateDescriptorSets(descriptorSets, uboList, uboSizes);
 }
 
-VkDescriptorSetLayout* D3D::Material::GetDescriptorLayout()
+std::vector<VkDescriptorSetLayout>& D3D::Material::GetDescriptorLayout()
 {
 	return VulkanRenderer::GetInstance().GetDescriptorSetLayout(1, 1, 0);
 }

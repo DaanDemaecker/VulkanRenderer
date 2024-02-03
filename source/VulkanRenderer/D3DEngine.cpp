@@ -1,3 +1,5 @@
+// D3DEngine.cpp
+
 // File includes
 #include "D3DEngine.h"
 #include "VulkanRenderer.h"
@@ -123,7 +125,6 @@ void D3D::D3DEngine::Run(const std::function<void()>& load)
 
 	// Get current time for later use
 	auto lastTime = std::chrono::high_resolution_clock::now();
-
 
 	// Variable that will indicate if framerate should be capped or or not
 	bool capFrameRate{ true };

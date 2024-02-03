@@ -59,7 +59,7 @@ namespace D3D
 
         void UpdateUniformBuffer(UniformBufferObject& buffer);
 
-        VkDescriptorSetLayout* GetDescriptorSetLayout(int vertexUbos, int fragmentUbos, int textureAmount);
+        std::vector<VkDescriptorSetLayout>& GetDescriptorSetLayout(int vertexUbos, int fragmentUbos, int textureAmount);
     private:
         const size_t m_MaxFramesInFlight{ 2 };
 
@@ -131,7 +131,7 @@ namespace D3D
         VkRenderPassBeginInfo m_RenderpassInfo{};
 
         //--Descriptorlayout--
-        std::map<std::tuple<int, int, int>, VkDescriptorSetLayout> m_DescriptorSetLayouts{};
+        std::map<std::tuple<int, int, int>, std::vector<VkDescriptorSetLayout>> m_DescriptorSetLayouts{};
 
         //--GraphicsPipeline--
         //VkPipeline m_GraphicsPipeline{};
