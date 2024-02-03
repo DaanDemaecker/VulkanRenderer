@@ -1,5 +1,6 @@
 // DescriptorPoolWrapper.h
 // This class manages a single descriptor pool, it updates descriptorsets and resizes the pool when necesarry
+// Because of the way descriptorpools work, every wrapper will work for a specific amount of ubos and textures
 
 #ifndef DescriptorPoolWrapperIncluded
 #define DescriptorPoolWrapperIncluded

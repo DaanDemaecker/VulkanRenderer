@@ -121,7 +121,7 @@ void D3D::DescriptorPoolWrapper::UpdateDescriptorSets(std::vector<VkDescriptorSe
 		// Create vector for imageInfos
 		std::vector<VkDescriptorImageInfo> imageInfos{ m_TextureAmount };
 
-		// Loop for the amount of imageInfos there are
+		// Loop for the amount of imageInfos there are+
 		for (size_t j{}; j < m_TextureAmount; j++)
 		{
 			// Set imageLayout to read only 

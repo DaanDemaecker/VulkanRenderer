@@ -4,7 +4,6 @@
 #include "Model.h"
 #include "DescriptorPoolManager.h"
 #include "DescriptorPoolWrapper.h"
-
 #include "STBIncludes.h"
 
 #include <imgui.h>
