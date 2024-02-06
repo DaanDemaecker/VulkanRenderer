@@ -491,7 +491,7 @@ void D3D::VulkanRenderer::Render(Model* pModel, VkCommandBuffer& commandBuffer, 
 	vkCmdDrawIndexed(commandBuffer, static_cast<uint32_t>(pModel->GetIndexAmount()), 1, 0, 0, 0);
 }
 
-PipelinePair& D3D::VulkanRenderer::GetPipeline(const std::string& name)
+D3D::PipelinePair& D3D::VulkanRenderer::GetPipeline(const std::string& name)
 {
 	if (m_GraphicPipelines.contains(name))
 	{
@@ -730,7 +730,7 @@ bool D3D::VulkanRenderer::IsDeviceSuitable(VkPhysicalDevice device)
 	return indices.isComplete() && extensionsSupported && swapChainAdequate && supportedFeatures.samplerAnisotropy;
 }
 
-QueueFamilyIndices D3D::VulkanRenderer::FindQueueFamilies(VkPhysicalDevice device)
+D3D::QueueFamilyIndices D3D::VulkanRenderer::FindQueueFamilies(VkPhysicalDevice device)
 {
 	QueueFamilyIndices indices;
 
@@ -791,9 +791,9 @@ bool D3D::VulkanRenderer::CheckDeviceExtensionSupport(VkPhysicalDevice device)
 	return false;
 }
 
-SwapChainSupportDetails D3D::VulkanRenderer::QuerySwapChainSupport(VkPhysicalDevice device)
+D3D::SwapChainSupportDetails D3D::VulkanRenderer::QuerySwapChainSupport(VkPhysicalDevice device)
 {
-	SwapChainSupportDetails details;
+	D3D::SwapChainSupportDetails details;
 
 	vkGetPhysicalDeviceSurfaceCapabilitiesKHR(device, m_Surface, &details.capabilities);
 
@@ -875,7 +875,7 @@ void D3D::VulkanRenderer::CreateLogicalDevice()
 
 void D3D::VulkanRenderer::CreateSwapChain()
 {
-	SwapChainSupportDetails swapChainSupport = QuerySwapChainSupport(m_PhysicalDevice);
+	D3D::SwapChainSupportDetails swapChainSupport = QuerySwapChainSupport(m_PhysicalDevice);
 
 	VkSurfaceFormatKHR surfaceFormat = ChooseSwapSurfaceFormat(swapChainSupport.formats);
 	VkPresentModeKHR presentMode = ChooseSwapPresentMode(swapChainSupport.presentModes);
@@ -1197,7 +1197,7 @@ VkShaderModule D3D::VulkanRenderer::CreateShaderModule(const std::vector<char>& 
 
 void D3D::VulkanRenderer::CreateCommandPool()
 {
-	QueueFamilyIndices queueFamilyIndices = FindQueueFamilies(m_PhysicalDevice);
+	D3D::QueueFamilyIndices queueFamilyIndices = FindQueueFamilies(m_PhysicalDevice);
 
 	VkCommandPoolCreateInfo poolInfo{};
 	poolInfo.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;

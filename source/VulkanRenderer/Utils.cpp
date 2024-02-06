@@ -32,7 +32,7 @@ std::vector<char> Utils::readFile(const std::string& filename)
 	return buffer;
 }
 
-void Utils::LoadModel(const std::string& filename, std::vector<Vertex>& vertices, std::vector<uint32_t>& indices)
+void Utils::LoadModel(const std::string& filename, std::vector<D3D::Vertex>& vertices, std::vector<uint32_t>& indices)
 {
 	// Clear the vectors in case they aren't empty
 	vertices.clear();
@@ -53,7 +53,7 @@ void Utils::LoadModel(const std::string& filename, std::vector<Vertex>& vertices
 	}
 
 	// Create map to store vertices
-	std::unordered_map<Vertex, uint32_t> uniqueVertices{};
+	std::unordered_map<D3D::Vertex, uint32_t> uniqueVertices{};
 
 	// Loop trough every shape that was read from the file
 	for (const auto& shape : shapes)
@@ -62,7 +62,7 @@ void Utils::LoadModel(const std::string& filename, std::vector<Vertex>& vertices
 		for (const auto& index : shape.mesh.indices)
 		{
 			// Create empty vertex
-			Vertex vertex{};
+			D3D::Vertex vertex{};
 
 			// Add position to vertex
 			vertex.pos = {
@@ -112,9 +112,9 @@ void Utils::LoadModel(const std::string& filename, std::vector<Vertex>& vertices
 		uint32_t index2 = indices[i + 2];
 
 		// Get the vertices asociated with this triangle
-		Vertex& v0 = vertices[index0];
-		Vertex& v1 = vertices[index1];
-		Vertex& v2 = vertices[index2];
+		D3D::Vertex& v0 = vertices[index0];
+		D3D::Vertex& v1 = vertices[index1];
+		D3D::Vertex& v2 = vertices[index2];
 
 		// Get 2 edges of this triangle
 		glm::vec3 edge1 = v1.pos - v0.pos;

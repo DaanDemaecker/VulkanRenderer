@@ -25,7 +25,7 @@ namespace Utils
 	//     - filename: The name of the obj file
 	//     - vertices: The vector that will be used to store the vertices
 	//     - indices: The vector that will be used to store the indices
-	void LoadModel(const std::string& filename, std::vector<Vertex>& vertices, std::vector<uint32_t>& indices);
+	void LoadModel(const std::string& filename, std::vector<D3D::Vertex>& vertices, std::vector<uint32_t>& indices);
 }
 
 #endif // !UtilsIncluded
