@@ -43,7 +43,7 @@ namespace D3D
         VkCommandBuffer& GetCurrentCommandBuffer() { return m_CommandBuffers[m_CurrentFrame]; }
         uint32_t GetCurrentFrame() const { return  m_CurrentFrame; }
         DescriptorPoolManager* GetDescriptorPoolManager() const;
-        const LightObject& GetGlobalLight() const { return m_GlobalLight; }
+        const DirectionalLightObject& GetGlobalLight() const { return m_GlobalLight; }
         std::vector<VkBuffer>& GetLightBuffers() { return m_LightBuffers; }
 
 
@@ -63,7 +63,7 @@ namespace D3D
     private:
         const size_t m_MaxFramesInFlight{ 2 };
 
-        LightObject m_GlobalLight{};
+        DirectionalLightObject m_GlobalLight{};
         std::vector<bool> m_LightChanged{};
 
         std::vector<VkBuffer> m_LightBuffers{};

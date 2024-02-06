@@ -1324,7 +1324,7 @@ void D3D::VulkanRenderer::CreateSyncObjects()
 
 void D3D::VulkanRenderer::CreateLightBuffer()
 {
-	VkDeviceSize bufferSize = sizeof(LightObject);
+	VkDeviceSize bufferSize = sizeof(DirectionalLightObject);
 
 	m_LightBuffers.resize(m_MaxFramesInFlight);
 	m_LightMemory.resize(m_MaxFramesInFlight);

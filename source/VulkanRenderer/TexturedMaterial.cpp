@@ -85,7 +85,7 @@ void D3D::TexturedMaterial::UpdateDescriptorSets(std::vector<VkBuffer>& uboBuffe
 	// Set first size to size of UniformBufferObject
 	uboSizes[0] = sizeof(UniformBufferObject);
 	// Set second size to size of LightObject
-	uboSizes[1] = sizeof(LightObject);
+	uboSizes[1] = sizeof(DirectionalLightObject);
 
 	// Update descriptorsets
 	descriptorPool->UpdateDescriptorSets(descriptorSets, uboBuffferList, uboSizes,  m_TextureImageViews.data());
