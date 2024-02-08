@@ -6,9 +6,7 @@
 #include "DescriptorPoolWrapper.h"
 #include "STBIncludes.h"
 
-#include <imgui.h>
-#include <backends/imgui_impl_vulkan.h>
-#include <backends/imgui_impl_glfw.h>
+#include "ImGuiIncludes.h"
 
 #include <set>
 #include <algorithm>

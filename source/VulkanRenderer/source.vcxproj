@@ -202,6 +202,7 @@
     <ClInclude Include="D3DEngine.h" />
     <ClInclude Include="DescriptorPoolManager.h" />
     <ClInclude Include="DescriptorPoolWrapper.h" />
+    <ClInclude Include="ImGuiIncludes.h" />
     <ClInclude Include="TexturedMaterial.h" />
     <ClInclude Include="Material.h" />
     <ClInclude Include="Model.h" />
