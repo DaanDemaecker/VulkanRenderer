@@ -13,6 +13,16 @@ namespace D3D
 	{
 	public:
 		ImGuiWrapper(ImGui_ImplVulkan_InitInfo init_info, VkRenderPass renderPass, VkCommandBuffer commandBuffer, VkDevice device, uint32_t maxFrames);
+		~ImGuiWrapper() = default;
+
+		ImGuiWrapper() = delete;
+
+		ImGuiWrapper(ImGuiWrapper& other) = delete;
+		ImGuiWrapper(ImGuiWrapper&& other) = delete;
+
+		ImGuiWrapper& operator=(ImGuiWrapper& other) = delete;
+		ImGuiWrapper& operator=(ImGuiWrapper&& other) = delete;
+
 
 		void Cleanup(VkDevice device);
 

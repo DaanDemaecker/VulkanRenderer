@@ -61,7 +61,7 @@ namespace D3D
 
         std::vector<VkDescriptorSetLayout>& GetDescriptorSetLayout(int vertexUbos, int fragmentUbos, int textureAmount);
     private:
-        std::unique_ptr<ImGuiWrapper> m_pImGuiWrapper{};
+        std::unique_ptr<ImGuiWrapper> m_pImGuiWrapper;
 
         const size_t m_MaxFramesInFlight{ 2 };
 
