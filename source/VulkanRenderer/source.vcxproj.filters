@@ -98,6 +98,9 @@
     <ClCompile Include="TinyObjLoaderIncludes.cpp">
       <Filter>Includes</Filter>
     </ClCompile>
+    <ClCompile Include="ImGuiWrapper.cpp">
+      <Filter>Vulkan</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Utils.h">
@@ -162,6 +165,9 @@
     </ClInclude>
     <ClInclude Include="TinyObjLoaderIncludes.h">
       <Filter>Includes</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGuiWrapper.h">
+      <Filter>Vulkan</Filter>
     </ClInclude>
     <ClInclude Include="ImGuiIncludes.h">
       <Filter>Includes</Filter>

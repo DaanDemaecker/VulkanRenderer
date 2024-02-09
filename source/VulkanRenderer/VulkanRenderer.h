@@ -14,6 +14,7 @@ namespace D3D
 {
     class Model;
     class DescriptorPoolManager;
+    class ImGuiWrapper;
 
     class VulkanRenderer final : public Singleton<VulkanRenderer>
     {
@@ -36,15 +37,14 @@ namespace D3D
         //Public getters
         size_t GetMaxFrames() const { return m_MaxFramesInFlight; }
         VkDevice& GetDevice() { return m_Device; }
-        VkCommandPool& GetCommandPool() { return m_CommandPool; }
         VkImageView& GetDefaultImageView() { return m_DefaultTextureImageView; }
-        VkSampler& GetSampler() { return m_TextureSampler; }
+        VkSampler& GetSampler() {return m_TextureSampler; }
         PipelinePair& GetPipeline(const std::string& name = "Default");
         VkCommandBuffer& GetCurrentCommandBuffer() { return m_CommandBuffers[m_CurrentFrame]; }
         uint32_t GetCurrentFrame() const { return  m_CurrentFrame; }
         DescriptorPoolManager* GetDescriptorPoolManager() const;
         const DirectionalLightObject& GetGlobalLight() const { return m_GlobalLight; }
-        std::vector<VkBuffer>& GetLightBuffers() { return m_LightBuffers; }
+        std::vector<VkBuffer>& GetLightBuffers() {return m_LightBuffers; }
 
 
         //Public Helpers
@@ -61,6 +61,8 @@ namespace D3D
 
         std::vector<VkDescriptorSetLayout>& GetDescriptorSetLayout(int vertexUbos, int fragmentUbos, int textureAmount);
     private:
+        std::unique_ptr<ImGuiWrapper> m_pImGuiWrapper{};
+
         const size_t m_MaxFramesInFlight{ 2 };
 
         DirectionalLightObject m_GlobalLight{};
@@ -164,8 +166,6 @@ namespace D3D
 
         //--Descriptorpool--
         std::unique_ptr<DescriptorPoolManager> m_pDescriptorPoolManager{};
-
-        VkDescriptorPool m_IMguiDescriptorPool{};
 
         //--Sync objects--
         std::vector<VkSemaphore> m_ImageAvailableSemaphores{};
@@ -277,9 +277,6 @@ namespace D3D
         //--Framebuffers--
         void CreateFramebuffers();
 
-        //--DescriptorPool--
-        void CreateIMguiDescriptorPool();
-
         //--CommandBuffers--
         void CreateCommandBuffers();
         void RecordCommandBuffer(VkCommandBuffer& commandBuffer, uint32_t imageIndex, std::vector<std::unique_ptr<Model>>& pModels);
@@ -302,9 +299,6 @@ namespace D3D
         void CreateTextureImage();
         void CreateTextureImageView();
         void CreateTextureSampler();
-
-        //ImGUI Functions
-        void RenderImGui(VkCommandBuffer commandBuffer);
 
         bool CheckExtensionSupport(const char* extensionName);
     };

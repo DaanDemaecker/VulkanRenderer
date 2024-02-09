@@ -7,6 +7,7 @@
 #include "STBIncludes.h"
 
 #include "ImGuiIncludes.h"
+#include "ImGuiWrapper.h"
 
 #include <set>
 #include <algorithm>
@@ -55,8 +56,6 @@ void D3D::VulkanRenderer::CleanupVulkan()
 
 	m_pDescriptorPoolManager->Cleanup(m_Device);
 
-	vkDestroyDescriptorPool(m_Device, m_IMguiDescriptorPool, nullptr);
-
 	for (auto& pair : m_DescriptorSetLayouts)
 	{
 			vkDestroyDescriptorSetLayout(m_Device, pair.second[0], nullptr);
@@ -92,10 +91,7 @@ void D3D::VulkanRenderer::CleanupVulkan()
 
 void D3D::VulkanRenderer::CleanupImGui()
 {
-	// Cleanup
-	ImGui_ImplVulkan_Shutdown();
-	ImGui_ImplGlfw_Shutdown();
-	ImGui::DestroyContext();
+	m_pImGuiWrapper->Cleanup(m_Device);
 }
 
 void D3D::VulkanRenderer::InitVulkan()
@@ -118,8 +114,6 @@ void D3D::VulkanRenderer::InitVulkan()
 	CreateDepthResources();
 	CreateFramebuffers();
 
-	CreateIMguiDescriptorPool();
-
 	m_pDescriptorPoolManager = std::make_unique<DescriptorPoolManager>();
 
 	CreateTextureImage();
@@ -133,11 +127,6 @@ void D3D::VulkanRenderer::InitVulkan()
 
 void D3D::VulkanRenderer::InitImGui()
 {
-	IMGUI_CHECKVERSION();
-	ImGui::CreateContext();
-
-	// Initialize ImGui Vulkan backend
-	ImGui_ImplGlfw_InitForVulkan(g_pWindow.pWindow, true);
 	ImGui_ImplVulkan_InitInfo init_info = {};
 	init_info.Instance = m_Instance; // Your Vulkan instance
 	init_info.PhysicalDevice = m_PhysicalDevice; // Your Vulkan physical device
@@ -145,17 +134,16 @@ void D3D::VulkanRenderer::InitImGui()
 	init_info.QueueFamily = m_GraphicsQueueIndex; // The index of your Vulkan queue family that supports graphics operations
 	init_info.Queue = m_GraphicsQueue; // Your Vulkan graphics queue
 	init_info.PipelineCache = VK_NULL_HANDLE;
-	init_info.DescriptorPool = m_IMguiDescriptorPool; // Your Vulkan descriptor pool
 	init_info.Allocator = VK_NULL_HANDLE;
 	init_info.MinImageCount = m_MinImageCount; // Minimum number of swapchain images
 	init_info.ImageCount = static_cast<uint32_t>(m_MaxFramesInFlight); // Number of swapchain images
 	init_info.CheckVkResultFn = [](VkResult /*err*/) { /* Implement your own error handling */ };
 	init_info.MSAASamples = m_MsaaSamples;
 
-	ImGui_ImplVulkan_Init(&init_info, m_RenderPass); // Your Vulkan render pass
-
 	auto commandBuffer{ BeginSingleTimeCommands() };
-	ImGui_ImplVulkan_CreateFontsTexture(commandBuffer);
+
+	m_pImGuiWrapper = std::make_unique<D3D::ImGuiWrapper>(init_info, m_RenderPass, commandBuffer, m_Device, static_cast<uint32_t>(m_MaxFramesInFlight));
+
 	EndSingleTimeCommands(commandBuffer);
 }
 
@@ -462,7 +450,7 @@ void D3D::VulkanRenderer::RecordCommandBuffer(VkCommandBuffer& commandBuffer, ui
 		pModels[i]->Render();
 	}
 
-	RenderImGui(commandBuffer);
+	m_pImGuiWrapper->Render(commandBuffer);
 
 	vkCmdEndRenderPass(commandBuffer);
 
@@ -1257,25 +1245,6 @@ void D3D::VulkanRenderer::CreateFramebuffers()
 	}
 }
 
-void D3D::VulkanRenderer::CreateIMguiDescriptorPool()
-{
-	std::array<VkDescriptorPoolSize, 2> poolSizes{};
-	poolSizes[0].type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-	poolSizes[0].descriptorCount = static_cast<uint32_t>(m_MaxFramesInFlight);
-	poolSizes[1].type = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
-	poolSizes[1].descriptorCount = static_cast<uint32_t>(m_MaxFramesInFlight);
-
-	VkDescriptorPoolCreateInfo poolInfo{};
-	poolInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
-	poolInfo.poolSizeCount = static_cast<uint32_t>(poolSizes.size());
-	poolInfo.pPoolSizes = poolSizes.data();
-	poolInfo.maxSets = static_cast<uint32_t>(m_MaxFramesInFlight);
-
-	if (vkCreateDescriptorPool(m_Device, &poolInfo, nullptr, &m_IMguiDescriptorPool) != VK_SUCCESS) {
-		throw std::runtime_error("failed to create descriptor pool!");
-	}
-}
-
 void D3D::VulkanRenderer::CreateCommandBuffers()
 {
 	m_CommandBuffers.resize(m_MaxFramesInFlight);
@@ -1759,23 +1728,6 @@ void D3D::VulkanRenderer::CreateTextureSampler()
 	{
 		throw std::runtime_error("failed to create texture sampler!");
 	}
-}
-
-void D3D::VulkanRenderer::RenderImGui(VkCommandBuffer commandBuffer)
-{
-	// Start ImGui frame
-	ImGui_ImplVulkan_NewFrame();
-	ImGui_ImplGlfw_NewFrame();
-	ImGui::NewFrame();
-
-	ImGui::ShowDemoWindow();
-
-	// End ImGui frame
-	ImGui::Render();
-
-	// Record ImGui draw data
-	ImDrawData* draw_data = ImGui::GetDrawData();
-	ImGui_ImplVulkan_RenderDrawData(draw_data, commandBuffer);
 }
 
 void D3D::VulkanRenderer::CopyBufferToImage(VkBuffer buffer, VkImage image, uint32_t width, uint32_t height)

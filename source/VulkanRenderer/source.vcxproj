@@ -179,6 +179,7 @@
     <ClCompile Include="DescriptorPoolManager.cpp" />
     <ClCompile Include="DescriptorPoolWrapper.cpp" />
     <ClCompile Include="GLFWIncludes.h" />
+    <ClCompile Include="ImGuiWrapper.cpp" />
     <ClCompile Include="STBIncludes.cpp" />
     <ClCompile Include="STBIncludes.h" />
     <ClCompile Include="TexturedMaterial.cpp" />
@@ -203,6 +204,7 @@
     <ClInclude Include="DescriptorPoolManager.h" />
     <ClInclude Include="DescriptorPoolWrapper.h" />
     <ClInclude Include="ImGuiIncludes.h" />
+    <ClInclude Include="ImGuiWrapper.h" />
     <ClInclude Include="TexturedMaterial.h" />
     <ClInclude Include="Material.h" />
     <ClInclude Include="Model.h" />
