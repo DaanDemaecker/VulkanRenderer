@@ -4,6 +4,8 @@
 #include "Singleton.h"
 #include "Structs.h"
 
+#include "PipelineManager.h"
+
 #include <memory>
 #include <vector>
 #include <map>
@@ -62,6 +64,7 @@ namespace D3D
         std::vector<VkDescriptorSetLayout>& GetDescriptorSetLayout(int vertexUbos, int fragmentUbos, int textureAmount);
     private:
         std::unique_ptr<ImGuiWrapper> m_pImGuiWrapper;
+        std::unique_ptr<PipelineManager> m_pPipelineManager;
 
         const size_t m_MaxFramesInFlight{ 2 };
 
@@ -132,16 +135,10 @@ namespace D3D
         //-RenderpassInfo-
         VkRenderPassBeginInfo m_RenderpassInfo{};
 
-        //--Descriptorlayout--
-        std::map<std::tuple<int, int, int>, std::vector<VkDescriptorSetLayout>> m_DescriptorSetLayouts{};
-
-        //--GraphicsPipeline--
-        //VkPipeline m_GraphicsPipeline{};
-        std::map<std::string, PipelinePair> m_GraphicPipelines{};
-
-        const std::string m_DefaultPipelineName{"Default"};
+        const std::string m_DefaultPipelineName{ "Default" };
         const std::string m_DefaultVertName{ "../resources/DefaultResources/Default.Vert.spv" };
         const std::string m_DefaultFragName{ "../resources/DefaultResources/Default.Frag.spv" };
+        
 
         //--CommandPool--
         VkCommandPool m_CommandPool{};
@@ -186,7 +183,6 @@ namespace D3D
         const std::string m_DefaultTextureName{ "../resources/DefaultResources/DefaultTexture.png" };
 
         VkSampler m_TextureSampler{};
-
 
 
         //----Member Functions----
@@ -252,12 +248,6 @@ namespace D3D
 
         //--RenderPass--
         void CreateRenderPass();
-
-        //--Descriptor Layout
-        void CreateDescriptorLayout(int vertexUbos, int fragmentUbos, int textureAmount);
-
-        //-Shader Module-
-        VkShaderModule CreateShaderModule(const std::vector<char>& code);
 
         //--Command Pool
         void CreateCommandPool();

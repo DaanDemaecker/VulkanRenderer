@@ -33,6 +33,12 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Vulkan\Wrappers">
+      <UniqueIdentifier>{45f80921-179a-4057-9e52-7dbfb2c7c0cc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Vulkan\Manager">
+      <UniqueIdentifier>{88998c34-3eed-4f5a-a373-22e7f0eada43}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -80,12 +86,6 @@
     <ClCompile Include="VulkanRenderer.cpp">
       <Filter>Vulkan</Filter>
     </ClCompile>
-    <ClCompile Include="DescriptorPoolWrapper.cpp">
-      <Filter>Vulkan</Filter>
-    </ClCompile>
-    <ClCompile Include="DescriptorPoolManager.cpp">
-      <Filter>Vulkan</Filter>
-    </ClCompile>
     <ClCompile Include="GLFWIncludes.h">
       <Filter>Includes</Filter>
     </ClCompile>
@@ -98,8 +98,17 @@
     <ClCompile Include="TinyObjLoaderIncludes.cpp">
       <Filter>Includes</Filter>
     </ClCompile>
+    <ClCompile Include="DescriptorPoolWrapper.cpp">
+      <Filter>Vulkan\Wrappers</Filter>
+    </ClCompile>
     <ClCompile Include="ImGuiWrapper.cpp">
-      <Filter>Vulkan</Filter>
+      <Filter>Vulkan\Wrappers</Filter>
+    </ClCompile>
+    <ClCompile Include="DescriptorPoolManager.cpp">
+      <Filter>Vulkan\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="PipelineManager.cpp">
+      <Filter>Vulkan\Manager</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -154,23 +163,26 @@
     <ClInclude Include="VulkanRenderer.h">
       <Filter>Vulkan</Filter>
     </ClInclude>
-    <ClInclude Include="DescriptorPoolWrapper.h">
-      <Filter>Vulkan</Filter>
-    </ClInclude>
-    <ClInclude Include="DescriptorPoolManager.h">
-      <Filter>Vulkan</Filter>
-    </ClInclude>
     <ClInclude Include="GLMIncludes.h">
       <Filter>Includes</Filter>
     </ClInclude>
     <ClInclude Include="TinyObjLoaderIncludes.h">
       <Filter>Includes</Filter>
     </ClInclude>
-    <ClInclude Include="ImGuiWrapper.h">
-      <Filter>Vulkan</Filter>
-    </ClInclude>
     <ClInclude Include="ImGuiIncludes.h">
       <Filter>Includes</Filter>
+    </ClInclude>
+    <ClInclude Include="DescriptorPoolWrapper.h">
+      <Filter>Vulkan\Wrappers</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGuiWrapper.h">
+      <Filter>Vulkan\Wrappers</Filter>
+    </ClInclude>
+    <ClInclude Include="DescriptorPoolManager.h">
+      <Filter>Vulkan\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="PipelineManager.h">
+      <Filter>Vulkan\Manager</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
