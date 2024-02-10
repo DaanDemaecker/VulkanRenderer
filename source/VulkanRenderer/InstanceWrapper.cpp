@@ -3,7 +3,7 @@
 #include <stdexcept>
 #include <iostream>
 
-D3D::InstanceWrapper::InstanceWrapper(bool enableValidationLayers, const std::vector<const char *>& validationLayers, VkDebugUtilsMessengerEXT& debugMessenger)
+D3D::InstanceWrapper::InstanceWrapper(bool enableValidationLayers, const std::vector<const char *>& validationLayers)
 {
 #ifndef NDEBUG
 	//If in debug and validation layers are requested, set up validation layers
@@ -54,14 +54,14 @@ D3D::InstanceWrapper::InstanceWrapper(bool enableValidationLayers, const std::ve
 		throw std::runtime_error("failed to create instance");
 	}
 
-	SetupDebugMessenger(enableValidationLayers, debugMessenger);
+	SetupDebugMessenger(enableValidationLayers);
 }
 
-void D3D::InstanceWrapper::cleanup(bool enableValidationLayers, VkDebugUtilsMessengerEXT& debugMessenger)
+void D3D::InstanceWrapper::cleanup(bool enableValidationLayers)
 {
 	if (enableValidationLayers)
 	{
-		DestroyDebugUtilsMessegerEXT(m_Instance, debugMessenger, nullptr);
+		DestroyDebugUtilsMessegerEXT(m_Instance, m_DebugMessenger, nullptr);
 	}
 
 	vkDestroyInstance(m_Instance, nullptr);
@@ -155,7 +155,7 @@ VKAPI_ATTR VkBool32 VKAPI_CALL D3D::InstanceWrapper::debugCallback(VkDebugUtilsM
 	return VK_FALSE;
 }
 
-void D3D::InstanceWrapper::SetupDebugMessenger(bool enableValidationLayers, VkDebugUtilsMessengerEXT& debugMessenger)
+void D3D::InstanceWrapper::SetupDebugMessenger(bool enableValidationLayers)
 {
 	if (!enableValidationLayers)
 		return;
@@ -163,7 +163,7 @@ void D3D::InstanceWrapper::SetupDebugMessenger(bool enableValidationLayers, VkDe
 	VkDebugUtilsMessengerCreateInfoEXT createInfo{};
 	PopulateDebugMessengerCreateInfo(createInfo);
 
-	if (CreateDebugUtilsMessengerEXT(m_Instance, &createInfo, nullptr, &debugMessenger) != VK_SUCCESS)
+	if (CreateDebugUtilsMessengerEXT(m_Instance, &createInfo, nullptr, &m_DebugMessenger) != VK_SUCCESS)
 	{
 		throw std::runtime_error("failed to set up debug messenger!");
 	}

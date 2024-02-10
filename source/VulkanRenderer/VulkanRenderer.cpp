@@ -75,7 +75,7 @@ void D3D::VulkanRenderer::CleanupVulkan()
 
 	vkDestroySurfaceKHR(m_pInstanceWrapper->GetInstance(), m_Surface, nullptr);
 
-	m_pInstanceWrapper->cleanup(m_EnableValidationLayers, m_DebugMessenger);
+	m_pInstanceWrapper->cleanup(m_EnableValidationLayers);
 }
 
 void D3D::VulkanRenderer::CleanupImGui()
@@ -85,7 +85,7 @@ void D3D::VulkanRenderer::CleanupImGui()
 
 void D3D::VulkanRenderer::InitVulkan()
 {
-	m_pInstanceWrapper = std::make_unique<InstanceWrapper>(m_EnableValidationLayers, m_ValidationLayers, m_DebugMessenger);
+	m_pInstanceWrapper = std::make_unique<InstanceWrapper>(m_EnableValidationLayers, m_ValidationLayers);
 	CreateSurface();
 	PickPhysicalDevice();
 	CreateLogicalDevice();

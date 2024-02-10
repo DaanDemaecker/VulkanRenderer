@@ -16,7 +16,7 @@ namespace D3D
 	public:
 		InstanceWrapper() = delete;
 
-		InstanceWrapper(bool enableValidationLayers, const std::vector<const char*>& validationLayers, VkDebugUtilsMessengerEXT& debugMessenger);
+		InstanceWrapper(bool enableValidationLayers, const std::vector<const char*>& validationLayers);
 
 		~InstanceWrapper() = default;
 
@@ -28,10 +28,13 @@ namespace D3D
 
 		VkInstance GetInstance() const { return m_Instance; }
 
-		void cleanup(bool enableValidationLayers, VkDebugUtilsMessengerEXT& debugMessenger);
+		void cleanup(bool enableValidationLayers);
 
 	private:
 		VkInstance m_Instance = VK_NULL_HANDLE;
+
+		VkDebugUtilsMessengerEXT m_DebugMessenger = VK_NULL_HANDLE;
+
 
 		bool CheckValidationLayerSupport(const std::vector<const char*> validationLayers);
 
@@ -48,7 +51,7 @@ namespace D3D
 			void* pUserData
 		);
 
-		void SetupDebugMessenger(bool enableValidationLayers, VkDebugUtilsMessengerEXT& debugMessenger);
+		void SetupDebugMessenger(bool enableValidationLayers);
 
 		VkResult CreateDebugUtilsMessengerEXT(VkInstance instance, const VkDebugUtilsMessengerCreateInfoEXT* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkDebugUtilsMessengerEXT* pDebugMessenger);
 	

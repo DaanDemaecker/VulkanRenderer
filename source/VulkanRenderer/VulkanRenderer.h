@@ -84,7 +84,6 @@ namespace D3D
         { 
             "VK_LAYER_KHRONOS_validation"
         };
-        VkDebugUtilsMessengerEXT m_DebugMessenger = VK_NULL_HANDLE;
 
 
         //--Window Surface--
