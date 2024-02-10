@@ -17,6 +17,7 @@ namespace D3D
     class Model;
     class DescriptorPoolManager;
     class ImGuiWrapper;
+    class InstanceWrapper;
 
     class VulkanRenderer final : public Singleton<VulkanRenderer>
     {
@@ -65,6 +66,7 @@ namespace D3D
     private:
         std::unique_ptr<ImGuiWrapper> m_pImGuiWrapper;
         std::unique_ptr<PipelineManager> m_pPipelineManager;
+        std::unique_ptr<InstanceWrapper> m_pInstanceWrapper;
 
         const size_t m_MaxFramesInFlight{ 2 };
 
@@ -83,10 +85,6 @@ namespace D3D
             "VK_LAYER_KHRONOS_validation"
         };
         VkDebugUtilsMessengerEXT m_DebugMessenger = VK_NULL_HANDLE;
-
-
-        //---Vulkan Instance---
-        VkInstance m_Instance = VK_NULL_HANDLE;
 
 
         //--Window Surface--
@@ -198,26 +196,6 @@ namespace D3D
         //---IMGUI Initialization---
         void InitImGui();
 
-        //--Vulkan instance--
-        void CreateInstance();
-
-        //-Validation layers--
-        bool CheckValidationLayerSupport();
-        void PopulateDebugMessengerCreateInfo(VkDebugUtilsMessengerCreateInfoEXT& createInfo);
-        static VKAPI_ATTR VkBool32 VKAPI_CALL debugCallback(
-            VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
-            VkDebugUtilsMessageTypeFlagsEXT messageType,
-            const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData,
-            void* pUserData
-        );
-        void SetupDebugMessenger();
-        VkResult CreateDebugUtilsMessengerEXT(VkInstance instance, const VkDebugUtilsMessengerCreateInfoEXT* pCreateInfo,
-            const VkAllocationCallbacks* pAllocator, VkDebugUtilsMessengerEXT* pDebugMessenger);
-        void DestroyDebugUtilsMessegerEXT(VkInstance instance, VkDebugUtilsMessengerEXT debugMessenger, const VkAllocationCallbacks* pAllocator);
-
-        //-Extensions-
-        std::vector<const char*> GetRequiredExtensions();
-
         //--Surface creation--
         void CreateSurface();
 
@@ -289,8 +267,6 @@ namespace D3D
         void CreateTextureImage();
         void CreateTextureImageView();
         void CreateTextureSampler();
-
-        bool CheckExtensionSupport(const char* extensionName);
     };
 }
 
