@@ -110,6 +110,9 @@
     <ClCompile Include="PipelineManager.cpp">
       <Filter>Vulkan\Manager</Filter>
     </ClCompile>
+    <ClCompile Include="InstanceWrapper.cpp">
+      <Filter>Vulkan\Wrappers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Utils.h">
@@ -183,6 +186,9 @@
     </ClInclude>
     <ClInclude Include="PipelineManager.h">
       <Filter>Vulkan\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="InstanceWrapper.h">
+      <Filter>Vulkan\Wrappers</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
