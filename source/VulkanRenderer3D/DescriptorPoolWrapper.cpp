@@ -2,7 +2,7 @@
 
 // File includes
 #include "DescriptorPoolWrapper.h"
-#include "VulkanRenderer.h"
+#include "VulkanRenderer3D.h"
 #include "Model.h"
 
 D3D::DescriptorPoolWrapper::DescriptorPoolWrapper(uint32_t uboAmount, uint32_t textureAmount)

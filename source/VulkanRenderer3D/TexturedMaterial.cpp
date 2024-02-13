@@ -2,7 +2,7 @@
 
 // File includes
 #include "TexturedMaterial.h"
-#include "VulkanRenderer.h"
+#include "VulkanRenderer3D.h"
 #include "Utils.h"
 #include "DescriptorPoolManager.h"
 #include "DescriptorPoolWrapper.h"

@@ -2,7 +2,7 @@
 
 // File includes
 #include "D3DEngine.h"
-#include "VulkanRenderer.h"
+#include "VulkanRenderer3D.h"
 #include "TimeManager.h"
 #include "Model.h"
 #include "Material.h"

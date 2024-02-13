@@ -2,7 +2,7 @@
 
 // File includes
 #include "Material.h"
-#include "VulkanRenderer.h"
+#include "VulkanRenderer3D.h"
 #include "Utils.h"
 #include "DescriptorPoolWrapper.h"
 #include "DescriptorPoolManager.h"

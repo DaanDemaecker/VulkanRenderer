@@ -2,7 +2,7 @@
 
 // File includes
 #include "Model.h"
-#include "VulkanRenderer.h"
+#include "VulkanRenderer3D.h"
 #include "Utils.h"
 #include "Material.h"
 #include "TimeManager.h"
