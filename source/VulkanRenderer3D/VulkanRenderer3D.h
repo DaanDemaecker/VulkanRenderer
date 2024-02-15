@@ -19,17 +19,17 @@ namespace D3D
     class ImGuiWrapper;
     class InstanceWrapper;
 
-    class VulkanRenderer final : public Singleton<VulkanRenderer>
+    class VulkanRenderer3D final : public Singleton<VulkanRenderer3D>
     {
     public:
-        VulkanRenderer();
-        ~VulkanRenderer();
+        VulkanRenderer3D();
+        ~VulkanRenderer3D();
 
-        VulkanRenderer(VulkanRenderer& other) = delete;
-        VulkanRenderer(VulkanRenderer&& other) = delete;
+        VulkanRenderer3D(VulkanRenderer3D& other) = delete;
+        VulkanRenderer3D(VulkanRenderer3D&& other) = delete;
 
-        VulkanRenderer& operator=(VulkanRenderer& other) = delete;
-        VulkanRenderer& operator=(VulkanRenderer&& other) = delete;
+        VulkanRenderer3D& operator=(VulkanRenderer3D& other) = delete;
+        VulkanRenderer3D& operator=(VulkanRenderer3D&& other) = delete;
 
         void Render(std::vector<std::unique_ptr<Model>>& pModels);
 

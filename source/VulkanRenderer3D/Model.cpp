@@ -79,7 +79,7 @@ void D3D::Model::Render()
 		return;
 
 	// Get reference to renderer
-	auto& renderer{ VulkanRenderer::GetInstance() };
+	auto& renderer{ VulkanRenderer3D::GetInstance() };
 	// Get index of current frame
 	auto frame{ renderer.GetCurrentFrame() };
 
@@ -120,7 +120,7 @@ void D3D::Model::SetScale(float x, float y, float z)
 void D3D::Model::CreateVertexBuffer()
 {
 	// Get reference to renderer
-	auto& renderer{ VulkanRenderer::GetInstance() };
+	auto& renderer{ VulkanRenderer3D::GetInstance() };
 	// Get reference to logical device
 	auto& device = renderer.GetDevice();
 
@@ -160,7 +160,7 @@ void D3D::Model::CreateVertexBuffer()
 void D3D::Model::CreateIndexBuffer()
 {
 	// Get reference to renderer
-	auto& renderer{ VulkanRenderer::GetInstance() };
+	auto& renderer{ VulkanRenderer3D::GetInstance() };
 	// Get reference to logical device
 	auto& device = renderer.GetDevice();
 
@@ -197,7 +197,7 @@ void D3D::Model::CreateIndexBuffer()
 void D3D::Model::CreateUniformBuffers()
 {
 	// Get reference to renderer
-	auto& renderer = VulkanRenderer::GetInstance();
+	auto& renderer = VulkanRenderer3D::GetInstance();
 	// Get amount of frames
 	auto frames = renderer.GetMaxFrames();
 
@@ -262,7 +262,7 @@ void D3D::Model::UpdateUniformBuffer(uint32_t frame)
 
 	// Update ubo
 	// Send to renderer to update camera matrix
-	VulkanRenderer::GetInstance().UpdateUniformBuffer(m_Ubos[frame]);
+	VulkanRenderer3D::GetInstance().UpdateUniformBuffer(m_Ubos[frame]);
 
 	// Reset dirty flag
 	m_UboChanged[frame] = false;
@@ -279,13 +279,13 @@ D3D::PipelinePair& D3D::Model::GetPipeline()
 		return m_pMaterial->GetPipeline();
 	}
 
-	return VulkanRenderer::GetInstance().GetPipeline();
+	return VulkanRenderer3D::GetInstance().GetPipeline();
 }
 
 void D3D::Model::Cleanup()
 {
 	// Get reference to renderer
-	auto& renderer = D3D::VulkanRenderer::GetInstance();
+	auto& renderer = D3D::VulkanRenderer3D::GetInstance();
 	// Get reference to device
 	auto& device = renderer.GetDevice();
 

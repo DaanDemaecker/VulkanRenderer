@@ -39,7 +39,7 @@ void D3D::D3DEngine::Run(const std::function<void()>& load)
 	// Run the load function
 	load();
 
-	auto& renderer{ VulkanRenderer::GetInstance() };
+	auto& renderer{ VulkanRenderer3D::GetInstance() };
 
 	renderer.AddGraphicsPipeline("Diffuse", "../Resources/Shaders/Diffuse.Vert.spv", "../Resources/Shaders/Diffuse.Frag.spv",1, 1, 1);
 	renderer.AddGraphicsPipeline("NormalMap", "../Resources/Shaders/NormalMap.Vert.spv", "../Resources/Shaders/NormalMap.Frag.spv", 1, 1, 1);

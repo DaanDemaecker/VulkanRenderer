@@ -11,7 +11,7 @@
 D3D::Material::Material(const std::string& pipelineName)
 {
 	// Get the requested pipeline from the renderer
-	m_PipelinePair = VulkanRenderer::GetInstance().GetPipeline(pipelineName);
+	m_PipelinePair = VulkanRenderer3D::GetInstance().GetPipeline(pipelineName);
 }
 
 void D3D::Material::CreateDescriptorSets(Model* pModel, std::vector<VkDescriptorSet>& descriptorSets)
@@ -29,7 +29,7 @@ void D3D::Material::UpdateDescriptorSets(std::vector<VkBuffer>& uboBuffers, std:
 	// Get pointer to the descriptorpool wrapper
 	auto descriptorPool = GetDescriptorPool();
 	// Create vector of vectors of vkBuffers
-	std::vector<std::vector<VkBuffer>> uboList{ uboBuffers, D3D::VulkanRenderer::GetInstance().GetLightBuffers()};
+	std::vector<std::vector<VkBuffer>> uboList{ uboBuffers, D3D::VulkanRenderer3D::GetInstance().GetLightBuffers()};
 
 	// Create vector for buffersizes
 	std::vector<VkDeviceSize> uboSizes(2);
@@ -46,12 +46,12 @@ std::vector<VkDescriptorSetLayout>& D3D::Material::GetDescriptorLayout()
 {
 	// Get the descriptorsets layout
 	// Standard material has 1 vertshader ubo, 1 fragshader ubo and no textures
-	return VulkanRenderer::GetInstance().GetDescriptorSetLayout(1, 1, 0);
+	return VulkanRenderer3D::GetInstance().GetDescriptorSetLayout(1, 1, 0);
 }
 
 D3D::DescriptorPoolWrapper* D3D::Material::GetDescriptorPool()
 {
 	// Get descriptorpoolwrapper
 	// Standard material has 2 ubos and 0 textures
-	return D3D::VulkanRenderer::GetInstance().GetDescriptorPoolManager()->GetDescriptorPool(2, 0);
+	return D3D::VulkanRenderer3D::GetInstance().GetDescriptorPoolManager()->GetDescriptorPool(2, 0);
 }

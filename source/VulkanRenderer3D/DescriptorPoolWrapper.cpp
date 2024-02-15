@@ -47,7 +47,7 @@ void D3D::DescriptorPoolWrapper::CreateDescriptorSets(std::vector<VkDescriptorSe
 	}
 
 	// Get a reference to the renderer for later use
-	auto& renderer{ VulkanRenderer::GetInstance() };
+	auto& renderer{ VulkanRenderer3D::GetInstance() };
 
 	// Get the amount of frames in flight
 	auto maxFrames = renderer.GetMaxFrames();
@@ -79,7 +79,7 @@ void D3D::DescriptorPoolWrapper::CreateDescriptorSets(std::vector<VkDescriptorSe
 void D3D::DescriptorPoolWrapper::UpdateDescriptorSets(std::vector<VkDescriptorSet>& descriptorSets, std::vector<std::vector<VkBuffer>>& uboBuffers, std::vector<VkDeviceSize>& uboSizes,  VkImageView* imageViews)
 {
 	// Get reference to renderer for later use
-	auto& renderer{ D3D::VulkanRenderer::GetInstance() };
+	auto& renderer{ D3D::VulkanRenderer3D::GetInstance() };
 
 	// Loop for the amount off frames there are
 	for (size_t i = 0; i < renderer.GetMaxFrames(); i++)
@@ -152,14 +152,14 @@ void D3D::DescriptorPoolWrapper::UpdateDescriptorSets(std::vector<VkDescriptorSe
 		}
 
 		// Update descriptorsets
-		vkUpdateDescriptorSets(VulkanRenderer::GetInstance().GetDevice(), static_cast<uint32_t>(descriptorWrites.size()), descriptorWrites.data(), 0, nullptr);
+		vkUpdateDescriptorSets(VulkanRenderer3D::GetInstance().GetDevice(), static_cast<uint32_t>(descriptorWrites.size()), descriptorWrites.data(), 0, nullptr);
 	}
 }
 
 void D3D::DescriptorPoolWrapper::ResizeDescriptorPool()
 {
 	// Destroy current descriptorpool
-	vkDestroyDescriptorPool(VulkanRenderer::GetInstance().GetDevice(), m_DescriptorPool, nullptr);
+	vkDestroyDescriptorPool(VulkanRenderer3D::GetInstance().GetDevice(), m_DescriptorPool, nullptr);
 
 	// Multiply max amount of descriptorsets by increaseFactor
 	m_MaxDescriptorSets *= m_IncreaseFactor;
@@ -179,7 +179,7 @@ void D3D::DescriptorPoolWrapper::ResizeDescriptorPool()
 void D3D::DescriptorPoolWrapper::InitDescriptorPool()
 {
 	// Get reference to renderer for later use
-	auto& renderer{ VulkanRenderer::GetInstance() };
+	auto& renderer{ VulkanRenderer3D::GetInstance() };
 	// Get amount of frames
 	auto maxFrames = renderer.GetMaxFrames();
 

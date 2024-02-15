@@ -42,7 +42,7 @@ D3D::TexturedMaterial::TexturedMaterial(std::initializer_list<const std::string>
 D3D::TexturedMaterial::~TexturedMaterial()
 {
 	// Get reference to device for later use
-	auto& device{ VulkanRenderer::GetInstance().GetDevice() };
+	auto& device{ VulkanRenderer3D::GetInstance().GetDevice() };
 
 	// Loop trough imageviews and destroy them
 	for (auto& imageView : m_TextureImageViews)
@@ -78,7 +78,7 @@ void D3D::TexturedMaterial::UpdateDescriptorSets(std::vector<VkBuffer>& uboBuffe
 	// Get descriptorpool associated with this material
 	auto descriptorPool = GetDescriptorPool();
 	// Create vector of vector of ubo buffers
-	std::vector<std::vector<VkBuffer>> uboBuffferList{ uboBuffers, D3D::VulkanRenderer::GetInstance().GetLightBuffers() };
+	std::vector<std::vector<VkBuffer>> uboBuffferList{ uboBuffers, D3D::VulkanRenderer3D::GetInstance().GetLightBuffers() };
 
 	// Create vector for buffersizes
 	std::vector<VkDeviceSize> uboSizes(2);
@@ -95,20 +95,20 @@ std::vector<VkDescriptorSetLayout>& D3D::TexturedMaterial::GetDescriptorLayout()
 {
 	// Get descriptorlayout for this material
 	// Textured material standardly has 1 veretx ubo, 1 fragment ubo and the amount of textures that was requested
-	return VulkanRenderer::GetInstance().GetDescriptorSetLayout(1, 1, static_cast<int>(m_TextureImages.size()));
+	return VulkanRenderer3D::GetInstance().GetDescriptorSetLayout(1, 1, static_cast<int>(m_TextureImages.size()));
 }
 
 D3D::DescriptorPoolWrapper* D3D::TexturedMaterial::GetDescriptorPool()
 {
 	// Get descriptorpool for this material
 	// Textured material standardly has 2 ubos and the amount of textures that was requested
-	return D3D::VulkanRenderer::GetInstance().GetDescriptorPoolManager()->GetDescriptorPool(2, m_TextureAmount);
+	return D3D::VulkanRenderer3D::GetInstance().GetDescriptorPoolManager()->GetDescriptorPool(2, m_TextureAmount);
 }
 
 void D3D::TexturedMaterial::CreateTextureImage(const std::string& filePath, int index)
 {
 	// Get reference to renderer for later use
-	auto& renderer{ VulkanRenderer::GetInstance() };
+	auto& renderer{ VulkanRenderer3D::GetInstance() };
 	// Get reference to logical device for later use
 	auto& device{ renderer.GetDevice() };
 
@@ -174,11 +174,11 @@ void D3D::TexturedMaterial::CreateTextureImage(const std::string& filePath, int 
 void D3D::TexturedMaterial::CreateTextureImageView(int index)
 {
 	// Create texture image view
-	m_TextureImageViews[index] = D3D::VulkanRenderer::GetInstance().CreateImageView(m_TextureImages[index], VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_ASPECT_COLOR_BIT, m_MipLevels);
+	m_TextureImageViews[index] = D3D::VulkanRenderer3D::GetInstance().CreateImageView(m_TextureImages[index], VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_ASPECT_COLOR_BIT, m_MipLevels);
 }
 
 void D3D::TexturedMaterial::CreateTextureSampler()
 {
 	// Get sampler
-	m_TextureSampler = VulkanRenderer::GetInstance().GetSampler();
+	m_TextureSampler = VulkanRenderer3D::GetInstance().GetSampler();
 }

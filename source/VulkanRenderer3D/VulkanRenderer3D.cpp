@@ -17,7 +17,7 @@
 
 extern D3D::Window g_pWindow;
 
-D3D::VulkanRenderer::VulkanRenderer()
+D3D::VulkanRenderer3D::VulkanRenderer3D()
 {
 #ifdef NDEBUG
 	m_EnableValidationLayers = false;
@@ -32,7 +32,7 @@ D3D::VulkanRenderer::VulkanRenderer()
 	InitImGui();
 }
 
-D3D::VulkanRenderer::~VulkanRenderer()
+D3D::VulkanRenderer3D::~VulkanRenderer3D()
 {
 	vkDeviceWaitIdle(m_Device);
 
@@ -41,7 +41,7 @@ D3D::VulkanRenderer::~VulkanRenderer()
 	CleanupVulkan();
 }
 
-void D3D::VulkanRenderer::CleanupVulkan()
+void D3D::VulkanRenderer3D::CleanupVulkan()
 {
 	CleanupSwapChain();
 
@@ -78,12 +78,12 @@ void D3D::VulkanRenderer::CleanupVulkan()
 	m_pInstanceWrapper->cleanup(m_EnableValidationLayers);
 }
 
-void D3D::VulkanRenderer::CleanupImGui()
+void D3D::VulkanRenderer3D::CleanupImGui()
 {
 	m_pImGuiWrapper->Cleanup(m_Device);
 }
 
-void D3D::VulkanRenderer::InitVulkan()
+void D3D::VulkanRenderer3D::InitVulkan()
 {
 	m_pInstanceWrapper = std::make_unique<InstanceWrapper>(m_EnableValidationLayers, m_ValidationLayers);
 	CreateSurface();
@@ -115,7 +115,7 @@ void D3D::VulkanRenderer::InitVulkan()
 	CreateSyncObjects();
 }
 
-void D3D::VulkanRenderer::InitImGui()
+void D3D::VulkanRenderer3D::InitImGui()
 {
 	ImGui_ImplVulkan_InitInfo init_info = {};
 	init_info.Instance = m_pInstanceWrapper->GetInstance(); // Your Vulkan instance
@@ -137,13 +137,13 @@ void D3D::VulkanRenderer::InitImGui()
 	EndSingleTimeCommands(commandBuffer);
 }
 
-void D3D::VulkanRenderer::AddGraphicsPipeline(const std::string& pipelineName, const std::string& vertShaderName, const std::string& fragShaderName, int vertexUbos, int fragmentUbos, int textureAmount)
+void D3D::VulkanRenderer3D::AddGraphicsPipeline(const std::string& pipelineName, const std::string& vertShaderName, const std::string& fragShaderName, int vertexUbos, int fragmentUbos, int textureAmount)
 {
 	m_pPipelineManager->AddGraphicsPipeline(m_Device, static_cast<uint32_t>(m_MaxFramesInFlight), m_RenderPass, m_MsaaSamples,
 		pipelineName, vertShaderName, fragShaderName, vertexUbos, fragmentUbos, textureAmount);
 }
 
-void D3D::VulkanRenderer::Render(std::vector<std::unique_ptr<Model>>& pModels)
+void D3D::VulkanRenderer3D::Render(std::vector<std::unique_ptr<Model>>& pModels)
 {
 	vkWaitForFences(m_Device, 1, &m_InFlightFences[m_CurrentFrame], VK_TRUE, UINT64_MAX);
 
@@ -215,7 +215,7 @@ void D3D::VulkanRenderer::Render(std::vector<std::unique_ptr<Model>>& pModels)
 	++m_CurrentFrame %= m_MaxFramesInFlight;
 }
 
-void D3D::VulkanRenderer::RecordCommandBuffer(VkCommandBuffer& commandBuffer, uint32_t imageIndex, std::vector<std::unique_ptr<Model>>& pModels)
+void D3D::VulkanRenderer3D::RecordCommandBuffer(VkCommandBuffer& commandBuffer, uint32_t imageIndex, std::vector<std::unique_ptr<Model>>& pModels)
 {
 	VkCommandBufferBeginInfo beginInfo{};
 	beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
@@ -275,7 +275,7 @@ void D3D::VulkanRenderer::RecordCommandBuffer(VkCommandBuffer& commandBuffer, ui
 	}
 }
 
-void D3D::VulkanRenderer::Render(Model* pModel, VkCommandBuffer& commandBuffer, const VkDescriptorSet* descriptorSet, const PipelinePair& pipeline)
+void D3D::VulkanRenderer3D::Render(Model* pModel, VkCommandBuffer& commandBuffer, const VkDescriptorSet* descriptorSet, const PipelinePair& pipeline)
 {
 	vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline.pipeline);
 
@@ -292,17 +292,17 @@ void D3D::VulkanRenderer::Render(Model* pModel, VkCommandBuffer& commandBuffer, 
 	vkCmdDrawIndexed(commandBuffer, static_cast<uint32_t>(pModel->GetIndexAmount()), 1, 0, 0, 0);
 }
 
-D3D::PipelinePair& D3D::VulkanRenderer::GetPipeline(const std::string& name)
+D3D::PipelinePair& D3D::VulkanRenderer3D::GetPipeline(const std::string& name)
 {
 	return m_pPipelineManager->GetPipeline(name);
 }
 
-D3D::DescriptorPoolManager* D3D::VulkanRenderer::GetDescriptorPoolManager() const
+D3D::DescriptorPoolManager* D3D::VulkanRenderer3D::GetDescriptorPoolManager() const
 {
 	return m_pDescriptorPoolManager.get();
 }
 
-void D3D::VulkanRenderer::CreateSurface()
+void D3D::VulkanRenderer3D::CreateSurface()
 {
 	if (glfwCreateWindowSurface(m_pInstanceWrapper->GetInstance(), g_pWindow.pWindow, nullptr, &m_Surface) != VK_SUCCESS)
 	{
@@ -310,7 +310,7 @@ void D3D::VulkanRenderer::CreateSurface()
 	}
 }
 
-void D3D::VulkanRenderer::PickPhysicalDevice()
+void D3D::VulkanRenderer3D::PickPhysicalDevice()
 {
 	//Get number of physical devices that support Vulkan
 	uint32_t deviceCount = 0;
@@ -345,7 +345,7 @@ void D3D::VulkanRenderer::PickPhysicalDevice()
 	}
 }
 
-bool D3D::VulkanRenderer::IsDeviceSuitable(VkPhysicalDevice device)
+bool D3D::VulkanRenderer3D::IsDeviceSuitable(VkPhysicalDevice device)
 {
 	QueueFamilyIndices indices = FindQueueFamilies(device);
 
@@ -365,7 +365,7 @@ bool D3D::VulkanRenderer::IsDeviceSuitable(VkPhysicalDevice device)
 	return indices.isComplete() && extensionsSupported && swapChainAdequate && supportedFeatures.samplerAnisotropy;
 }
 
-D3D::QueueFamilyIndices D3D::VulkanRenderer::FindQueueFamilies(VkPhysicalDevice device)
+D3D::QueueFamilyIndices D3D::VulkanRenderer3D::FindQueueFamilies(VkPhysicalDevice device)
 {
 	QueueFamilyIndices indices;
 
@@ -401,7 +401,7 @@ D3D::QueueFamilyIndices D3D::VulkanRenderer::FindQueueFamilies(VkPhysicalDevice 
 	return indices;
 }
 
-bool D3D::VulkanRenderer::CheckDeviceExtensionSupport(VkPhysicalDevice device)
+bool D3D::VulkanRenderer3D::CheckDeviceExtensionSupport(VkPhysicalDevice device)
 {
 	//Check how many extensions this device supports
 	uint32_t extensionCount;
@@ -426,7 +426,7 @@ bool D3D::VulkanRenderer::CheckDeviceExtensionSupport(VkPhysicalDevice device)
 	return false;
 }
 
-D3D::SwapChainSupportDetails D3D::VulkanRenderer::QuerySwapChainSupport(VkPhysicalDevice device)
+D3D::SwapChainSupportDetails D3D::VulkanRenderer3D::QuerySwapChainSupport(VkPhysicalDevice device)
 {
 	D3D::SwapChainSupportDetails details;
 
@@ -453,7 +453,7 @@ D3D::SwapChainSupportDetails D3D::VulkanRenderer::QuerySwapChainSupport(VkPhysic
 	return details;
 }
 
-void D3D::VulkanRenderer::CreateLogicalDevice()
+void D3D::VulkanRenderer3D::CreateLogicalDevice()
 {
 	QueueFamilyIndices indices = FindQueueFamilies(m_PhysicalDevice);
 
@@ -508,7 +508,7 @@ void D3D::VulkanRenderer::CreateLogicalDevice()
 }
 
 
-void D3D::VulkanRenderer::CreateSwapChain()
+void D3D::VulkanRenderer3D::CreateSwapChain()
 {
 	D3D::SwapChainSupportDetails swapChainSupport = QuerySwapChainSupport(m_PhysicalDevice);
 
@@ -573,7 +573,7 @@ void D3D::VulkanRenderer::CreateSwapChain()
 	m_SwapChainExtent = extent;
 }
 
-VkSurfaceFormatKHR D3D::VulkanRenderer::ChooseSwapSurfaceFormat(const std::vector<VkSurfaceFormatKHR>& availableFormats)
+VkSurfaceFormatKHR D3D::VulkanRenderer3D::ChooseSwapSurfaceFormat(const std::vector<VkSurfaceFormatKHR>& availableFormats)
 {
 	for (const auto& availableFormat : availableFormats)
 	{
@@ -586,7 +586,7 @@ VkSurfaceFormatKHR D3D::VulkanRenderer::ChooseSwapSurfaceFormat(const std::vecto
 	return availableFormats[0];
 }
 
-VkPresentModeKHR D3D::VulkanRenderer::ChooseSwapPresentMode(const std::vector<VkPresentModeKHR>& availablePresentModes)
+VkPresentModeKHR D3D::VulkanRenderer3D::ChooseSwapPresentMode(const std::vector<VkPresentModeKHR>& availablePresentModes)
 {
 	for (const auto& availablePresentMode : availablePresentModes)
 	{
@@ -598,7 +598,7 @@ VkPresentModeKHR D3D::VulkanRenderer::ChooseSwapPresentMode(const std::vector<Vk
 	return VK_PRESENT_MODE_FIFO_KHR;
 }
 
-VkExtent2D D3D::VulkanRenderer::ChooseSwapExtent(const VkSurfaceCapabilitiesKHR& capabilities)
+VkExtent2D D3D::VulkanRenderer3D::ChooseSwapExtent(const VkSurfaceCapabilitiesKHR& capabilities)
 {
 	if (capabilities.currentExtent.width != std::numeric_limits<uint32_t>::max())
 	{
@@ -621,7 +621,7 @@ VkExtent2D D3D::VulkanRenderer::ChooseSwapExtent(const VkSurfaceCapabilitiesKHR&
 	}
 }
 
-void D3D::VulkanRenderer::CleanupSwapChain()
+void D3D::VulkanRenderer3D::CleanupSwapChain()
 {
 	for (size_t i = 0; i < m_SwapChainFramebuffers.size(); ++i)
 	{
@@ -644,7 +644,7 @@ void D3D::VulkanRenderer::CleanupSwapChain()
 	vkFreeMemory(m_Device, m_ColorImageMemory, nullptr);
 }
 
-void D3D::VulkanRenderer::RecreateSwapChain()
+void D3D::VulkanRenderer3D::RecreateSwapChain()
 {
 	g_pWindow.Width = 0;
 	g_pWindow.Height = 0;
@@ -667,7 +667,7 @@ void D3D::VulkanRenderer::RecreateSwapChain()
 	CreateFramebuffers();
 }
 
-void D3D::VulkanRenderer::CreateImageViews()
+void D3D::VulkanRenderer3D::CreateImageViews()
 {
 	m_SwapChainImageViews.resize(m_SwapChainImages.size());
 
@@ -677,7 +677,7 @@ void D3D::VulkanRenderer::CreateImageViews()
 	}
 }
 
-void D3D::VulkanRenderer::CreateRenderPass()
+void D3D::VulkanRenderer3D::CreateRenderPass()
 {
 	VkAttachmentDescription colorAttachment{};
 	colorAttachment.format = m_SwapChainImageFormat;
@@ -756,7 +756,7 @@ void D3D::VulkanRenderer::CreateRenderPass()
 	}
 }
 
-void D3D::VulkanRenderer::CreateCommandPool()
+void D3D::VulkanRenderer3D::CreateCommandPool()
 {
 	D3D::QueueFamilyIndices queueFamilyIndices = FindQueueFamilies(m_PhysicalDevice);
 
@@ -771,7 +771,7 @@ void D3D::VulkanRenderer::CreateCommandPool()
 	}
 }
 
-void D3D::VulkanRenderer::CreateColorResources()
+void D3D::VulkanRenderer3D::CreateColorResources()
 {
 	VkFormat colorFormat = m_SwapChainImageFormat;
 
@@ -782,7 +782,7 @@ void D3D::VulkanRenderer::CreateColorResources()
 	m_ColorImageView = CreateImageView(m_ColorImage, colorFormat, VK_IMAGE_ASPECT_COLOR_BIT, 1);
 }
 
-VkFormat D3D::VulkanRenderer::FindDepthFormat()
+VkFormat D3D::VulkanRenderer3D::FindDepthFormat()
 {
 	return FindSupportedFormat(
 		{ VK_FORMAT_D32_SFLOAT, VK_FORMAT_D32_SFLOAT_S8_UINT, VK_FORMAT_D24_UNORM_S8_UINT },
@@ -791,7 +791,7 @@ VkFormat D3D::VulkanRenderer::FindDepthFormat()
 	);
 }
 
-void D3D::VulkanRenderer::CreateFramebuffers()
+void D3D::VulkanRenderer3D::CreateFramebuffers()
 {
 	m_SwapChainFramebuffers.resize(m_SwapChainImageViews.size());
 
@@ -820,7 +820,7 @@ void D3D::VulkanRenderer::CreateFramebuffers()
 	}
 }
 
-void D3D::VulkanRenderer::CreateCommandBuffers()
+void D3D::VulkanRenderer3D::CreateCommandBuffers()
 {
 	m_CommandBuffers.resize(m_MaxFramesInFlight);
 
@@ -836,7 +836,7 @@ void D3D::VulkanRenderer::CreateCommandBuffers()
 	}
 }
 
-void D3D::VulkanRenderer::CreateSyncObjects()
+void D3D::VulkanRenderer3D::CreateSyncObjects()
 {
 	m_ImageAvailableSemaphores.resize(m_MaxFramesInFlight);
 	m_RenderFinishedSemaphores.resize(m_MaxFramesInFlight);
@@ -862,7 +862,7 @@ void D3D::VulkanRenderer::CreateSyncObjects()
 	}
 }
 
-void D3D::VulkanRenderer::CreateLightBuffer()
+void D3D::VulkanRenderer3D::CreateLightBuffer()
 {
 	VkDeviceSize bufferSize = sizeof(DirectionalLightObject);
 
@@ -886,7 +886,7 @@ void D3D::VulkanRenderer::CreateLightBuffer()
 	}
 }
 
-void D3D::VulkanRenderer::UpdateLightBuffer(int frame)
+void D3D::VulkanRenderer3D::UpdateLightBuffer(int frame)
 {
 	//if (!m_LightChanged[frame])
 	//	return;
@@ -896,7 +896,7 @@ void D3D::VulkanRenderer::UpdateLightBuffer(int frame)
 	memcpy(m_LightMapped[frame], &m_GlobalLight, sizeof(m_GlobalLight));
 }
 
-VkSampleCountFlagBits D3D::VulkanRenderer::GetMaxUsableSampleCount()
+VkSampleCountFlagBits D3D::VulkanRenderer3D::GetMaxUsableSampleCount()
 {
 
 	VkPhysicalDeviceProperties physicalDeviceProperties{};
@@ -921,7 +921,7 @@ VkSampleCountFlagBits D3D::VulkanRenderer::GetMaxUsableSampleCount()
 	return VK_SAMPLE_COUNT_1_BIT;
 }
 
-void D3D::VulkanRenderer::CreateDepthResources()
+void D3D::VulkanRenderer3D::CreateDepthResources()
 {
 	VkFormat depthFormat = FindDepthFormat();
 
@@ -936,7 +936,7 @@ void D3D::VulkanRenderer::CreateDepthResources()
 	TransitionImageLayout(m_DepthImage, depthFormat, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL, 1);
 }
 
-void D3D::VulkanRenderer::CreateImage(uint32_t width, uint32_t height, uint32_t mipLevels, VkSampleCountFlagBits numSamples, VkFormat format, VkImageTiling tiling, VkImageUsageFlags usage, VkMemoryPropertyFlags properties, VkImage& image, VkDeviceMemory& imageMemory)
+void D3D::VulkanRenderer3D::CreateImage(uint32_t width, uint32_t height, uint32_t mipLevels, VkSampleCountFlagBits numSamples, VkFormat format, VkImageTiling tiling, VkImageUsageFlags usage, VkMemoryPropertyFlags properties, VkImage& image, VkDeviceMemory& imageMemory)
 {
 	VkImageCreateInfo imageInfo{};
 	imageInfo.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
@@ -976,7 +976,7 @@ void D3D::VulkanRenderer::CreateImage(uint32_t width, uint32_t height, uint32_t 
 	vkBindImageMemory(m_Device, image, imageMemory, 0);
 }
 
-VkImageView D3D::VulkanRenderer::CreateImageView(VkImage image, VkFormat format, VkImageAspectFlags aspectFlags, uint32_t mipLevels)
+VkImageView D3D::VulkanRenderer3D::CreateImageView(VkImage image, VkFormat format, VkImageAspectFlags aspectFlags, uint32_t mipLevels)
 {
 	VkImageViewCreateInfo viewInfo{};
 	viewInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
@@ -998,7 +998,7 @@ VkImageView D3D::VulkanRenderer::CreateImageView(VkImage image, VkFormat format,
 	return imageView;
 }
 
-VkFormat D3D::VulkanRenderer::FindSupportedFormat(const std::vector<VkFormat>& candidates, VkImageTiling tiling, VkFormatFeatureFlags features)
+VkFormat D3D::VulkanRenderer3D::FindSupportedFormat(const std::vector<VkFormat>& candidates, VkImageTiling tiling, VkFormatFeatureFlags features)
 {
 	for (const VkFormat& format : candidates)
 	{
@@ -1018,7 +1018,7 @@ VkFormat D3D::VulkanRenderer::FindSupportedFormat(const std::vector<VkFormat>& c
 	throw std::runtime_error("failed to find supported format!");
 }
 
-uint32_t D3D::VulkanRenderer::FindMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties)
+uint32_t D3D::VulkanRenderer3D::FindMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties)
 {
 	VkPhysicalDeviceMemoryProperties memProperties;
 	vkGetPhysicalDeviceMemoryProperties(m_PhysicalDevice, &memProperties);
@@ -1034,7 +1034,7 @@ uint32_t D3D::VulkanRenderer::FindMemoryType(uint32_t typeFilter, VkMemoryProper
 	throw std::runtime_error("failed to find suitable memory type!");
 }
 
-void D3D::VulkanRenderer::TransitionImageLayout(VkImage image, VkFormat format, VkImageLayout oldLayout, VkImageLayout newLayout, uint32_t mipLevels)
+void D3D::VulkanRenderer3D::TransitionImageLayout(VkImage image, VkFormat format, VkImageLayout oldLayout, VkImageLayout newLayout, uint32_t mipLevels)
 {
 	VkCommandBuffer commandBuffer = BeginSingleTimeCommands();
 
@@ -1109,7 +1109,7 @@ void D3D::VulkanRenderer::TransitionImageLayout(VkImage image, VkFormat format, 
 	EndSingleTimeCommands(commandBuffer);
 }
 
-VkCommandBuffer D3D::VulkanRenderer::BeginSingleTimeCommands()
+VkCommandBuffer D3D::VulkanRenderer3D::BeginSingleTimeCommands()
 {
 	VkCommandBufferAllocateInfo allocInfo{};
 	allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
@@ -1129,7 +1129,7 @@ VkCommandBuffer D3D::VulkanRenderer::BeginSingleTimeCommands()
 	return commandBuffer;
 }
 
-void D3D::VulkanRenderer::EndSingleTimeCommands(VkCommandBuffer comandBuffer)
+void D3D::VulkanRenderer3D::EndSingleTimeCommands(VkCommandBuffer comandBuffer)
 {
 	vkEndCommandBuffer(comandBuffer);
 
@@ -1144,7 +1144,7 @@ void D3D::VulkanRenderer::EndSingleTimeCommands(VkCommandBuffer comandBuffer)
 	vkFreeCommandBuffers(m_Device, m_CommandPool, 1, &comandBuffer);
 }
 
-void D3D::VulkanRenderer::CreateBuffer(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VkBuffer& buffer, VkDeviceMemory& bufferMemory)
+void D3D::VulkanRenderer3D::CreateBuffer(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VkBuffer& buffer, VkDeviceMemory& bufferMemory)
 {
 	VkBufferCreateInfo bufferInfo{};
 	bufferInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
@@ -1171,7 +1171,7 @@ void D3D::VulkanRenderer::CreateBuffer(VkDeviceSize size, VkBufferUsageFlags usa
 	vkBindBufferMemory(m_Device, buffer, bufferMemory, 0);
 }
 
-void D3D::VulkanRenderer::CopyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size)
+void D3D::VulkanRenderer3D::CopyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size)
 {
 	VkCommandBuffer commandBuffer = BeginSingleTimeCommands();
 
@@ -1183,7 +1183,7 @@ void D3D::VulkanRenderer::CopyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkD
 	EndSingleTimeCommands(commandBuffer);
 }
 
-void D3D::VulkanRenderer::UpdateUniformBuffer(UniformBufferObject& buffer)
+void D3D::VulkanRenderer3D::UpdateUniformBuffer(UniformBufferObject& buffer)
 {
 	glm::vec3 cameraPosition(0.0f, 0.0f, 0.0f);
 	glm::vec3 cameraScale(1.0f, 1.0f, 1.0f);
@@ -1205,17 +1205,17 @@ void D3D::VulkanRenderer::UpdateUniformBuffer(UniformBufferObject& buffer)
 	buffer.proj[1][1] *= -1;
 }
 
-std::vector<VkDescriptorSetLayout>& D3D::VulkanRenderer::GetDescriptorSetLayout(int vertexUbos, int fragmentUbos, int textureAmount)
+std::vector<VkDescriptorSetLayout>& D3D::VulkanRenderer3D::GetDescriptorSetLayout(int vertexUbos, int fragmentUbos, int textureAmount)
 {
 	return m_pPipelineManager->GetDescriptorSetLayout(m_Device, static_cast<uint32_t>(m_MaxFramesInFlight), vertexUbos, fragmentUbos, textureAmount);
 }
 
-bool D3D::VulkanRenderer::HasStencilComponent(VkFormat format)
+bool D3D::VulkanRenderer3D::HasStencilComponent(VkFormat format)
 {
 	return format == VK_FORMAT_D32_SFLOAT_S8_UINT || format == VK_FORMAT_D24_UNORM_S8_UINT;
 }
 
-void D3D::VulkanRenderer::CreateTextureImage()
+void D3D::VulkanRenderer3D::CreateTextureImage()
 {
 	int texWidth, texHeight, texChannels;
 
@@ -1259,12 +1259,12 @@ void D3D::VulkanRenderer::CreateTextureImage()
 	GenerateMipmaps(m_DefaultTextureImage, VK_FORMAT_R8G8B8A8_SRGB, texWidth, texHeight, m_MipLevels);
 }
 
-void D3D::VulkanRenderer::CreateTextureImageView()
+void D3D::VulkanRenderer3D::CreateTextureImageView()
 {
 	m_DefaultTextureImageView = CreateImageView(m_DefaultTextureImage, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_ASPECT_COLOR_BIT, m_MipLevels);
 }
 
-void D3D::VulkanRenderer::CreateTextureSampler()
+void D3D::VulkanRenderer3D::CreateTextureSampler()
 {
 	VkSamplerCreateInfo samplerInfo{};
 	samplerInfo.sType = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO;
@@ -1298,7 +1298,7 @@ void D3D::VulkanRenderer::CreateTextureSampler()
 	}
 }
 
-void D3D::VulkanRenderer::CopyBufferToImage(VkBuffer buffer, VkImage image, uint32_t width, uint32_t height)
+void D3D::VulkanRenderer3D::CopyBufferToImage(VkBuffer buffer, VkImage image, uint32_t width, uint32_t height)
 {
 	VkCommandBuffer commandBuffer = BeginSingleTimeCommands();
 
@@ -1332,7 +1332,7 @@ void D3D::VulkanRenderer::CopyBufferToImage(VkBuffer buffer, VkImage image, uint
 	EndSingleTimeCommands(commandBuffer);
 }
 
-void D3D::VulkanRenderer::GenerateMipmaps(VkImage image, VkFormat imageFormat, int32_t texWidth, int32_t texHeight, uint32_t mipLevels)
+void D3D::VulkanRenderer3D::GenerateMipmaps(VkImage image, VkFormat imageFormat, int32_t texWidth, int32_t texHeight, uint32_t mipLevels)
 {
 	VkFormatProperties formatProperties{};
 	vkGetPhysicalDeviceFormatProperties(m_PhysicalDevice, imageFormat, &formatProperties);
