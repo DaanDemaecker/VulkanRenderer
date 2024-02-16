@@ -38,6 +38,18 @@ namespace D3D
 		std::vector<VkPresentModeKHR> presentModes{};
 	};
 
+	// Struct for compacting vulkan textures
+	struct Texture
+	{
+		// VkImage object
+		VkImage textureImage{};
+		// VkDeviceMemory object
+		VkDeviceMemory textureImageMemory{};
+		// VkImageView object
+		VkImageView textureImageView{};
+	};
+
+
 	// Struct to compact pipeline and pipeline layout
 	struct PipelinePair
 	{
