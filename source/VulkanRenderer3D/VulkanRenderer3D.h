@@ -18,6 +18,7 @@ namespace D3D
     class DescriptorPoolManager;
     class ImGuiWrapper;
     class InstanceWrapper;
+    class ImageManager;
 
     class VulkanRenderer3D final : public Singleton<VulkanRenderer3D>
     {
@@ -40,8 +41,8 @@ namespace D3D
         //Public getters
         size_t GetMaxFrames() const { return m_MaxFramesInFlight; }
         VkDevice& GetDevice() { return m_Device; }
-        VkImageView& GetDefaultImageView() { return m_DefaultTextureImageView; }
-        VkSampler& GetSampler() {return m_TextureSampler; }
+        VkImageView& GetDefaultImageView();
+        VkSampler& GetSampler();
         PipelinePair& GetPipeline(const std::string& name = "Default");
         VkCommandBuffer& GetCurrentCommandBuffer() { return m_CommandBuffers[m_CurrentFrame]; }
         uint32_t GetCurrentFrame() const { return  m_CurrentFrame; }
@@ -67,6 +68,7 @@ namespace D3D
         std::unique_ptr<ImGuiWrapper> m_pImGuiWrapper;
         std::unique_ptr<PipelineManager> m_pPipelineManager;
         std::unique_ptr<InstanceWrapper> m_pInstanceWrapper;
+        std::unique_ptr<ImageManager> m_pImageManager;
 
         const size_t m_MaxFramesInFlight{ 2 };
 
@@ -171,15 +173,6 @@ namespace D3D
         uint32_t m_CurrentFrame = 0;
 
 
-        //DefaultTexture
-        VkImage m_DefaultTextureImage{};
-        VkDeviceMemory m_DefaultTextureImageMemory{};
-        VkImageView m_DefaultTextureImageView{};
-        uint32_t m_MipLevels{};
-
-        const std::string m_DefaultTextureName{ "../resources/DefaultResources/DefaultTexture.png" };
-
-        VkSampler m_TextureSampler{};
 
 
         //----Member Functions----
@@ -261,11 +254,6 @@ namespace D3D
         uint32_t FindMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties);
         VkCommandBuffer BeginSingleTimeCommands();
         void EndSingleTimeCommands(VkCommandBuffer comandBuffer);
-
-        //Texture functions
-        void CreateTextureImage();
-        void CreateTextureImageView();
-        void CreateTextureSampler();
     };
 }
 
