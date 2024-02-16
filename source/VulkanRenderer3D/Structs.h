@@ -42,11 +42,11 @@ namespace D3D
 	struct Texture
 	{
 		// VkImage object
-		VkImage textureImage{};
+		VkImage image{};
 		// VkDeviceMemory object
-		VkDeviceMemory textureImageMemory{};
+		VkDeviceMemory imageMemory{};
 		// VkImageView object
-		VkImageView textureImageView{};
+		VkImageView imageView{};
 	};
 
 

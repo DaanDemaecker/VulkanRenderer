@@ -14,12 +14,8 @@ D3D::TexturedMaterial::TexturedMaterial(std::initializer_list<const std::string>
 	// Set texture amount to the size of the initializer list
 	m_TextureAmount = static_cast<int>(filePaths.size());
 	
-	// Resize textureImages to textureAmount
-	m_TextureImages.resize(m_TextureAmount);
-	// Resize textureImageViews to textureAmount
-	m_TextureImageViews.resize(m_TextureAmount);
-	// Resize textureImageMemories to textureAmount
-	m_TextureImageMemories.resize(m_TextureAmount);
+	// Resize textures to textureAmount
+	m_Textures.resize(m_TextureAmount);
 
 	// Initialize index variable
 	int index{};
@@ -44,22 +40,15 @@ D3D::TexturedMaterial::~TexturedMaterial()
 	// Get reference to device for later use
 	auto& device{ VulkanRenderer3D::GetInstance().GetDevice() };
 
-	// Loop trough imageviews and destroy them
-	for (auto& imageView : m_TextureImageViews)
+	// Loop trough textures and destroy them
+	for (auto& texture : m_Textures)
 	{
-		vkDestroyImageView(device, imageView, nullptr);
-	}
-
-	// Loop trough textureImages and destroy them
-	for (auto& texture : m_TextureImages)
-	{
-		vkDestroyImage(device, texture, nullptr);
-	}
-
-	// Loop trouh textureImageMemories and free them
-	for (auto& memory : m_TextureImageMemories)
-	{
-		vkFreeMemory(device, memory, nullptr);
+		// Destroy image view
+		vkDestroyImageView(device, texture.imageView, nullptr);
+		// Destroy image
+		vkDestroyImage(device, texture.image, nullptr);
+		// Free memory
+		vkFreeMemory(device, texture.imageMemory, nullptr);
 	}
 }
 
@@ -88,14 +77,14 @@ void D3D::TexturedMaterial::UpdateDescriptorSets(std::vector<VkBuffer>& uboBuffe
 	uboSizes[1] = sizeof(DirectionalLightObject);
 
 	// Update descriptorsets
-	descriptorPool->UpdateDescriptorSets(descriptorSets, uboBuffferList, uboSizes,  m_TextureImageViews.data());
+	descriptorPool->UpdateDescriptorSets(descriptorSets, uboBuffferList, uboSizes,  &m_Textures);
 }
 
 std::vector<VkDescriptorSetLayout>& D3D::TexturedMaterial::GetDescriptorLayout()
 {
 	// Get descriptorlayout for this material
 	// Textured material standardly has 1 veretx ubo, 1 fragment ubo and the amount of textures that was requested
-	return VulkanRenderer3D::GetInstance().GetDescriptorSetLayout(1, 1, static_cast<int>(m_TextureImages.size()));
+	return VulkanRenderer3D::GetInstance().GetDescriptorSetLayout(1, 1, static_cast<int>(m_Textures.size()));
 }
 
 D3D::DescriptorPoolWrapper* D3D::TexturedMaterial::GetDescriptorPool()
@@ -155,12 +144,12 @@ void D3D::TexturedMaterial::CreateTextureImage(const std::string& filePath, int 
 	// Create image
 	renderer.CreateImage(texWidth, texHeight, m_MipLevels, VK_SAMPLE_COUNT_1_BIT, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_TILING_OPTIMAL,
 		VK_IMAGE_USAGE_TRANSFER_SRC_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT,
-		m_TextureImages[index], m_TextureImageMemories[index]);
+		m_Textures[index].image, m_Textures[index].imageMemory);
 
 	// Transition image layout
-	renderer.TransitionImageLayout(m_TextureImages[index], VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, m_MipLevels);
+	renderer.TransitionImageLayout(m_Textures[index].image, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, m_MipLevels);
 	// Copy staginbuffer to textureImage
-	renderer.CopyBufferToImage(stagingBuffer, m_TextureImages[index], static_cast<uint32_t>(texWidth), static_cast<uint32_t>(texHeight));
+	renderer.CopyBufferToImage(stagingBuffer, m_Textures[index].image, static_cast<uint32_t>(texWidth), static_cast<uint32_t>(texHeight));
 
 	// Destroy staging buffer
 	vkDestroyBuffer(device, stagingBuffer, nullptr);
@@ -168,13 +157,13 @@ void D3D::TexturedMaterial::CreateTextureImage(const std::string& filePath, int 
 	vkFreeMemory(device, stagingBufferMemory, nullptr);
 
 	// Generate mipmaps
-	renderer.GenerateMipmaps(m_TextureImages[index], VK_FORMAT_R8G8B8A8_SRGB, texWidth, texHeight, m_MipLevels);
+	renderer.GenerateMipmaps(m_Textures[index].image, VK_FORMAT_R8G8B8A8_SRGB, texWidth, texHeight, m_MipLevels);
 }
 
 void D3D::TexturedMaterial::CreateTextureImageView(int index)
 {
 	// Create texture image view
-	m_TextureImageViews[index] = D3D::VulkanRenderer3D::GetInstance().CreateImageView(m_TextureImages[index], VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_ASPECT_COLOR_BIT, m_MipLevels);
+	m_Textures[index].imageView = D3D::VulkanRenderer3D::GetInstance().CreateImageView(m_Textures[index].image, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_ASPECT_COLOR_BIT, m_MipLevels);
 }
 
 void D3D::TexturedMaterial::CreateTextureSampler()

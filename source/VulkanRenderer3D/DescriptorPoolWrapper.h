@@ -7,6 +7,7 @@
 
 // File includes
 #include "GLFWIncludes.h"
+#include "Structs.h"
 
 // Standard library includes
 #include <vector>
@@ -61,7 +62,7 @@ namespace D3D
 		//     uboBuffers: a vector of vectors of buffers that will be bound to the descriptorsets
 		//     uboSizes: a vector containing the size of the object contained in the uboBuffers
 		//     imageViews: a pointer to all the imageViews that will need to be bound to the descriptorsets
-		void UpdateDescriptorSets(std::vector<VkDescriptorSet>& descriptorSets, std::vector<std::vector<VkBuffer>>& uboBuffers, std::vector<VkDeviceSize>& uboSizes,  VkImageView* imageViews = nullptr);
+		void UpdateDescriptorSets(std::vector<VkDescriptorSet>& descriptorSets, std::vector<std::vector<VkBuffer>>& uboBuffers, std::vector<VkDeviceSize>& uboSizes, std::vector<Texture>* textures = nullptr);
 
 	private:
 		// The amount of uniform buffer objects per descriptorsets in this pool

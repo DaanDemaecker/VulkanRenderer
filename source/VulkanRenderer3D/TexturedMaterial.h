@@ -48,12 +48,9 @@ namespace D3D
 		// The amount of textures this material uses
 		int m_TextureAmount{};
 
-		// Vector of the VkImage objects that hold the textures
-		std::vector<VkImage> m_TextureImages{};
-		// Vector of VkDeviceMemory obects that hold the textures
-		std::vector<VkDeviceMemory> m_TextureImageMemories{};
-		// Vector of the VkImageView objects
-		std::vector<VkImageView> m_TextureImageViews{};
+		// Vector of textures
+		std::vector<Texture> m_Textures{};
+
 		// The sampler for the textures
 		VkSampler m_TextureSampler{};
 		// The amount of levels the mipmap will have

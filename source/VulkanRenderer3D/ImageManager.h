@@ -6,6 +6,7 @@
 
 // File includes
 #include "GLFWIncludes.h"
+#include "Structs.h"
 
 // Standard library includes
 #include <iostream>
@@ -27,7 +28,7 @@ namespace D3D
 
 		void Cleanup(VkDevice device);
 
-		VkImageView& GetDefaultImageView() { return m_DefaultTextureImageView; }
+		VkImageView& GetDefaultImageView() { return m_DefaultTexture.imageView; }
 		VkSampler& GetSampler() { return m_TextureSampler; }
 
 		void CopyBufferToImage(VkCommandBuffer commandBuffer, VkBuffer buffer, VkImage image, uint32_t width, uint32_t height);
@@ -43,9 +44,8 @@ namespace D3D
 		void CreateBuffer(VkDevice device, VkPhysicalDevice physicalDevice, VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VkBuffer& buffer, VkDeviceMemory& bufferMemory);
 	private:
 
-		VkImage m_DefaultTextureImage{};
-		VkDeviceMemory m_DefaultTextureImageMemory{};
-		VkImageView m_DefaultTextureImageView{};
+		Texture m_DefaultTexture{};
+
 		uint32_t m_MipLevels{};
 
 		const std::string m_DefaultTextureName{ "../resources/DefaultResources/DefaultTexture.png" };

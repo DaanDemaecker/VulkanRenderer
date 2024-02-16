@@ -76,7 +76,7 @@ void D3D::DescriptorPoolWrapper::CreateDescriptorSets(std::vector<VkDescriptorSe
 	m_AllocatedDescriptorSets++;
 }
 
-void D3D::DescriptorPoolWrapper::UpdateDescriptorSets(std::vector<VkDescriptorSet>& descriptorSets, std::vector<std::vector<VkBuffer>>& uboBuffers, std::vector<VkDeviceSize>& uboSizes,  VkImageView* imageViews)
+void D3D::DescriptorPoolWrapper::UpdateDescriptorSets(std::vector<VkDescriptorSet>& descriptorSets, std::vector<std::vector<VkBuffer>>& uboBuffers, std::vector<VkDeviceSize>& uboSizes,  std::vector<Texture>* textures)
 {
 	// Get reference to renderer for later use
 	auto& renderer{ D3D::VulkanRenderer3D::GetInstance() };
@@ -127,7 +127,7 @@ void D3D::DescriptorPoolWrapper::UpdateDescriptorSets(std::vector<VkDescriptorSe
 			// Set imageLayout to read only 
 			imageInfos[j].imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
 			// Give correct image views
-			imageInfos[j].imageView = *(imageViews + j);
+			imageInfos[j].imageView = (*textures)[j].imageView;
 			// Set sampler
 			imageInfos[j].sampler = renderer.GetSampler();
 		}

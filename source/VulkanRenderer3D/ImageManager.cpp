@@ -39,7 +39,7 @@ VkImageView D3D::ImageManager::CreateImageView(VkDevice device, VkImage image, V
 
 void D3D::ImageManager::CreateDefaultImageView(VkDevice device)
 {
-	m_DefaultTextureImageView = CreateImageView(device, m_DefaultTextureImage, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_ASPECT_COLOR_BIT, m_MipLevels);
+	m_DefaultTexture.imageView = CreateImageView(device, m_DefaultTexture.image, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_ASPECT_COLOR_BIT, m_MipLevels);
 }
 
 void D3D::ImageManager::CreateTextureSampler(VkDevice device, VkPhysicalDevice physicalDevice)
@@ -79,9 +79,9 @@ void D3D::ImageManager::CreateTextureSampler(VkDevice device, VkPhysicalDevice p
 void D3D::ImageManager::Cleanup(VkDevice device)
 {
 	vkDestroySampler(device, m_TextureSampler, nullptr);
-	vkDestroyImageView(device, m_DefaultTextureImageView, nullptr);
-	vkDestroyImage(device, m_DefaultTextureImage, nullptr);
-	vkFreeMemory(device, m_DefaultTextureImageMemory, nullptr);
+	vkDestroyImageView(device, m_DefaultTexture.imageView, nullptr);
+	vkDestroyImage(device, m_DefaultTexture.image, nullptr);
+	vkFreeMemory(device, m_DefaultTexture.imageMemory, nullptr);
 }
 
 void D3D::ImageManager::CopyBufferToImage(VkCommandBuffer commandBuffer, VkBuffer buffer, VkImage image, uint32_t width, uint32_t height)
@@ -229,17 +229,17 @@ void D3D::ImageManager::CreateDefaultTextureImage(VkDevice device, VkPhysicalDev
 
 	CreateImage(device, physicalDevice, texWidth, texHeight, m_MipLevels, VK_SAMPLE_COUNT_1_BIT, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_TILING_OPTIMAL,
 		VK_IMAGE_USAGE_TRANSFER_SRC_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT,
-		m_DefaultTextureImage, m_DefaultTextureImageMemory);
+		m_DefaultTexture.image, m_DefaultTexture.imageMemory);
 
-	TransitionImageLayout(m_DefaultTextureImage, commandBuffer, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, m_MipLevels);
-	CopyBufferToImage(commandBuffer, stagingBuffer, m_DefaultTextureImage, static_cast<uint32_t>(texWidth), static_cast<uint32_t>(texHeight));
+	TransitionImageLayout(m_DefaultTexture.image, commandBuffer, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, m_MipLevels);
+	CopyBufferToImage(commandBuffer, stagingBuffer, m_DefaultTexture.image, static_cast<uint32_t>(texWidth), static_cast<uint32_t>(texHeight));
 
 	///transitionImageLayout(m_TextureImage, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, m_MipLevels);
 
 	vkDestroyBuffer(device, stagingBuffer, nullptr);
 	vkFreeMemory(device, stagingBufferMemory, nullptr);
 
-	GenerateMipmaps(physicalDevice, commandBuffer, m_DefaultTextureImage, VK_FORMAT_R8G8B8A8_SRGB, texWidth, texHeight, m_MipLevels);
+	GenerateMipmaps(physicalDevice, commandBuffer, m_DefaultTexture.image, VK_FORMAT_R8G8B8A8_SRGB, texWidth, texHeight, m_MipLevels);
 }
 
 void D3D::ImageManager::CreateImage(VkDevice device, VkPhysicalDevice physicalDevice, uint32_t width, uint32_t height, uint32_t mipLevels, VkSampleCountFlagBits numSamples, VkFormat format, VkImageTiling tiling, VkImageUsageFlags usage, VkMemoryPropertyFlags properties, VkImage& image, VkDeviceMemory& imageMemory)
