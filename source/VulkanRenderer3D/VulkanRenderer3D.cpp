@@ -11,6 +11,7 @@
 #include "PipelineManager.h"
 #include "InstanceWrapper.h"
 #include "ImageManager.h"
+#include "CommandpoolManager.h"
 
 #include <set>
 #include <algorithm>
@@ -67,7 +68,7 @@ void D3D::VulkanRenderer3D::CleanupVulkan()
 		vkDestroyFence(m_Device, m_InFlightFences[i], nullptr);
 	}
 
-	vkDestroyCommandPool(m_Device, m_CommandPool, nullptr);
+	m_pCommandPoolManager->Cleanup(m_Device);
 
 	vkDestroyDevice(m_Device, nullptr);
 
@@ -93,7 +94,8 @@ void D3D::VulkanRenderer3D::InitVulkan()
 
 	CreateLightBuffer();
 
-	CreateCommandPool();
+	m_pCommandPoolManager = std::make_unique<CommandpoolManager>(m_Device, m_PhysicalDevice, m_Surface, static_cast<uint32_t>(m_MaxFramesInFlight));
+
 	CreateColorResources();
 	CreateDepthResources();
 	CreateFramebuffers();
@@ -103,8 +105,6 @@ void D3D::VulkanRenderer3D::InitVulkan()
 	m_pPipelineManager = std::make_unique<PipelineManager>(m_DefaultPipelineName, m_DefaultVertName, m_DefaultFragName);
 
 	AddGraphicsPipeline(m_DefaultPipelineName, m_DefaultVertName, m_DefaultFragName, 1, 1, 0);
-
-	CreateCommandBuffers();
 
 	CreateSyncObjects();
 
@@ -162,9 +162,11 @@ void D3D::VulkanRenderer3D::Render(std::vector<std::unique_ptr<Model>>& pModels)
 
 	vkResetFences(m_Device, 1, &m_InFlightFences[m_CurrentFrame]);
 
-	vkResetCommandBuffer(m_CommandBuffers[m_CurrentFrame], 0);
+	auto commandBuffer{m_pCommandPoolManager->GetCommandBuffer(m_CurrentFrame)};
 
-	RecordCommandBuffer(m_CommandBuffers[m_CurrentFrame], imageIndex, pModels);
+	vkResetCommandBuffer(commandBuffer, 0);
+
+	RecordCommandBuffer(commandBuffer, imageIndex, pModels);
 
 	VkSubmitInfo submitInfo{};
 	submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
@@ -176,7 +178,7 @@ void D3D::VulkanRenderer3D::Render(std::vector<std::unique_ptr<Model>>& pModels)
 	submitInfo.pWaitDstStageMask = waitStages;
 	
 	submitInfo.commandBufferCount = 1;
-	submitInfo.pCommandBuffers = &m_CommandBuffers[m_CurrentFrame];
+	submitInfo.pCommandBuffers = &commandBuffer;
 
 	VkSemaphore signalSemaphores[] = { m_RenderFinishedSemaphores[m_CurrentFrame] };
 	submitInfo.signalSemaphoreCount = 1;
@@ -305,6 +307,11 @@ VkSampler& D3D::VulkanRenderer3D::GetSampler()
 D3D::PipelinePair& D3D::VulkanRenderer3D::GetPipeline(const std::string& name)
 {
 	return m_pPipelineManager->GetPipeline(name);
+}
+
+VkCommandBuffer& D3D::VulkanRenderer3D::GetCurrentCommandBuffer()
+{
+	return m_pCommandPoolManager->GetCommandBuffer(m_CurrentFrame);
 }
 
 D3D::DescriptorPoolManager* D3D::VulkanRenderer3D::GetDescriptorPoolManager() const
@@ -761,21 +768,6 @@ void D3D::VulkanRenderer3D::CreateRenderPass()
 	}
 }
 
-void D3D::VulkanRenderer3D::CreateCommandPool()
-{
-	D3D::QueueFamilyIndices queueFamilyIndices = FindQueueFamilies(m_PhysicalDevice);
-
-	VkCommandPoolCreateInfo poolInfo{};
-	poolInfo.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
-	poolInfo.flags = VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT;
-	poolInfo.queueFamilyIndex = queueFamilyIndices.graphicsFamily.value();
-
-	if (vkCreateCommandPool(m_Device, &poolInfo, nullptr, &m_CommandPool) != VK_SUCCESS)
-	{
-		throw std::runtime_error("failed to create command pool!");
-	}
-}
-
 void D3D::VulkanRenderer3D::CreateColorResources()
 {
 	VkFormat colorFormat = m_SwapChainImageFormat;
@@ -822,22 +814,6 @@ void D3D::VulkanRenderer3D::CreateFramebuffers()
 		{
 			throw std::runtime_error("failed to create framebuffer!");
 		}
-	}
-}
-
-void D3D::VulkanRenderer3D::CreateCommandBuffers()
-{
-	m_CommandBuffers.resize(m_MaxFramesInFlight);
-
-	VkCommandBufferAllocateInfo allocInfo{};
-	allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
-	allocInfo.commandPool = m_CommandPool;
-	allocInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
-	allocInfo.commandBufferCount = static_cast<uint32_t>(m_CommandBuffers.size());
-
-	if (vkAllocateCommandBuffers(m_Device, &allocInfo, m_CommandBuffers.data()) != VK_SUCCESS)
-	{
-		throw std::runtime_error("failed to allocate command buffers!");
 	}
 }
 
@@ -1097,41 +1073,6 @@ void D3D::VulkanRenderer3D::TransitionImageLayout(VkImage image, VkFormat format
 	EndSingleTimeCommands(commandBuffer);
 }
 
-VkCommandBuffer D3D::VulkanRenderer3D::BeginSingleTimeCommands()
-{
-	VkCommandBufferAllocateInfo allocInfo{};
-	allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
-	allocInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
-	allocInfo.commandPool = m_CommandPool;
-	allocInfo.commandBufferCount = 1;
-
-	VkCommandBuffer commandBuffer;
-	vkAllocateCommandBuffers(m_Device, &allocInfo, &commandBuffer);
-
-	VkCommandBufferBeginInfo beginInfo{};
-	beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
-	beginInfo.flags = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
-
-	vkBeginCommandBuffer(commandBuffer, &beginInfo);
-
-	return commandBuffer;
-}
-
-void D3D::VulkanRenderer3D::EndSingleTimeCommands(VkCommandBuffer comandBuffer)
-{
-	vkEndCommandBuffer(comandBuffer);
-
-	VkSubmitInfo submitInfo{};
-	submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
-	submitInfo.commandBufferCount = 1;
-	submitInfo.pCommandBuffers = &comandBuffer;
-
-	vkQueueSubmit(m_GraphicsQueue, 1, &submitInfo, VK_NULL_HANDLE);
-	vkQueueWaitIdle(m_GraphicsQueue);
-
-	vkFreeCommandBuffers(m_Device, m_CommandPool, 1, &comandBuffer);
-}
-
 void D3D::VulkanRenderer3D::CreateBuffer(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VkBuffer& buffer, VkDeviceMemory& bufferMemory)
 {
 	VkBufferCreateInfo bufferInfo{};
@@ -1219,4 +1160,14 @@ void D3D::VulkanRenderer3D::GenerateMipmaps(VkImage image, VkFormat imageFormat,
 	m_pImageManager->GenerateMipmaps(m_PhysicalDevice, commandBuffer, image, imageFormat, texWidth, texHeight, mipLevels);
 
 	EndSingleTimeCommands(commandBuffer);
+}
+
+VkCommandBuffer D3D::VulkanRenderer3D::BeginSingleTimeCommands()
+{
+	return m_pCommandPoolManager->BeginSingleTimeCommands(m_Device);
+}
+
+void D3D::VulkanRenderer3D::EndSingleTimeCommands(VkCommandBuffer commandBuffer)
+{
+	m_pCommandPoolManager->EndSingleTimeCommands(m_Device, commandBuffer, m_GraphicsQueue);
 }

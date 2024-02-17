@@ -19,6 +19,7 @@ namespace D3D
     class ImGuiWrapper;
     class InstanceWrapper;
     class ImageManager;
+    class CommandpoolManager;
 
     class VulkanRenderer3D final : public Singleton<VulkanRenderer3D>
     {
@@ -44,7 +45,7 @@ namespace D3D
         VkImageView& GetDefaultImageView();
         VkSampler& GetSampler();
         PipelinePair& GetPipeline(const std::string& name = "Default");
-        VkCommandBuffer& GetCurrentCommandBuffer() { return m_CommandBuffers[m_CurrentFrame]; }
+        VkCommandBuffer& GetCurrentCommandBuffer();
         uint32_t GetCurrentFrame() const { return  m_CurrentFrame; }
         DescriptorPoolManager* GetDescriptorPoolManager() const;
         const DirectionalLightObject& GetGlobalLight() const { return m_GlobalLight; }
@@ -69,6 +70,7 @@ namespace D3D
         std::unique_ptr<PipelineManager> m_pPipelineManager;
         std::unique_ptr<InstanceWrapper> m_pInstanceWrapper;
         std::unique_ptr<ImageManager> m_pImageManager;
+        std::unique_ptr<CommandpoolManager> m_pCommandPoolManager;
 
         const size_t m_MaxFramesInFlight{ 2 };
 
@@ -137,13 +139,6 @@ namespace D3D
         const std::string m_DefaultPipelineName{ "Default" };
         const std::string m_DefaultVertName{ "../resources/DefaultResources/Default.Vert.spv" };
         const std::string m_DefaultFragName{ "../resources/DefaultResources/Default.Frag.spv" };
-
-
-        //--CommandPool--
-        VkCommandPool m_CommandPool{};
-
-        //CommandBuffer
-        std::vector<VkCommandBuffer> m_CommandBuffers{};
 
 
         //--MultiSampling--
@@ -215,9 +210,6 @@ namespace D3D
         //--RenderPass--
         void CreateRenderPass();
 
-        //--Command Pool
-        void CreateCommandPool();
-
         //--MultiSampling--
         void CreateColorResources();
 
@@ -234,7 +226,6 @@ namespace D3D
         void CreateFramebuffers();
 
         //--CommandBuffers--
-        void CreateCommandBuffers();
         void RecordCommandBuffer(VkCommandBuffer& commandBuffer, uint32_t imageIndex, std::vector<std::unique_ptr<Model>>& pModels);
 
         //--Sync Objects--
@@ -249,7 +240,7 @@ namespace D3D
         bool HasStencilComponent(VkFormat format);
         uint32_t FindMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties);
         VkCommandBuffer BeginSingleTimeCommands();
-        void EndSingleTimeCommands(VkCommandBuffer comandBuffer);
+        void EndSingleTimeCommands(VkCommandBuffer commandBuffer);
     };
 }
 
