@@ -48,7 +48,7 @@ namespace D3D
         uint32_t GetCurrentFrame() const { return  m_CurrentFrame; }
         DescriptorPoolManager* GetDescriptorPoolManager() const;
         const DirectionalLightObject& GetGlobalLight() const { return m_GlobalLight; }
-        std::vector<VkBuffer>& GetLightBuffers() {return m_LightBuffers; }
+        std::vector<VkBuffer>& GetLightBuffers() { return m_LightBuffers; }
 
 
         //Public Helpers
@@ -81,9 +81,9 @@ namespace D3D
 
         //----Member variables----
         //---Validation layers---
-        bool m_EnableValidationLayers{true};
+        bool m_EnableValidationLayers{ true };
         const std::vector<const char*> m_ValidationLayers =
-        { 
+        {
             "VK_LAYER_KHRONOS_validation"
         };
 
@@ -137,25 +137,21 @@ namespace D3D
         const std::string m_DefaultPipelineName{ "Default" };
         const std::string m_DefaultVertName{ "../resources/DefaultResources/Default.Vert.spv" };
         const std::string m_DefaultFragName{ "../resources/DefaultResources/Default.Frag.spv" };
-        
+
 
         //--CommandPool--
         VkCommandPool m_CommandPool{};
 
         //CommandBuffer
         std::vector<VkCommandBuffer> m_CommandBuffers{};
-       
+
 
         //--MultiSampling--
         VkSampleCountFlagBits m_MsaaSamples = VK_SAMPLE_COUNT_1_BIT;
-        VkImage m_ColorImage{};
-        VkDeviceMemory m_ColorImageMemory{};
-        VkImageView m_ColorImageView{};
+        Texture m_ColorImage{};
 
         //--Depth Image--
-        VkImage m_DepthImage{};
-        VkDeviceMemory m_DepthImageMemory{};
-        VkImageView m_DepthImageView{};
+        Texture m_DepthImage{};
 
         //--Framebuffers--
         std::vector<VkFramebuffer> m_SwapChainFramebuffers{};

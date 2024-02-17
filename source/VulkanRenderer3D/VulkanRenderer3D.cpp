@@ -645,13 +645,8 @@ void D3D::VulkanRenderer3D::CleanupSwapChain()
 
 	vkDestroySwapchainKHR(m_Device, m_SwapChain, nullptr);
 
-	vkDestroyImageView(m_Device, m_DepthImageView, nullptr);
-	vkDestroyImage(m_Device, m_DepthImage, nullptr);
-	vkFreeMemory(m_Device, m_DepthImageMemory, nullptr);
-
-	vkDestroyImageView(m_Device, m_ColorImageView, nullptr);
-	vkDestroyImage(m_Device, m_ColorImage, nullptr);
-	vkFreeMemory(m_Device, m_ColorImageMemory, nullptr);
+	m_DepthImage.cleanup(m_Device);
+	m_ColorImage.cleanup(m_Device);
 }
 
 void D3D::VulkanRenderer3D::RecreateSwapChain()
@@ -787,9 +782,9 @@ void D3D::VulkanRenderer3D::CreateColorResources()
 
 	CreateImage(m_SwapChainExtent.width, m_SwapChainExtent.height, 1, m_MsaaSamples, colorFormat,
 		VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT | VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT,
-		VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, m_ColorImage, m_ColorImageMemory);
+		VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, m_ColorImage.image, m_ColorImage.imageMemory);
 
-	m_ColorImageView = CreateImageView(m_ColorImage, colorFormat, VK_IMAGE_ASPECT_COLOR_BIT, 1);
+	m_ColorImage.imageView = CreateImageView(m_ColorImage.image, colorFormat, VK_IMAGE_ASPECT_COLOR_BIT, 1);
 }
 
 VkFormat D3D::VulkanRenderer3D::FindDepthFormat()
@@ -809,8 +804,8 @@ void D3D::VulkanRenderer3D::CreateFramebuffers()
 	{
 		std::array<VkImageView, 3> attachments =
 		{
-			m_ColorImageView,
-			m_DepthImageView,
+			m_ColorImage.imageView,
+			m_DepthImage.imageView,
 			m_SwapChainImageViews[i]
 		};
 
@@ -939,11 +934,11 @@ void D3D::VulkanRenderer3D::CreateDepthResources()
 		VK_IMAGE_TILING_OPTIMAL,
 		VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT,
 		VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT,
-		m_DepthImage, m_DepthImageMemory);
+		m_DepthImage.image, m_DepthImage.imageMemory);
 
-	m_DepthImageView = CreateImageView(m_DepthImage, depthFormat, VK_IMAGE_ASPECT_DEPTH_BIT, 1);
+	m_DepthImage.imageView = CreateImageView(m_DepthImage.image, depthFormat, VK_IMAGE_ASPECT_DEPTH_BIT, 1);
 
-	TransitionImageLayout(m_DepthImage, depthFormat, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL, 1);
+	TransitionImageLayout(m_DepthImage.image, depthFormat, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL, 1);
 }
 
 void D3D::VulkanRenderer3D::CreateImage(uint32_t width, uint32_t height, uint32_t mipLevels, VkSampleCountFlagBits numSamples, VkFormat format, VkImageTiling tiling, VkImageUsageFlags usage, VkMemoryPropertyFlags properties, VkImage& image, VkDeviceMemory& imageMemory)

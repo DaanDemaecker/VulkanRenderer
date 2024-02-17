@@ -79,9 +79,7 @@ void D3D::ImageManager::CreateTextureSampler(VkDevice device, VkPhysicalDevice p
 void D3D::ImageManager::Cleanup(VkDevice device)
 {
 	vkDestroySampler(device, m_TextureSampler, nullptr);
-	vkDestroyImageView(device, m_DefaultTexture.imageView, nullptr);
-	vkDestroyImage(device, m_DefaultTexture.image, nullptr);
-	vkFreeMemory(device, m_DefaultTexture.imageMemory, nullptr);
+	m_DefaultTexture.cleanup(device);
 }
 
 void D3D::ImageManager::CopyBufferToImage(VkCommandBuffer commandBuffer, VkBuffer buffer, VkImage image, uint32_t width, uint32_t height)

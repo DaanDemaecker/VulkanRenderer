@@ -43,12 +43,7 @@ D3D::TexturedMaterial::~TexturedMaterial()
 	// Loop trough textures and destroy them
 	for (auto& texture : m_Textures)
 	{
-		// Destroy image view
-		vkDestroyImageView(device, texture.imageView, nullptr);
-		// Destroy image
-		vkDestroyImage(device, texture.image, nullptr);
-		// Free memory
-		vkFreeMemory(device, texture.imageMemory, nullptr);
+		texture.cleanup(device);
 	}
 }
 

@@ -47,7 +47,15 @@ namespace D3D
 		VkDeviceMemory imageMemory{};
 		// VkImageView object
 		VkImageView imageView{};
+
+		void cleanup(VkDevice device)
+		{
+			vkDestroyImageView(device, imageView, nullptr);
+			vkDestroyImage(device, image, nullptr);
+			vkFreeMemory(device, imageMemory, nullptr);
+		}
 	};
+	
 
 
 	// Struct to compact pipeline and pipeline layout
