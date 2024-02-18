@@ -110,7 +110,7 @@ void D3D::VulkanRenderer3D::InitVulkan()
 
 	auto commandBuffer{ BeginSingleTimeCommands() };
 
-	m_pImageManager = std::make_unique<ImageManager>(m_Device, m_PhysicalDevice,  commandBuffer);
+	m_pImageManager = std::make_unique<ImageManager>(m_Device, m_PhysicalDevice, m_pCommandPoolManager.get(), m_GraphicsQueue);
 
 	EndSingleTimeCommands(commandBuffer);
 }

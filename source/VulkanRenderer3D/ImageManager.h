@@ -7,6 +7,7 @@
 // File includes
 #include "GLFWIncludes.h"
 #include "Structs.h"
+#include "CommandpoolManager.h"
 
 // Standard library includes
 #include <iostream>
@@ -16,7 +17,7 @@ namespace D3D
 	class ImageManager
 	{
 	public:
-		ImageManager(VkDevice device, VkPhysicalDevice physicalDevice, VkCommandBuffer commandBuffer);
+		ImageManager(VkDevice device, VkPhysicalDevice physicalDevice, CommandpoolManager* pCommandPoolManager, VkQueue graphicsQueue);
 		
 		~ImageManager() = default;
 
@@ -37,6 +38,8 @@ namespace D3D
 			VkImage image, VkFormat imageFormat,
 			int32_t texWidth, int32_t texHeight, uint32_t mipLevels);
 
+		void CreateTextureImage(VkDevice device, VkPhysicalDevice physicalDevice, Texture& texture, const std::string& textureName, uint32_t& miplevels, CommandpoolManager* pCommandPoolManager, VkQueue graphicsQueue);
+		void CreateTextureSampler(VkSampler& sampler, uint32_t samples, VkDevice device, VkPhysicalDevice physicalDevice);
 		VkImageView CreateImageView(VkDevice device, VkImage image, VkFormat format, VkImageAspectFlags aspectFlags, uint32_t mipLevels);
 		
 		void TransitionImageLayout(VkImage image, VkCommandBuffer commandBuffer, VkFormat format, VkImageLayout oldLayout, VkImageLayout newLayout, uint32_t mipLevels);
@@ -53,15 +56,12 @@ namespace D3D
 
 		VkSampler m_TextureSampler{};
 
-		void CreateDefaultTextureImage(VkDevice device, VkPhysicalDevice physicalDevice, VkCommandBuffer commandBuffer);
-
-		void CreateDefaultImageView(VkDevice device);
-		void CreateTextureSampler(VkDevice device, VkPhysicalDevice physicalDevice);
-
-		void CreateImage(VkDevice device, VkPhysicalDevice physicalDevice, uint32_t width, uint32_t height, uint32_t mipLevels, VkSampleCountFlagBits numSamples, VkFormat format, VkImageTiling tiling, VkImageUsageFlags usage, VkMemoryPropertyFlags properties, VkImage& image, VkDeviceMemory& imageMemory);
+		void CreateImage(VkDevice device, VkPhysicalDevice physicalDevice, uint32_t width, uint32_t height, uint32_t mipLevels, VkSampleCountFlagBits numSamples, VkFormat format, VkImageTiling tiling, VkImageUsageFlags usage, VkMemoryPropertyFlags properties, Texture& texture);
 		uint32_t FindMemoryType(VkPhysicalDevice physicalDevice, uint32_t typeFilter, VkMemoryPropertyFlags properties);
 		
 		bool HasStencilComponent(VkFormat format);
+
+		void CreateDefaultResources(VkDevice device, VkPhysicalDevice physicalDevice,  CommandpoolManager* pCommandPoolManager, VkQueue graphicsQueue);
 	};
 }
 #endif // !ImageManagerIncluded

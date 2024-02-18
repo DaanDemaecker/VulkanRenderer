@@ -66,6 +66,7 @@ namespace D3D
 
         std::vector<VkDescriptorSetLayout>& GetDescriptorSetLayout(int vertexUbos, int fragmentUbos, int textureAmount);
     private:
+        std::unique_ptr<DescriptorPoolManager> m_pDescriptorPoolManager{};
         std::unique_ptr<ImGuiWrapper> m_pImGuiWrapper;
         std::unique_ptr<PipelineManager> m_pPipelineManager;
         std::unique_ptr<InstanceWrapper> m_pInstanceWrapper;
@@ -150,9 +151,7 @@ namespace D3D
 
         //--Framebuffers--
         std::vector<VkFramebuffer> m_SwapChainFramebuffers{};
-
-        //--Descriptorpool--
-        std::unique_ptr<DescriptorPoolManager> m_pDescriptorPoolManager{};
+        
 
         //--Sync objects--
         std::vector<VkSemaphore> m_ImageAvailableSemaphores{};
@@ -162,9 +161,6 @@ namespace D3D
 
         //--Current frame--
         uint32_t m_CurrentFrame = 0;
-
-
-
 
         //----Member Functions----
         //--- Cleanup ---
@@ -239,6 +235,7 @@ namespace D3D
         VkFormat FindSupportedFormat(const std::vector<VkFormat>& candidates, VkImageTiling tiling, VkFormatFeatureFlags features);
         bool HasStencilComponent(VkFormat format);
         uint32_t FindMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties);
+        
         VkCommandBuffer BeginSingleTimeCommands();
         void EndSingleTimeCommands(VkCommandBuffer commandBuffer);
     };
