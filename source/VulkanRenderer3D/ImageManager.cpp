@@ -238,14 +238,21 @@ void D3D::ImageManager::CreateTextureImage(VkDevice device, VkPhysicalDevice phy
 	CopyBufferToImage(commandBuffer, stagingBuffer, texture.image, static_cast<uint32_t>(texWidth), static_cast<uint32_t>(texHeight));
 	pCommandPoolManager->EndSingleTimeCommands(device, commandBuffer, graphicsQueue);
 
-	///transitionImageLayout(m_TextureImage, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, m_MipLevels);
+	//commandBuffer = pCommandPoolManager->BeginSingleTimeCommands(device);
+	//TransitionImageLayout(texture.image, commandBuffer, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, m_MipLevels);
+	//pCommandPoolManager->EndSingleTimeCommands(device, commandBuffer, graphicsQueue);
 
 	vkDestroyBuffer(device, stagingBuffer, nullptr);
 	vkFreeMemory(device, stagingBufferMemory, nullptr);
 
 	commandBuffer = pCommandPoolManager->BeginSingleTimeCommands(device);
-	GenerateMipmaps(physicalDevice, commandBuffer, m_DefaultTexture.image, VK_FORMAT_R8G8B8A8_SRGB, texWidth, texHeight, m_MipLevels);
+	GenerateMipmaps(physicalDevice, commandBuffer, texture.image, VK_FORMAT_R8G8B8A8_SRGB, texWidth, texHeight, miplevels);
 	pCommandPoolManager->EndSingleTimeCommands(device, commandBuffer, graphicsQueue);
+
+	//commandBuffer = pCommandPoolManager->BeginSingleTimeCommands(device);
+	//TransitionImageLayout(texture.image, commandBuffer, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, m_MipLevels);
+	//pCommandPoolManager->EndSingleTimeCommands(device, commandBuffer, graphicsQueue);
+
 }
 
 void D3D::ImageManager::CreateImage(VkDevice device, VkPhysicalDevice physicalDevice, uint32_t width, uint32_t height, uint32_t mipLevels, VkSampleCountFlagBits numSamples, VkFormat format, VkImageTiling tiling, VkImageUsageFlags usage, VkMemoryPropertyFlags properties, Texture& texture)

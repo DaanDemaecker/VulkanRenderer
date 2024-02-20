@@ -56,17 +56,6 @@ namespace D3D
 		// The amount of levels the mipmap will have
 		uint32_t m_MipLevels{};
 
-		// Create texture image
-		// Parameters:
-		//     filePath: the filepath to the image that will be used for the texture
-		//     index: the index of the current image within the vector of VKImages
-		void CreateTextureImage(const std::string& filePath, int index);
-
-		// Create texture image view
-		// Parameters:
-		//     index: the index of the current image within the vector of VkImageViews
-		void CreateTextureImageView(int index);
-
 		// Create the texture sampler
 		void CreateTextureSampler();
 	};

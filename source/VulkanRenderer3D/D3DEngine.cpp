@@ -10,6 +10,7 @@
 
 // Standard library includes
 #include <chrono>
+#include <thread>
 
 // Global variable that holds the window
 D3D::Window g_pWindow{};

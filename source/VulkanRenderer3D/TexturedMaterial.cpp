@@ -20,13 +20,14 @@ D3D::TexturedMaterial::TexturedMaterial(std::initializer_list<const std::string>
 	// Initialize index variable
 	int index{};
 
+	auto& renderer{ VulkanRenderer3D::GetInstance() };
+
 	// Loop trough all filePaths
 	for (const auto& path : filePaths)
 	{
-		// Create texture image with current path and index
-		CreateTextureImage(path, index);
-		// Create texture image view with current index
-		CreateTextureImageView(index);
+		// Create texture
+		renderer.CreateTexture(m_Textures[index], path, m_MipLevels);
+
 		// Increment index
 		++index;
 	}
@@ -87,78 +88,6 @@ D3D::DescriptorPoolWrapper* D3D::TexturedMaterial::GetDescriptorPool()
 	// Get descriptorpool for this material
 	// Textured material standardly has 2 ubos and the amount of textures that was requested
 	return D3D::VulkanRenderer3D::GetInstance().GetDescriptorPoolManager()->GetDescriptorPool(2, m_TextureAmount);
-}
-
-void D3D::TexturedMaterial::CreateTextureImage(const std::string& filePath, int index)
-{
-	// Get reference to renderer for later use
-	auto& renderer{ VulkanRenderer3D::GetInstance() };
-	// Get reference to logical device for later use
-	auto& device{ renderer.GetDevice() };
-
-	// Create variable for width, height and channels for textures
-	int texWidth, texHeight, texChannels;
-
-	// Load image into pixels
-	stbi_uc* pixels = stbi_load(filePath.c_str(), &texWidth, &texHeight, &texChannels, STBI_rgb_alpha);
-
-	// Calculate the amount of levels the mipmap will have
-	m_MipLevels = static_cast<uint32_t>(std::floor(std::log2(std::max(texWidth, texHeight)))) + 1;
-
-	// Calculate image size
-	VkDeviceSize imageSize = static_cast<uint64_t>(texWidth) * static_cast<uint64_t>(texHeight) * static_cast<uint64_t>(4);
-
-	// Check if pixels were loaded in correctly, if not, throw runtime error
-	if (!pixels)
-	{
-		throw std::runtime_error("failed to load texture image!");
-	}
-
-	// Initialize staging buffer
-	VkBuffer stagingBuffer{};
-	// Initialize staging buffer memory
-	VkDeviceMemory stagingBufferMemory{};
-
-	// Create staging buffer
-	renderer.CreateBuffer(imageSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
-		stagingBuffer, stagingBufferMemory);
-	
-	// Create void pointer
-	void* data;
-
-	// Map memory date to staginbuffermemory
-	vkMapMemory(device, stagingBufferMemory, 0, imageSize, 0, &data);
-	// Copy memory of pixels to data pointer
-	memcpy(data, pixels, static_cast<size_t>(imageSize));
-	// Unmap memory fo stagingbuffermemory
-	vkUnmapMemory(device, stagingBufferMemory);
-
-	// Free pixels
-	stbi_image_free(pixels);
-
-	// Create image
-	renderer.CreateImage(texWidth, texHeight, m_MipLevels, VK_SAMPLE_COUNT_1_BIT, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_TILING_OPTIMAL,
-		VK_IMAGE_USAGE_TRANSFER_SRC_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT,
-		m_Textures[index].image, m_Textures[index].imageMemory);
-
-	// Transition image layout
-	renderer.TransitionImageLayout(m_Textures[index].image, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, m_MipLevels);
-	// Copy staginbuffer to textureImage
-	renderer.CopyBufferToImage(stagingBuffer, m_Textures[index].image, static_cast<uint32_t>(texWidth), static_cast<uint32_t>(texHeight));
-
-	// Destroy staging buffer
-	vkDestroyBuffer(device, stagingBuffer, nullptr);
-	// Free staging buffer memory
-	vkFreeMemory(device, stagingBufferMemory, nullptr);
-
-	// Generate mipmaps
-	renderer.GenerateMipmaps(m_Textures[index].image, VK_FORMAT_R8G8B8A8_SRGB, texWidth, texHeight, m_MipLevels);
-}
-
-void D3D::TexturedMaterial::CreateTextureImageView(int index)
-{
-	// Create texture image view
-	m_Textures[index].imageView = D3D::VulkanRenderer3D::GetInstance().CreateImageView(m_Textures[index].image, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_ASPECT_COLOR_BIT, m_MipLevels);
 }
 
 void D3D::TexturedMaterial::CreateTextureSampler()
