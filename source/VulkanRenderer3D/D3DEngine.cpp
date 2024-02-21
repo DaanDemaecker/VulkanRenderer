@@ -45,9 +45,12 @@ void D3D::D3DEngine::Run(const std::function<void()>& load)
 	renderer.AddGraphicsPipeline("Diffuse", "../Resources/Shaders/Diffuse.Vert.spv", "../Resources/Shaders/Diffuse.Frag.spv",1, 1, 1);
 	renderer.AddGraphicsPipeline("NormalMap", "../Resources/Shaders/NormalMap.Vert.spv", "../Resources/Shaders/NormalMap.Frag.spv", 1, 1, 1);
 	renderer.AddGraphicsPipeline("DiffNorm", "../Resources/Shaders/DiffNorm.Vert.spv", "../Resources/Shaders/DiffNorm.Frag.spv", 1, 1, 2);
+	
 	renderer.AddGraphicsPipeline("Test", "../Resources/Shaders/Test.Vert.spv", "../Resources/Shaders/Test.Frag.spv", 1, 1, 2);
 	
 	renderer.AddGraphicsPipeline("DiffuseUnshaded", "../Resources/Shaders/DiffuseUnshaded.Vert.spv", "../Resources/Shaders/DiffuseUnshaded.Frag.spv", 1, 1, 1);
+
+	renderer.AddGraphicsPipeline("Specular", "../Resources/Shaders/Specular.Vert.spv", "../Resources/Shaders/Specular.Frag.spv", 1, 1, 2);
 
 	
 	std::shared_ptr<D3D::TexturedMaterial> pVikingMaterial{ std::make_shared<D3D::TexturedMaterial>(std::initializer_list<const std::string>{"../resources/images/viking_room.png"}, "Diffuse") };
@@ -59,6 +62,9 @@ void D3D::D3DEngine::Run(const std::function<void()>& load)
 
 	std::shared_ptr<D3D::TexturedMaterial> pTestMaterial{std::make_shared<D3D::TexturedMaterial>(std::initializer_list<const std::string>{"../resources/images/TestRed.png","../resources/images/TestBlue.png"}, "Test")};
 	
+	std::shared_ptr<D3D::TexturedMaterial> pVehicle3Material{ std::make_shared<D3D::TexturedMaterial>(std::initializer_list<const std::string>{"../resources/images/vehicle_gloss.png", "../resources/images/vehicle_specular.png"}, "Specular") };
+
+
 		std::vector<std::unique_ptr<Model>> pModels{};
 
 		/*pModels.push_back(std::make_unique<Model>());
@@ -84,7 +90,7 @@ void D3D::D3DEngine::Run(const std::function<void()>& load)
 		pCurrModel = std::make_unique<Model>();
 
 		pCurrModel->LoadModel("../Resources/Models/vehicle.obj");
-		pCurrModel->SetMaterial(pVehicleMaterial);
+		pCurrModel->SetMaterial(pVehicle3Material);
 		//pModel->SetMaterial(pTestMaterial);
 		pCurrModel->SetPosition(0.f, 0, 10.f);
 		pCurrModel->SetRotation(0.f, glm::radians(75.0f), 0.f);
