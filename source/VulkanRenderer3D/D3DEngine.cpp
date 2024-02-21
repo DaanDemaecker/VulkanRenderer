@@ -52,6 +52,9 @@ void D3D::D3DEngine::Run(const std::function<void()>& load)
 
 	renderer.AddGraphicsPipeline("Specular", "../Resources/Shaders/Specular.Vert.spv", "../Resources/Shaders/Specular.Frag.spv", 1, 1, 2);
 
+	renderer.AddGraphicsPipeline("DiffNormSpec", "../Resources/Shaders/DiffNormSpec.Vert.spv", "../Resources/Shaders/DiffNormSpec.Frag.spv", 1, 1, 4);
+
+
 	
 	std::shared_ptr<D3D::TexturedMaterial> pVikingMaterial{ std::make_shared<D3D::TexturedMaterial>(std::initializer_list<const std::string>{"../resources/images/viking_room.png"}, "Diffuse") };
 	std::shared_ptr<D3D::TexturedMaterial> pVehicleMaterial{ std::make_shared<D3D::TexturedMaterial>(std::initializer_list<const std::string>{"../resources/images/vehicle_diffuse.png"}, "Diffuse") };
@@ -62,7 +65,10 @@ void D3D::D3DEngine::Run(const std::function<void()>& load)
 
 	std::shared_ptr<D3D::TexturedMaterial> pTestMaterial{std::make_shared<D3D::TexturedMaterial>(std::initializer_list<const std::string>{"../resources/images/TestRed.png","../resources/images/TestBlue.png"}, "Test")};
 	
-	std::shared_ptr<D3D::TexturedMaterial> pVehicle3Material{ std::make_shared<D3D::TexturedMaterial>(std::initializer_list<const std::string>{"../resources/images/vehicle_gloss.png", "../resources/images/vehicle_specular.png"}, "Specular") };
+	std::shared_ptr<D3D::TexturedMaterial> pVehicle3Material{ std::make_shared<D3D::TexturedMaterial>
+		(std::initializer_list<const std::string>{"../resources/images/vehicle_diffuse.png", "../resources/images/vehicle_normal.png",
+		"../resources/images/vehicle_gloss.png", "../resources/images/vehicle_specular.png"},
+			"DiffNormSpec") };
 
 
 		std::vector<std::unique_ptr<Model>> pModels{};
