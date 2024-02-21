@@ -46,11 +46,13 @@ void D3D::D3DEngine::Run(const std::function<void()>& load)
 	renderer.AddGraphicsPipeline("NormalMap", "../Resources/Shaders/NormalMap.Vert.spv", "../Resources/Shaders/NormalMap.Frag.spv", 1, 1, 1);
 	renderer.AddGraphicsPipeline("DiffNorm", "../Resources/Shaders/DiffNorm.Vert.spv", "../Resources/Shaders/DiffNorm.Frag.spv", 1, 1, 2);
 	renderer.AddGraphicsPipeline("Test", "../Resources/Shaders/Test.Vert.spv", "../Resources/Shaders/Test.Frag.spv", 1, 1, 2);
+	
+	renderer.AddGraphicsPipeline("DiffuseUnshaded", "../Resources/Shaders/DiffuseUnshaded.Vert.spv", "../Resources/Shaders/DiffuseUnshaded.Frag.spv", 1, 1, 1);
 
 	
 	std::shared_ptr<D3D::TexturedMaterial> pVikingMaterial{ std::make_shared<D3D::TexturedMaterial>(std::initializer_list<const std::string>{"../resources/images/viking_room.png"}, "Diffuse") };
 	std::shared_ptr<D3D::TexturedMaterial> pVehicleMaterial{ std::make_shared<D3D::TexturedMaterial>(std::initializer_list<const std::string>{"../resources/images/vehicle_diffuse.png"}, "Diffuse") };
-	std::shared_ptr<D3D::TexturedMaterial> pFireMaterial{ std::make_shared<D3D::TexturedMaterial>(std::initializer_list<const std::string>{"../resources/images/fireFX_diffuse.png"}, "Diffuse") };
+	std::shared_ptr<D3D::TexturedMaterial> pFireMaterial{ std::make_shared<D3D::TexturedMaterial>(std::initializer_list<const std::string>{"../resources/images/fireFX_diffuse.png"}, "DiffuseUnshaded") };
 
 	std::shared_ptr<D3D::Material> pVehicle2Material{ std::make_shared<D3D::TexturedMaterial>
 		(std::initializer_list<const std::string>{"../resources/images/vehicle_diffuse.png", "../resources/images/vehicle_normal.png"}, "DiffNorm") };

@@ -124,7 +124,7 @@ namespace D3D
         //-Swapchain Extent-
         VkExtent2D m_SwapChainExtent{};
 
-        //--Image Views--
+        //-Image Views-
         std::vector<VkImageView> m_SwapChainImageViews{};
 
         //--Renderpass--
