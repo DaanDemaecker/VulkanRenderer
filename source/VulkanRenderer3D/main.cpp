@@ -3,7 +3,7 @@
 
 void load()
 {
-	//auto& renderer{ D3D::VulkanRenderer::GetInstance() };
+	//std::cout << "wow \n";
 }
 
 int main()
