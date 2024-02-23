@@ -4,6 +4,7 @@
 #ifndef ImGuiWrapperIncluded
 #define ImGuiWrapperIncluded
 
+// File includes
 #include "GLFWIncludes.h"
 #include "ImGuiIncludes.h"
 
@@ -12,9 +13,20 @@ namespace D3D
 	class ImGuiWrapper
 	{
 	public:
-		ImGuiWrapper(ImGui_ImplVulkan_InitInfo init_info, VkRenderPass renderPass, VkCommandBuffer commandBuffer, VkDevice device, uint32_t maxFrames);
+		// Constructor
+		// Parameters:
+		//     init_info: the initialization info for imgui
+		//     renderpass: the handle to the renderpass that will be used
+		//     commandbuffer: a single time command buffer needed for initialization
+		//     device: the handle for the VkDevice
+		//     maxFrames: the max frames in flight
+		ImGuiWrapper(ImGui_ImplVulkan_InitInfo init_info, VkRenderPass renderPass, VkCommandBuffer commandBuffer,
+			VkDevice device, uint32_t maxFrames);
+
+		// Default destructor
 		~ImGuiWrapper() = default;
 
+		// Delete default constructor
 		ImGuiWrapper() = delete;
 
 		ImGuiWrapper(ImGuiWrapper& other) = delete;
@@ -23,14 +35,24 @@ namespace D3D
 		ImGuiWrapper& operator=(ImGuiWrapper& other) = delete;
 		ImGuiWrapper& operator=(ImGuiWrapper&& other) = delete;
 
-
+		// Cleanup
+		// Parameters:
+		//     device: handle for the VkDevice
 		void Cleanup(VkDevice device);
 
+		// Render the imgui
+		// Parameters:
+		//     commandBuffer: the commandBuffer used for rendering
 		void Render(VkCommandBuffer commandBuffer);
 
 	private:
+		// Descriptorpool needed for ImGUI
 		VkDescriptorPool m_DescriptorPool{};
 
+		// Initialization of descriptorpool
+		// Parameters:
+		//     device: handle for the VkDevice
+		//     maxFrames: the amount of frames in flight
 		void InitDescriptorPool(VkDevice device, uint32_t maxFrames);
 
 	};
