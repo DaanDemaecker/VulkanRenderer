@@ -20,6 +20,7 @@ namespace D3D
     class InstanceWrapper;
     class ImageManager;
     class CommandpoolManager;
+    class RenderpassWrapper;
 
     class VulkanRenderer3D final : public Singleton<VulkanRenderer3D>
     {
@@ -68,6 +69,7 @@ namespace D3D
         std::unique_ptr<InstanceWrapper> m_pInstanceWrapper;
         std::unique_ptr<ImageManager> m_pImageManager;
         std::unique_ptr<CommandpoolManager> m_pCommandPoolManager;
+        std::unique_ptr<RenderpassWrapper> m_pRenderpassWrapper;
 
         const size_t m_MaxFramesInFlight{ 2 };
 
@@ -126,12 +128,6 @@ namespace D3D
 
         //-Image Views-
         std::vector<VkImageView> m_SwapChainImageViews{};
-
-        //--Renderpass--
-        VkRenderPass m_RenderPass{};
-
-        //-RenderpassInfo-
-        VkRenderPassBeginInfo m_RenderpassInfo{};
 
         const std::string m_DefaultPipelineName{ "Default" };
         const std::string m_DefaultVertName{ "../resources/DefaultResources/Default.Vert.spv" };
@@ -198,9 +194,6 @@ namespace D3D
 
         //--Swapchain Image Views--
         void CreateImageViews();
-
-        //--RenderPass--
-        void CreateRenderPass();
 
         //--MultiSampling--
         void CreateColorResources();

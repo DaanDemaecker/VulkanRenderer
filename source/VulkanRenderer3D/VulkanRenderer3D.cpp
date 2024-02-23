@@ -11,6 +11,8 @@
 #include "InstanceWrapper.h"
 #include "ImageManager.h"
 #include "CommandpoolManager.h"
+#include "RenderpassWrapper.h"
+
 
 #include <set>
 #include <algorithm>
@@ -58,7 +60,7 @@ void D3D::VulkanRenderer3D::CleanupVulkan()
 
 	m_pPipelineManager->Cleanup(m_Device);
 
-	vkDestroyRenderPass(m_Device, m_RenderPass, nullptr);
+	m_pRenderpassWrapper->cleanup(m_Device);
 
 	for (size_t i = 0; i < m_MaxFramesInFlight; ++i)
 	{
@@ -95,7 +97,8 @@ void D3D::VulkanRenderer3D::InitVulkan()
 
 	CreateSwapChain();
 	CreateImageViews();
-	CreateRenderPass();
+
+	m_pRenderpassWrapper = std::make_unique<RenderpassWrapper>(m_Device, m_SwapChainImageFormat, FindDepthFormat(), m_MsaaSamples);
 
 	CreateLightBuffer();
 
@@ -131,14 +134,14 @@ void D3D::VulkanRenderer3D::InitImGui()
 
 	auto commandBuffer{ BeginSingleTimeCommands() };
 
-	m_pImGuiWrapper = std::make_unique<D3D::ImGuiWrapper>(init_info, m_RenderPass, commandBuffer, m_Device, static_cast<uint32_t>(m_MaxFramesInFlight));
+	m_pImGuiWrapper = std::make_unique<D3D::ImGuiWrapper>(init_info, m_pRenderpassWrapper->GetRenderpass(), commandBuffer, m_Device, static_cast<uint32_t>(m_MaxFramesInFlight));
 
 	EndSingleTimeCommands(commandBuffer);
 }
 
 void D3D::VulkanRenderer3D::AddGraphicsPipeline(const std::string& pipelineName, const std::string& vertShaderName, const std::string& fragShaderName, int vertexUbos, int fragmentUbos, int textureAmount)
 {
-	m_pPipelineManager->AddGraphicsPipeline(m_Device, static_cast<uint32_t>(m_MaxFramesInFlight), m_RenderPass, m_MsaaSamples,
+	m_pPipelineManager->AddGraphicsPipeline(m_Device, static_cast<uint32_t>(m_MaxFramesInFlight), m_pRenderpassWrapper->GetRenderpass(), m_MsaaSamples,
 		pipelineName, vertShaderName, fragShaderName, vertexUbos, fragmentUbos, textureAmount);
 }
 
@@ -230,7 +233,7 @@ void D3D::VulkanRenderer3D::RecordCommandBuffer(VkCommandBuffer& commandBuffer, 
 
 	VkRenderPassBeginInfo renderPassInfo{};
 	renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
-	renderPassInfo.renderPass = m_RenderPass;
+	renderPassInfo.renderPass = m_pRenderpassWrapper->GetRenderpass();
 	renderPassInfo.framebuffer = m_SwapChainFramebuffers[imageIndex];
 
 	renderPassInfo.renderArea.offset = { 0, 0 };
@@ -688,85 +691,6 @@ void D3D::VulkanRenderer3D::CreateImageViews()
 	}
 }
 
-void D3D::VulkanRenderer3D::CreateRenderPass()
-{
-	VkAttachmentDescription colorAttachment{};
-	colorAttachment.format = m_SwapChainImageFormat;
-	colorAttachment.samples = m_MsaaSamples;
-	colorAttachment.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
-	colorAttachment.storeOp = VK_ATTACHMENT_STORE_OP_STORE;
-	colorAttachment.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
-	colorAttachment.finalLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;;
-
-	VkAttachmentReference colorAttachmentRef{};
-	colorAttachmentRef.attachment = 0;
-	colorAttachmentRef.layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
-
-
-	VkAttachmentDescription depthAttachment{};
-	depthAttachment.format = FindDepthFormat();
-	depthAttachment.samples = m_MsaaSamples;
-	depthAttachment.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
-	depthAttachment.storeOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
-	depthAttachment.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
-	depthAttachment.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
-	depthAttachment.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
-	depthAttachment.finalLayout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
-
-	VkAttachmentReference depthAttachmentRef{};
-	depthAttachmentRef.attachment = 1;
-	depthAttachmentRef.layout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
-
-
-	VkAttachmentDescription colorAttachmentResolve{};
-	colorAttachmentResolve.format = m_SwapChainImageFormat;
-	colorAttachmentResolve.samples = VK_SAMPLE_COUNT_1_BIT;
-	colorAttachmentResolve.loadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
-	colorAttachmentResolve.storeOp = VK_ATTACHMENT_STORE_OP_STORE;
-	colorAttachmentResolve.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
-	colorAttachmentResolve.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
-	colorAttachmentResolve.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
-	colorAttachmentResolve.finalLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
-
-	VkAttachmentReference colorAttachmentResolveRef{};
-	colorAttachmentResolveRef.attachment = 2;
-	colorAttachmentResolveRef.layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
-
-
-	VkSubpassDescription subpass{};
-	subpass.pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS;
-	subpass.colorAttachmentCount = 1;
-	subpass.pColorAttachments = &colorAttachmentRef;
-	subpass.pDepthStencilAttachment = &depthAttachmentRef;
-	subpass.pResolveAttachments = &colorAttachmentResolveRef;
-
-
-	VkSubpassDependency dependency{};
-	dependency.srcSubpass = VK_SUBPASS_EXTERNAL;
-	dependency.dstSubpass = 0;
-	dependency.srcStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT | VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT;
-	dependency.srcAccessMask = 0;
-	dependency.dstStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT | VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT;
-	dependency.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT | VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT;
-
-
-	std::array<VkAttachmentDescription, 3> attachments = { colorAttachment, depthAttachment, colorAttachmentResolve };
-	VkRenderPassCreateInfo renderPassInfo{};
-	renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO;
-	renderPassInfo.attachmentCount = static_cast<uint32_t>(attachments.size());
-	renderPassInfo.pAttachments = attachments.data();
-	renderPassInfo.subpassCount = 1;
-	renderPassInfo.pSubpasses = &subpass;
-	renderPassInfo.dependencyCount = 1;
-	renderPassInfo.pDependencies = &dependency;
-
-
-	if (vkCreateRenderPass(m_Device, &renderPassInfo, nullptr, &m_RenderPass) != VK_SUCCESS)
-	{
-		throw std::runtime_error("failed to create render pass!");
-	}
-}
-
 void D3D::VulkanRenderer3D::CreateColorResources()
 {
 	VkFormat colorFormat = m_SwapChainImageFormat;
@@ -802,7 +726,7 @@ void D3D::VulkanRenderer3D::CreateFramebuffers()
 
 		VkFramebufferCreateInfo framebufferInfo{};
 		framebufferInfo.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
-		framebufferInfo.renderPass = m_RenderPass;
+		framebufferInfo.renderPass = m_pRenderpassWrapper->GetRenderpass();
 		framebufferInfo.attachmentCount = static_cast<uint32_t>(attachments.size());
 		framebufferInfo.pAttachments = attachments.data();
 		framebufferInfo.width = m_SwapChainExtent.width;
