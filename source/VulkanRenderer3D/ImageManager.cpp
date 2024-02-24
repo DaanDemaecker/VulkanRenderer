@@ -79,7 +79,7 @@ void D3D::ImageManager::CreateTextureSampler(VkSampler& sampler, uint32_t miplev
 void D3D::ImageManager::Cleanup(VkDevice device)
 {
 	vkDestroySampler(device, m_TextureSampler, nullptr);
-	m_DefaultTexture.cleanup(device);
+	m_DefaultTexture.Cleanup(device);
 }
 
 void D3D::ImageManager::CopyBufferToImage(VkCommandBuffer commandBuffer, VkBuffer buffer, VkImage image, uint32_t width, uint32_t height)

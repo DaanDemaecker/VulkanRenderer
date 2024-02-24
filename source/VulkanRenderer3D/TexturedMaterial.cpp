@@ -44,7 +44,7 @@ D3D::TexturedMaterial::~TexturedMaterial()
 	// Loop trough textures and destroy them
 	for (auto& texture : m_Textures)
 	{
-		texture.cleanup(device);
+		texture.Cleanup(device);
 	}
 }
 

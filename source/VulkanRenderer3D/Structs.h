@@ -48,7 +48,7 @@ namespace D3D
 		// VkImageView object
 		VkImageView imageView{};
 
-		void cleanup(VkDevice device)
+		void Cleanup(VkDevice device)
 		{
 			vkDestroyImageView(device, imageView, nullptr);
 			vkDestroyImage(device, image, nullptr);

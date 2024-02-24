@@ -12,6 +12,7 @@
 #include "ImageManager.h"
 #include "CommandpoolManager.h"
 #include "RenderpassWrapper.h"
+#include "SwapchainWrapper.h"
 
 
 #include <set>
@@ -46,7 +47,7 @@ D3D::VulkanRenderer3D::~VulkanRenderer3D()
 
 void D3D::VulkanRenderer3D::CleanupVulkan()
 {
-	CleanupSwapChain();
+	m_pSwapchainWrapper->Cleanup(m_Device);
 
 	m_pImageManager->Cleanup(m_Device);
 
@@ -93,19 +94,22 @@ void D3D::VulkanRenderer3D::InitVulkan()
 
 	m_pCommandPoolManager = std::make_unique<CommandpoolManager>(m_Device, m_PhysicalDevice, m_Surface, static_cast<uint32_t>(m_MaxFramesInFlight));
 
-	m_pImageManager = std::make_unique<ImageManager>(m_Device, m_PhysicalDevice, m_pCommandPoolManager.get(), m_GraphicsQueue);
+	m_pImageManager = std::make_unique<ImageManager>(m_Device, m_PhysicalDevice,
+		m_pCommandPoolManager.get(), m_GraphicsQueue);
 
-	CreateSwapChain();
-	CreateImageViews();
+	auto msaaSamples = GetMaxUsableSampleCount();
 
-	m_pRenderpassWrapper = std::make_unique<RenderpassWrapper>(m_Device, m_SwapChainImageFormat, FindDepthFormat(), m_MsaaSamples);
+	m_pSwapchainWrapper = std::make_unique<SwapchainWrapper>(m_Device, m_PhysicalDevice, m_Surface,
+		m_pImageManager.get(), msaaSamples);
+
+	m_pRenderpassWrapper = std::make_unique<RenderpassWrapper>(m_Device, m_pSwapchainWrapper->GetFormat(), FindDepthFormat(), msaaSamples);
+
+	auto commandBuffer{ m_pCommandPoolManager->BeginSingleTimeCommands(m_Device) };
+	m_pSwapchainWrapper->SetupImageViews(m_Device, m_PhysicalDevice, m_pImageManager.get(), FindDepthFormat(),
+		commandBuffer, m_pRenderpassWrapper->GetRenderpass());
+	m_pCommandPoolManager->EndSingleTimeCommands(m_Device, commandBuffer, m_GraphicsQueue);
 
 	CreateLightBuffer();
-
-	
-	CreateColorResources();
-	CreateDepthResources();
-	CreateFramebuffers();
 
 	m_pDescriptorPoolManager = std::make_unique<DescriptorPoolManager>();
 
@@ -127,10 +131,10 @@ void D3D::VulkanRenderer3D::InitImGui()
 	init_info.Queue = m_GraphicsQueue; // Your Vulkan graphics queue
 	init_info.PipelineCache = VK_NULL_HANDLE;
 	init_info.Allocator = VK_NULL_HANDLE;
-	init_info.MinImageCount = m_MinImageCount; // Minimum number of swapchain images
+	init_info.MinImageCount = m_pSwapchainWrapper->GetMinImageCount(); // Minimum number of swapchain images
 	init_info.ImageCount = static_cast<uint32_t>(m_MaxFramesInFlight); // Number of swapchain images
 	init_info.CheckVkResultFn = [](VkResult /*err*/) { /* Implement your own error handling */ };
-	init_info.MSAASamples = m_MsaaSamples;
+	init_info.MSAASamples = m_pSwapchainWrapper->GetMsaaSamples();
 
 	auto commandBuffer{ BeginSingleTimeCommands() };
 
@@ -141,8 +145,9 @@ void D3D::VulkanRenderer3D::InitImGui()
 
 void D3D::VulkanRenderer3D::AddGraphicsPipeline(const std::string& pipelineName, const std::string& vertShaderName, const std::string& fragShaderName, int vertexUbos, int fragmentUbos, int textureAmount)
 {
-	m_pPipelineManager->AddGraphicsPipeline(m_Device, static_cast<uint32_t>(m_MaxFramesInFlight), m_pRenderpassWrapper->GetRenderpass(), m_MsaaSamples,
-		pipelineName, vertShaderName, fragShaderName, vertexUbos, fragmentUbos, textureAmount);
+	m_pPipelineManager->AddGraphicsPipeline(m_Device, static_cast<uint32_t>(m_MaxFramesInFlight), m_pRenderpassWrapper->GetRenderpass(),
+		m_pSwapchainWrapper->GetMsaaSamples(), pipelineName, vertShaderName, fragShaderName,
+		vertexUbos, fragmentUbos, textureAmount);
 }
 
 void D3D::VulkanRenderer3D::Render(std::vector<std::unique_ptr<Model>>& pModels)
@@ -150,7 +155,7 @@ void D3D::VulkanRenderer3D::Render(std::vector<std::unique_ptr<Model>>& pModels)
 	vkWaitForFences(m_Device, 1, &m_InFlightFences[m_CurrentFrame], VK_TRUE, UINT64_MAX);
 
 	uint32_t imageIndex{};
-	VkResult result = vkAcquireNextImageKHR(m_Device, m_SwapChain, UINT64_MAX, m_ImageAvailableSemaphores[m_CurrentFrame], VK_NULL_HANDLE, &imageIndex);
+	VkResult result = vkAcquireNextImageKHR(m_Device, m_pSwapchainWrapper->GetSwapchain(), UINT64_MAX, m_ImageAvailableSemaphores[m_CurrentFrame], VK_NULL_HANDLE, &imageIndex);
 
 	if (result == VK_ERROR_OUT_OF_DATE_KHR)
 	{
@@ -197,7 +202,7 @@ void D3D::VulkanRenderer3D::Render(std::vector<std::unique_ptr<Model>>& pModels)
 	presentInfo.waitSemaphoreCount = 1;
 	presentInfo.pWaitSemaphores = signalSemaphores;
 
-	VkSwapchainKHR swapChains[] = { m_SwapChain };
+	VkSwapchainKHR swapChains[] = { m_pSwapchainWrapper->GetSwapchain()};
 	presentInfo.swapchainCount = 1;
 	presentInfo.pSwapchains = swapChains;
 	presentInfo.pImageIndices = &imageIndex;
@@ -221,6 +226,8 @@ void D3D::VulkanRenderer3D::Render(std::vector<std::unique_ptr<Model>>& pModels)
 
 void D3D::VulkanRenderer3D::RecordCommandBuffer(VkCommandBuffer& commandBuffer, uint32_t imageIndex, std::vector<std::unique_ptr<Model>>& pModels)
 {
+	auto swapchainExtent{ m_pSwapchainWrapper->GetExtent() };
+
 	VkCommandBufferBeginInfo beginInfo{};
 	beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
 	beginInfo.flags = VK_COMMAND_BUFFER_USAGE_RENDER_PASS_CONTINUE_BIT; // Optional
@@ -234,10 +241,10 @@ void D3D::VulkanRenderer3D::RecordCommandBuffer(VkCommandBuffer& commandBuffer, 
 	VkRenderPassBeginInfo renderPassInfo{};
 	renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
 	renderPassInfo.renderPass = m_pRenderpassWrapper->GetRenderpass();
-	renderPassInfo.framebuffer = m_SwapChainFramebuffers[imageIndex];
+	renderPassInfo.framebuffer = m_pSwapchainWrapper->GetFrameBuffer(imageIndex);
 
 	renderPassInfo.renderArea.offset = { 0, 0 };
-	renderPassInfo.renderArea.extent = m_SwapChainExtent;
+	renderPassInfo.renderArea.extent = swapchainExtent;
 
 	std::array<VkClearValue, 2> clearValues{};
 	clearValues[0].color = { {0.388f, 0.588f, 0.929f, 1.0f} };
@@ -251,15 +258,15 @@ void D3D::VulkanRenderer3D::RecordCommandBuffer(VkCommandBuffer& commandBuffer, 
 	VkViewport viewport{};
 	viewport.x = 0.0f;
 	viewport.y = 0.0f;
-	viewport.width = static_cast<float>(m_SwapChainExtent.width);
-	viewport.height = static_cast<float>(m_SwapChainExtent.height);
+	viewport.width = static_cast<float>(swapchainExtent.width);
+	viewport.height = static_cast<float>(swapchainExtent.height);
 	viewport.minDepth = 0.0f;
 	viewport.maxDepth = 1.0f;
 	vkCmdSetViewport(commandBuffer, 0, 1, &viewport);
 
 	VkRect2D scissor{};
 	scissor.offset = { 0, 0 };
-	scissor.extent = m_SwapChainExtent;
+	scissor.extent = swapchainExtent;
 	vkCmdSetScissor(commandBuffer, 0, 1, &scissor);
 
 	UpdateLightBuffer(m_CurrentFrame);
@@ -353,7 +360,6 @@ void D3D::VulkanRenderer3D::PickPhysicalDevice()
 		if (IsDeviceSuitable(device))
 		{
 			m_PhysicalDevice = device;
-			m_MsaaSamples = GetMaxUsableSampleCount();
 			break;
 		}
 	}
@@ -384,41 +390,6 @@ bool D3D::VulkanRenderer3D::IsDeviceSuitable(VkPhysicalDevice device)
 	return indices.isComplete() && extensionsSupported && swapChainAdequate && supportedFeatures.samplerAnisotropy;
 }
 
-D3D::QueueFamilyIndices D3D::VulkanRenderer3D::FindQueueFamilies(VkPhysicalDevice device)
-{
-	QueueFamilyIndices indices;
-
-	uint32_t queueFamilyCount = 0;
-	vkGetPhysicalDeviceQueueFamilyProperties(device, &queueFamilyCount, nullptr);
-
-	std::vector<VkQueueFamilyProperties> queueFamilies(queueFamilyCount);
-	vkGetPhysicalDeviceQueueFamilyProperties(device, &queueFamilyCount, queueFamilies.data());
-
-	//find at least one queue family that supports VK_QUEUE_GRAPHICS_BIT
-	int i = 0;
-	for (const auto& queueFamily : queueFamilies)
-	{
-		if (queueFamily.queueFlags & VK_QUEUE_GRAPHICS_BIT)
-		{
-			indices.graphicsFamily = i;
-		}
-
-		VkBool32 presentSupport = false;
-		vkGetPhysicalDeviceSurfaceSupportKHR(device, i, m_Surface, &presentSupport);
-
-		if (presentSupport)
-		{
-			indices.presentFamily = i;
-		}
-
-		if (indices.isComplete())
-			break;
-
-		i++;
-	}
-
-	return indices;
-}
 
 bool D3D::VulkanRenderer3D::CheckDeviceExtensionSupport(VkPhysicalDevice device)
 {
@@ -445,32 +416,6 @@ bool D3D::VulkanRenderer3D::CheckDeviceExtensionSupport(VkPhysicalDevice device)
 	return false;
 }
 
-D3D::SwapChainSupportDetails D3D::VulkanRenderer3D::QuerySwapChainSupport(VkPhysicalDevice device)
-{
-	D3D::SwapChainSupportDetails details;
-
-	vkGetPhysicalDeviceSurfaceCapabilitiesKHR(device, m_Surface, &details.capabilities);
-
-	uint32_t formatCount;
-	vkGetPhysicalDeviceSurfaceFormatsKHR(device, m_Surface, &formatCount, nullptr);
-
-	if (formatCount != 0)
-	{
-		details.formats.resize(formatCount);
-		vkGetPhysicalDeviceSurfaceFormatsKHR(device, m_Surface, &formatCount, details.formats.data());
-	}
-
-	uint32_t presentModeCount;
-	vkGetPhysicalDeviceSurfacePresentModesKHR(device, m_Surface, &presentModeCount, nullptr);
-
-	if (presentModeCount != 0)
-	{
-		details.presentModes.resize(presentModeCount);
-		vkGetPhysicalDeviceSurfacePresentModesKHR(device, m_Surface, &presentModeCount, details.presentModes.data());
-	}
-
-	return details;
-}
 
 void D3D::VulkanRenderer3D::CreateLogicalDevice()
 {
@@ -527,137 +472,6 @@ void D3D::VulkanRenderer3D::CreateLogicalDevice()
 }
 
 
-void D3D::VulkanRenderer3D::CreateSwapChain()
-{
-	D3D::SwapChainSupportDetails swapChainSupport = QuerySwapChainSupport(m_PhysicalDevice);
-
-	VkSurfaceFormatKHR surfaceFormat = ChooseSwapSurfaceFormat(swapChainSupport.formats);
-	VkPresentModeKHR presentMode = ChooseSwapPresentMode(swapChainSupport.presentModes);
-	VkExtent2D extent = ChooseSwapExtent(swapChainSupport.capabilities);
-
-	uint32_t imageCount = swapChainSupport.capabilities.minImageCount + 1;
-	m_MinImageCount = swapChainSupport.capabilities.minImageCount;
-
-	if (swapChainSupport.capabilities.maxImageCount > 0 && imageCount > swapChainSupport.capabilities.maxImageCount)
-	{
-		imageCount = swapChainSupport.capabilities.maxImageCount;
-	}
-
-	VkSwapchainCreateInfoKHR createInfo{};
-	createInfo.sType = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR;
-	createInfo.surface = m_Surface;
-
-	createInfo.minImageCount = imageCount;
-	createInfo.imageFormat = surfaceFormat.format;
-	createInfo.imageColorSpace = surfaceFormat.colorSpace;
-	createInfo.imageExtent = extent;
-	createInfo.imageArrayLayers = 1;
-	createInfo.imageUsage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
-	
-
-	QueueFamilyIndices indices = FindQueueFamilies(m_PhysicalDevice);
-	uint32_t queueFamilyIndices[] = { indices.graphicsFamily.value(), indices.presentFamily.value() };
-
-	if (indices.graphicsFamily != indices.presentFamily)
-	{
-		//Image is owned by queue family and ownership must be transfered
-		createInfo.imageSharingMode = VK_SHARING_MODE_CONCURRENT;
-		createInfo.queueFamilyIndexCount = 2;
-		createInfo.pQueueFamilyIndices = queueFamilyIndices;
-	}
-	else
-	{
-		///Images can be used across multiple queue families without transfer of ownership
-		createInfo.imageSharingMode = VK_SHARING_MODE_EXCLUSIVE;
-		createInfo.queueFamilyIndexCount = 0; //Optional
-		createInfo.pQueueFamilyIndices = nullptr; //Optional
-	}
-
-	createInfo.preTransform = swapChainSupport.capabilities.currentTransform;
-	createInfo.compositeAlpha = VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR;
-	createInfo.presentMode = presentMode;
-	createInfo.clipped = VK_TRUE;
-	createInfo.oldSwapchain = VK_NULL_HANDLE;
-
-	if (vkCreateSwapchainKHR(m_Device, &createInfo, nullptr, &m_SwapChain) != VK_SUCCESS)
-	{
-		throw std::runtime_error("failed to create swap chain!");
-	}
-
-	vkGetSwapchainImagesKHR(m_Device, m_SwapChain, &imageCount, nullptr);
-	m_SwapChainImages.resize(imageCount);
-	vkGetSwapchainImagesKHR(m_Device, m_SwapChain, &imageCount, m_SwapChainImages.data());
-
-	m_SwapChainImageFormat = surfaceFormat.format;
-	m_SwapChainExtent = extent;
-}
-
-VkSurfaceFormatKHR D3D::VulkanRenderer3D::ChooseSwapSurfaceFormat(const std::vector<VkSurfaceFormatKHR>& availableFormats)
-{
-	for (const auto& availableFormat : availableFormats)
-	{
-		if (availableFormat.format == VK_FORMAT_B8G8R8A8_SRGB && availableFormat.colorSpace == VK_COLOR_SPACE_SRGB_NONLINEAR_KHR)
-		{
-			return availableFormat;
-		}
-	}
-
-	return availableFormats[0];
-}
-
-VkPresentModeKHR D3D::VulkanRenderer3D::ChooseSwapPresentMode(const std::vector<VkPresentModeKHR>& availablePresentModes)
-{
-	for (const auto& availablePresentMode : availablePresentModes)
-	{
-		if (availablePresentMode == VK_PRESENT_MODE_MAILBOX_KHR)
-		{
-			return availablePresentMode;
-		}
-	}
-	return VK_PRESENT_MODE_FIFO_KHR;
-}
-
-VkExtent2D D3D::VulkanRenderer3D::ChooseSwapExtent(const VkSurfaceCapabilitiesKHR& capabilities)
-{
-	if (capabilities.currentExtent.width != std::numeric_limits<uint32_t>::max())
-	{
-		return capabilities.currentExtent;
-	}
-	else
-	{
-		int width, height;
-		glfwGetFramebufferSize(g_pWindow.pWindow, &width, &height);
-		VkExtent2D actualExtent =
-		{
-			static_cast<uint32_t>(width),
-			static_cast<uint32_t>(height)
-		};
-
-		actualExtent.width = std::clamp(actualExtent.width, capabilities.minImageExtent.width, capabilities.maxImageExtent.width);
-		actualExtent.height = std::clamp(actualExtent.height, capabilities.minImageExtent.height, capabilities.maxImageExtent.height);
-
-		return actualExtent;
-	}
-}
-
-void D3D::VulkanRenderer3D::CleanupSwapChain()
-{
-	for (size_t i = 0; i < m_SwapChainFramebuffers.size(); ++i)
-	{
-		vkDestroyFramebuffer(m_Device, m_SwapChainFramebuffers[i], nullptr);
-	}
-
-	for (size_t i = 0; i < m_SwapChainImageViews.size(); ++i)
-	{
-		vkDestroyImageView(m_Device, m_SwapChainImageViews[i], nullptr);
-	}
-
-	vkDestroySwapchainKHR(m_Device, m_SwapChain, nullptr);
-
-	m_DepthImage.cleanup(m_Device);
-	m_ColorImage.cleanup(m_Device);
-}
-
 void D3D::VulkanRenderer3D::RecreateSwapChain()
 {
 	g_pWindow.Width = 0;
@@ -672,34 +486,11 @@ void D3D::VulkanRenderer3D::RecreateSwapChain()
 
 	vkDeviceWaitIdle(m_Device);
 
-	CleanupSwapChain();
-
-	CreateSwapChain();
-	CreateImageViews();
-	CreateColorResources();
-	CreateDepthResources();
-	CreateFramebuffers();
-}
-
-void D3D::VulkanRenderer3D::CreateImageViews()
-{
-	m_SwapChainImageViews.resize(m_SwapChainImages.size());
-
-	for (size_t i = 0; i < m_SwapChainImages.size(); i++)
-	{
-		m_SwapChainImageViews[i] = m_pImageManager->CreateImageView(m_Device, m_SwapChainImages[i], m_SwapChainImageFormat, VK_IMAGE_ASPECT_COLOR_BIT, 1);
-	}
-}
-
-void D3D::VulkanRenderer3D::CreateColorResources()
-{
-	VkFormat colorFormat = m_SwapChainImageFormat;
-
-	m_pImageManager->CreateImage(m_Device, m_PhysicalDevice, m_SwapChainExtent.width, m_SwapChainExtent.height, 1, m_MsaaSamples, colorFormat,
-		VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT | VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT,
-		VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, m_ColorImage);
-
-	m_ColorImage.imageView = m_pImageManager->CreateImageView(m_Device, m_ColorImage.image, colorFormat, VK_IMAGE_ASPECT_COLOR_BIT, 1);
+	
+	auto commandBuffer{ m_pCommandPoolManager->BeginSingleTimeCommands(m_Device) };
+	m_pSwapchainWrapper->RecreateSwapChain(m_Device, m_PhysicalDevice, m_Surface, m_pImageManager.get(), commandBuffer,
+		FindDepthFormat(), m_pRenderpassWrapper->GetRenderpass());
+	m_pCommandPoolManager->EndSingleTimeCommands(m_Device, commandBuffer, m_GraphicsQueue);
 }
 
 VkFormat D3D::VulkanRenderer3D::FindDepthFormat()
@@ -709,35 +500,6 @@ VkFormat D3D::VulkanRenderer3D::FindDepthFormat()
 		VK_IMAGE_TILING_OPTIMAL,
 		VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT
 	);
-}
-
-void D3D::VulkanRenderer3D::CreateFramebuffers()
-{
-	m_SwapChainFramebuffers.resize(m_SwapChainImageViews.size());
-
-	for (size_t i = 0; i < m_SwapChainImageViews.size(); ++i)
-	{
-		std::array<VkImageView, 3> attachments =
-		{
-			m_ColorImage.imageView,
-			m_DepthImage.imageView,
-			m_SwapChainImageViews[i]
-		};
-
-		VkFramebufferCreateInfo framebufferInfo{};
-		framebufferInfo.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
-		framebufferInfo.renderPass = m_pRenderpassWrapper->GetRenderpass();
-		framebufferInfo.attachmentCount = static_cast<uint32_t>(attachments.size());
-		framebufferInfo.pAttachments = attachments.data();
-		framebufferInfo.width = m_SwapChainExtent.width;
-		framebufferInfo.height = m_SwapChainExtent.height;
-		framebufferInfo.layers = 1;
-
-		if (vkCreateFramebuffer(m_Device, &framebufferInfo, nullptr, &m_SwapChainFramebuffers[i]) != VK_SUCCESS)
-		{
-			throw std::runtime_error("failed to create framebuffer!");
-		}
-	}
 }
 
 void D3D::VulkanRenderer3D::CreateSyncObjects()
@@ -823,21 +585,6 @@ VkSampleCountFlagBits D3D::VulkanRenderer3D::GetMaxUsableSampleCount()
 		return VK_SAMPLE_COUNT_2_BIT;
 
 	return VK_SAMPLE_COUNT_1_BIT;
-}
-
-void D3D::VulkanRenderer3D::CreateDepthResources()
-{
-	VkFormat depthFormat = FindDepthFormat();
-
-	m_pImageManager->CreateImage(m_Device, m_PhysicalDevice, m_SwapChainExtent.width, m_SwapChainExtent.height, 1, m_MsaaSamples, depthFormat,
-		VK_IMAGE_TILING_OPTIMAL,
-		VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT,
-		VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT,
-		m_DepthImage);
-
-	m_DepthImage.imageView = m_pImageManager->CreateImageView(m_Device, m_DepthImage.image, depthFormat, VK_IMAGE_ASPECT_DEPTH_BIT, 1);
-
-	TransitionImageLayout(m_DepthImage.image, depthFormat, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL, 1);
 }
 
 VkFormat D3D::VulkanRenderer3D::FindSupportedFormat(const std::vector<VkFormat>& candidates, VkImageTiling tiling, VkFormatFeatureFlags features)
@@ -941,8 +688,9 @@ void D3D::VulkanRenderer3D::UpdateUniformBuffer(UniformBufferObject& buffer)
 	// Apply rotation
 	buffer.view = glm::rotate(buffer.view, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 
+	auto extent{ m_pSwapchainWrapper->GetExtent() };
 
-	buffer.proj = glm::perspective(glm::radians(45.0f), m_SwapChainExtent.width / static_cast<float>(m_SwapChainExtent.height), 0.1f, 100.0f);
+	buffer.proj = glm::perspective(glm::radians(45.0f), extent.width / static_cast<float>(extent.height), 0.1f, 100.0f);
 	buffer.proj[1][1] *= -1;
 }
 
@@ -967,3 +715,66 @@ void D3D::VulkanRenderer3D::EndSingleTimeCommands(VkCommandBuffer commandBuffer)
 	m_pCommandPoolManager->EndSingleTimeCommands(m_Device, commandBuffer, m_GraphicsQueue);
 }
 
+
+D3D::QueueFamilyIndices D3D::VulkanRenderer3D::FindQueueFamilies(VkPhysicalDevice physicalDevice)
+{
+	D3D::QueueFamilyIndices indices;
+
+	uint32_t queueFamilyCount = 0;
+	vkGetPhysicalDeviceQueueFamilyProperties(physicalDevice, &queueFamilyCount, nullptr);
+
+	std::vector<VkQueueFamilyProperties> queueFamilies(queueFamilyCount);
+	vkGetPhysicalDeviceQueueFamilyProperties(physicalDevice, &queueFamilyCount, queueFamilies.data());
+
+	//find at least one queue family that supports VK_QUEUE_GRAPHICS_BIT
+	int i = 0;
+	for (const auto& queueFamily : queueFamilies)
+	{
+		if (queueFamily.queueFlags & VK_QUEUE_GRAPHICS_BIT)
+		{
+			indices.graphicsFamily = i;
+		}
+
+		VkBool32 presentSupport = false;
+		vkGetPhysicalDeviceSurfaceSupportKHR(physicalDevice, i, m_Surface, &presentSupport);
+
+		if (presentSupport)
+		{
+			indices.presentFamily = i;
+		}
+
+		if (indices.isComplete())
+			break;
+
+		i++;
+	}
+
+	return indices;
+}
+
+D3D::SwapChainSupportDetails D3D::VulkanRenderer3D::QuerySwapChainSupport(VkPhysicalDevice physicalDevice)
+{
+	D3D::SwapChainSupportDetails details;
+
+	vkGetPhysicalDeviceSurfaceCapabilitiesKHR(physicalDevice, m_Surface, &details.capabilities);
+
+	uint32_t formatCount;
+	vkGetPhysicalDeviceSurfaceFormatsKHR(physicalDevice, m_Surface, &formatCount, nullptr);
+
+	if (formatCount != 0)
+	{
+		details.formats.resize(formatCount);
+		vkGetPhysicalDeviceSurfaceFormatsKHR(physicalDevice, m_Surface, &formatCount, details.formats.data());
+	}
+
+	uint32_t presentModeCount;
+	vkGetPhysicalDeviceSurfacePresentModesKHR(physicalDevice, m_Surface, &presentModeCount, nullptr);
+
+	if (presentModeCount != 0)
+	{
+		details.presentModes.resize(presentModeCount);
+		vkGetPhysicalDeviceSurfacePresentModesKHR(physicalDevice, m_Surface, &presentModeCount, details.presentModes.data());
+	}
+
+	return details;
+}

@@ -21,8 +21,9 @@ namespace D3D
     class ImageManager;
     class CommandpoolManager;
     class RenderpassWrapper;
+    class SwapchainWrapper;
 
-    class VulkanRenderer3D final : public Singleton<VulkanRenderer3D>
+        class VulkanRenderer3D final : public Singleton<VulkanRenderer3D>
     {
     public:
         VulkanRenderer3D();
@@ -64,12 +65,13 @@ namespace D3D
 
     private:
         std::unique_ptr<DescriptorPoolManager> m_pDescriptorPoolManager{};
-        std::unique_ptr<ImGuiWrapper> m_pImGuiWrapper;
-        std::unique_ptr<PipelineManager> m_pPipelineManager;
-        std::unique_ptr<InstanceWrapper> m_pInstanceWrapper;
-        std::unique_ptr<ImageManager> m_pImageManager;
-        std::unique_ptr<CommandpoolManager> m_pCommandPoolManager;
-        std::unique_ptr<RenderpassWrapper> m_pRenderpassWrapper;
+        std::unique_ptr<ImGuiWrapper> m_pImGuiWrapper{};
+        std::unique_ptr<PipelineManager> m_pPipelineManager{};
+        std::unique_ptr<InstanceWrapper> m_pInstanceWrapper{};
+        std::unique_ptr<ImageManager> m_pImageManager{};
+        std::unique_ptr<CommandpoolManager> m_pCommandPoolManager{};
+        std::unique_ptr<RenderpassWrapper> m_pRenderpassWrapper{};
+        std::unique_ptr<SwapchainWrapper> m_pSwapchainWrapper{};
 
         const size_t m_MaxFramesInFlight{ 2 };
 
@@ -111,39 +113,9 @@ namespace D3D
         //-Present queue-
         VkQueue m_PresentQueue{};
 
-        //--Swapchain--
-        VkSwapchainKHR m_SwapChain = VK_NULL_HANDLE;
-
-        //-Swapchain MinImageCount-
-        uint32_t m_MinImageCount{};
-
-        //-Swapchain Images-
-        std::vector<VkImage> m_SwapChainImages{};
-
-        //-Swapchain Image Format-
-        VkFormat m_SwapChainImageFormat{};
-
-        //-Swapchain Extent-
-        VkExtent2D m_SwapChainExtent{};
-
-        //-Image Views-
-        std::vector<VkImageView> m_SwapChainImageViews{};
-
         const std::string m_DefaultPipelineName{ "Default" };
         const std::string m_DefaultVertName{ "../resources/DefaultResources/Default.Vert.spv" };
         const std::string m_DefaultFragName{ "../resources/DefaultResources/Default.Frag.spv" };
-
-
-        //--MultiSampling--
-        VkSampleCountFlagBits m_MsaaSamples = VK_SAMPLE_COUNT_1_BIT;
-        Texture m_ColorImage{};
-
-        //--Depth Image--
-        Texture m_DepthImage{};
-
-        //--Framebuffers--
-        std::vector<VkFramebuffer> m_SwapChainFramebuffers{};
-        
 
         //--Sync objects--
         std::vector<VkSemaphore> m_ImageAvailableSemaphores{};
@@ -175,40 +147,19 @@ namespace D3D
 
         //-Physical device helper functions-
         bool IsDeviceSuitable(VkPhysicalDevice device);
-        QueueFamilyIndices FindQueueFamilies(VkPhysicalDevice device);
         bool CheckDeviceExtensionSupport(VkPhysicalDevice device);
-        SwapChainSupportDetails QuerySwapChainSupport(VkPhysicalDevice device);
 
         //--Logical Device--
         void CreateLogicalDevice();
 
-        //--Swapchain--
-        void CreateSwapChain();
-
         //-Swapchain Helper Functions-
-        VkSurfaceFormatKHR ChooseSwapSurfaceFormat(const std::vector<VkSurfaceFormatKHR>& availableFormats);
-        VkPresentModeKHR ChooseSwapPresentMode(const std::vector<VkPresentModeKHR>& availablePresentModes);
-        VkExtent2D ChooseSwapExtent(const VkSurfaceCapabilitiesKHR& capabilities);
-        void CleanupSwapChain();
         void RecreateSwapChain();
-
-        //--Swapchain Image Views--
-        void CreateImageViews();
-
-        //--MultiSampling--
-        void CreateColorResources();
 
         //-MultiSampling Helpers-
         VkSampleCountFlagBits GetMaxUsableSampleCount();
 
-        //--Depth Image--
-        void CreateDepthResources();
-
         //-Depth Image Helper-
         VkFormat FindDepthFormat();
-
-        //--Framebuffers--
-        void CreateFramebuffers();
 
         //--CommandBuffers--
         void RecordCommandBuffer(VkCommandBuffer& commandBuffer, uint32_t imageIndex, std::vector<std::unique_ptr<Model>>& pModels);
@@ -229,6 +180,8 @@ namespace D3D
 
         void TransitionImageLayout(VkImage image, VkFormat format, VkImageLayout oldLayout, VkImageLayout newLayout, uint32_t mipLevels);
 
+        QueueFamilyIndices FindQueueFamilies(VkPhysicalDevice physicalDevice);
+        SwapChainSupportDetails QuerySwapChainSupport(VkPhysicalDevice physicalDevice);
     };
 }
 
