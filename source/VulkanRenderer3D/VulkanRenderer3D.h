@@ -22,6 +22,7 @@ namespace D3D
     class CommandpoolManager;
     class RenderpassWrapper;
     class SwapchainWrapper;
+    class SyncObjectManager;
 
         class VulkanRenderer3D final : public Singleton<VulkanRenderer3D>
     {
@@ -72,8 +73,9 @@ namespace D3D
         std::unique_ptr<CommandpoolManager> m_pCommandPoolManager{};
         std::unique_ptr<RenderpassWrapper> m_pRenderpassWrapper{};
         std::unique_ptr<SwapchainWrapper> m_pSwapchainWrapper{};
+        std::unique_ptr<SyncObjectManager> m_pSyncObjectManager{};
 
-        const size_t m_MaxFramesInFlight{ 2 };
+        const uint32_t m_MaxFramesInFlight{ 2 };
 
         DirectionalLightObject m_GlobalLight{};
         std::vector<bool> m_LightChanged{};
@@ -117,11 +119,6 @@ namespace D3D
         const std::string m_DefaultVertName{ "../resources/DefaultResources/Default.Vert.spv" };
         const std::string m_DefaultFragName{ "../resources/DefaultResources/Default.Frag.spv" };
 
-        //--Sync objects--
-        std::vector<VkSemaphore> m_ImageAvailableSemaphores{};
-        std::vector<VkSemaphore> m_RenderFinishedSemaphores{};
-        std::vector<VkFence> m_InFlightFences{};
-
 
         //--Current frame--
         uint32_t m_CurrentFrame = 0;
@@ -163,9 +160,6 @@ namespace D3D
 
         //--CommandBuffers--
         void RecordCommandBuffer(VkCommandBuffer& commandBuffer, uint32_t imageIndex, std::vector<std::unique_ptr<Model>>& pModels);
-
-        //--Sync Objects--
-        void CreateSyncObjects();
 
         //--LightBuffers--
         void CreateLightBuffer();

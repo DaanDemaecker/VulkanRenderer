@@ -13,6 +13,7 @@
 #include "CommandpoolManager.h"
 #include "RenderpassWrapper.h"
 #include "SwapchainWrapper.h"
+#include "SyncObjectManager.h"
 
 
 #include <set>
@@ -63,12 +64,7 @@ void D3D::VulkanRenderer3D::CleanupVulkan()
 
 	m_pRenderpassWrapper->cleanup(m_Device);
 
-	for (size_t i = 0; i < m_MaxFramesInFlight; ++i)
-	{
-		vkDestroySemaphore(m_Device, m_ImageAvailableSemaphores[i], nullptr);
-		vkDestroySemaphore(m_Device, m_RenderFinishedSemaphores[i], nullptr);
-		vkDestroyFence(m_Device, m_InFlightFences[i], nullptr);
-	}
+	m_pSyncObjectManager->Cleanup(m_Device);
 
 	m_pCommandPoolManager->Cleanup(m_Device);
 
@@ -92,7 +88,7 @@ void D3D::VulkanRenderer3D::InitVulkan()
 	PickPhysicalDevice();
 	CreateLogicalDevice();
 
-	m_pCommandPoolManager = std::make_unique<CommandpoolManager>(m_Device, m_PhysicalDevice, m_Surface, static_cast<uint32_t>(m_MaxFramesInFlight));
+	m_pCommandPoolManager = std::make_unique<CommandpoolManager>(m_Device, m_PhysicalDevice, m_Surface, m_MaxFramesInFlight);
 
 	m_pImageManager = std::make_unique<ImageManager>(m_Device, m_PhysicalDevice,
 		m_pCommandPoolManager.get(), m_GraphicsQueue);
@@ -117,7 +113,7 @@ void D3D::VulkanRenderer3D::InitVulkan()
 
 	AddGraphicsPipeline(m_DefaultPipelineName, m_DefaultVertName, m_DefaultFragName, 1, 1, 0);
 
-	CreateSyncObjects();
+	m_pSyncObjectManager = std::make_unique<SyncObjectManager>(m_Device, m_MaxFramesInFlight);
 }
 
 void D3D::VulkanRenderer3D::InitImGui()
@@ -131,30 +127,30 @@ void D3D::VulkanRenderer3D::InitImGui()
 	init_info.PipelineCache = VK_NULL_HANDLE;
 	init_info.Allocator = VK_NULL_HANDLE;
 	init_info.MinImageCount = m_pSwapchainWrapper->GetMinImageCount(); // Minimum number of swapchain images
-	init_info.ImageCount = static_cast<uint32_t>(m_MaxFramesInFlight); // Number of swapchain images
+	init_info.ImageCount = m_MaxFramesInFlight; // Number of swapchain images
 	init_info.CheckVkResultFn = [](VkResult /*err*/) { /* Implement your own error handling */ };
 	init_info.MSAASamples = m_pSwapchainWrapper->GetMsaaSamples();
 
 	auto commandBuffer{ BeginSingleTimeCommands() };
 
-	m_pImGuiWrapper = std::make_unique<D3D::ImGuiWrapper>(init_info, m_pRenderpassWrapper->GetRenderpass(), commandBuffer, m_Device, static_cast<uint32_t>(m_MaxFramesInFlight));
+	m_pImGuiWrapper = std::make_unique<D3D::ImGuiWrapper>(init_info, m_pRenderpassWrapper->GetRenderpass(), commandBuffer, m_Device, m_MaxFramesInFlight);
 
 	EndSingleTimeCommands(commandBuffer);
 }
 
 void D3D::VulkanRenderer3D::AddGraphicsPipeline(const std::string& pipelineName, const std::string& vertShaderName, const std::string& fragShaderName, int vertexUbos, int fragmentUbos, int textureAmount)
 {
-	m_pPipelineManager->AddGraphicsPipeline(m_Device, static_cast<uint32_t>(m_MaxFramesInFlight), m_pRenderpassWrapper->GetRenderpass(),
+	m_pPipelineManager->AddGraphicsPipeline(m_Device, m_MaxFramesInFlight, m_pRenderpassWrapper->GetRenderpass(),
 		m_pSwapchainWrapper->GetMsaaSamples(), pipelineName, vertShaderName, fragShaderName,
 		vertexUbos, fragmentUbos, textureAmount);
 }
 
 void D3D::VulkanRenderer3D::Render(std::vector<std::unique_ptr<Model>>& pModels)
 {
-	vkWaitForFences(m_Device, 1, &m_InFlightFences[m_CurrentFrame], VK_TRUE, UINT64_MAX);
+	vkWaitForFences(m_Device, 1, &m_pSyncObjectManager->GetInFlightFence(m_CurrentFrame), VK_TRUE, UINT64_MAX);
 
 	uint32_t imageIndex{};
-	VkResult result = vkAcquireNextImageKHR(m_Device, m_pSwapchainWrapper->GetSwapchain(), UINT64_MAX, m_ImageAvailableSemaphores[m_CurrentFrame], VK_NULL_HANDLE, &imageIndex);
+	VkResult result = vkAcquireNextImageKHR(m_Device, m_pSwapchainWrapper->GetSwapchain(), UINT64_MAX, m_pSyncObjectManager->GetImageAvailableSemaphore(m_CurrentFrame), VK_NULL_HANDLE, &imageIndex);
 
 	if (result == VK_ERROR_OUT_OF_DATE_KHR)
 	{
@@ -166,7 +162,7 @@ void D3D::VulkanRenderer3D::Render(std::vector<std::unique_ptr<Model>>& pModels)
 		throw std::runtime_error("failed to acquire swap chain image!");
 	}
 
-	vkResetFences(m_Device, 1, &m_InFlightFences[m_CurrentFrame]);
+	vkResetFences(m_Device, 1, &m_pSyncObjectManager->GetInFlightFence(m_CurrentFrame));
 
 	auto commandBuffer{m_pCommandPoolManager->GetCommandBuffer(m_CurrentFrame)};
 
@@ -177,7 +173,7 @@ void D3D::VulkanRenderer3D::Render(std::vector<std::unique_ptr<Model>>& pModels)
 	VkSubmitInfo submitInfo{};
 	submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
 
-	VkSemaphore waitSemaphores[] = { m_ImageAvailableSemaphores[m_CurrentFrame]};
+	VkSemaphore waitSemaphores[] = { m_pSyncObjectManager->GetImageAvailableSemaphore(m_CurrentFrame)};
 	VkPipelineStageFlags waitStages[] = { VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT };
 	submitInfo.waitSemaphoreCount = 1;
 	submitInfo.pWaitSemaphores = waitSemaphores;
@@ -186,11 +182,11 @@ void D3D::VulkanRenderer3D::Render(std::vector<std::unique_ptr<Model>>& pModels)
 	submitInfo.commandBufferCount = 1;
 	submitInfo.pCommandBuffers = &commandBuffer;
 
-	VkSemaphore signalSemaphores[] = { m_RenderFinishedSemaphores[m_CurrentFrame] };
+	VkSemaphore signalSemaphores[] = { m_pSyncObjectManager->GetRenderFinishedSemaphore(m_CurrentFrame) };
 	submitInfo.signalSemaphoreCount = 1;
 	submitInfo.pSignalSemaphores = signalSemaphores;
 
-	if (vkQueueSubmit(m_GraphicsQueue, 1, &submitInfo, m_InFlightFences[m_CurrentFrame]) != VK_SUCCESS)
+	if (vkQueueSubmit(m_GraphicsQueue, 1, &submitInfo, m_pSyncObjectManager->GetInFlightFence(m_CurrentFrame)) != VK_SUCCESS)
 	{
 		throw std::runtime_error("failed to submit draw command buffer!");
 	}
@@ -501,32 +497,6 @@ VkFormat D3D::VulkanRenderer3D::FindDepthFormat()
 	);
 }
 
-void D3D::VulkanRenderer3D::CreateSyncObjects()
-{
-	m_ImageAvailableSemaphores.resize(m_MaxFramesInFlight);
-	m_RenderFinishedSemaphores.resize(m_MaxFramesInFlight);
-	m_InFlightFences.resize(m_MaxFramesInFlight);
-
-
-	VkSemaphoreCreateInfo semaphoreInfo{};
-	semaphoreInfo.sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;
-
-	VkFenceCreateInfo fenceInfo{};
-	fenceInfo.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
-	fenceInfo.flags = VK_FENCE_CREATE_SIGNALED_BIT;
-
-
-	for (size_t i = 0; i < m_MaxFramesInFlight; ++i)
-	{
-		if (vkCreateSemaphore(m_Device, &semaphoreInfo, nullptr, &m_ImageAvailableSemaphores[i]) != VK_SUCCESS ||
-			vkCreateSemaphore(m_Device, &semaphoreInfo, nullptr, &m_RenderFinishedSemaphores[i]) != VK_SUCCESS ||
-			vkCreateFence(m_Device, &fenceInfo, nullptr, &m_InFlightFences[i]) != VK_SUCCESS)
-		{
-			throw std::runtime_error("failed to create sync objects!");
-		}
-	}
-}
-
 void D3D::VulkanRenderer3D::CreateLightBuffer()
 {
 	VkDeviceSize bufferSize = sizeof(DirectionalLightObject);
@@ -694,7 +664,7 @@ void D3D::VulkanRenderer3D::UpdateUniformBuffer(UniformBufferObject& buffer)
 
 std::vector<VkDescriptorSetLayout>& D3D::VulkanRenderer3D::GetDescriptorSetLayout(int vertexUbos, int fragmentUbos, int textureAmount)
 {
-	return m_pPipelineManager->GetDescriptorSetLayout(m_Device, static_cast<uint32_t>(m_MaxFramesInFlight), vertexUbos, fragmentUbos, textureAmount);
+	return m_pPipelineManager->GetDescriptorSetLayout(m_Device, m_MaxFramesInFlight, vertexUbos, fragmentUbos, textureAmount);
 }
 
 void D3D::VulkanRenderer3D::CreateTexture(Texture& texture, const std::string& textureName, uint32_t& mipLevels)
