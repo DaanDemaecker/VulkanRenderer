@@ -2,9 +2,9 @@
 #include "D3DEngine.h"
 #include "Utils.h"
 #include "Model.h"
+
 #include "DescriptorPoolManager.h"
 #include "DescriptorPoolWrapper.h"
-
 #include "ImGuiIncludes.h"
 #include "ImGuiWrapper.h"
 #include "PipelineManager.h"
@@ -118,7 +118,6 @@ void D3D::VulkanRenderer3D::InitVulkan()
 	AddGraphicsPipeline(m_DefaultPipelineName, m_DefaultVertName, m_DefaultFragName, 1, 1, 0);
 
 	CreateSyncObjects();
-
 }
 
 void D3D::VulkanRenderer3D::InitImGui()
@@ -483,13 +482,13 @@ void D3D::VulkanRenderer3D::RecreateSwapChain()
 		glfwWaitEvents();
 	}
 
-
 	vkDeviceWaitIdle(m_Device);
-
 	
 	auto commandBuffer{ m_pCommandPoolManager->BeginSingleTimeCommands(m_Device) };
+
 	m_pSwapchainWrapper->RecreateSwapChain(m_Device, m_PhysicalDevice, m_Surface, m_pImageManager.get(), commandBuffer,
 		FindDepthFormat(), m_pRenderpassWrapper->GetRenderpass());
+
 	m_pCommandPoolManager->EndSingleTimeCommands(m_Device, commandBuffer, m_GraphicsQueue);
 }
 
@@ -564,7 +563,6 @@ void D3D::VulkanRenderer3D::UpdateLightBuffer(int frame)
 
 VkSampleCountFlagBits D3D::VulkanRenderer3D::GetMaxUsableSampleCount()
 {
-
 	VkPhysicalDeviceProperties physicalDeviceProperties{};
 	vkGetPhysicalDeviceProperties(m_PhysicalDevice, &physicalDeviceProperties);
 
