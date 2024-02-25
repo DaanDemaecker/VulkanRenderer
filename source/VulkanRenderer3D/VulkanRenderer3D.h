@@ -51,7 +51,7 @@ namespace D3D
         VkCommandBuffer& GetCurrentCommandBuffer();
         uint32_t GetCurrentFrame() const { return  m_CurrentFrame; }
         DescriptorPoolManager* GetDescriptorPoolManager() const;
-        const DirectionalLightObject& GetGlobalLight() const { return m_GlobalLight; }
+        const DirectionalLightStruct& GetGlobalLight() const { return m_GlobalLight; }
         std::vector<VkBuffer>& GetLightBuffers() { return m_LightBuffers; }
 
 
@@ -76,8 +76,10 @@ namespace D3D
         std::unique_ptr<SyncObjectManager> m_pSyncObjectManager{};
 
         const uint32_t m_MaxFramesInFlight{ 2 };
+        uint32_t m_CurrentFrame = 0;
 
-        DirectionalLightObject m_GlobalLight{};
+
+        DirectionalLightStruct m_GlobalLight{};
         std::vector<bool> m_LightChanged{};
 
         std::vector<VkBuffer> m_LightBuffers{};
@@ -118,10 +120,6 @@ namespace D3D
         const std::string m_DefaultPipelineName{ "Default" };
         const std::string m_DefaultVertName{ "../resources/DefaultResources/Default.Vert.spv" };
         const std::string m_DefaultFragName{ "../resources/DefaultResources/Default.Frag.spv" };
-
-
-        //--Current frame--
-        uint32_t m_CurrentFrame = 0;
 
         //----Member Functions----
         //--- Cleanup ---

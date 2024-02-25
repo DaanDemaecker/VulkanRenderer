@@ -499,7 +499,7 @@ VkFormat D3D::VulkanRenderer3D::FindDepthFormat()
 
 void D3D::VulkanRenderer3D::CreateLightBuffer()
 {
-	VkDeviceSize bufferSize = sizeof(DirectionalLightObject);
+	VkDeviceSize bufferSize = sizeof(DirectionalLightStruct);
 
 	m_LightBuffers.resize(m_MaxFramesInFlight);
 	m_LightMemory.resize(m_MaxFramesInFlight);
@@ -687,7 +687,7 @@ void D3D::VulkanRenderer3D::EndSingleTimeCommands(VkCommandBuffer commandBuffer)
 D3D::QueueFamilyIndices D3D::VulkanRenderer3D::FindQueueFamilies(VkPhysicalDevice physicalDevice)
 {
 	D3D::QueueFamilyIndices indices;
-
+	
 	uint32_t queueFamilyCount = 0;
 	vkGetPhysicalDeviceQueueFamilyProperties(physicalDevice, &queueFamilyCount, nullptr);
 

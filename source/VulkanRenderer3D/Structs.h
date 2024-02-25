@@ -178,7 +178,7 @@ namespace D3D
 	// Disable warning C4324
 #pragma warning(disable : 4324)
 	// Directional light object
-	struct DirectionalLightObject
+	struct DirectionalLightStruct
 	{
 		// Direction of light
 		alignas(16) glm::vec3 direction;
