@@ -15,6 +15,7 @@
 #include "SwapchainWrapper.h"
 #include "SyncObjectManager.h"
 
+#include "DirectionalLightObject.h"
 
 #include <set>
 #include <algorithm>
@@ -27,10 +28,6 @@ D3D::VulkanRenderer3D::VulkanRenderer3D()
 #ifdef NDEBUG
 	m_EnableValidationLayers = false;
 #endif
-
-	m_GlobalLight.direction = glm::normalize(glm::vec3{ -.577, -.577f, .577 });
-	m_GlobalLight.color = glm::vec3{ 1.f, 1.f, 1.f };
-	m_GlobalLight.intensity = 1.f;
 
 	InitVulkan();
 
@@ -52,11 +49,7 @@ void D3D::VulkanRenderer3D::CleanupVulkan()
 
 	m_pImageManager->Cleanup(m_Device);
 
-	for(size_t i{}; i < m_MaxFramesInFlight; i++)
-	{
-		vkDestroyBuffer(m_Device, m_LightBuffers[i], nullptr);
-		vkFreeMemory(m_Device, m_LightMemory[i], nullptr);
-	}
+	m_pGlobalLight->Cleanup(m_Device);
 
 	m_pDescriptorPoolManager->Cleanup(m_Device);
 
@@ -105,7 +98,12 @@ void D3D::VulkanRenderer3D::InitVulkan()
 		commandBuffer, m_pRenderpassWrapper->GetRenderpass());
 	m_pCommandPoolManager->EndSingleTimeCommands(m_Device, commandBuffer, m_GraphicsQueue);
 
-	CreateLightBuffer();
+
+	m_pGlobalLight = std::make_unique<DirectionalLightObject>(this);
+	m_pGlobalLight->SetDirection(glm::vec3{-.577, -.577f, .577});
+	m_pGlobalLight->SetColor(glm::vec3{1.f, 1.f, 1.f} );
+	m_pGlobalLight->SetIntensity(1.f);
+
 
 	m_pDescriptorPoolManager = std::make_unique<DescriptorPoolManager>();
 
@@ -264,7 +262,7 @@ void D3D::VulkanRenderer3D::RecordCommandBuffer(VkCommandBuffer& commandBuffer, 
 	scissor.extent = swapchainExtent;
 	vkCmdSetScissor(commandBuffer, 0, 1, &scissor);
 
-	UpdateLightBuffer(m_CurrentFrame);
+	m_pGlobalLight->UpdateBuffer(m_CurrentFrame);
 
 	for (size_t i = 0; i < pModels.size(); ++i)
 	{
@@ -321,6 +319,16 @@ VkCommandBuffer& D3D::VulkanRenderer3D::GetCurrentCommandBuffer()
 D3D::DescriptorPoolManager* D3D::VulkanRenderer3D::GetDescriptorPoolManager() const
 {
 	return m_pDescriptorPoolManager.get();
+}
+
+const D3D::DirectionalLightStruct& D3D::VulkanRenderer3D::GetGlobalLight() const
+{
+	return m_pGlobalLight->GetLight();
+}
+
+std::vector<VkBuffer>& D3D::VulkanRenderer3D::GetLightBuffers()
+{
+	return m_pGlobalLight->GetLightBuffers();
 }
 
 void D3D::VulkanRenderer3D::CreateSurface()
@@ -495,40 +503,6 @@ VkFormat D3D::VulkanRenderer3D::FindDepthFormat()
 		VK_IMAGE_TILING_OPTIMAL,
 		VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT
 	);
-}
-
-void D3D::VulkanRenderer3D::CreateLightBuffer()
-{
-	VkDeviceSize bufferSize = sizeof(DirectionalLightStruct);
-
-	m_LightBuffers.resize(m_MaxFramesInFlight);
-	m_LightMemory.resize(m_MaxFramesInFlight);
-	m_LightMapped.resize(m_MaxFramesInFlight);
-
-	m_LightChanged.resize(m_MaxFramesInFlight);
-	std::fill(m_LightChanged.begin(), m_LightChanged.end(), true);
-
-
-
-	for (size_t i = 0; i < m_MaxFramesInFlight; ++i)
-	{
-		CreateBuffer(bufferSize, VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
-			m_LightBuffers[i], m_LightMemory[i]);
-
-		vkMapMemory(m_Device, m_LightMemory[i], 0, bufferSize, 0, &m_LightMapped[i]);
-
-		UpdateLightBuffer(static_cast<int>(i));
-	}
-}
-
-void D3D::VulkanRenderer3D::UpdateLightBuffer(int frame)
-{
-	//if (!m_LightChanged[frame])
-	//	return;
-
-	m_LightChanged[frame] = false;
-
-	memcpy(m_LightMapped[frame], &m_GlobalLight, sizeof(m_GlobalLight));
 }
 
 VkSampleCountFlagBits D3D::VulkanRenderer3D::GetMaxUsableSampleCount()

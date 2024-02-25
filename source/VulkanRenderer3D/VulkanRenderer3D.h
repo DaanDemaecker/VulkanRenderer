@@ -24,6 +24,8 @@ namespace D3D
     class SwapchainWrapper;
     class SyncObjectManager;
 
+    class DirectionalLightObject;
+
         class VulkanRenderer3D final : public Singleton<VulkanRenderer3D>
     {
     public:
@@ -51,8 +53,8 @@ namespace D3D
         VkCommandBuffer& GetCurrentCommandBuffer();
         uint32_t GetCurrentFrame() const { return  m_CurrentFrame; }
         DescriptorPoolManager* GetDescriptorPoolManager() const;
-        const DirectionalLightStruct& GetGlobalLight() const { return m_GlobalLight; }
-        std::vector<VkBuffer>& GetLightBuffers() { return m_LightBuffers; }
+        const DirectionalLightStruct& GetGlobalLight() const;
+        std::vector<VkBuffer>& GetLightBuffers();
 
 
         //Public Helpers
@@ -79,12 +81,7 @@ namespace D3D
         uint32_t m_CurrentFrame = 0;
 
 
-        DirectionalLightStruct m_GlobalLight{};
-        std::vector<bool> m_LightChanged{};
-
-        std::vector<VkBuffer> m_LightBuffers{};
-        std::vector<VkDeviceMemory> m_LightMemory{};
-        std::vector<void*> m_LightMapped{};
+        std::unique_ptr<DirectionalLightObject> m_pGlobalLight{};
 
         //----Member variables----
         //---Validation layers---
@@ -158,10 +155,6 @@ namespace D3D
 
         //--CommandBuffers--
         void RecordCommandBuffer(VkCommandBuffer& commandBuffer, uint32_t imageIndex, std::vector<std::unique_ptr<Model>>& pModels);
-
-        //--LightBuffers--
-        void CreateLightBuffer();
-        void UpdateLightBuffer(int frame);
 
         //--General helpers--
         VkFormat FindSupportedFormat(const std::vector<VkFormat>& candidates, VkImageTiling tiling, VkFormatFeatureFlags features);
