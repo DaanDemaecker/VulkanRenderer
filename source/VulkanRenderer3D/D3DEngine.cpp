@@ -142,7 +142,7 @@ void D3D::D3DEngine::Run(const std::function<void()>& load)
 	auto lastTime = std::chrono::high_resolution_clock::now();
 
 	// Variable that will indicate if framerate should be capped or or not
-	bool capFrameRate{ true };
+	bool capFrameRate{ false };
 
 	// Set desired framerate
 	const int desiredFramerate = 60;
@@ -172,7 +172,7 @@ void D3D::D3DEngine::Run(const std::function<void()>& load)
 		time.SetDeltaTime(deltaTime);
 
 		// Print FPS
-		//std::cout << time.GetFps() << std::endl;
+		std::cout << time.GetFps() << std::endl;
 
 		// Poll input for the window
 		glfwPollEvents();
