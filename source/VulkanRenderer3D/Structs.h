@@ -38,6 +38,18 @@ namespace D3D
 		std::vector<VkPresentModeKHR> presentModes{};
 	};
 
+	struct QueueObject
+	{
+		//-Graphics queue-
+		VkQueue graphicsQueue{};
+
+		//-Graphics queue index-
+		uint32_t graphicsQueueIndex{};
+
+		//-Present queue-
+		VkQueue presentQueue{};
+	};
+
 	// Struct for compacting vulkan textures
 	struct Texture
 	{

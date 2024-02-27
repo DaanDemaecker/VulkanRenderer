@@ -84,7 +84,7 @@ void D3D::VulkanRenderer3D::InitVulkan()
 	m_pCommandPoolManager = std::make_unique<CommandpoolManager>(m_Device, m_PhysicalDevice, m_Surface, m_MaxFramesInFlight);
 
 	m_pImageManager = std::make_unique<ImageManager>(m_Device, m_PhysicalDevice,
-		m_pCommandPoolManager.get(), m_GraphicsQueue);
+		m_pCommandPoolManager.get(), m_QueueObject.graphicsQueue);
 
 	auto msaaSamples = GetMaxUsableSampleCount();
 
@@ -96,7 +96,7 @@ void D3D::VulkanRenderer3D::InitVulkan()
 	auto commandBuffer{ m_pCommandPoolManager->BeginSingleTimeCommands(m_Device) };
 	m_pSwapchainWrapper->SetupImageViews(m_Device, m_PhysicalDevice, m_pImageManager.get(), FindDepthFormat(),
 		commandBuffer, m_pRenderpassWrapper->GetRenderpass());
-	m_pCommandPoolManager->EndSingleTimeCommands(m_Device, commandBuffer, m_GraphicsQueue);
+	m_pCommandPoolManager->EndSingleTimeCommands(m_Device, commandBuffer, m_QueueObject.graphicsQueue);
 
 
 	m_pGlobalLight = std::make_unique<DirectionalLightObject>(this);
@@ -120,8 +120,8 @@ void D3D::VulkanRenderer3D::InitImGui()
 	init_info.Instance = m_pInstanceWrapper->GetInstance(); // Your Vulkan instance
 	init_info.PhysicalDevice = m_PhysicalDevice; // Your Vulkan physical device
 	init_info.Device = m_Device; // Your Vulkan logical device
-	init_info.QueueFamily = m_GraphicsQueueIndex; // The index of your Vulkan queue family that supports graphics operations
-	init_info.Queue = m_GraphicsQueue; // Your Vulkan graphics queue
+	init_info.QueueFamily = m_QueueObject.graphicsQueueIndex; // The index of your Vulkan queue family that supports graphics operations
+	init_info.Queue = m_QueueObject.graphicsQueue; // Your Vulkan graphics queue
 	init_info.PipelineCache = VK_NULL_HANDLE;
 	init_info.Allocator = VK_NULL_HANDLE;
 	init_info.MinImageCount = m_pSwapchainWrapper->GetMinImageCount(); // Minimum number of swapchain images
@@ -184,7 +184,7 @@ void D3D::VulkanRenderer3D::Render(std::vector<std::unique_ptr<Model>>& pModels)
 	submitInfo.signalSemaphoreCount = 1;
 	submitInfo.pSignalSemaphores = signalSemaphores;
 
-	if (vkQueueSubmit(m_GraphicsQueue, 1, &submitInfo, m_pSyncObjectManager->GetInFlightFence(m_CurrentFrame)) != VK_SUCCESS)
+	if (vkQueueSubmit(m_QueueObject.graphicsQueue, 1, &submitInfo, m_pSyncObjectManager->GetInFlightFence(m_CurrentFrame)) != VK_SUCCESS)
 	{
 		throw std::runtime_error("failed to submit draw command buffer!");
 	}
@@ -202,7 +202,7 @@ void D3D::VulkanRenderer3D::Render(std::vector<std::unique_ptr<Model>>& pModels)
 
 	presentInfo.pResults = nullptr;
 
-	result = vkQueuePresentKHR(m_PresentQueue, &presentInfo);
+	result = vkQueuePresentKHR(m_QueueObject.presentQueue, &presentInfo);
 
 	if (result == VK_ERROR_OUT_OF_DATE_KHR || result == VK_SUBOPTIMAL_KHR || g_pWindow.FrameBufferResized)
 	{
@@ -426,7 +426,7 @@ void D3D::VulkanRenderer3D::CreateLogicalDevice()
 
 	std::vector<VkDeviceQueueCreateInfo> queueCreateInfos;
 	std::set<uint32_t> uniqueQueueFamilies = { indices.graphicsFamily.value(), indices.presentFamily.value() };
-	m_GraphicsQueueIndex = indices.graphicsFamily.value();
+	m_QueueObject.graphicsQueueIndex = indices.graphicsFamily.value();
 
 	float queuePriority = 1.0f;
 	for (uint32_t queueFamily : uniqueQueueFamilies)
@@ -470,8 +470,8 @@ void D3D::VulkanRenderer3D::CreateLogicalDevice()
 		throw std::runtime_error("failed to create logical device!");
 	}
 
-	vkGetDeviceQueue(m_Device, indices.graphicsFamily.value(), 0, &m_GraphicsQueue);
-	vkGetDeviceQueue(m_Device, indices.presentFamily.value(), 0, &m_PresentQueue);
+	vkGetDeviceQueue(m_Device, indices.graphicsFamily.value(), 0, &m_QueueObject.graphicsQueue);
+	vkGetDeviceQueue(m_Device, indices.presentFamily.value(), 0, &m_QueueObject.presentQueue);
 }
 
 
@@ -493,7 +493,7 @@ void D3D::VulkanRenderer3D::RecreateSwapChain()
 	m_pSwapchainWrapper->RecreateSwapChain(m_Device, m_PhysicalDevice, m_Surface, m_pImageManager.get(), commandBuffer,
 		FindDepthFormat(), m_pRenderpassWrapper->GetRenderpass());
 
-	m_pCommandPoolManager->EndSingleTimeCommands(m_Device, commandBuffer, m_GraphicsQueue);
+	m_pCommandPoolManager->EndSingleTimeCommands(m_Device, commandBuffer, m_QueueObject.graphicsQueue);
 }
 
 VkFormat D3D::VulkanRenderer3D::FindDepthFormat()
@@ -643,7 +643,7 @@ std::vector<VkDescriptorSetLayout>& D3D::VulkanRenderer3D::GetDescriptorSetLayou
 
 void D3D::VulkanRenderer3D::CreateTexture(Texture& texture, const std::string& textureName, uint32_t& mipLevels)
 {
-	m_pImageManager->CreateTextureImage(m_Device, m_PhysicalDevice, texture, textureName, mipLevels, m_pCommandPoolManager.get(), m_GraphicsQueue);
+	m_pImageManager->CreateTextureImage(m_Device, m_PhysicalDevice, texture, textureName, mipLevels, m_pCommandPoolManager.get(), m_QueueObject.graphicsQueue);
 	texture.imageView = m_pImageManager->CreateImageView(m_Device, texture.image, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_ASPECT_COLOR_BIT, mipLevels);
 }
 
@@ -654,7 +654,7 @@ VkCommandBuffer D3D::VulkanRenderer3D::BeginSingleTimeCommands()
 
 void D3D::VulkanRenderer3D::EndSingleTimeCommands(VkCommandBuffer commandBuffer)
 {
-	m_pCommandPoolManager->EndSingleTimeCommands(m_Device, commandBuffer, m_GraphicsQueue);
+	m_pCommandPoolManager->EndSingleTimeCommands(m_Device, commandBuffer, m_QueueObject.graphicsQueue);
 }
 
 

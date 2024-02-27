@@ -76,6 +76,7 @@ namespace D3D
         std::unique_ptr<RenderpassWrapper> m_pRenderpassWrapper{};
         std::unique_ptr<SwapchainWrapper> m_pSwapchainWrapper{};
         std::unique_ptr<SyncObjectManager> m_pSyncObjectManager{};
+        QueueObject m_QueueObject{};
 
         const uint32_t m_MaxFramesInFlight{ 2 };
         uint32_t m_CurrentFrame = 0;
@@ -104,15 +105,7 @@ namespace D3D
 
         //--Logical device--
         VkDevice m_Device = VK_NULL_HANDLE;
-
-        //-Graphics queue-
-        VkQueue m_GraphicsQueue{};
-
-        //-Graphics queue index-
-        uint32_t m_GraphicsQueueIndex{};
-
-        //-Present queue-
-        VkQueue m_PresentQueue{};
+        
 
         const std::string m_DefaultPipelineName{ "Default" };
         const std::string m_DefaultVertName{ "../resources/DefaultResources/Default.Vert.spv" };
