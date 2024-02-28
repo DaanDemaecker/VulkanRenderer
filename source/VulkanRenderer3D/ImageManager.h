@@ -5,7 +5,7 @@
 #define ImageManagerIncluded
 
 // File includes
-#include "GLFWIncludes.h"
+#include "VulkanIncludes.h"
 #include "Structs.h"
 #include "CommandpoolManager.h"
 

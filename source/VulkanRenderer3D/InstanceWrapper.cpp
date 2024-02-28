@@ -1,4 +1,5 @@
 #include "InstanceWrapper.h"
+#include "GLFWIncludes.h"
 
 #include <stdexcept>
 #include <iostream>

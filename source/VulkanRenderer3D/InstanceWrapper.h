@@ -4,7 +4,7 @@
 #ifndef InstanceWrapperDefined
 #define InstanceWrapperDefined
 
-#include "GLFWIncludes.h"
+#include "VulkanIncludes.h"
 
 #include <vector>
 

@@ -6,7 +6,7 @@
 #define DescriptorPoolWrapperIncluded
 
 // File includes
-#include "GLFWIncludes.h"
+#include "VulkanIncludes.h"
 #include "Structs.h"
 
 // Standard library includes

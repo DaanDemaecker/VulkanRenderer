@@ -5,7 +5,7 @@
 #define ImGuiWrapperIncluded
 
 // File includes
-#include "GLFWIncludes.h"
+#include "VulkanIncludes.h"
 #include "ImGuiIncludes.h"
 
 namespace D3D
