@@ -60,10 +60,16 @@ namespace D3D
 		// VkImageView object
 		VkImageView imageView{};
 
+		// Cleanup function
+		// Parameters: 
+		//     device: handle to VkDevice
 		void Cleanup(VkDevice device)
 		{
+			// Destroy the image view
 			vkDestroyImageView(device, imageView, nullptr);
+			// Destroy the image
 			vkDestroyImage(device, image, nullptr);
+			// Free the memory
 			vkFreeMemory(device, imageMemory, nullptr);
 		}
 	};
@@ -77,6 +83,17 @@ namespace D3D
 		VkPipeline pipeline{};
 		// Pipeline layout
 		VkPipelineLayout pipelineLayout{};
+
+		// Cleanup function
+		// Parameters: 
+		//     device: handle to VkDevice
+		void Cleanup(VkDevice device)
+		{
+			// Destroy the pipeline
+			vkDestroyPipeline(device, pipeline, nullptr);
+			//Destroy the pipeline layout
+			vkDestroyPipelineLayout(device, pipelineLayout, nullptr);
+		}
 	};
 
 	// Vertex struct for rendering
@@ -110,10 +127,10 @@ namespace D3D
 		}
 
 		// Get attribute description of vertex
-		static std::array<VkVertexInputAttributeDescription, 5> getAttributeDescription()
+		static std::vector<VkVertexInputAttributeDescription> getAttributeDescription()
 		{
 			// Create attribute description
-			std::array<VkVertexInputAttributeDescription, 5> attributeDescriptions{};
+			std::vector<VkVertexInputAttributeDescription> attributeDescriptions(5);
 
 			// Set binding to 0
 			attributeDescriptions[0].binding = 0;

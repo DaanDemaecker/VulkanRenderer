@@ -107,7 +107,7 @@ void D3D::VulkanRenderer3D::InitVulkan()
 
 	m_pDescriptorPoolManager = std::make_unique<DescriptorPoolManager>();
 
-	m_pPipelineManager = std::make_unique<PipelineManager>(m_DefaultPipelineName, m_DefaultVertName, m_DefaultFragName);
+	m_pPipelineManager = std::make_unique<PipelineManager>(m_DefaultPipelineName);
 
 	AddGraphicsPipeline(m_DefaultPipelineName, m_DefaultVertName, m_DefaultFragName, 1, 1, 0);
 
