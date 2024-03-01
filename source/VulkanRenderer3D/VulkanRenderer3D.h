@@ -151,7 +151,6 @@ namespace D3D
 
         //--General helpers--
         VkFormat FindSupportedFormat(const std::vector<VkFormat>& candidates, VkImageTiling tiling, VkFormatFeatureFlags features);
-        uint32_t FindMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties);
         
         VkCommandBuffer BeginSingleTimeCommands();
         void EndSingleTimeCommands(VkCommandBuffer commandBuffer);
@@ -159,7 +158,8 @@ namespace D3D
         void TransitionImageLayout(VkImage image, VkFormat format, VkImageLayout oldLayout, VkImageLayout newLayout, uint32_t mipLevels);
 
         QueueFamilyIndices FindQueueFamilies(VkPhysicalDevice physicalDevice);
-        SwapChainSupportDetails QuerySwapChainSupport(VkPhysicalDevice physicalDevice);
+
+        D3D::SwapChainSupportDetails QuerySwapChainSupport(VkPhysicalDevice physicalDevice, VkSurfaceKHR surface);
     };
 }
 

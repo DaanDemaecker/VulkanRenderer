@@ -44,12 +44,9 @@ namespace D3D
 		
 		void TransitionImageLayout(VkImage image, VkCommandBuffer commandBuffer, VkFormat format, VkImageLayout oldLayout, VkImageLayout newLayout, uint32_t mipLevels);
 
-		void CreateBuffer(VkDevice device, VkPhysicalDevice physicalDevice, VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VkBuffer& buffer, VkDeviceMemory& bufferMemory);
-		
 		void CreateImage(VkDevice device, VkPhysicalDevice physicalDevice, uint32_t width, uint32_t height, uint32_t mipLevels, VkSampleCountFlagBits numSamples, VkFormat format, VkImageTiling tiling, VkImageUsageFlags usage, VkMemoryPropertyFlags properties, Texture& texture);
 
 	private:
-
 		Texture m_DefaultTexture{};
 
 		uint32_t m_MipLevels{};
@@ -59,8 +56,6 @@ namespace D3D
 
 		VkSampler m_TextureSampler{};
 
-		uint32_t FindMemoryType(VkPhysicalDevice physicalDevice, uint32_t typeFilter, VkMemoryPropertyFlags properties);
-		
 		bool HasStencilComponent(VkFormat format);
 
 		void CreateDefaultResources(VkDevice device, VkPhysicalDevice physicalDevice,  CommandpoolManager* pCommandPoolManager, VkQueue graphicsQueue);
