@@ -17,8 +17,18 @@ namespace D3D
 	class ImageManager
 	{
 	public:
+		// Constructor
+		// Parameter:
+		//     device: handle of the VkDevice
+		//     physicalDevice: handle of the VkPhysicalDevice
+		//     pCommandPoolManager: a pointer to the commandpool manager
+		//     graphicsQueue: handle of the graphics queue
 		ImageManager(VkDevice device, VkPhysicalDevice physicalDevice, CommandpoolManager* pCommandPoolManager, VkQueue graphicsQueue);
 		
+		// Delete default constructor
+		ImageManager() = delete;
+
+		// Default destructor
 		~ImageManager() = default;
 
 		ImageManager(ImageManager& other) = delete;
@@ -27,37 +37,122 @@ namespace D3D
 		ImageManager& operator=(ImageManager& other) = delete;
 		ImageManager& operator=(ImageManager&& other) = delete;
 
+		// Function for deleting alocated objects
+		// Parameters:
+		//     device: handle of the VkDevice
 		void Cleanup(VkDevice device);
 
+		// Get the default image view
 		VkImageView& GetDefaultImageView() { return m_DefaultTexture.imageView; }
+
+		// Get the standard image sampler
 		VkSampler& GetSampler() { return m_TextureSampler; }
 
+		// Function for copying a buffer to an image
+		// Parameters:
+		//     commandBuffer: the single time command buffer needed for the copying
+		//     buffer: the buffer that needs to be copied
+		//     image: the destination image
+		//     width: the width of the image
+		//     height: the height of the image
 		void CopyBufferToImage(VkCommandBuffer commandBuffer, VkBuffer buffer, VkImage image, uint32_t width, uint32_t height);
 
+		// Generate mipmaps of a single image
+		// Parameters:
+		//     physicalDevice: handle of the VkPhysicalDevice
+		//     commandBuffer: the commandbuffer needed for the mipmap generation
+		//     image: the source image
+		//     imageFormat: the format the image is in
+		//     texWidth: the width of the image
+		//     texHeight: the height of the image
+		//     mipLevels: the amount of mipmaps that will be generated
 		void GenerateMipmaps(VkPhysicalDevice physicalDevice, VkCommandBuffer commandBuffer,
 			VkImage image, VkFormat imageFormat,
 			int32_t texWidth, int32_t texHeight, uint32_t mipLevels);
 
-		void CreateTextureImage(VkDevice device, VkPhysicalDevice physicalDevice, Texture& texture, const std::string& textureName, uint32_t& miplevels, CommandpoolManager* pCommandPoolManager, VkQueue graphicsQueue);
+		// Create a given texture image
+		// Parameters:
+		//     device: handle to the VkDevice
+		//     physicalDevice: handle to the VkPhysicalDevice
+		//     texture: reference to the texture that will be created
+		//     textureName: filepath to the texture
+		//     mipLevels: the amount of mipmaps that will be created
+		//     pCommandPoolManager: pointer to the commandpool manager
+		//     graphicsqueue handle of the graphics queue
+		void CreateTextureImage(VkDevice device, VkPhysicalDevice physicalDevice, Texture& texture, const std::string& textureName,
+			uint32_t& miplevels, CommandpoolManager* pCommandPoolManager, VkQueue graphicsQueue);
+
+		// Create a texture sampler
+		// Parameters:
+		//     sampler: a reference to the sampler that will be created
+		//     samples: the max amount of samples
+		//     device: handle to the VkDevice
+		//     physicalDevice: handle to the VkPhysicalDevice
 		void CreateTextureSampler(VkSampler& sampler, uint32_t samples, VkDevice device, VkPhysicalDevice physicalDevice);
+
+		// Create and return an image view
+		// Parameters:
+		//     device: handle to the VkDevice:
+		//     image: the image for the image view
+		//     format: the format the image is in
+		//     aspectFlags: the flags for the aspect maskµ
+		//     mipLevels: the amount of mipmaps that will be generated
 		VkImageView CreateImageView(VkDevice device, VkImage image, VkFormat format, VkImageAspectFlags aspectFlags, uint32_t mipLevels);
 		
-		void TransitionImageLayout(VkImage image, VkCommandBuffer commandBuffer, VkFormat format, VkImageLayout oldLayout, VkImageLayout newLayout, uint32_t mipLevels);
+		// Transition an image from one layout to another
+		// Parameters:
+		//     image: the image that will be transitioned
+		//     commandBuffer: a command buffer needed for the transition
+		//     format: the format the image is in
+		//     oldLayout: the current layout of the image
+		//     newLayout: the desired layout of the image
+		//     mipLevels: the amount of mipmaps in the image
+		void TransitionImageLayout(VkImage image, VkCommandBuffer commandBuffer, VkFormat format,
+			VkImageLayout oldLayout, VkImageLayout newLayout, uint32_t mipLevels);
 
-		void CreateImage(VkDevice device, VkPhysicalDevice physicalDevice, uint32_t width, uint32_t height, uint32_t mipLevels, VkSampleCountFlagBits numSamples, VkFormat format, VkImageTiling tiling, VkImageUsageFlags usage, VkMemoryPropertyFlags properties, Texture& texture);
+
+		// Create an image
+		// Parameters:
+		//     device: handle of the VkDevice
+		//     physicalDevice: handle of the VkPhysicalDevice
+		//     width: the width of the image
+		//     height: the height of the image
+		//     mipLevels: the amount of mipmaps
+		//     numsaples: the amount of samples for multisampling
+		//     format: the format the image will be in
+		//     tiling: the type of image tiling that will be used
+		//     usage: the usage for the image
+		//     properties: the requested properties for the image
+		//     texture: reference to the texture to be created
+		void CreateImage(VkDevice device, VkPhysicalDevice physicalDevice,
+			uint32_t width, uint32_t height, uint32_t mipLevels,
+			VkSampleCountFlagBits numSamples, VkFormat format, VkImageTiling tiling,
+			VkImageUsageFlags usage, VkMemoryPropertyFlags properties, Texture& texture);
 
 	private:
+		// The default texture
 		Texture m_DefaultTexture{};
 
+		// The max amount of miplevels
 		uint32_t m_MipLevels{};
 
+		// The textpath to the default texture
 		const std::string m_DefaultTextureName{ "../resources/DefaultResources/DefaultTexture.png" };
-
-
+		
+		// The default sampler
 		VkSampler m_TextureSampler{};
 
+		// Check if a requested format has the stencil component
+		// Parameters:
+		//     format: the format to be checked
 		bool HasStencilComponent(VkFormat format);
 
+		// Create the default textures
+		// Parameters:
+		//     device: handle of the VkDevice
+		//     physicalDevice: handle of the VkPhysicalDevice
+		//     pCommandPoolManager: pointer to the commandpool manager
+		//     graphicsQueue: handle of the graphics queue
 		void CreateDefaultResources(VkDevice device, VkPhysicalDevice physicalDevice,  CommandpoolManager* pCommandPoolManager, VkQueue graphicsQueue);
 	};
 }
