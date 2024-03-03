@@ -2,6 +2,7 @@
 
 // File includes
 #include "CommandpoolManager.h"
+#include "VulkanUtils.h"
 
 // Standard library includes
 #include <stdexcept>
@@ -23,7 +24,7 @@ void D3D::CommandpoolManager::Cleanup(VkDevice device)
 void D3D::CommandpoolManager::CreateCommandPool(VkDevice device, VkPhysicalDevice physicalDevice, VkSurfaceKHR surface)
 {
 	// Get the needed queuefamilies
-	D3D::QueueFamilyIndices queueFamilyIndices = FindQueueFamilies(physicalDevice, surface);
+	D3D::QueueFamilyIndices queueFamilyIndices = VulkanUtils::FindQueueFamilies(physicalDevice, surface);
 
 	// Create commandpool create info object
 	VkCommandPoolCreateInfo poolInfo{};

@@ -4,10 +4,11 @@
 #include "SwapchainWrapper.h"
 #include "D3DEngine.h"
 #include "ImageManager.h"
+#include "VulkanUtils.h"
 
 // Standard library includes
-#include <algorithm>
 #include <stdexcept>
+#include <algorithm>
 
 extern D3D::Window g_pWindow;
 
@@ -40,10 +41,10 @@ void D3D::SwapchainWrapper::SetupSwapchain(VkDevice device, VkPhysicalDevice phy
 
 void D3D::SwapchainWrapper::CreateSwapChain(VkDevice device, VkPhysicalDevice physicalDevice, VkSurfaceKHR surface)
 {
-	D3D::SwapChainSupportDetails swapChainSupport = QuerySwapChainSupport(physicalDevice, surface);
+	D3D::SwapChainSupportDetails swapChainSupport = VulkanUtils::QuerySwapChainSupport(physicalDevice, surface);
 
-	VkSurfaceFormatKHR surfaceFormat = ChooseSwapSurfaceFormat(swapChainSupport.formats);
-	VkPresentModeKHR presentMode = ChooseSwapPresentMode(swapChainSupport.presentModes);
+	VkSurfaceFormatKHR surfaceFormat = VulkanUtils::ChooseSwapSurfaceFormat(swapChainSupport.formats);
+	VkPresentModeKHR presentMode = VulkanUtils::ChooseSwapPresentMode(swapChainSupport.presentModes);
 	VkExtent2D extent = ChooseSwapExtent(swapChainSupport.capabilities);
 
 	uint32_t imageCount = swapChainSupport.capabilities.minImageCount + 1;
@@ -66,7 +67,7 @@ void D3D::SwapchainWrapper::CreateSwapChain(VkDevice device, VkPhysicalDevice ph
 	createInfo.imageUsage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
 
 
-	D3D::QueueFamilyIndices indices = FindQueueFamilies(physicalDevice, surface);
+	D3D::QueueFamilyIndices indices = VulkanUtils::FindQueueFamilies(physicalDevice, surface);
 	uint32_t queueFamilyIndices[] = { indices.graphicsFamily.value(), indices.presentFamily.value() };
 
 	if (indices.graphicsFamily != indices.presentFamily)
@@ -138,57 +139,6 @@ void D3D::SwapchainWrapper::RecreateSwapChain(VkDevice device, VkPhysicalDevice 
 	SetupSwapchain(device, physicalDevice, surface, pImageManager, commandBuffer, depthFormat, renderpass);
 }
 
-D3D::SwapChainSupportDetails D3D::SwapchainWrapper::QuerySwapChainSupport(VkPhysicalDevice physicalDevice, VkSurfaceKHR surface)
-{
-	D3D::SwapChainSupportDetails details;
-
-	vkGetPhysicalDeviceSurfaceCapabilitiesKHR(physicalDevice, surface, &details.capabilities);
-
-	uint32_t formatCount;
-	vkGetPhysicalDeviceSurfaceFormatsKHR(physicalDevice, surface, &formatCount, nullptr);
-
-	if (formatCount != 0)
-	{
-		details.formats.resize(formatCount);
-		vkGetPhysicalDeviceSurfaceFormatsKHR(physicalDevice, surface, &formatCount, details.formats.data());
-	}
-
-	uint32_t presentModeCount;
-	vkGetPhysicalDeviceSurfacePresentModesKHR(physicalDevice, surface, &presentModeCount, nullptr);
-
-	if (presentModeCount != 0)
-	{
-		details.presentModes.resize(presentModeCount);
-		vkGetPhysicalDeviceSurfacePresentModesKHR(physicalDevice, surface, &presentModeCount, details.presentModes.data());
-	}
-
-	return details;
-}
-
-VkSurfaceFormatKHR D3D::SwapchainWrapper::ChooseSwapSurfaceFormat(const std::vector<VkSurfaceFormatKHR>& availableFormats)
-{
-	for (const auto& availableFormat : availableFormats)
-	{
-		if (availableFormat.format == VK_FORMAT_B8G8R8A8_SRGB && availableFormat.colorSpace == VK_COLOR_SPACE_SRGB_NONLINEAR_KHR)
-		{
-			return availableFormat;
-		}
-	}
-
-	return availableFormats[0];
-}
-
-VkPresentModeKHR D3D::SwapchainWrapper::ChooseSwapPresentMode(const std::vector<VkPresentModeKHR>& availablePresentModes)
-{
-	for (const auto& availablePresentMode : availablePresentModes)
-	{
-		if (availablePresentMode == VK_PRESENT_MODE_MAILBOX_KHR)
-		{
-			return availablePresentMode;
-		}
-	}
-	return VK_PRESENT_MODE_FIFO_KHR;
-}
 
 VkExtent2D D3D::SwapchainWrapper::ChooseSwapExtent(const VkSurfaceCapabilitiesKHR& capabilities)
 {
@@ -211,42 +161,6 @@ VkExtent2D D3D::SwapchainWrapper::ChooseSwapExtent(const VkSurfaceCapabilitiesKH
 
 		return actualExtent;
 	}
-}
-
-D3D::QueueFamilyIndices D3D::SwapchainWrapper::FindQueueFamilies(VkPhysicalDevice device, VkSurfaceKHR surface)
-{
-	D3D::QueueFamilyIndices indices;
-
-	uint32_t queueFamilyCount = 0;
-	vkGetPhysicalDeviceQueueFamilyProperties(device, &queueFamilyCount, nullptr);
-
-	std::vector<VkQueueFamilyProperties> queueFamilies(queueFamilyCount);
-	vkGetPhysicalDeviceQueueFamilyProperties(device, &queueFamilyCount, queueFamilies.data());
-
-	//find at least one queue family that supports VK_QUEUE_GRAPHICS_BIT
-	int i = 0;
-	for (const auto& queueFamily : queueFamilies)
-	{
-		if (queueFamily.queueFlags & VK_QUEUE_GRAPHICS_BIT)
-		{
-			indices.graphicsFamily = i;
-		}
-
-		VkBool32 presentSupport = false;
-		vkGetPhysicalDeviceSurfaceSupportKHR(device, i, surface, &presentSupport);
-
-		if (presentSupport)
-		{
-			indices.presentFamily = i;
-		}
-
-		if (indices.isComplete())
-			break;
-
-		i++;
-	}
-
-	return indices;
 }
 
 void D3D::SwapchainWrapper::CreateFramebuffers(VkDevice device, VkRenderPass renderpass)

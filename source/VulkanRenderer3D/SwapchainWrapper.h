@@ -42,61 +42,111 @@ namespace D3D
 		SwapchainWrapper& operator=(SwapchainWrapper& other) = delete;
 		SwapchainWrapper& operator=(SwapchainWrapper&& other) = delete;
 
+		// Set up the color and depth image views
+		// Parameters:
+		//     device: handle of the VkDevice
+		//     physicalDevice: handle of the VkPhysicalDevice
+		//     pImageManager: pointer to the image manager
+		//     depthFormat: the format for the depth image
+		//     commandBuffer: commandbuffer that will be used to create depth image
+		//     renderPass: the renderpass that will be used with this swapchain
 		void SetupImageViews(VkDevice device, VkPhysicalDevice physicalDevice, D3D::ImageManager* pImageManager,
 			VkFormat depthFormat, VkCommandBuffer commandBuffer, VkRenderPass renderPass);
 
+		// Clean up allocated objects
+		// Parameters:
+		//     device: handle of the VkDevice
 		void Cleanup(VkDevice device);
 
+		// Delete and recreate the swapchain
+		// Parameters:
+		//     device: handle of the VkDevice
+		//     physicalDevice: handle of the VkPhysicalDevice
+		//     surface: handle of the VkSurfaceKHR
+		//     pImageManager: pointer to the image manager
+		//     commandBuffer: commandbuffer that will be used to create depth image
+		//     depthFormat: the format for the depth image
+		//     renderpass: the renderpass that will be used with this swapchain
 		void RecreateSwapChain(VkDevice device, VkPhysicalDevice physicalDevice, VkSurfaceKHR surface,
 			D3D::ImageManager* pImageManager, VkCommandBuffer commandBuffer, VkFormat depthFormat,
 			VkRenderPass renderpass);
 
+		// Get the swapchain
 		VkSwapchainKHR GetSwapchain() const { return m_SwapChain; }
+
+		// Get the format of the swapchain
 		VkFormat GetFormat() const { return m_SwapChainImageFormat; }
+
+		// Get the minimum image count
 		uint32_t GetMinImageCount() const { return m_MinImageCount; }
+
+		// Get the extent of the swapchain
 		VkExtent2D GetExtent() const { return m_SwapChainExtent; }
+
+		// Get the requested frame buffer
+		// Parameters:
+		//     index: the index of the frame buffer
 		VkFramebuffer GetFrameBuffer(uint32_t index) const { return m_SwapChainFramebuffers[index]; }
 
+		// Get the amound of samples per pixel
 		VkSampleCountFlagBits GetMsaaSamples() const { return m_pImageViewManager->GetMsaaSamples(); }
 	private:
+		// The image view manager that hold the color and depth image
 		std::unique_ptr<ImageViewManager> m_pImageViewManager{};
 
-		//--Swapchain--
+		// Handle of the swapchaint
 		VkSwapchainKHR m_SwapChain = VK_NULL_HANDLE;
 
-		//-Swapchain MinImageCount-
+		// The minimum amount of images
 		uint32_t m_MinImageCount{};
 
-		//-Swapchain Images-
+		// Vector of swapchain images
 		std::vector<VkImage> m_SwapChainImages{};
 
-		//-Swapchain Image Format-
-		VkFormat m_SwapChainImageFormat{};
-
-		//-Swapchain Extent-
-		VkExtent2D m_SwapChainExtent{};
-
-		//-Image Views-
+		// Vector of swapchain imageviews
 		std::vector<VkImageView> m_SwapChainImageViews{};
 
-		//--Framebuffers--
+		// Format of the swapchain
+		VkFormat m_SwapChainImageFormat{};
+
+		// Extent of the swapchain
+		VkExtent2D m_SwapChainExtent{};
+
+		// Vector of frameBuffers
 		std::vector<VkFramebuffer> m_SwapChainFramebuffers{};
 
-
+		// Initialize the swapchain and other components
+		// Parameters:
+		//     device: handle of the VkDevice
+		//     physicalDevice: handle of the VkPhysicalDevice
+		//     surface: Handle of the VkSurfaceKHR
+		//     pImageManager: pointer to the image manager
+		//     commandBuffer: commandbuffer needed for creation of depth image
+		//     depthFormat: the format the depth image will be in
+		//     renderpass: the renderpass used with this swapchain
 		void SetupSwapchain(VkDevice device, VkPhysicalDevice physicalDevice, VkSurfaceKHR surface,
 			D3D::ImageManager* pImageManager, VkCommandBuffer commandBuffer, VkFormat depthFormat, VkRenderPass renderpass);
 
+		// Create the swapchain
+		// Parameters:
+		//     device: handle of the VkDevice
+		//     physicalDevice: handle of the physicalDevice
+		//     surface: handle of the VkSurfaceKHR
 		void CreateSwapChain(VkDevice device, VkPhysicalDevice physicalDevice, VkSurfaceKHR surface);
 
-		void CreateImageViews(VkDevice device, ImageManager* pmageManager);
+		// Create the color and depth image views
+		// Parameters:
+		//     device: handle of the VkDevice
+		//     pImageManager: handle of the image manager
+		void CreateImageViews(VkDevice device, ImageManager* pImageManager);
 
+		// Create the frame buffers
+		// Parameters:
+		//     device: handle of the VkDevice
 		void CreateFramebuffers(VkDevice device, VkRenderPass renderpass);
 
-		D3D::SwapChainSupportDetails QuerySwapChainSupport(VkPhysicalDevice physicalDevice, VkSurfaceKHR surface);
-		VkSurfaceFormatKHR ChooseSwapSurfaceFormat(const std::vector<VkSurfaceFormatKHR>& availableFormats);
-		VkPresentModeKHR ChooseSwapPresentMode(const std::vector<VkPresentModeKHR>& availablePresentModes);
+
 		VkExtent2D ChooseSwapExtent(const VkSurfaceCapabilitiesKHR& capabilities);
-		D3D::QueueFamilyIndices FindQueueFamilies(VkPhysicalDevice device, VkSurfaceKHR surface);
 	};
 
 }

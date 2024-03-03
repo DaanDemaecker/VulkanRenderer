@@ -63,11 +63,6 @@ namespace D3D
 		//     enableValidationLayers: are the validation layers enabled
 		std::vector<const char*> GetRequiredExtensions(bool enableValidationLayers);
 
-		// Check if a certain extension is supported
-		// Parameters:
-		//     extensionName: the name of the extension that should be checked
-		bool CheckExtensionSupport(const char* extensionName);
-
 		// Setup the debug messenger create info
 		// Parameters:
 		//     createInfo: a reference to the messenger create info to avoid creating a new one in the function

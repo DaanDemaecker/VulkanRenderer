@@ -2,7 +2,8 @@
 
 // File includes
 #include "InstanceWrapper.h"
-#include "GLFWIncludes.h"
+#include "GlfwIncludes.h"
+#include "VulkanUtils.h"
 
 // Standard library includes
 #include <stdexcept>
@@ -163,32 +164,13 @@ std::vector<const char*> D3D::InstanceWrapper::GetRequiredExtensions(bool enable
 	}
 
 	// If the push descriptor is supported, add it to the extensions list
-	if (CheckExtensionSupport(VK_KHR_PUSH_DESCRIPTOR_EXTENSION_NAME))
+	if (VulkanUtils::CheckExtensionSupport(VK_KHR_PUSH_DESCRIPTOR_EXTENSION_NAME))
 	{
 		extensions.push_back(VK_KHR_PUSH_DESCRIPTOR_EXTENSION_NAME);
 	}
 
 	// Return the extensions
 	return extensions;
-}
-
-bool D3D::InstanceWrapper::CheckExtensionSupport(const char* extensionName)
-{
-	uint32_t extensionCount;
-	vkEnumerateInstanceExtensionProperties(nullptr, &extensionCount, nullptr);
-
-	std::vector<VkExtensionProperties> availableExtensions(extensionCount);
-	vkEnumerateInstanceExtensionProperties(nullptr, &extensionCount, availableExtensions.data());
-
-	for (const auto& extension : availableExtensions)
-	{
-		if (strcmp(extension.extensionName, extensionName) == 0)
-		{
-			return true;
-		}
-	}
-
-	return false;
 }
 
 void D3D::InstanceWrapper::PopulateDebugMessengerCreateInfo(VkDebugUtilsMessengerCreateInfoEXT& createInfo)
