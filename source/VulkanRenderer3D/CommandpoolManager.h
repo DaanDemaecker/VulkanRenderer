@@ -13,13 +13,21 @@
 
 namespace D3D
 {
-	class CommandpoolManager
+	class CommandpoolManager 
 	{
 	public:
+		// Delete default constructor
 		CommandpoolManager() = delete;
 
+		// Constructor
+		// Parameters:
+		//     device: handle of the VkDevice
+		//     physicalDevice: handle of the VkPhysicalDevice
+		//     surface: handle of the VkSurfaceKHR
+		//     frames: the max amount of frames in flight
 		CommandpoolManager(VkDevice device, VkPhysicalDevice physicalDevice, VkSurfaceKHR surface, uint32_t frames);
 
+		// Default destructor
 		~CommandpoolManager() = default;
 
 		CommandpoolManager(CommandpoolManager& other) = delete;
@@ -28,24 +36,52 @@ namespace D3D
 		CommandpoolManager& operator=(CommandpoolManager& other) = delete;
 		CommandpoolManager& operator=(CommandpoolManager&& other) = delete;
 
+		// Cleanup function
+		// Parameters:
+		//     device: handle of the VkDevice
 		void Cleanup(VkDevice device);
 
+		// Get the current used command buffer
+		// Parameters:
+		//     frame: the current frame, to be used as the index for the command buffer
 		VkCommandBuffer& GetCommandBuffer(uint32_t frame) { return m_CommandBuffers[frame]; }
 
-		void EndSingleTimeCommands(VkDevice device, VkCommandBuffer comandBuffer, VkQueue graphicsQueue);
-
+		// Get a commandbuffer for a single use
+		// Parameters:
+		//     device: handle of the VkDevice
 		VkCommandBuffer BeginSingleTimeCommands(VkDevice device);
 
+		// End a commandbuffer that was for a single use
+		// Parameters:
+		//     device: handle of the VkDevice
+		//     commandBuffer: handle of the commandbuffer in question
+		//     graphicsQueue: handle of the graphics queue
+		void EndSingleTimeCommands(VkDevice device, VkCommandBuffer commandBuffer, VkQueue graphicsQueue);
 
 	private:
-		//--CommandPool--
+		//CommandPool
 		VkCommandPool m_CommandPool{};
 
 		//CommandBuffers
 		std::vector<VkCommandBuffer> m_CommandBuffers{};
 
+		// Initialize the commandpool
+		// Parameters:
+		//     device: handle of the VkDevice
+		//     physicalDevice: handle of the VkPhysicalDevice
+		//     surface: handle of th VkSurfaceKHR
 		void CreateCommandPool(VkDevice device, VkPhysicalDevice physicalDevice, VkSurfaceKHR surface);
-		QueueFamilyIndices FindQueueFamilies(VkPhysicalDevice device, VkSurfaceKHR surface);
+
+		// Find the needed queue families
+		// Parameters:
+		//     physicalDevice: handle of the VkPhysicalDevice
+		//     surface: handle of the VkSurfaceKHR
+		QueueFamilyIndices FindQueueFamilies(VkPhysicalDevice physicalDevice, VkSurfaceKHR surface);
+
+		// Initialize the commandbuffers
+		// Parameters:
+		//     device: handle of the VkDevice
+		//     frames: max amount of frames in flight
 		void CreateCommandBuffers(VkDevice device, uint32_t frames);
 	};
 }
