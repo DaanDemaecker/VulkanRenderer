@@ -12,10 +12,19 @@ namespace D3D
 	class RenderpassWrapper
 	{
 	public:
+		// Constructor
+		// Parameters:
+		//     device: handle of the VkDevice
+		//     swapchainImageFormat: the format that the swapchain color image is in
+		//     depthFormat: the format that the swapchain depth image is in
+		//     msaaSamples: the max amount of samples per pixels
 		RenderpassWrapper(VkDevice device, VkFormat swapchainImageFormat, VkFormat depthFormat,
 			VkSampleCountFlagBits msaaSamples);
 
+		// Delete default constructor
 		RenderpassWrapper() = delete;
+
+		// Default destructor
 		~RenderpassWrapper() = default;
 
 		RenderpassWrapper(RenderpassWrapper& other) = delete;
@@ -24,8 +33,12 @@ namespace D3D
 		RenderpassWrapper& operator=(RenderpassWrapper& other) = delete;
 		RenderpassWrapper& operator=(RenderpassWrapper&& other) = delete;
 	
+		// Clean up allocated objects
+		// Parameters:
+		//     device: handle of the VkDevice
 		void cleanup(VkDevice device);
 
+		// Get the handle of the renderpass
 		VkRenderPass GetRenderpass() const { return m_RenderPass; }
 
 	private:
@@ -36,6 +49,12 @@ namespace D3D
 		//RenderpassInfo
 		VkRenderPassBeginInfo m_RenderpassInfo{};
 
+		// Initialize the renderpass
+		// Parameters:
+		//     device: handle of the VkDevice
+		//     swapchainImageFormat: the format that the swapchain color image is in
+		//     depthFormat: the format that the swapchain depth image is in
+		//     msaaSamples: the max amount of samples per pixels
 		void CreateRenderPass(VkDevice device, VkFormat swapchainImageFormat, VkFormat depthFormat,
 			VkSampleCountFlagBits msaaSamples);
 
