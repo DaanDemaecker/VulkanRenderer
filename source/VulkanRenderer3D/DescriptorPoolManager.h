@@ -17,7 +17,7 @@ namespace D3D
 	// Class forward declaration for descriptorpool wrapper
 	class DescriptorPoolWrapper;
 
-	class DescriptorPoolManager
+	class DescriptorPoolManager final
 	{
 	public:
 		// Default constructor

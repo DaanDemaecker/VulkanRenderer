@@ -12,7 +12,7 @@
 
 namespace D3D
 {
-	class D3DEngine
+	class D3DEngine final
 	{
 	public:
 		// Constructor

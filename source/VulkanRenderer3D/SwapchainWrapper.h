@@ -14,13 +14,26 @@
 
 namespace D3D
 {
+	// Class forward declaration for imagemanager
 	class ImageManager;
 
-	class SwapchainWrapper
+	class SwapchainWrapper final
 	{
 	public:
+		// Constructor
+		// Parameter:
+		//     device: handle of the VkDevice
+		//     physicalDevice: handle of the VkPhysicalDevice
+		//     surface: handle of the VkSurfaceKHR
+		//     pImageManager: pointer to the image manager
+		//     msaaSamples: max amount of samples per pixel
 		SwapchainWrapper(VkDevice device, VkPhysicalDevice physicalDevice, VkSurfaceKHR surface,
 			D3D::ImageManager* pImageManager, VkSampleCountFlagBits msaaSamples);
+
+		// Delete default constructor
+		SwapchainWrapper() = delete;
+
+		// Default destructort
 		~SwapchainWrapper() = default;
 
 		SwapchainWrapper(SwapchainWrapper& other) = delete;

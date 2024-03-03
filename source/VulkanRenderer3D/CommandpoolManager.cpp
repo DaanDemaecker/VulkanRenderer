@@ -1,5 +1,9 @@
+// CommandpoolManager.cpp
+
+// File includes
 #include "CommandpoolManager.h"
 
+// Standard library includes
 #include <stdexcept>
 
 D3D::CommandpoolManager::CommandpoolManager(VkDevice device, VkPhysicalDevice physicalDevice, VkSurfaceKHR surface, uint32_t frames)

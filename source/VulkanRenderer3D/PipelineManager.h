@@ -15,7 +15,7 @@
 
 namespace D3D
 {
-	class PipelineManager
+	class PipelineManager final
 	{
 	public:
 		// Delete default constructor

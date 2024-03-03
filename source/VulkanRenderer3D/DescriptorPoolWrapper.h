@@ -16,7 +16,7 @@ namespace D3D
 {
 	class Model;
 
-	class DescriptorPoolWrapper
+	class DescriptorPoolWrapper final
 	{
 	public:
 		// Constructor

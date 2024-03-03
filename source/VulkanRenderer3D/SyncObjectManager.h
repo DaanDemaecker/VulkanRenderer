@@ -12,7 +12,7 @@
 
 namespace D3D
 {
-	class SyncObjectManager
+	class SyncObjectManager final
 	{
 	public:
 		SyncObjectManager(VkDevice device, uint32_t maxFrames);

@@ -18,7 +18,7 @@ namespace D3D
 	// Class forward declaration for material
 	class Material;
 
-	class Model : public std::enable_shared_from_this<Model>
+	class Model final : public std::enable_shared_from_this<Model>
 	{
 	public:
 		// Constructor

@@ -14,7 +14,7 @@
 
 namespace D3D
 {
-	class ImageManager
+	class ImageManager final
 	{
 	public:
 		// Constructor

@@ -9,7 +9,7 @@
 
 namespace D3D
 {
-	class RenderpassWrapper
+	class RenderpassWrapper final
 	{
 	public:
 		// Constructor

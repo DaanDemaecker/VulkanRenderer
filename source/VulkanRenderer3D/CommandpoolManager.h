@@ -13,7 +13,7 @@
 
 namespace D3D
 {
-	class CommandpoolManager 
+	class CommandpoolManager final
 	{
 	public:
 		// Delete default constructor

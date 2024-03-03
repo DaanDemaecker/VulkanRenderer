@@ -10,7 +10,7 @@ namespace D3D
 	// Class forward declaration for image manager
 	class ImageManager;
 
-	class ImageViewManager
+	class ImageViewManager final
 	{
 	public:
 		// Constructor

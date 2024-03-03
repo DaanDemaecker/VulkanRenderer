@@ -10,7 +10,7 @@
 
 namespace D3D
 {
-	class ImGuiWrapper
+	class ImGuiWrapper final
 	{
 	public:
 		// Constructor

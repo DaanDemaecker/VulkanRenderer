@@ -12,7 +12,7 @@
 
 namespace D3D
 {
-	class InstanceWrapper
+	class InstanceWrapper final
 	{
 	public:
 		// Constructor
