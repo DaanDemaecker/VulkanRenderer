@@ -88,15 +88,15 @@ void D3D::VulkanRenderer3D::InitVulkan()
 	m_pImageManager = std::make_unique<ImageManager>(m_Device, m_PhysicalDevice,
 		m_pCommandPoolManager.get(), m_QueueObject.graphicsQueue);
 
-	auto msaaSamples = GetMaxUsableSampleCount();
+	auto msaaSamples = VulkanUtils::GetMaxUsableSampleCount(m_PhysicalDevice);
 
 	m_pSwapchainWrapper = std::make_unique<SwapchainWrapper>(m_Device, m_PhysicalDevice, m_Surface,
 		m_pImageManager.get(), msaaSamples);
 
-	m_pRenderpassWrapper = std::make_unique<RenderpassWrapper>(m_Device, m_pSwapchainWrapper->GetFormat(), FindDepthFormat(), msaaSamples);
+	m_pRenderpassWrapper = std::make_unique<RenderpassWrapper>(m_Device, m_pSwapchainWrapper->GetFormat(), VulkanUtils::FindDepthFormat(m_PhysicalDevice), msaaSamples);
 
 	auto commandBuffer{ m_pCommandPoolManager->BeginSingleTimeCommands(m_Device) };
-	m_pSwapchainWrapper->SetupImageViews(m_Device, m_PhysicalDevice, m_pImageManager.get(), FindDepthFormat(),
+	m_pSwapchainWrapper->SetupImageViews(m_Device, m_PhysicalDevice, m_pImageManager.get(), VulkanUtils::FindDepthFormat(m_PhysicalDevice),
 		commandBuffer, m_pRenderpassWrapper->GetRenderpass());
 	m_pCommandPoolManager->EndSingleTimeCommands(m_Device, commandBuffer, m_QueueObject.graphicsQueue);
 
@@ -377,7 +377,7 @@ void D3D::VulkanRenderer3D::PickPhysicalDevice()
 
 bool D3D::VulkanRenderer3D::IsDeviceSuitable(VkPhysicalDevice device)
 {
-	QueueFamilyIndices indices = FindQueueFamilies(device);
+	QueueFamilyIndices indices = VulkanUtils::FindQueueFamilies(device, m_Surface);
 
 	bool extensionsSupported = CheckDeviceExtensionSupport(device);
 
@@ -424,7 +424,7 @@ bool D3D::VulkanRenderer3D::CheckDeviceExtensionSupport(VkPhysicalDevice device)
 
 void D3D::VulkanRenderer3D::CreateLogicalDevice()
 {
-	QueueFamilyIndices indices = FindQueueFamilies(m_PhysicalDevice);
+	QueueFamilyIndices indices = VulkanUtils::FindQueueFamilies(m_PhysicalDevice, m_Surface);
 
 	std::vector<VkDeviceQueueCreateInfo> queueCreateInfos;
 	std::set<uint32_t> uniqueQueueFamilies = { indices.graphicsFamily.value(), indices.presentFamily.value() };
@@ -493,62 +493,9 @@ void D3D::VulkanRenderer3D::RecreateSwapChain()
 	auto commandBuffer{ m_pCommandPoolManager->BeginSingleTimeCommands(m_Device) };
 
 	m_pSwapchainWrapper->RecreateSwapChain(m_Device, m_PhysicalDevice, m_Surface, m_pImageManager.get(), commandBuffer,
-		FindDepthFormat(), m_pRenderpassWrapper->GetRenderpass());
+		VulkanUtils::FindDepthFormat(m_PhysicalDevice), m_pRenderpassWrapper->GetRenderpass());
 
 	m_pCommandPoolManager->EndSingleTimeCommands(m_Device, commandBuffer, m_QueueObject.graphicsQueue);
-}
-
-VkFormat D3D::VulkanRenderer3D::FindDepthFormat()
-{
-	return FindSupportedFormat(
-		{ VK_FORMAT_D32_SFLOAT, VK_FORMAT_D32_SFLOAT_S8_UINT, VK_FORMAT_D24_UNORM_S8_UINT },
-		VK_IMAGE_TILING_OPTIMAL,
-		VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT
-	);
-}
-
-VkSampleCountFlagBits D3D::VulkanRenderer3D::GetMaxUsableSampleCount()
-{
-	VkPhysicalDeviceProperties physicalDeviceProperties{};
-	vkGetPhysicalDeviceProperties(m_PhysicalDevice, &physicalDeviceProperties);
-
-	VkSampleCountFlags counts = physicalDeviceProperties.limits.framebufferColorSampleCounts &
-		physicalDeviceProperties.limits.framebufferDepthSampleCounts;
-
-	if (counts & VK_SAMPLE_COUNT_64_BIT)
-		return VK_SAMPLE_COUNT_64_BIT;
-	if (counts & VK_SAMPLE_COUNT_32_BIT)
-		return VK_SAMPLE_COUNT_32_BIT;
-	if (counts & VK_SAMPLE_COUNT_16_BIT)
-		return VK_SAMPLE_COUNT_16_BIT;
-	if (counts & VK_SAMPLE_COUNT_8_BIT)
-		return VK_SAMPLE_COUNT_8_BIT;
-	if (counts & VK_SAMPLE_COUNT_4_BIT)
-		return VK_SAMPLE_COUNT_4_BIT;
-	if (counts & VK_SAMPLE_COUNT_2_BIT)
-		return VK_SAMPLE_COUNT_2_BIT;
-
-	return VK_SAMPLE_COUNT_1_BIT;
-}
-
-VkFormat D3D::VulkanRenderer3D::FindSupportedFormat(const std::vector<VkFormat>& candidates, VkImageTiling tiling, VkFormatFeatureFlags features)
-{
-	for (const VkFormat& format : candidates)
-	{
-		VkFormatProperties props;
-		vkGetPhysicalDeviceFormatProperties(m_PhysicalDevice, format, &props);
-
-		if (tiling == VK_IMAGE_TILING_LINEAR && (props.linearTilingFeatures & features) == features)
-		{
-			return format;
-		}
-		else if (tiling == VK_IMAGE_TILING_OPTIMAL && (props.optimalTilingFeatures & features) == features)
-		{
-			return format;
-		}
-	}
-
-	throw std::runtime_error("failed to find supported format!");
 }
 
 
@@ -620,43 +567,6 @@ VkCommandBuffer D3D::VulkanRenderer3D::BeginSingleTimeCommands()
 void D3D::VulkanRenderer3D::EndSingleTimeCommands(VkCommandBuffer commandBuffer)
 {
 	m_pCommandPoolManager->EndSingleTimeCommands(m_Device, commandBuffer, m_QueueObject.graphicsQueue);
-}
-
-
-D3D::QueueFamilyIndices D3D::VulkanRenderer3D::FindQueueFamilies(VkPhysicalDevice physicalDevice)
-{
-	D3D::QueueFamilyIndices indices;
-	
-	uint32_t queueFamilyCount = 0;
-	vkGetPhysicalDeviceQueueFamilyProperties(physicalDevice, &queueFamilyCount, nullptr);
-
-	std::vector<VkQueueFamilyProperties> queueFamilies(queueFamilyCount);
-	vkGetPhysicalDeviceQueueFamilyProperties(physicalDevice, &queueFamilyCount, queueFamilies.data());
-
-	//find at least one queue family that supports VK_QUEUE_GRAPHICS_BIT
-	int i = 0;
-	for (const auto& queueFamily : queueFamilies)
-	{
-		if (queueFamily.queueFlags & VK_QUEUE_GRAPHICS_BIT)
-		{
-			indices.graphicsFamily = i;
-		}
-
-		VkBool32 presentSupport = false;
-		vkGetPhysicalDeviceSurfaceSupportKHR(physicalDevice, i, m_Surface, &presentSupport);
-
-		if (presentSupport)
-		{
-			indices.presentFamily = i;
-		}
-
-		if (indices.isComplete())
-			break;
-
-		i++;
-	}
-
-	return indices;
 }
 
 D3D::SwapChainSupportDetails D3D::VulkanRenderer3D::QuerySwapChainSupport(VkPhysicalDevice physicalDevice, VkSurfaceKHR surface)

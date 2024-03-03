@@ -72,12 +72,6 @@ namespace D3D
 		//     surface: handle of th VkSurfaceKHR
 		void CreateCommandPool(VkDevice device, VkPhysicalDevice physicalDevice, VkSurfaceKHR surface);
 
-		// Find the needed queue families
-		// Parameters:
-		//     physicalDevice: handle of the VkPhysicalDevice
-		//     surface: handle of the VkSurfaceKHR
-		QueueFamilyIndices FindQueueFamilies(VkPhysicalDevice physicalDevice, VkSurfaceKHR surface);
-
 		// Initialize the commandbuffers
 		// Parameters:
 		//     device: handle of the VkDevice

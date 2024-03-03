@@ -43,51 +43,6 @@ void D3D::CommandpoolManager::CreateCommandPool(VkDevice device, VkPhysicalDevic
 	}
 }
 
-D3D::QueueFamilyIndices D3D::CommandpoolManager::FindQueueFamilies(VkPhysicalDevice physicalDevice, VkSurfaceKHR surface)
-{
-	// Create quefamilyindices object
-	D3D::QueueFamilyIndices indices;
-
-	// Create uint for amount of queuefamilies
-	uint32_t queueFamilyCount = 0;
-	// Get the amount of queuefamilies
-	vkGetPhysicalDeviceQueueFamilyProperties(physicalDevice, &queueFamilyCount, nullptr);
-	// Create vector the size of the amount of queuefamilies
-	std::vector<VkQueueFamilyProperties> queueFamilies(queueFamilyCount);
-	// Get the queuefamilies
-	vkGetPhysicalDeviceQueueFamilyProperties(physicalDevice, &queueFamilyCount, queueFamilies.data());
-
-
-	// Loop trough the amount of queueFamilies
-	for (uint32_t i{}; i < queueFamilies.size(); i++)
-	{
-		// If the queueflag cointains the queue graphics bit
-		if (queueFamilies[i].queueFlags & VK_QUEUE_GRAPHICS_BIT)
-		{
-			// Set graphics family of the indices to i
-			indices.graphicsFamily = i;
-		}
-
-		VkBool32 presentSupport = false;
-		// Check if the graphics family index is supported
-		vkGetPhysicalDeviceSurfaceSupportKHR(physicalDevice, i, surface, &presentSupport);
-
-		// If it is supported
-		if (presentSupport)
-		{
-			// Set the present family of indices to i
-			indices.presentFamily = i;
-		}
-
-		// If indices is complete, jump out of the loop
-		if (indices.isComplete())
-			break;
-	}
-
-	// Return the found indices
-	return indices;
-}
-
 void D3D::CommandpoolManager::CreateCommandBuffers(VkDevice device, uint32_t frames)
 {
 	// Resize the commandbuffer vector to the amount of frames

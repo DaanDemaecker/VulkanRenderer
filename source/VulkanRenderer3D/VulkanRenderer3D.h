@@ -140,24 +140,15 @@ namespace D3D
         //-Swapchain Helper Functions-
         void RecreateSwapChain();
 
-        //-MultiSampling Helpers-
-        VkSampleCountFlagBits GetMaxUsableSampleCount();
-
-        //-Depth Image Helper-
-        VkFormat FindDepthFormat();
-
         //--CommandBuffers--
         void RecordCommandBuffer(VkCommandBuffer& commandBuffer, uint32_t imageIndex, std::vector<std::unique_ptr<Model>>& pModels);
 
         //--General helpers--
-        VkFormat FindSupportedFormat(const std::vector<VkFormat>& candidates, VkImageTiling tiling, VkFormatFeatureFlags features);
         
         VkCommandBuffer BeginSingleTimeCommands();
         void EndSingleTimeCommands(VkCommandBuffer commandBuffer);
 
         void TransitionImageLayout(VkImage image, VkFormat format, VkImageLayout oldLayout, VkImageLayout newLayout, uint32_t mipLevels);
-
-        QueueFamilyIndices FindQueueFamilies(VkPhysicalDevice physicalDevice);
 
         D3D::SwapChainSupportDetails QuerySwapChainSupport(VkPhysicalDevice physicalDevice, VkSurfaceKHR surface);
     };
