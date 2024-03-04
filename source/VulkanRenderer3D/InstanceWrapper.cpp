@@ -9,11 +9,16 @@
 #include <stdexcept>
 #include <iostream>
 
-D3D::InstanceWrapper::InstanceWrapper(bool enableValidationLayers, const std::vector<const char *>& validationLayers)
+D3D::InstanceWrapper::InstanceWrapper()
 {
+#ifdef NDEBUG
+	// If in release mode, disable validation layers
+	m_EnableValidationLayers = false;
+#endif
+
 #ifndef NDEBUG
 	//If in debug and validation layers are requested, set up validation layers
-	if (enableValidationLayers && !CheckValidationLayerSupport(validationLayers))
+	if (m_EnableValidationLayers && !CheckValidationLayerSupport(m_ValidationLayers))
 	{
 		// If validation layers are not supported, throw runtime error
 		throw std::runtime_error("validation layers requested, but not available!");
@@ -33,7 +38,7 @@ D3D::InstanceWrapper::InstanceWrapper(bool enableValidationLayers, const std::ve
 	createInfo.pApplicationInfo = &appInfo;
 
 	// Get required extensions
-	auto extensions = GetRequiredExtensions(enableValidationLayers);
+	auto extensions = GetRequiredExtensions(m_EnableValidationLayers);
 	// Set extension count to size of extensions
 	createInfo.enabledExtensionCount = static_cast<uint32_t>(extensions.size());
 	// Give data of extensions
@@ -41,13 +46,13 @@ D3D::InstanceWrapper::InstanceWrapper(bool enableValidationLayers, const std::ve
 
 	// Create debug create info
 	VkDebugUtilsMessengerCreateInfoEXT debugCreateInfo{};
-	if (enableValidationLayers)
+	if (m_EnableValidationLayers)
 	{
 		// If validation layers enabled:
 		// Set layercount to validation layers size
-		createInfo.enabledLayerCount = static_cast<uint32_t>(validationLayers.size());
+		createInfo.enabledLayerCount = static_cast<uint32_t>(m_ValidationLayers.size());
 		// Set enabled layers names to data of validation layers
-		createInfo.ppEnabledLayerNames = validationLayers.data();
+		createInfo.ppEnabledLayerNames = m_ValidationLayers.data();
 
 		// Pupulate the debug messenger create info
 		PopulateDebugMessengerCreateInfo(debugCreateInfo);
@@ -71,17 +76,17 @@ D3D::InstanceWrapper::InstanceWrapper(bool enableValidationLayers, const std::ve
 	}
 
 	// Set up debug messenger
-	SetupDebugMessenger(enableValidationLayers);
+	SetupDebugMessenger(m_EnableValidationLayers);
 }
 
-void D3D::InstanceWrapper::cleanup(bool enableValidationLayers)
+D3D::InstanceWrapper::~InstanceWrapper()
 {
 	// If validation layers enabled, delete debug messenger
-	if (enableValidationLayers)
+	if (m_EnableValidationLayers)
 	{
 		DestroyDebugUtilsMessegerEXT(m_Instance, m_DebugMessenger, nullptr);
 	}
-	
+
 	// Destroy instance
 	vkDestroyInstance(m_Instance, nullptr);
 }

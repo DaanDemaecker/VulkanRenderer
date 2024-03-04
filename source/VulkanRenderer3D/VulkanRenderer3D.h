@@ -85,12 +85,6 @@ namespace D3D
         std::unique_ptr<DirectionalLightObject> m_pGlobalLight{};
 
         //----Member variables----
-        //---Validation layers---
-        bool m_EnableValidationLayers{ true };
-        const std::vector<const char*> m_ValidationLayers =
-        {
-            "VK_LAYER_KHRONOS_validation"
-        };
 
 
         //--Window Surface--

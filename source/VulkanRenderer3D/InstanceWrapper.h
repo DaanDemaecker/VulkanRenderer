@@ -16,16 +16,10 @@ namespace D3D
 	{
 	public:
 		// Constructor
-		// Parameters:
-		//     enableValidationLayers: should validation layers be used or not
-		//     validationLayers: list of validation layers that should be used
-		InstanceWrapper(bool enableValidationLayers, const std::vector<const char*>& validationLayers);
+		InstanceWrapper();
 
-		// Delete default constructor
-		InstanceWrapper() = delete;
-
-		// Default destructor
-		~InstanceWrapper() = default;
+		// Destructor
+		~InstanceWrapper();
 
 		InstanceWrapper(InstanceWrapper& other) = delete;
 		InstanceWrapper(InstanceWrapper&& other) = delete;
@@ -36,10 +30,11 @@ namespace D3D
 		// Get the VkInstance
 		VkInstance GetInstance() const { return m_Instance; }
 
-		// Cleanup function
-		// Parameters:
-		//     enableValidationLayers: are validation layers enabled or not
-		void cleanup(bool enableValidationLayers);
+		// Are validation layers enabled
+		bool ValidationLayersEnabled() const { return m_EnableValidationLayers; }
+
+		// Get validation layers
+		const std::vector<const char*>& GetValidationLayers() const { return m_ValidationLayers; }
 
 	private:
 		// Handle of the VkInstance
@@ -47,6 +42,15 @@ namespace D3D
 
 		// Handle for the debug messenger
 		VkDebugUtilsMessengerEXT m_DebugMessenger = VK_NULL_HANDLE;
+
+		// Should validation layers be enabled
+		bool m_EnableValidationLayers{ true };
+
+		// The requested validation layers
+		const std::vector<const char*> m_ValidationLayers =
+		{
+			"VK_LAYER_KHRONOS_validation"
+		};
 
 		// Set the values for the application info
 		// Parameters:

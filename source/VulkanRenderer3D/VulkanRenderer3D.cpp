@@ -27,10 +27,6 @@ extern D3D::Window g_pWindow;
 
 D3D::VulkanRenderer3D::VulkanRenderer3D()
 {
-#ifdef NDEBUG
-	m_EnableValidationLayers = false;
-#endif
-
 	InitVulkan();
 
 	InitImGui();
@@ -66,8 +62,6 @@ void D3D::VulkanRenderer3D::CleanupVulkan()
 	vkDestroyDevice(m_Device, nullptr);
 
 	vkDestroySurfaceKHR(m_pInstanceWrapper->GetInstance(), m_Surface, nullptr);
-
-	m_pInstanceWrapper->cleanup(m_EnableValidationLayers);
 }
 
 void D3D::VulkanRenderer3D::CleanupImGui()
@@ -77,7 +71,7 @@ void D3D::VulkanRenderer3D::CleanupImGui()
 
 void D3D::VulkanRenderer3D::InitVulkan()
 {
-	m_pInstanceWrapper = std::make_unique<InstanceWrapper>(m_EnableValidationLayers, m_ValidationLayers);
+	m_pInstanceWrapper = std::make_unique<InstanceWrapper>();
 
 	CreateSurface();
 	PickPhysicalDevice();
@@ -457,10 +451,10 @@ void D3D::VulkanRenderer3D::CreateLogicalDevice()
 	createInfo.enabledExtensionCount = static_cast<uint32_t>(m_DeviceExtensions.size());
 	createInfo.ppEnabledExtensionNames = m_DeviceExtensions.data();
 
-	if (m_EnableValidationLayers)
+	if (m_pInstanceWrapper->ValidationLayersEnabled())
 	{
-		createInfo.enabledLayerCount = static_cast<uint32_t>(m_ValidationLayers.size());
-		createInfo.ppEnabledLayerNames = m_ValidationLayers.data();
+		createInfo.enabledLayerCount = static_cast<uint32_t>(m_pInstanceWrapper->GetValidationLayers().size());
+		createInfo.ppEnabledLayerNames = m_pInstanceWrapper->GetValidationLayers().data();
 	}
 	else
 	{
