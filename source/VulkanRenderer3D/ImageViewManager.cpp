@@ -3,6 +3,7 @@
 // File includes
 #include "ImageViewManager.h"
 #include "ImageManager.h"
+#include "VulkanUtils.h"
 
 
 D3D::ImageViewManager::ImageViewManager(VkSampleCountFlagBits msaaSamples)
@@ -33,8 +34,11 @@ void D3D::ImageViewManager::CreateColorResources(VkDevice device, VkPhysicalDevi
 	m_ColorImage.imageView = pImageManager->CreateImageView(device, m_ColorImage.image, format, VK_IMAGE_ASPECT_COLOR_BIT, 1);
 }
 
-void D3D::ImageViewManager::CreateDepthResources(VkDevice device, VkPhysicalDevice physicalDevice, VkFormat depthFormat, VkExtent2D swapchainExtent, D3D::ImageManager* pImageManager, VkCommandBuffer commandBuffer)
+void D3D::ImageViewManager::CreateDepthResources(VkDevice device, VkPhysicalDevice physicalDevice, VkExtent2D swapchainExtent, D3D::ImageManager* pImageManager, VkCommandBuffer commandBuffer)
 {
+	// Get the depth formatµ
+	auto depthFormat = VulkanUtils::FindDepthFormat(physicalDevice);
+
 	// Create the image for the depth
 	// Set tiling to optimal
 	// Set usage to depth stencil attachment bit

@@ -96,7 +96,7 @@ void D3D::VulkanRenderer3D::InitVulkan()
 	m_pRenderpassWrapper = std::make_unique<RenderpassWrapper>(m_Device, m_pSwapchainWrapper->GetFormat(), VulkanUtils::FindDepthFormat(m_PhysicalDevice), msaaSamples);
 
 	auto commandBuffer{ m_pCommandPoolManager->BeginSingleTimeCommands(m_Device) };
-	m_pSwapchainWrapper->SetupImageViews(m_Device, m_PhysicalDevice, m_pImageManager.get(), VulkanUtils::FindDepthFormat(m_PhysicalDevice),
+	m_pSwapchainWrapper->SetupImageViews(m_Device, m_PhysicalDevice, m_pImageManager.get(),
 		commandBuffer, m_pRenderpassWrapper->GetRenderpass());
 	m_pCommandPoolManager->EndSingleTimeCommands(m_Device, commandBuffer, m_QueueObject.graphicsQueue);
 
@@ -492,8 +492,8 @@ void D3D::VulkanRenderer3D::RecreateSwapChain()
 	
 	auto commandBuffer{ m_pCommandPoolManager->BeginSingleTimeCommands(m_Device) };
 
-	m_pSwapchainWrapper->RecreateSwapChain(m_Device, m_PhysicalDevice, m_Surface, m_pImageManager.get(), commandBuffer,
-		VulkanUtils::FindDepthFormat(m_PhysicalDevice), m_pRenderpassWrapper->GetRenderpass());
+	m_pSwapchainWrapper->RecreateSwapChain(m_Device, m_PhysicalDevice, m_Surface, m_pImageManager.get(),
+		commandBuffer, m_pRenderpassWrapper->GetRenderpass());
 
 	m_pCommandPoolManager->EndSingleTimeCommands(m_Device, commandBuffer, m_QueueObject.graphicsQueue);
 }

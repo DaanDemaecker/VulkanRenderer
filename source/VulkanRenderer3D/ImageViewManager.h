@@ -48,10 +48,9 @@ namespace D3D
 		// Parameters:
 		//     device: handle of the VkDevice
 		//     physicalDevice: handle of the VkPhysicalDevice
-		//     depthFormat: the requested format for the depth image
 		//     swapchainExtent: the extent of the swapchain, for use of the image size
 		//     pImageManager: pointer to the image manager
-		void CreateDepthResources(VkDevice device, VkPhysicalDevice physicalDevice, VkFormat depthFormat,
+		void CreateDepthResources(VkDevice device, VkPhysicalDevice physicalDevice,
 			VkExtent2D swapchainExtent, D3D::ImageManager* pImageManager, VkCommandBuffer commandBuffer);
 
 		// Get the imageView for the color image
