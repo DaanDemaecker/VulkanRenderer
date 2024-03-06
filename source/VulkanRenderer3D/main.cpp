@@ -7,8 +7,7 @@ void load()
 }
 
 int main()
-{
-	const uint32_t windowWidth = 800;
+{const uint32_t windowWidth = 800;
 	const uint32_t windowHeight = 600;
 
 	D3D::D3DEngine engine(static_cast<int>(windowWidth), static_cast<int>(windowHeight));
@@ -16,3 +15,4 @@ int main()
 
 	return EXIT_SUCCESS;
 } 
+	
