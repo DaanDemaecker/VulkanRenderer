@@ -19,22 +19,30 @@ namespace D3D
 	struct WindowStruct
 	{
 		GLFWwindow* pWindow{};
-		int Width;
-		int Height;
+		int Width{};
+		int Height{};
 		bool FrameBufferResized = false;
 	};
 
 	class Window : public Singleton<Window>
 	{
 	public:
+		// Default constructor
 		Window() = default;
 
+		// Create the glfw window
+		// Parameters:
+		//     width: the window width
+		//     height: the window height
 		void CreateWindow(int width, int height);
 
+		// Default
 		~Window();
 
+		// Get a reference to the windowstruct object
 		WindowStruct& GetWindowStruct() { return m_Window; }
 
+		// Set the FrameBufferResized variable
 		void SetFrameBufferResized(bool value);
 
 	private:
@@ -43,9 +51,14 @@ namespace D3D
 		void InitWindow();
 
 		// Function needed for resizing of glfw window
+		// Parameters:
+		//     pWindow: pointer to the window
+		//     width: the new width of the window
+		//     height: the new height of the window
 		static void FramebufferResizeCallback(GLFWwindow* pWindow, int width, int height);
 
-		WindowStruct m_Window;
+		// The window struct object
+		WindowStruct m_Window{};
 
 	};
 }

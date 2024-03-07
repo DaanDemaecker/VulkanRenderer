@@ -13,10 +13,9 @@
 #include <chrono>
 #include <thread>
 
-// Global variable that holds the window
-
 D3D::D3DEngine::D3DEngine(int width, int height)
 {
+	// Create the window with the given width and height
 	D3D::Window::GetInstance().CreateWindow(width, height);
 }
 

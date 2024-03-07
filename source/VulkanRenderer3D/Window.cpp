@@ -1,11 +1,16 @@
-#include "Window.h"
-#include <functional>
+// Window.cpp
 
-//static D3D::WindowStruct m_Window{};
+// File includes
+#include "Window.h"
+
+// Static library includes
+#include <functional>
 
 void D3D::Window::CreateWindow(int width, int height)
 {
+	// Set the width of the window
 	m_Window.Width = width;
+	// Set the height of the window
 	m_Window.Height = height;
 
 	// Initialize the window
@@ -23,6 +28,7 @@ D3D::Window::~Window()
 
 void D3D::Window::SetFrameBufferResized(bool value)
 {
+	// Set the value of frameBufferResized to the requested value
 	m_Window.FrameBufferResized = value;
 }
 
@@ -42,8 +48,10 @@ void D3D::Window::InitWindow()
 
 void D3D::Window::FramebufferResizeCallback(GLFWwindow* pWindow, int width, int height)
 {
-	// Update values of global window variable after resizing
+	// Get a reference to the window struct
 	auto& window = GetInstance().GetWindowStruct();
+
+	// Update values of global window variable after resizing
 	window.FrameBufferResized = true;
 	window.pWindow = pWindow;
 	window.Width = width;
