@@ -5,13 +5,11 @@
 #include "D3DEngine.h"
 #include "ImageManager.h"
 #include "VulkanUtils.h"
+#include "Window.h"
 
 // Standard library includes
 #include <stdexcept>
 #include <algorithm>
-
-// Declare global variable
-extern D3D::Window g_pWindow;
 
 D3D::SwapchainWrapper::SwapchainWrapper(VkDevice device, VkPhysicalDevice physicalDevice, VkSurfaceKHR surface,
 	D3D::ImageManager* pImageManager, VkSampleCountFlagBits msaaSamples)
@@ -207,7 +205,7 @@ VkExtent2D D3D::SwapchainWrapper::ChooseSwapExtent(const VkSurfaceCapabilitiesKH
 		// Create width and height ints
 		int width, height;
 		// Get the width and height of the window
-		glfwGetFramebufferSize(g_pWindow.pWindow, &width, &height);
+		glfwGetFramebufferSize(Window::GetInstance().GetWindowStruct().pWindow, &width, &height);
 		// Create extent that is the size of the window
 		VkExtent2D actualExtent =
 		{

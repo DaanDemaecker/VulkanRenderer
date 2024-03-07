@@ -3,13 +3,11 @@
 // File includes
 #include "ImGuiWrapper.h"
 #include "D3DEngine.h"
+#include "Window.h"
 
 // Standard library includes
 #include <array>
 #include <stdexcept>
-
-// Get exter global variable for window
-extern D3D::Window g_pWindow;
 
 D3D::ImGuiWrapper::ImGuiWrapper(ImGui_ImplVulkan_InitInfo init_info, VkRenderPass renderPass, VkCommandBuffer commandBuffer, VkDevice device, uint32_t maxFrames)
 {	
@@ -23,7 +21,7 @@ D3D::ImGuiWrapper::ImGuiWrapper(ImGui_ImplVulkan_InitInfo init_info, VkRenderPas
 	ImGui::CreateContext();
 
 	// Initialize ImGui Vulkan backend
-	ImGui_ImplGlfw_InitForVulkan(g_pWindow.pWindow, true);
+	ImGui_ImplGlfw_InitForVulkan(Window::GetInstance().GetWindowStruct().pWindow, true);
 
 	// Set the descriptorpool of the init_info
 	init_info.DescriptorPool = m_DescriptorPool;

@@ -7,31 +7,22 @@
 #include "Model.h"
 #include "Material.h"
 #include "TexturedMaterial.h"
+#include "Window.h"
 
 // Standard library includes
 #include <chrono>
 #include <thread>
 
 // Global variable that holds the window
-D3D::Window g_pWindow{};
 
 D3D::D3DEngine::D3DEngine(int width, int height)
 {
-	// Set the window width and height
-	g_pWindow.Width = width;
-	g_pWindow.Height = height;
-
-	// Initialize the window
-	InitWindow();
+	D3D::Window::GetInstance().CreateWindow(width, height);
 }
 
 D3D::D3DEngine::~D3DEngine()
 {
-	// Destroy the window
-	glfwDestroyWindow(g_pWindow.pWindow);
-
-	// Terminate glfw
-	glfwTerminate();
+	
 }
 
 // This function will run the gameloop for the duration of the app
@@ -41,6 +32,7 @@ void D3D::D3DEngine::Run(const std::function<void()>& load)
 	load();
 
 	auto& renderer{ VulkanRenderer3D::GetInstance() };
+	auto& window{ Window::GetInstance() };
 
 	renderer.AddGraphicsPipeline("Diffuse", "../Resources/Shaders/Diffuse.Vert.spv", "../Resources/Shaders/Diffuse.Frag.spv",1, 1, 1);
 	renderer.AddGraphicsPipeline("NormalMap", "../Resources/Shaders/NormalMap.Vert.spv", "../Resources/Shaders/NormalMap.Frag.spv", 1, 1, 1);
@@ -187,7 +179,7 @@ void D3D::D3DEngine::Run(const std::function<void()>& load)
 		renderer.Render(pModels);
 
 		// Check if aplication should quit
-		shouldQuit = glfwWindowShouldClose(g_pWindow.pWindow);
+		shouldQuit = glfwWindowShouldClose(window.GetWindowStruct().pWindow);
 
 		// If cap framerate, sleep the appropriate amount of time
 		if (capFrameRate)
@@ -209,27 +201,4 @@ void D3D::D3DEngine::Run(const std::function<void()>& load)
 			//std::this_thread::sleep_until(frameEnd);
 		}
 	}
-}
-
-void D3D::D3DEngine::InitWindow()
-{
-	//Initialize glfw
-	glfwInit();
-
-	//Tell GLFW not to create an OpenGL context
-	glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
-
-	//Initialize the window
-	g_pWindow.pWindow = glfwCreateWindow(g_pWindow.Width, g_pWindow.Height, "Vulkan", nullptr, nullptr);
-	glfwSetWindowUserPointer(g_pWindow.pWindow, this);
-	glfwSetFramebufferSizeCallback(g_pWindow.pWindow, FramebufferResizeCallback);
-}
-
-void D3D::D3DEngine::FramebufferResizeCallback(GLFWwindow* pWindow, int width, int height)
-{
-	// Update values of global window variable after resizing
-	g_pWindow.FrameBufferResized = true;
-	g_pWindow.pWindow = pWindow;
-	g_pWindow.Width = width;
-	g_pWindow.Height = height;
 }

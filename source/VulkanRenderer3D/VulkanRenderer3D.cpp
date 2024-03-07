@@ -18,14 +18,12 @@
 #include "SwapchainWrapper.h"
 #include "SyncObjectManager.h"
 #include "DirectionalLightObject.h"
+#include "Window.h"
 
 // Standard library includes
 #include <set>
 #include <algorithm>
 #include <iostream>
-
-
-extern D3D::Window g_pWindow;
 
 D3D::VulkanRenderer3D::VulkanRenderer3D()
 {
@@ -282,12 +280,12 @@ void D3D::VulkanRenderer3D::Render(std::vector<std::unique_ptr<Model>>& pModels)
 	result = vkQueuePresentKHR(m_QueueObject.presentQueue, &presentInfo);
 
 	// Check if window was resized and is out of date
-	if (result == VK_ERROR_OUT_OF_DATE_KHR || result == VK_SUBOPTIMAL_KHR || g_pWindow.FrameBufferResized)
+	if (result == VK_ERROR_OUT_OF_DATE_KHR || result == VK_SUBOPTIMAL_KHR || Window::GetInstance().GetWindowStruct().FrameBufferResized)
 	{
 		// If necesarry, resize swapchain
 		RecreateSwapChain();
 		// Reset FrameBufferResized flag
-		g_pWindow.FrameBufferResized = false;
+		Window::GetInstance().SetFrameBufferResized(false);
 	}
 	// Check if presentation of swapchain was successful
 	else if (result != VK_SUCCESS)
@@ -470,7 +468,7 @@ std::vector<VkBuffer>& D3D::VulkanRenderer3D::GetLightBuffers()
 void D3D::VulkanRenderer3D::CreateSurface()
 {
 	// Create the window surface
-	if (glfwCreateWindowSurface(m_pInstanceWrapper->GetInstance(), g_pWindow.pWindow, nullptr, &m_Surface) != VK_SUCCESS)
+	if (glfwCreateWindowSurface(m_pInstanceWrapper->GetInstance(), Window::GetInstance().GetWindowStruct().pWindow, nullptr, &m_Surface) != VK_SUCCESS)
 	{
 		// If unsuccessful, throw runtime error
 		throw std::runtime_error("failed to create window surface!");
@@ -656,13 +654,16 @@ void D3D::VulkanRenderer3D::CreateLogicalDevice()
 
 void D3D::VulkanRenderer3D::RecreateSwapChain()
 {
+	// Get a reference to the window struct
+	auto& windowStruct{ Window::GetInstance().GetWindowStruct() };
+
 	//Get the width and the height of the window
-	glfwGetFramebufferSize(g_pWindow.pWindow, &g_pWindow.Width, &g_pWindow.Height);
+	glfwGetFramebufferSize(windowStruct.pWindow, &windowStruct.Width, &windowStruct.Height);
 
 	// While width and height are 0, wait before continuing
-	while (g_pWindow.Width == 0 || g_pWindow.Height == 0)
+	while (windowStruct.Width == 0 || windowStruct.Height == 0)
 	{
-		glfwGetFramebufferSize(g_pWindow.pWindow, &g_pWindow.Width, &g_pWindow.Height);
+		glfwGetFramebufferSize(windowStruct.pWindow, &windowStruct.Width, &windowStruct.Height);
 		glfwWaitEvents();
 	}
 
