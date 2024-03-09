@@ -8,6 +8,7 @@
 #include "Singleton.h"
 #include "Structs.h"
 #include "PipelineManager.h"
+#include "Camera.h"
 
 // Standard library includes
 #include <memory>
@@ -127,7 +128,7 @@ namespace D3D
         //     size: the size of the buffers
         void CopyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size);
 
-        // Update uniform buffer with camera transform
+        // Update uniform buffer with camera and projection transform
         // Parameters:
         //     buffer: reference to the uniform buffer object that needs updating
         void UpdateUniformBuffer(UniformBufferObject& buffer);
@@ -145,6 +146,9 @@ namespace D3D
         //     textureName: textpath to the image
         //     mipLevels: the amount of mipmaps to be created
         void CreateTexture(Texture& texture, const std::string& textureName, uint32_t& mipLevels);
+
+        // Pointer for the camera
+        Camera* GetCamera() { return m_pCamera.get(); }
 
     private:
         // The maximum amount of frames in flight
@@ -197,6 +201,9 @@ namespace D3D
 
         // Pointer to the global light object
         std::unique_ptr<DirectionalLightObject> m_pGlobalLight{};
+
+        // Pointer to the camera
+        std::unique_ptr<Camera> m_pCamera{};
 
         // Name of the default pipeline
         const std::string m_DefaultPipelineName{ "Default" };

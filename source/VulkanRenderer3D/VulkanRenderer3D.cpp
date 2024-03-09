@@ -27,6 +27,12 @@
 
 D3D::VulkanRenderer3D::VulkanRenderer3D()
 {
+	// Create camera
+	m_pCamera = std::make_unique<Camera>();
+
+	// Set initial rotation
+	m_pCamera->SetRotation(glm::vec3(0.0f, glm::radians(180.f), 0.0f));
+
 	// Initialize vulkan objects
 	InitVulkan();
 
@@ -719,24 +725,8 @@ void D3D::VulkanRenderer3D::CopyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, V
 
 void D3D::VulkanRenderer3D::UpdateUniformBuffer(UniformBufferObject& buffer)
 {
-	// Create camera position vector
-	glm::vec3 cameraPosition(0.0f, 0.0f, 0.0f);
-	// Create camera scale vector
-	glm::vec3 cameraScale(1.0f, 1.0f, 1.0f);
-	// Create camera rotation vector
-	glm::vec3 cameraRotation(0.0f, 0.0f, 0.0f);
-
-	// Set view to identity matrix
-	buffer.view = glm::mat4{ 1.0f };
-
-	// Apply translation
-	buffer.view = glm::translate(buffer.view, cameraPosition);
-
-	// Apply scaling
-	buffer.view = glm::scale(buffer.view, cameraScale);
-
-	// Apply rotation
-	buffer.view = glm::rotate(buffer.view, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+	// Update the buffer with the camera transformation
+	m_pCamera->UpdateUniformBuffer(buffer);
 
 	// Get the swapchain extent
 	auto extent{ m_pSwapchainWrapper->GetExtent() };
