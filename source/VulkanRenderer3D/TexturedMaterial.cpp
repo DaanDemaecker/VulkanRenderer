@@ -8,7 +8,7 @@
 #include "DescriptorPoolWrapper.h"
 #include "STBIncludes.h"
 
-D3D::TexturedMaterial::TexturedMaterial(std::initializer_list<const std::string> filePaths, const std::string& pipelineName)
+D3D::TexturedMaterial::TexturedMaterial(std::initializer_list<const std::string>&& filePaths, const std::string& pipelineName)
 	:Material(pipelineName)
 {
 	// Set texture amount to the size of the initializer list

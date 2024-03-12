@@ -20,6 +20,8 @@
 #include "DirectionalLightObject.h"
 #include "Window.h"
 
+#include "SkyBox.h"
+
 // Standard library includes
 #include <set>
 #include <algorithm>
@@ -50,6 +52,28 @@ D3D::VulkanRenderer3D::~VulkanRenderer3D()
 
 	// Clean up vulkan objects
 	CleanupVulkan();
+}
+
+void D3D::VulkanRenderer3D::SetupSkybox()
+{
+	const std::string vertShaderName{ "../Resources/Shaders/Skybox.Vert.spv" };
+	const std::string fragShaderName{ "../Resources/Shaders/Skybox.Frag.spv" };
+
+	AddGraphicsPipeline("Skybox", vertShaderName, fragShaderName, 1, 0, 1, true);
+
+	m_pSkyBox = std::make_unique<SkyBox>(
+		std::initializer_list<const std::string>{"../resources/images/CubeMap/Sky_Right.png",
+												"../resources/images/CubeMap/Sky_Left.png",
+												"../resources/images/CubeMap/Sky_Up.png", 
+												"../resources/images/CubeMap/Sky_Down.png", 
+												"../resources/images/CubeMap/Sky_Front.png", 
+												"../resources/images/CubeMap/Sky_Back.png"});
+
+}
+
+void D3D::VulkanRenderer3D::CleanupSkybox()
+{
+	m_pSkyBox = nullptr;
 }
 
 void D3D::VulkanRenderer3D::CleanupVulkan()
@@ -185,12 +209,12 @@ void D3D::VulkanRenderer3D::InitImGui()
 	EndSingleTimeCommands(commandBuffer);
 }
 
-void D3D::VulkanRenderer3D::AddGraphicsPipeline(const std::string& pipelineName, const std::string& vertShaderName, const std::string& fragShaderName, int vertexUbos, int fragmentUbos, int textureAmount)
+void D3D::VulkanRenderer3D::AddGraphicsPipeline(const std::string& pipelineName, const std::string& vertShaderName, const std::string& fragShaderName, int vertexUbos, int fragmentUbos, int textureAmount, bool isSkybox)
 {
 	// Add a graphics pipeline trough the pipeline manager
 	m_pPipelineManager->AddGraphicsPipeline(m_Device, m_MaxFramesInFlight, m_pRenderpassWrapper->GetRenderpass(),
 		m_pSwapchainWrapper->GetMsaaSamples(), pipelineName, vertShaderName, fragShaderName,
-		vertexUbos, fragmentUbos, textureAmount);
+		vertexUbos, fragmentUbos, textureAmount, isSkybox);
 }
 
 void D3D::VulkanRenderer3D::Render(std::vector<std::unique_ptr<Model>>& pModels)
@@ -383,6 +407,8 @@ void D3D::VulkanRenderer3D::RecordCommandBuffer(VkCommandBuffer& commandBuffer, 
 
 	// Update the buffer of the global light
 	m_pGlobalLight->UpdateBuffer(m_CurrentFrame);
+
+	m_pSkyBox->Render();
 
 	// Loop trough the amount of models
 	for (size_t i = 0; i < pModels.size(); ++i)
@@ -748,6 +774,11 @@ void D3D::VulkanRenderer3D::CreateTexture(Texture& texture, const std::string& t
 	m_pImageManager->CreateTextureImage(m_Device, m_PhysicalDevice, texture, textureName, mipLevels, m_pCommandPoolManager.get(), m_QueueObject.graphicsQueue);
 	// Create the image view
 	texture.imageView = m_pImageManager->CreateImageView(m_Device, texture.image, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_ASPECT_COLOR_BIT, mipLevels);
+}
+
+void D3D::VulkanRenderer3D::CreateCubeTexture(Texture& cubeTexture, const std::initializer_list<const std::string>& textureNames, uint32_t& miplevels)
+{
+	m_pImageManager->CreateCubeTexture(m_Device, m_PhysicalDevice, cubeTexture, textureNames, miplevels, m_pCommandPoolManager.get(), m_QueueObject.graphicsQueue);
 }
 
 VkCommandBuffer D3D::VulkanRenderer3D::BeginSingleTimeCommands()

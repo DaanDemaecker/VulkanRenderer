@@ -61,6 +61,167 @@ VkImageView D3D::ImageManager::CreateImageView(VkDevice device, VkImage image, V
 	return imageView;
 }
 
+void D3D::ImageManager::CreateCubeTexture(VkDevice device, VkPhysicalDevice physicalDevice, Texture& cubeTexture, const std::initializer_list<const std::string>& textureNames, uint32_t& miplevels, CommandpoolManager* pCommandPoolManager, VkQueue graphicsQueue)
+{
+	uint32_t imageCount{ static_cast<uint32_t>(textureNames.size()) };
+
+	if (imageCount < 6)
+	{
+		throw std::runtime_error("6 or more images are required for a cube map");
+	}
+
+	int texWidth{};
+	int texHeight{};
+	int texChannels{};
+
+
+	stbi_uc* tempPixels = stbi_load(textureNames.begin()->c_str(), &texWidth, &texHeight, &texChannels, STBI_rgb_alpha);
+
+	if (!tempPixels)
+	{
+		throw std::runtime_error("Failed to load texture image!");
+	}
+
+	miplevels = 1;
+	VkDeviceSize faceSize = texWidth * texHeight * 4;
+	VkDeviceSize cubeSize = faceSize * imageCount;
+
+	// Create staging buffer object
+	VkBuffer stagingBuffer{};
+	// Create staging buffer memory object
+	VkDeviceMemory stagingBufferMemory{};
+
+	// Create the staging buffer
+	VulkanUtils::CreateBuffer(device, physicalDevice, cubeSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
+		stagingBuffer, stagingBufferMemory);
+
+	// Create void pointer to hold data
+	void* data;
+
+	// Map the memory of the staging buffer memory to the data pointer
+	vkMapMemory(device, stagingBufferMemory, 0, cubeSize, 0, &data);
+	// Copy the data from the pixels to the data pointer
+	memcpy(data, tempPixels, static_cast<size_t>(faceSize));
+
+	// Free the pixels
+	stbi_image_free(tempPixels);
+
+	for (uint32_t i = 1; i < imageCount; i++)
+	{
+		tempPixels = stbi_load((textureNames.begin() + i)->c_str(), &texWidth, &texHeight, &texChannels, STBI_rgb_alpha);
+
+		if (!tempPixels)
+		{
+			throw std::runtime_error("Failed to load texture image!");
+		}
+
+		// Copy the data from the pixels to the data pointer
+		char* mem_offset{ reinterpret_cast<char*>(data) };
+		mem_offset += i * faceSize;
+		memcpy(mem_offset, tempPixels, faceSize);
+
+
+		// Free the pixels
+		stbi_image_free(tempPixels);
+	}
+
+	// Create image
+	VkImageCreateInfo imageCreateInfo = {};
+	imageCreateInfo.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
+	imageCreateInfo.imageType = VK_IMAGE_TYPE_2D;
+	imageCreateInfo.format = VK_FORMAT_R8G8B8A8_SRGB;
+	imageCreateInfo.extent = { static_cast<uint32_t>(texWidth), static_cast<uint32_t>(texHeight), 1 };
+	imageCreateInfo.mipLevels = miplevels;
+	imageCreateInfo.arrayLayers = imageCount;
+	imageCreateInfo.samples = VK_SAMPLE_COUNT_1_BIT;
+	imageCreateInfo.tiling = VK_IMAGE_TILING_OPTIMAL;
+	imageCreateInfo.usage = VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT;
+	imageCreateInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
+	imageCreateInfo.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+	imageCreateInfo.flags = VK_IMAGE_CREATE_CUBE_COMPATIBLE_BIT;
+
+	if (vkCreateImage(device, &imageCreateInfo, nullptr, &cubeTexture.image) != VK_SUCCESS)
+	{
+		throw std::runtime_error("Failed to create cube map image!");
+	}
+
+	// Allocate memory for the cube map image
+	VkMemoryRequirements memoryRequirements;
+	vkGetImageMemoryRequirements(device, cubeTexture.image, &memoryRequirements);
+
+	VkMemoryAllocateInfo allocateInfo = {};
+	allocateInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
+	allocateInfo.allocationSize = memoryRequirements.size;
+	allocateInfo.memoryTypeIndex = VulkanUtils::FindMemoryType(physicalDevice, memoryRequirements.memoryTypeBits, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
+
+	if (vkAllocateMemory(device, &allocateInfo, nullptr, &cubeTexture.imageMemory) != VK_SUCCESS)
+	{
+		throw std::runtime_error("Failed to allocate memory for cube map image!");
+	}
+
+	vkBindImageMemory(device, cubeTexture.image, cubeTexture.imageMemory, 0);
+
+
+	// Create a command buffer object
+	VkCommandBuffer commandBuffer{};
+
+	// Get single time command buffer
+	commandBuffer = pCommandPoolManager->BeginSingleTimeCommands(device);
+	// Transition the image layout from undifined to transfer destination optimal
+	TransitionImageLayout(cubeTexture.image, commandBuffer, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, miplevels, imageCount);
+	// End single time command buffer
+	pCommandPoolManager->EndSingleTimeCommands(device, commandBuffer, graphicsQueue);
+
+	// Get new single time command buffer
+	commandBuffer = pCommandPoolManager->BeginSingleTimeCommands(device);
+	// Coppy staging buffer to texture image
+	CopyBufferToImage(commandBuffer, stagingBuffer, cubeTexture.image,
+		static_cast<uint32_t>(texWidth), static_cast<uint32_t>(texHeight), imageCount);
+	// End single time command buffer
+	pCommandPoolManager->EndSingleTimeCommands(device, commandBuffer, graphicsQueue);
+
+	// Get single time command buffer
+	commandBuffer = pCommandPoolManager->BeginSingleTimeCommands(device);
+	// Transition the image layout from undifined to transfer destination optimal
+	TransitionImageLayout(cubeTexture.image, commandBuffer, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, miplevels, imageCount);
+	// End single time command buffer
+	pCommandPoolManager->EndSingleTimeCommands(device, commandBuffer, graphicsQueue);
+
+	// Destroy the staging buffer
+	vkDestroyBuffer(device, stagingBuffer, nullptr);
+	// Free the staging buffer memory
+	vkFreeMemory(device, stagingBufferMemory, nullptr);
+
+
+	// Create image view create info
+	VkImageViewCreateInfo viewInfo{};
+	// Set type to image view create info
+	viewInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
+	// Give handle of image
+	viewInfo.image = cubeTexture.image;
+	// Set view type to 2D
+	viewInfo.viewType = VK_IMAGE_VIEW_TYPE_CUBE;
+	// Give handle of requested format
+	viewInfo.format = VK_FORMAT_R8G8B8A8_SRGB;
+	// Give aspectflags
+	viewInfo.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+	// Set base mip level to 0
+	viewInfo.subresourceRange.baseMipLevel = 0;
+	// Set levelcount to the amount of miplevels
+	viewInfo.subresourceRange.levelCount = miplevels;
+	// Set base array layer to 0
+	viewInfo.subresourceRange.baseArrayLayer = 0;
+	// Set layercount to 1
+	viewInfo.subresourceRange.layerCount = imageCount;
+
+	// Create image view
+	if (vkCreateImageView(device, &viewInfo, nullptr, &cubeTexture.imageView) != VK_SUCCESS)
+	{
+		// If unsuccessful, throw runtime error
+		throw std::runtime_error("failed to create texture image view!");
+	}
+}
+
 void D3D::ImageManager::CreateTextureSampler(VkSampler& sampler, uint32_t miplevels, VkDevice device, VkPhysicalDevice physicalDevice)
 {
 	// Create sampler create info
@@ -71,7 +232,6 @@ void D3D::ImageManager::CreateTextureSampler(VkSampler& sampler, uint32_t miplev
 	samplerInfo.magFilter = VK_FILTER_LINEAR;
 	// Set minfilter to linear
 	samplerInfo.minFilter = VK_FILTER_LINEAR;
-
 	// Set adressmode for U coordinates to repeat
 	samplerInfo.addressModeU = VK_SAMPLER_ADDRESS_MODE_REPEAT;
 	// Set adressmode for V coordinates to repeat
@@ -121,7 +281,7 @@ void D3D::ImageManager::Cleanup(VkDevice device)
 	m_DefaultTexture.Cleanup(device);
 }
 
-void D3D::ImageManager::CopyBufferToImage(VkCommandBuffer commandBuffer, VkBuffer buffer, VkImage image, uint32_t width, uint32_t height)
+void D3D::ImageManager::CopyBufferToImage(VkCommandBuffer commandBuffer, VkBuffer buffer, VkImage image, uint32_t width, uint32_t height, uint32_t layerCount)
 {
 	// Create buffer image copy
 	VkBufferImageCopy region{};
@@ -138,8 +298,8 @@ void D3D::ImageManager::CopyBufferToImage(VkCommandBuffer commandBuffer, VkBuffe
 	region.imageSubresource.mipLevel = 0;
 	// Set base array layer of subresource to 0
 	region.imageSubresource.baseArrayLayer = 0;
-	// Set layercount of subresource to 1
-	region.imageSubresource.layerCount = 1;
+	// Set layercount of subresource to layerCount
+	region.imageSubresource.layerCount = layerCount;
 	
 	// Set image offset to 0, 0, 0
 	region.imageOffset = { 0, 0, 0 };
@@ -368,7 +528,6 @@ void D3D::ImageManager::CreateTextureImage(VkDevice device, VkPhysicalDevice phy
 	GenerateMipmaps(physicalDevice, commandBuffer, texture.image, VK_FORMAT_R8G8B8A8_SRGB, texWidth, texHeight, miplevels);
 	// En single time command buffer
 	pCommandPoolManager->EndSingleTimeCommands(device, commandBuffer, graphicsQueue);
-
 }
 
 void D3D::ImageManager::CreateImage(VkDevice device, VkPhysicalDevice physicalDevice, uint32_t width, uint32_t height, uint32_t mipLevels, VkSampleCountFlagBits numSamples, VkFormat format, VkImageTiling tiling, VkImageUsageFlags usage, VkMemoryPropertyFlags properties, Texture& texture)
@@ -437,7 +596,7 @@ void D3D::ImageManager::CreateImage(VkDevice device, VkPhysicalDevice physicalDe
 }
 
 
-void D3D::ImageManager::TransitionImageLayout(VkImage image, VkCommandBuffer commandBuffer, VkFormat format, VkImageLayout oldLayout, VkImageLayout newLayout, uint32_t mipLevels)
+void D3D::ImageManager::TransitionImageLayout(VkImage image, VkCommandBuffer commandBuffer, VkFormat format, VkImageLayout oldLayout, VkImageLayout newLayout, uint32_t mipLevels, uint32_t layerCount)
 {
 	// Create memory barrier
 	VkImageMemoryBarrier barrier{};
@@ -460,7 +619,7 @@ void D3D::ImageManager::TransitionImageLayout(VkImage image, VkCommandBuffer com
 	// Set subresource base array layer to 0
 	barrier.subresourceRange.baseArrayLayer = 0;
 	// Set subresource layercount to 1
-	barrier.subresourceRange.layerCount = 1;
+	barrier.subresourceRange.layerCount = layerCount;
 
 	// Create source stage flags object
 	VkPipelineStageFlags sourceStage{};
@@ -524,6 +683,16 @@ void D3D::ImageManager::TransitionImageLayout(VkImage image, VkCommandBuffer com
 		sourceStage = VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT;
 		// Set destination stage to early fragment test
 		destinationStage = VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT;
+	}
+	else if (oldLayout == VK_IMAGE_LAYOUT_UNDEFINED && newLayout == VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL)
+	{
+		barrier.srcAccessMask = 0;
+
+		barrier.dstAccessMask = VK_ACCESS_SHADER_READ_BIT;
+
+		sourceStage = VK_PIPELINE_STAGE_TRANSFER_BIT;
+
+		destinationStage = VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT;
 	}
 	else
 	{

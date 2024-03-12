@@ -40,6 +40,9 @@ namespace D3D
     // Class forward declaration for DirectionalLightObject
     class DirectionalLightObject;
 
+    // Class forward declaration for SkyBox
+    class SkyBox;
+
     // Inherit from singleton
     class VulkanRenderer3D final : public Singleton<VulkanRenderer3D>
     {
@@ -76,8 +79,9 @@ namespace D3D
         //     vertexUbos: the amount of uniform buffer objects in the vertex shader
         //     fragmentUbos: the amount of uniform buffer objects in the fragment shader
         //     textureAmount: the amount of textures in the fragment shader
+        //     isSkybox: boolean that indicates if this pipeline is for the skybox
         void AddGraphicsPipeline(const std::string& pipelineName, const std::string& vertShaderName, const std::string& fragShaderName,
-            int vertexUbos, int fragmentUbos, int textureAmount);
+            int vertexUbos, int fragmentUbos, int textureAmount, bool isSkybox = false);
 
         // Get the maximum amount of frames in flight
         size_t GetMaxFrames() const { return m_MaxFramesInFlight; }
@@ -147,10 +151,20 @@ namespace D3D
         //     mipLevels: the amount of mipmaps to be created
         void CreateTexture(Texture& texture, const std::string& textureName, uint32_t& mipLevels);
 
+        void CreateCubeTexture(Texture& cubeTexture, const std::initializer_list<std::string const>& textureNames, uint32_t& miplevels);
+
         // Pointer for the camera
         Camera* GetCamera() { return m_pCamera.get(); }
 
+        // Set up the skybox
+        void SetupSkybox();
+
+        // Clean up skybox
+        void CleanupSkybox();
+
     private:
+        std::unique_ptr<SkyBox> m_pSkyBox{};
+
         // The maximum amount of frames in flight
         const uint32_t m_MaxFramesInFlight{ 3 };
 

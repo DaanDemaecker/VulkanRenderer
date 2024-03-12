@@ -84,10 +84,10 @@ void D3D::Model::Render()
 	auto frame{ renderer.GetCurrentFrame() };
 
 	// Check if UBOs have changed, if so, update them
-	if (m_UboChanged[frame])
-	{
+	//if (m_UboChanged[frame])
+	//{
 		UpdateUniformBuffer(frame);
-	}
+	//}
 
 	// Render model
 	renderer.Render(this, renderer.GetCurrentCommandBuffer(), &m_DescriptorSets[frame], GetPipeline());

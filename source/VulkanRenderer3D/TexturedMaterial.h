@@ -21,7 +21,7 @@ namespace D3D
 		// Parameters:
 		//     filePaths: an initializer list of the filepats to the textures in the order they should be for the shaders
 		//     pipelineName: the name of the graphics pipeline that should be used in this material
-		TexturedMaterial(std::initializer_list<const std::string> filePaths, const std::string& pipelineName = "Default");
+		TexturedMaterial(std::initializer_list<const std::string>&& filePaths, const std::string& pipelineName = "Default");
 		
 		// Destructor
 		~TexturedMaterial();

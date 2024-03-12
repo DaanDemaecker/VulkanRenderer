@@ -33,6 +33,8 @@ void D3D::D3DEngine::Run(const std::function<void()>& load)
 	auto& renderer{ VulkanRenderer3D::GetInstance() };
 	auto& window{ Window::GetInstance() };
 
+	renderer.SetupSkybox();
+
 	renderer.AddGraphicsPipeline("Diffuse", "../Resources/Shaders/Diffuse.Vert.spv", "../Resources/Shaders/Diffuse.Frag.spv",1, 1, 1);
 	renderer.AddGraphicsPipeline("NormalMap", "../Resources/Shaders/NormalMap.Vert.spv", "../Resources/Shaders/NormalMap.Frag.spv", 1, 1, 1);
 	renderer.AddGraphicsPipeline("DiffNorm", "../Resources/Shaders/DiffNorm.Vert.spv", "../Resources/Shaders/DiffNorm.Frag.spv", 1, 1, 2);
@@ -174,6 +176,8 @@ void D3D::D3DEngine::Run(const std::function<void()>& load)
 			pModel->Update();
 		}
 
+		
+
 		// Render all models
 		renderer.Render(pModels);
 
@@ -200,4 +204,6 @@ void D3D::D3DEngine::Run(const std::function<void()>& load)
 			//std::this_thread::sleep_until(frameEnd);
 		}
 	}
+
+	renderer.CleanupSkybox();
 }

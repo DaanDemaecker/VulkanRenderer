@@ -63,7 +63,7 @@ namespace D3D
 		// Cleanup function
 		// Parameters: 
 		//     device: handle to VkDevice
-		void Cleanup(VkDevice device)
+		virtual void Cleanup(VkDevice device)
 		{
 			// Destroy the image view
 			vkDestroyImageView(device, imageView, nullptr);
@@ -73,36 +73,6 @@ namespace D3D
 			vkFreeMemory(device, imageMemory, nullptr);
 		}
 	};
-
-	// Struct for compacting vulkan cube textures
-	struct CubeTexture
-	{
-		// VkImage object
-		VkImage image{};
-		// VkDeviceMemory object
-		VkDeviceMemory imageMemory{};
-		// vector of VkImageView objects
-		std::vector<VkImageView> imageViews{};
-
-		// Cleanup function
-		// Parameters: 
-		//     device: handle to VkDevice
-		void Cleanup(VkDevice device)
-		{
-			// Loop over all imageView and destroy them
-			for (auto& imageView : imageViews)
-			{
-				vkDestroyImageView(device, imageView, nullptr);
-			}
-
-			// Destroy the image
-			vkDestroyImage(device, image, nullptr);
-			// Free the memory
-			vkFreeMemory(device, imageMemory, nullptr);
-		}
-	};
-	
-
 
 	// Struct to compact pipeline and pipeline layout
 	struct PipelinePair

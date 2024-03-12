@@ -55,7 +55,7 @@ namespace D3D
 		//     image: the destination image
 		//     width: the width of the image
 		//     height: the height of the image
-		void CopyBufferToImage(VkCommandBuffer commandBuffer, VkBuffer buffer, VkImage image, uint32_t width, uint32_t height);
+		void CopyBufferToImage(VkCommandBuffer commandBuffer, VkBuffer buffer, VkImage image, uint32_t width, uint32_t height, uint32_t layerCount = 1);
 
 		// Generate mipmaps of a single image
 		// Parameters:
@@ -80,6 +80,18 @@ namespace D3D
 		//     pCommandPoolManager: pointer to the commandpool manager
 		//     graphicsqueue handle of the graphics queue
 		void CreateTextureImage(VkDevice device, VkPhysicalDevice physicalDevice, Texture& texture, const std::string& textureName,
+			uint32_t& miplevels, CommandpoolManager* pCommandPoolManager, VkQueue graphicsQueue);
+
+		// Create a given cube texture image
+		// Parameters:
+		//     device: handle to the VkDevice
+		//     physicalDevice: handle to the VkPhysicalDevice
+		//     cubeTexture: reference to the texture that will be created
+		//     textureNames: filepaths to the texture that make up the faces of the cube
+		//     mipLevels: the amount of mipmaps that will be created
+		//     pCommandPoolManager: pointer to the commandpool manager
+		//     graphicsqueue handle of the graphics queue
+		void CreateCubeTexture(VkDevice device, VkPhysicalDevice physicalDevice, Texture& cubeTexture, const std::initializer_list<const std::string>& textureNames,
 			uint32_t& miplevels, CommandpoolManager* pCommandPoolManager, VkQueue graphicsQueue);
 
 		// Create a texture sampler
@@ -107,8 +119,9 @@ namespace D3D
 		//     oldLayout: the current layout of the image
 		//     newLayout: the desired layout of the image
 		//     mipLevels: the amount of mipmaps in the image
+		//     layerCount: the amount of images stored in the single VkImage object, 1 by default
 		void TransitionImageLayout(VkImage image, VkCommandBuffer commandBuffer, VkFormat format,
-			VkImageLayout oldLayout, VkImageLayout newLayout, uint32_t mipLevels);
+			VkImageLayout oldLayout, VkImageLayout newLayout, uint32_t mipLevels, uint32_t layerCount = 1);
 
 
 		// Create an image

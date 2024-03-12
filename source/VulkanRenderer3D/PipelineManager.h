@@ -48,9 +48,10 @@ namespace D3D
 		//     vertexUbos: the amount of uniform buffer objects used in the vertex shader
 		//     fragmentUbos: the amount of uniform buffer objects used in thes fragment shader
 		//     textureAmount: the amount of textures used in the fragment shader
+		//     isSkybox: boolean that indicates if this pipeline is for the skybox or not
 		void AddGraphicsPipeline(VkDevice device, uint32_t maxFrames, VkRenderPass renderPass, VkSampleCountFlagBits sampleCount,
 			const std::string& pipelineName, const std::string& vertShaderName, const std::string& fragShaderName,
-			int vertexUbos, int fragmentUbos, int textureAmount);
+			int vertexUbos, int fragmentUbos, int textureAmount, bool isSkybox = false);
 
 		// Get a certain graphics pipeline
 		// Parameters:
@@ -124,7 +125,8 @@ namespace D3D
 		// Set the values of the depth stencil state create info
 		// Parameters:
 		//     depthStencil: a reference to the septh stencil state create info to avoid creating a new one in the function
-		void SetDepthStencilStateCreateInfo(VkPipelineDepthStencilStateCreateInfo& depthStencil);
+		//     isSkybox: boolean that indicates is this depth stencil create info is for the skybox or not
+		void SetDepthStencilStateCreateInfo(VkPipelineDepthStencilStateCreateInfo& depthStencil, bool isSkybox);
 
 		// Set the values of the color blend attachment state
 		// Parameters:
