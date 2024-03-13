@@ -18,11 +18,7 @@ D3D::CubeMapMaterial::CubeMapMaterial(const std::initializer_list<const std::str
 D3D::CubeMapMaterial::CubeMapMaterial(const std::initializer_list<const std::string>& filePaths)
 	:Material("Skybox")
 {
-	if (filePaths.size() < 6)
-	{
-		throw std::runtime_error("6 or more images are required for a cube map");
-	}
-
+	// Create the cube texture
 	VulkanRenderer3D::GetInstance().CreateCubeTexture(m_CubeTexture, filePaths, m_MipLevels);
 }
 
@@ -31,6 +27,7 @@ D3D::CubeMapMaterial::~CubeMapMaterial()
 	// Get reference to device for later use
 	auto& device{ VulkanRenderer3D::GetInstance().GetDevice() };
 
+	// Clean up the texture
 	m_CubeTexture.Cleanup(device);
 }
 
@@ -56,6 +53,7 @@ void D3D::CubeMapMaterial::UpdateDescriptorSets(std::vector<VkBuffer>& uboBuffer
 	// Set first size to size of UniformBufferObject
 	uboSizes[0] = sizeof(UniformBufferObject);
 
+	// Create a vector to hold this texture
 	auto texture = std::vector<Texture>{ m_CubeTexture };
 
 	// Update descriptorsets

@@ -47,6 +47,7 @@ namespace D3D
 		virtual DescriptorPoolWrapper* GetDescriptorPool() override;
 
 	private:
+		// Texture struct
 		Texture m_CubeTexture{};
 
 		// The amount of levels the mipmap will have

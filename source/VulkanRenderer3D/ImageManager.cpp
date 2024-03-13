@@ -63,27 +63,35 @@ VkImageView D3D::ImageManager::CreateImageView(VkDevice device, VkImage image, V
 
 void D3D::ImageManager::CreateCubeTexture(VkDevice device, VkPhysicalDevice physicalDevice, Texture& cubeTexture, const std::initializer_list<const std::string>& textureNames, uint32_t& miplevels, CommandpoolManager* pCommandPoolManager, VkQueue graphicsQueue)
 {
+	// Get the amount of images from the length of the textureNames list
 	uint32_t imageCount{ static_cast<uint32_t>(textureNames.size()) };
 
+	// If there are less than 6 images, no cube map can be made
 	if (imageCount < 6)
 	{
+		// Throw runtime error
 		throw std::runtime_error("6 or more images are required for a cube map");
 	}
 
+	// Initialize texture width, height and channels
 	int texWidth{};
 	int texHeight{};
 	int texChannels{};
 
+	// Load in the first image of the list to get the width, height and channel amount
+	stbi_uc* pixels = stbi_load(textureNames.begin()->c_str(), &texWidth, &texHeight, &texChannels, STBI_rgb_alpha);
 
-	stbi_uc* tempPixels = stbi_load(textureNames.begin()->c_str(), &texWidth, &texHeight, &texChannels, STBI_rgb_alpha);
-
-	if (!tempPixels)
+	// If pixels failed to load in, throw runtime error
+	if (!pixels)
 	{
 		throw std::runtime_error("Failed to load texture image!");
 	}
 
+	// Set miplevels to 1 as cube textures generally don't need them
 	miplevels = 1;
-	VkDeviceSize faceSize = texWidth * texHeight * 4;
+	// Calculate the size of a single image
+	VkDeviceSize faceSize = texWidth * texHeight * texChannels;
+	// Calcualte the size of the entire cubemap
 	VkDeviceSize cubeSize = faceSize * imageCount;
 
 	// Create staging buffer object
@@ -91,7 +99,7 @@ void D3D::ImageManager::CreateCubeTexture(VkDevice device, VkPhysicalDevice phys
 	// Create staging buffer memory object
 	VkDeviceMemory stagingBufferMemory{};
 
-	// Create the staging buffer
+	// Create the staging buffer, make it the size of the entire cube
 	VulkanUtils::CreateBuffer(device, physicalDevice, cubeSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
 		stagingBuffer, stagingBufferMemory);
 
@@ -101,64 +109,92 @@ void D3D::ImageManager::CreateCubeTexture(VkDevice device, VkPhysicalDevice phys
 	// Map the memory of the staging buffer memory to the data pointer
 	vkMapMemory(device, stagingBufferMemory, 0, cubeSize, 0, &data);
 	// Copy the data from the pixels to the data pointer
-	memcpy(data, tempPixels, static_cast<size_t>(faceSize));
+	memcpy(data, pixels, static_cast<size_t>(faceSize));
 
 	// Free the pixels
-	stbi_image_free(tempPixels);
+	stbi_image_free(pixels);
 
+	// Loop trough all the other images and load them in
 	for (uint32_t i = 1; i < imageCount; i++)
 	{
-		tempPixels = stbi_load((textureNames.begin() + i)->c_str(), &texWidth, &texHeight, &texChannels, STBI_rgb_alpha);
+		// Load in the pixels
+		pixels = stbi_load((textureNames.begin() + i)->c_str(), &texWidth, &texHeight, &texChannels, STBI_rgb_alpha);
 
-		if (!tempPixels)
+		// If pixels failed to load in, throw runtime error
+		if (!pixels)
 		{
 			throw std::runtime_error("Failed to load texture image!");
 		}
 
-		// Copy the data from the pixels to the data pointer
+		// Cast the void ptr to a char*
 		char* mem_offset{ reinterpret_cast<char*>(data) };
+
+		// Calculate the offset of the current image and add it to the pointer
 		mem_offset += i * faceSize;
-		memcpy(mem_offset, tempPixels, faceSize);
+
+		// Copy the memory of the pixels with the correct offset
+		memcpy(mem_offset, pixels, static_cast<VkDeviceSize>(faceSize));
 
 
 		// Free the pixels
-		stbi_image_free(tempPixels);
+		stbi_image_free(pixels);
 	}
 
-	// Create image
+	// Create image create info
 	VkImageCreateInfo imageCreateInfo = {};
+	// Set type to image create info
 	imageCreateInfo.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
+	// Set type to image type 2D, even for cube map
 	imageCreateInfo.imageType = VK_IMAGE_TYPE_2D;
+	// Set the format to R8G8B8A8
 	imageCreateInfo.format = VK_FORMAT_R8G8B8A8_SRGB;
+	// Set the width and height of the texture as the extent
 	imageCreateInfo.extent = { static_cast<uint32_t>(texWidth), static_cast<uint32_t>(texHeight), 1 };
+	// Give the miplevels
 	imageCreateInfo.mipLevels = miplevels;
+	// Set arrayLayers to the amount of textures
 	imageCreateInfo.arrayLayers = imageCount;
+	// Set samples to 1 bit
 	imageCreateInfo.samples = VK_SAMPLE_COUNT_1_BIT;
+	// Set tiling to optimal
 	imageCreateInfo.tiling = VK_IMAGE_TILING_OPTIMAL;
+	// Set usage to transfer destination and sampling
 	imageCreateInfo.usage = VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT;
+	// Set sharing mode to exclusive
 	imageCreateInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
+	// Set initial layout to undefined
 	imageCreateInfo.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+	// Set flags to cube compatible
 	imageCreateInfo.flags = VK_IMAGE_CREATE_CUBE_COMPATIBLE_BIT;
 
+	// Create the image
 	if (vkCreateImage(device, &imageCreateInfo, nullptr, &cubeTexture.image) != VK_SUCCESS)
 	{
 		throw std::runtime_error("Failed to create cube map image!");
 	}
 
-	// Allocate memory for the cube map image
+	// Create memory requirements object
 	VkMemoryRequirements memoryRequirements;
+	// Get the memory requirements
 	vkGetImageMemoryRequirements(device, cubeTexture.image, &memoryRequirements);
 
+	// Create allocate info
 	VkMemoryAllocateInfo allocateInfo = {};
+	// Set type to memory allocate info
 	allocateInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
+	// Set allocation size to the size found in memory requirements
 	allocateInfo.allocationSize = memoryRequirements.size;
+	// Find the correct memory type
 	allocateInfo.memoryTypeIndex = VulkanUtils::FindMemoryType(physicalDevice, memoryRequirements.memoryTypeBits, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
 
+	// Allocate the memory
 	if (vkAllocateMemory(device, &allocateInfo, nullptr, &cubeTexture.imageMemory) != VK_SUCCESS)
 	{
+		// If unsuccessful, throw runtime error
 		throw std::runtime_error("Failed to allocate memory for cube map image!");
 	}
 
+	// Bind the memory
 	vkBindImageMemory(device, cubeTexture.image, cubeTexture.imageMemory, 0);
 
 

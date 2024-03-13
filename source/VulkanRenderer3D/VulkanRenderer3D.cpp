@@ -56,11 +56,15 @@ D3D::VulkanRenderer3D::~VulkanRenderer3D()
 
 void D3D::VulkanRenderer3D::SetupSkybox()
 {
+	// Set the vertex shader name
 	const std::string vertShaderName{ "../Resources/Shaders/Skybox.Vert.spv" };
+	// Set the fragment shader name
 	const std::string fragShaderName{ "../Resources/Shaders/Skybox.Frag.spv" };
 
+	// Create the graphics pipeline for the skybox
 	AddGraphicsPipeline("Skybox", vertShaderName, fragShaderName, 1, 0, 1, true);
 
+	// Create the skybox
 	m_pSkyBox = std::make_unique<SkyBox>(
 		std::initializer_list<const std::string>{"../resources/images/CubeMap/Sky_Right.png",
 												"../resources/images/CubeMap/Sky_Left.png",
@@ -73,6 +77,7 @@ void D3D::VulkanRenderer3D::SetupSkybox()
 
 void D3D::VulkanRenderer3D::CleanupSkybox()
 {
+	// Set the skybox to nullptr, the unique pointer will destroy it
 	m_pSkyBox = nullptr;
 }
 
@@ -408,6 +413,7 @@ void D3D::VulkanRenderer3D::RecordCommandBuffer(VkCommandBuffer& commandBuffer, 
 	// Update the buffer of the global light
 	m_pGlobalLight->UpdateBuffer(m_CurrentFrame);
 
+	// Render the skybox
 	m_pSkyBox->Render();
 
 	// Loop trough the amount of models

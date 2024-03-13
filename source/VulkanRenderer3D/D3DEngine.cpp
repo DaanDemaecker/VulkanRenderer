@@ -176,6 +176,15 @@ void D3D::D3DEngine::Run(const std::function<void()>& load)
 			pModel->Update();
 		}
 
+		auto rot{ renderer.GetCamera()->GetRotation() };
+		// Initialize rotation speed
+		constexpr float rotSpeed{ -glm::radians(15.f) };
+
+		// Calculate amount of rotation
+		float rotAmount{ rotSpeed * TimeManager::GetInstance().GetDeltaTime() };
+
+		// Set new rotation
+		renderer.GetCamera()->SetRotation(rot.x, rot.y + rotAmount, rot.z);
 		
 
 		// Render all models
