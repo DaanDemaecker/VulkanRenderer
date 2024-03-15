@@ -25,7 +25,7 @@ D3D::CubeMapMaterial::CubeMapMaterial(const std::initializer_list<const std::str
 D3D::CubeMapMaterial::~CubeMapMaterial()
 {
 	// Get reference to device for later use
-	auto& device{ VulkanRenderer3D::GetInstance().GetDevice() };
+	auto device{ VulkanRenderer3D::GetInstance().GetDevice() };
 
 	// Clean up the texture
 	m_CubeTexture.Cleanup(device);

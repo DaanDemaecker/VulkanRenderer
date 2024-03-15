@@ -39,7 +39,7 @@ D3D::TexturedMaterial::TexturedMaterial(std::initializer_list<const std::string>
 D3D::TexturedMaterial::~TexturedMaterial()
 {
 	// Get reference to device for later use
-	auto& device{ VulkanRenderer3D::GetInstance().GetDevice() };
+	auto device{ VulkanRenderer3D::GetInstance().GetDevice() };
 
 	// Loop trough textures and destroy them
 	for (auto& texture : m_Textures)

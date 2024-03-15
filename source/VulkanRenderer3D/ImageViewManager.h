@@ -7,8 +7,9 @@
 
 namespace D3D
 {
-	// Class forward declaration for image manager
+	// Class forward declarations
 	class ImageManager;
+	class GPUObject;
 
 	class ImageViewManager final
 	{
@@ -37,21 +38,18 @@ namespace D3D
 
 		// Initialize the color image for the swapchain
 		// Parameters:
-		//     device: handle of the VkDevice
-		//     physicalDevice: handle of the VkPhysicalDevice
+		//     pGPUObject: pointer to the GPU Object
 		//     format: the requested format for the color image
 		//     swapchainExtent: the extent of the swapchain, for use of the image size
 		//     pImageManager: pointer to the image manager
-		void CreateColorResources(VkDevice device, VkPhysicalDevice physicalDevice, VkFormat format,
+		void CreateColorResources(GPUObject* pGPUObject, VkFormat format,
 			VkExtent2D swapchainExtent, D3D::ImageManager* pImageManager);
 		// Initialize the depth image for the swapchain
 		// Parameters:
-		//     device: handle of the VkDevice
-		//     physicalDevice: handle of the VkPhysicalDevice
+		//     pGPUObject: pointer to the GPU Object
 		//     swapchainExtent: the extent of the swapchain, for use of the image size
 		//     pImageManager: pointer to the image manager
-		void CreateDepthResources(VkDevice device, VkPhysicalDevice physicalDevice,
-			VkExtent2D swapchainExtent, D3D::ImageManager* pImageManager, VkCommandBuffer commandBuffer);
+		void CreateDepthResources(GPUObject* pGPUObject,VkExtent2D swapchainExtent, D3D::ImageManager* pImageManager, VkCommandBuffer commandBuffer);
 
 		// Get the imageView for the color image
 		VkImageView GetColorImageView() const { return m_ColorImage.imageView; }

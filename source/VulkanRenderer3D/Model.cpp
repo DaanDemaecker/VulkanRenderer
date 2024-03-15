@@ -122,7 +122,7 @@ void D3D::Model::CreateVertexBuffer()
 	// Get reference to renderer
 	auto& renderer{ VulkanRenderer3D::GetInstance() };
 	// Get reference to logical device
-	auto& device = renderer.GetDevice();
+	auto device = renderer.GetDevice();
 
 	// Calculate buffer size for vertices
 	VkDeviceSize bufferSize = sizeof(Vertex) * m_Vertices.size();
@@ -162,7 +162,7 @@ void D3D::Model::CreateIndexBuffer()
 	// Get reference to renderer
 	auto& renderer{ VulkanRenderer3D::GetInstance() };
 	// Get reference to logical device
-	auto& device = renderer.GetDevice();
+	auto device = renderer.GetDevice();
 
 	// Calculate buffer size for indices
 	VkDeviceSize bufferSize = sizeof(uint32_t) * m_Indices.size();
@@ -287,7 +287,7 @@ void D3D::Model::Cleanup()
 	// Get reference to renderer
 	auto& renderer = D3D::VulkanRenderer3D::GetInstance();
 	// Get reference to device
-	auto& device = renderer.GetDevice();
+	auto device = renderer.GetDevice();
 
 	// Wait until device is idle
 	vkDeviceWaitIdle(device);
