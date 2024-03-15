@@ -19,28 +19,18 @@
 
 namespace D3D
 {
-    // Class forward declaration for Model
+    // Class forward declarations
     class Model;
-    // Class forward declaration for DescriptorPoolManager
+    class GPUObject;
     class DescriptorPoolManager;
-    // Class forward declaration for ImGuiWrapper
     class ImGuiWrapper;
-    // Class forward declaration for InstanceWrapper
     class InstanceWrapper;
-    // Class forward declaration for ImageManager
     class ImageManager;
-    // Class forward declaration for CommandpoolManager
     class CommandpoolManager;
-    // Class forward declaration for RenderpassWrapper
     class RenderpassWrapper;
-    // Class forward declaration for SwapchainWrapper
     class SwapchainWrapper;
-    // Class forward declaration for SyncObjectManager
     class SyncObjectManager;
-    // Class forward declaration for DirectionalLightObject
     class DirectionalLightObject;
-
-    // Class forward declaration for SkyBox
     class SkyBox;
 
     // Inherit from singleton
@@ -90,7 +80,7 @@ namespace D3D
         uint32_t GetCurrentFrame() const { return  m_CurrentFrame; }
 
         // Get the handle to the vkDevice
-        VkDevice& GetDevice() { return m_Device; }
+        VkDevice GetDevice();
 
         //Get the default image view
         VkImageView& GetDefaultImageView();
@@ -165,6 +155,8 @@ namespace D3D
     private:
         std::unique_ptr<SkyBox> m_pSkyBox{};
 
+        std::unique_ptr<GPUObject> m_pGpuObject{};
+
         // The maximum amount of frames in flight
         const uint32_t m_MaxFramesInFlight{ 3 };
 
@@ -173,15 +165,6 @@ namespace D3D
 
         // Handle of the VkSurfaceKHR
         VkSurfaceKHR m_Surface{};
-
-        // Handle of the VkPhysicalDevice
-        VkPhysicalDevice m_PhysicalDevice = VK_NULL_HANDLE;
-
-        // Vector of requested device extensions
-        const std::vector<const char*> m_DeviceExtensions = { VK_KHR_SWAPCHAIN_EXTENSION_NAME };
-
-        // Handle of the logical device
-        VkDevice m_Device = VK_NULL_HANDLE;
 
         // Pointer to the descriptor pool manager
         std::unique_ptr<DescriptorPoolManager> m_pDescriptorPoolManager{};
@@ -209,9 +192,6 @@ namespace D3D
 
         // Pointer to the sync object manager
         std::unique_ptr<SyncObjectManager> m_pSyncObjectManager{};
-
-        // Object that holds the graphics and present family queues
-        QueueObject m_QueueObject{};
 
         // Pointer to the global light object
         std::unique_ptr<DirectionalLightObject> m_pGlobalLight{};
@@ -241,22 +221,6 @@ namespace D3D
         // Initialize the VkSurfaceKHR
         void CreateSurface();
 
-        // Pick the physical device
-        void PickPhysicalDevice();
-
-        // Check if a given device is suitable
-        // Parameters:
-        //     device: the device to be checked
-        bool IsDeviceSuitable(VkPhysicalDevice device);
-
-        // Check if a given device satisfies the extensions
-        // Parameters:
-        //     device: the device to be checked
-        bool CheckDeviceExtensionSupport(VkPhysicalDevice device);
-
-        // Initialize the logical device
-        void CreateLogicalDevice();
-
         // Recreate the swapchain
         void RecreateSwapChain();
 
@@ -283,11 +247,7 @@ namespace D3D
         //     mipLevels: the amount of mipmaps in this image
         void TransitionImageLayout(VkImage image, VkFormat format, VkImageLayout oldLayout, VkImageLayout newLayout, uint32_t mipLevels);
 
-        // Get necesarry detail for swapchainsupport
-        // Parameters:
-        //     physicalDevice: handle of the VkPhysicalDevice
-        //     surface: handle of the VkSurfaceKHR
-        D3D::SwapChainSupportDetails QuerySwapChainSupport(VkPhysicalDevice physicalDevice, VkSurfaceKHR surface);
+        
     };
 }
 

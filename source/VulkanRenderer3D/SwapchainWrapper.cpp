@@ -6,49 +6,53 @@
 #include "ImageManager.h"
 #include "VulkanUtils.h"
 #include "Window.h"
+#include "GPUObject.h"
 
 // Standard library includes
 #include <stdexcept>
 #include <algorithm>
 
-D3D::SwapchainWrapper::SwapchainWrapper(VkDevice device, VkPhysicalDevice physicalDevice, VkSurfaceKHR surface,
+D3D::SwapchainWrapper::SwapchainWrapper(GPUObject* pGPUObject, VkSurfaceKHR surface,
 	D3D::ImageManager* pImageManager, VkSampleCountFlagBits msaaSamples)
 {
 	// Create image view manager
 	m_pImageViewManager = std::make_unique<ImageViewManager>(msaaSamples);
 
 	// Initialize the swapchain
-	CreateSwapChain(device, physicalDevice, surface);
+	CreateSwapChain(pGPUObject, surface);
 	// Initialize the image views
-	CreateSwapchainImageViews(device, pImageManager);
+	CreateSwapchainImageViews(pGPUObject->GetDevice(), pImageManager);
 }
 
-void D3D::SwapchainWrapper::SetupImageViews(VkDevice device, VkPhysicalDevice physicalDevice, D3D::ImageManager* pImageManager,
+void D3D::SwapchainWrapper::SetupImageViews(GPUObject* pGPUObject, D3D::ImageManager* pImageManager,
 	 VkCommandBuffer commandBuffer, VkRenderPass renderPass)
 {
 	// Creat the color image
-	m_pImageViewManager->CreateColorResources(device, physicalDevice, m_SwapChainImageFormat, m_SwapChainExtent, pImageManager);
+	m_pImageViewManager->CreateColorResources(pGPUObject, m_SwapChainImageFormat, m_SwapChainExtent, pImageManager);
 	// Create depth image
-	m_pImageViewManager->CreateDepthResources(device, physicalDevice, m_SwapChainExtent, pImageManager, commandBuffer);
+	m_pImageViewManager->CreateDepthResources(pGPUObject, m_SwapChainExtent, pImageManager, commandBuffer);
 	// Initialize frame buffers
-	CreateFramebuffers(device, renderPass);
+	CreateFramebuffers(pGPUObject->GetDevice(), renderPass);
 }
 
-void D3D::SwapchainWrapper::SetupSwapchain(VkDevice device, VkPhysicalDevice physicalDevice, VkSurfaceKHR surface,
+void D3D::SwapchainWrapper::SetupSwapchain(GPUObject* pGPUObject, VkSurfaceKHR surface,
 	D3D::ImageManager* pImageManager, VkCommandBuffer commandBuffer, VkRenderPass renderpass)
 {
 	// Initalize the swapchain
-	CreateSwapChain(device, physicalDevice, surface);
+	CreateSwapChain(pGPUObject, surface);
 	// Initialize swapchain image views
-	CreateSwapchainImageViews(device, pImageManager);
+	CreateSwapchainImageViews(pGPUObject->GetDevice(), pImageManager);
 	// Setup color and depth resources
-	SetupImageViews(device, physicalDevice, pImageManager, commandBuffer, renderpass);
+	SetupImageViews(pGPUObject, pImageManager, commandBuffer, renderpass);
 }
 
-void D3D::SwapchainWrapper::CreateSwapChain(VkDevice device, VkPhysicalDevice physicalDevice, VkSurfaceKHR surface)
+void D3D::SwapchainWrapper::CreateSwapChain(GPUObject* pGPUObject, VkSurfaceKHR surface)
 {
+	// Get device
+	auto device{ pGPUObject->GetDevice() };
+
 	// Get swapchain support details
-	D3D::SwapChainSupportDetails swapChainSupport = QuerySwapChainSupport(physicalDevice, surface);
+	D3D::SwapChainSupportDetails swapChainSupport = VulkanUtils::QuerySwapChainSupport(pGPUObject->GetPhysicalDevice(), surface);
 	// Get the format for the swapchain surface
 	VkSurfaceFormatKHR surfaceFormat = ChooseSwapSurfaceFormat(swapChainSupport.formats);
 	// Get presentmode for the swapchain
@@ -88,7 +92,7 @@ void D3D::SwapchainWrapper::CreateSwapChain(VkDevice device, VkPhysicalDevice ph
 	createInfo.imageUsage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
 
 	// Get the queuefamily indices
-	D3D::QueueFamilyIndices indices = VulkanUtils::FindQueueFamilies(physicalDevice, surface);
+	D3D::QueueFamilyIndices indices = VulkanUtils::FindQueueFamilies(pGPUObject->GetPhysicalDevice(), surface);
 	// Create array of graphics and present family indices
 	uint32_t queueFamilyIndices[] = { indices.graphicsFamily.value(), indices.presentFamily.value() };
 
@@ -181,14 +185,14 @@ void D3D::SwapchainWrapper::Cleanup(VkDevice device)
 	m_pImageViewManager->Cleanup(device);
 }
 
-void D3D::SwapchainWrapper::RecreateSwapChain(VkDevice device, VkPhysicalDevice physicalDevice, VkSurfaceKHR surface,
+void D3D::SwapchainWrapper::RecreateSwapChain(GPUObject* pGPUObject, VkSurfaceKHR surface,
 	D3D::ImageManager* pImageManager, VkCommandBuffer commandBuffer, VkRenderPass renderpass)
 {
 	// Call cleanup function to destroy all allocated objects
-	Cleanup(device);
+	Cleanup(pGPUObject->GetDevice());
 	
 	// Set swapchain again
-	SetupSwapchain(device, physicalDevice, surface, pImageManager, commandBuffer, renderpass);
+	SetupSwapchain(pGPUObject, surface, pImageManager, commandBuffer, renderpass);
 }
 
 
@@ -263,47 +267,6 @@ void D3D::SwapchainWrapper::CreateFramebuffers(VkDevice device, VkRenderPass ren
 			throw std::runtime_error("failed to create framebuffer!");
 		}
 	}
-}
-
-
-D3D::SwapChainSupportDetails D3D::SwapchainWrapper::QuerySwapChainSupport(VkPhysicalDevice physicalDevice, VkSurfaceKHR surface)
-{
-	// Create swapchainsupport details object
-	D3D::SwapChainSupportDetails details;
-
-	// Get surface capabilities
-	vkGetPhysicalDeviceSurfaceCapabilitiesKHR(physicalDevice, surface, &details.capabilities);
-
-	// Create formatcount uint
-	uint32_t formatCount;
-	// Get surface formats
-	vkGetPhysicalDeviceSurfaceFormatsKHR(physicalDevice, surface, &formatCount, nullptr);
-
-	// If there is more than 0 image counts
-	if (formatCount != 0)
-	{
-		// Resize formats to the amount of formats
-		details.formats.resize(formatCount);
-		// Geth the surface formats
-		vkGetPhysicalDeviceSurfaceFormatsKHR(physicalDevice, surface, &formatCount, details.formats.data());
-	}
-
-	// Create present mode count
-	uint32_t presentModeCount;
-	// Get amount of present modes
-	vkGetPhysicalDeviceSurfacePresentModesKHR(physicalDevice, surface, &presentModeCount, nullptr);
-
-	// If there is more than 0 present modes
-	if (presentModeCount != 0)
-	{
-		// Resize present modes to amount of present modes
-		details.presentModes.resize(presentModeCount);
-		// Get the surface present modes
-		vkGetPhysicalDeviceSurfacePresentModesKHR(physicalDevice, surface, &presentModeCount, details.presentModes.data());
-	}
-
-	// Return swapchain support details
-	return details;
 }
 
 VkSurfaceFormatKHR D3D::SwapchainWrapper::ChooseSwapSurfaceFormat(const std::vector<VkSurfaceFormatKHR>& availableFormats)

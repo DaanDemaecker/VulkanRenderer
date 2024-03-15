@@ -2,12 +2,16 @@
 
 // File includes
 #include "VulkanUtils.h"
+#include "GPUObject.h"
 
 // Standard library includes
 
-void VulkanUtils::CreateBuffer(VkDevice device, VkPhysicalDevice physicalDevice, VkDeviceSize size,
+void VulkanUtils::CreateBuffer(D3D::GPUObject* pGPUObject, VkDeviceSize size,
 	VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VkBuffer& buffer, VkDeviceMemory& bufferMemory)
 {
+	// Get device
+	auto device{ pGPUObject->GetDevice() };
+
 	// Create buffer create info
 	VkBufferCreateInfo bufferInfo{};
 	// Set type to buffer create info
@@ -38,7 +42,7 @@ void VulkanUtils::CreateBuffer(VkDevice device, VkPhysicalDevice physicalDevice,
 	// Set size to memory requirements size
 	allocInfo.allocationSize = memRequirements.size;
 	// Find a memory type that satisfies the requested properties
-	allocInfo.memoryTypeIndex = FindMemoryType(physicalDevice, memRequirements.memoryTypeBits, properties);
+	allocInfo.memoryTypeIndex = FindMemoryType(pGPUObject->GetPhysicalDevice(), memRequirements.memoryTypeBits, properties);
 
 	// Allocate the memory
 	if (vkAllocateMemory(device, &allocInfo, nullptr, &bufferMemory) != VK_SUCCESS)
@@ -232,4 +236,44 @@ VkSampleCountFlagBits VulkanUtils::GetMaxUsableSampleCount(VkPhysicalDevice phys
 
 	// If nothing was returned, return 1
 	return VK_SAMPLE_COUNT_1_BIT;
+}
+
+D3D::SwapChainSupportDetails VulkanUtils::QuerySwapChainSupport(VkPhysicalDevice physicalDevice, VkSurfaceKHR surface)
+{
+	// Create swapchainsupport details object
+	D3D::SwapChainSupportDetails details;
+
+	// Get surface capabilities
+	vkGetPhysicalDeviceSurfaceCapabilitiesKHR(physicalDevice, surface, &details.capabilities);
+
+	// Create formatcount uint
+	uint32_t formatCount;
+	// Get surface formats
+	vkGetPhysicalDeviceSurfaceFormatsKHR(physicalDevice, surface, &formatCount, nullptr);
+
+	// If there is more than 0 image counts
+	if (formatCount != 0)
+	{
+		// Resize formats to the amount of formats
+		details.formats.resize(formatCount);
+		// Geth the surface formats
+		vkGetPhysicalDeviceSurfaceFormatsKHR(physicalDevice, surface, &formatCount, details.formats.data());
+	}
+
+	// Create present mode count
+	uint32_t presentModeCount;
+	// Get amount of present modes
+	vkGetPhysicalDeviceSurfacePresentModesKHR(physicalDevice, surface, &presentModeCount, nullptr);
+
+	// If there is more than 0 present modes
+	if (presentModeCount != 0)
+	{
+		// Resize present modes to amount of present modes
+		details.presentModes.resize(presentModeCount);
+		// Get the surface present modes
+		vkGetPhysicalDeviceSurfacePresentModesKHR(physicalDevice, surface, &presentModeCount, details.presentModes.data());
+	}
+
+	// Return swapchain support details
+	return details;
 }

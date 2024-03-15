@@ -13,6 +13,9 @@
 
 namespace D3D
 {
+	// Class forward declarations
+	class GPUObject;
+
 	class CommandpoolManager final
 	{
 	public:
@@ -21,11 +24,10 @@ namespace D3D
 
 		// Constructor
 		// Parameters:
-		//     device: handle of the VkDevice
-		//     physicalDevice: handle of the VkPhysicalDevice
+		//     pGPUObject: pointer to the object that holds the physical and logical devices
 		//     surface: handle of the VkSurfaceKHR
 		//     frames: the max amount of frames in flight
-		CommandpoolManager(VkDevice device, VkPhysicalDevice physicalDevice, VkSurfaceKHR surface, uint32_t frames);
+		CommandpoolManager(GPUObject* pGPUObject, VkSurfaceKHR surface, uint32_t frames);
 
 		// Default destructor
 		~CommandpoolManager() = default;
@@ -53,10 +55,9 @@ namespace D3D
 
 		// End a commandbuffer that was for a single use
 		// Parameters:
-		//     device: handle of the VkDevice
+		//     pGPUObject: pointer to the object that holds the physical and logical devices
 		//     commandBuffer: handle of the commandbuffer in question
-		//     graphicsQueue: handle of the graphics queue
-		void EndSingleTimeCommands(VkDevice device, VkCommandBuffer commandBuffer, VkQueue graphicsQueue);
+		void EndSingleTimeCommands(GPUObject* pGPUObject, VkCommandBuffer commandBuffer);
 
 	private:
 		//CommandPool
@@ -67,10 +68,9 @@ namespace D3D
 
 		// Initialize the commandpool
 		// Parameters:
-		//     device: handle of the VkDevice
-		//     physicalDevice: handle of the VkPhysicalDevice
+		//     pGPUObject: pointer to the object that holds the physical and logical devices
 		//     surface: handle of th VkSurfaceKHR
-		void CreateCommandPool(VkDevice device, VkPhysicalDevice physicalDevice, VkSurfaceKHR surface);
+		void CreateCommandPool(GPUObject* pGPUObject, VkSurfaceKHR surface);
 
 		// Initialize the commandbuffers
 		// Parameters:

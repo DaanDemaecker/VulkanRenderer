@@ -3,16 +3,17 @@
 // File includes
 #include "CommandpoolManager.h"
 #include "VulkanUtils.h"
+#include "GPUObject.h"
 
 // Standard library includes
 #include <stdexcept>
 
-D3D::CommandpoolManager::CommandpoolManager(VkDevice device, VkPhysicalDevice physicalDevice, VkSurfaceKHR surface, uint32_t frames)
+D3D::CommandpoolManager::CommandpoolManager(GPUObject* pGPUObject, VkSurfaceKHR surface, uint32_t frames)
 {
 	// Initialize the commandpool
-	CreateCommandPool(device, physicalDevice, surface);
+	CreateCommandPool(pGPUObject, surface);
 	// Initialize the commandbuffers
-	CreateCommandBuffers(device, frames);
+	CreateCommandBuffers(pGPUObject->GetDevice(), frames);
 }
 
 void D3D::CommandpoolManager::Cleanup(VkDevice device)
@@ -21,10 +22,10 @@ void D3D::CommandpoolManager::Cleanup(VkDevice device)
 	vkDestroyCommandPool(device, m_CommandPool, nullptr);
 }
 
-void D3D::CommandpoolManager::CreateCommandPool(VkDevice device, VkPhysicalDevice physicalDevice, VkSurfaceKHR surface)
+void D3D::CommandpoolManager::CreateCommandPool(GPUObject* pGPUObject, VkSurfaceKHR surface)
 {
 	// Get the needed queuefamilies
-	D3D::QueueFamilyIndices queueFamilyIndices = VulkanUtils::FindQueueFamilies(physicalDevice, surface);
+	D3D::QueueFamilyIndices queueFamilyIndices = VulkanUtils::FindQueueFamilies(pGPUObject->GetPhysicalDevice(), surface);
 
 	// Create commandpool create info object
 	VkCommandPoolCreateInfo poolInfo{};
@@ -36,7 +37,7 @@ void D3D::CommandpoolManager::CreateCommandPool(VkDevice device, VkPhysicalDevic
 	poolInfo.queueFamilyIndex = queueFamilyIndices.graphicsFamily.value();
 
 	// Create the commandpool
-	if (vkCreateCommandPool(device, &poolInfo, nullptr, &m_CommandPool) != VK_SUCCESS)
+	if (vkCreateCommandPool(pGPUObject->GetDevice(), &poolInfo, nullptr, &m_CommandPool) != VK_SUCCESS)
 	{
 		// If unsuccessful, throw runtime error
 		throw std::runtime_error("failed to create command pool!");
@@ -99,7 +100,7 @@ VkCommandBuffer D3D::CommandpoolManager::BeginSingleTimeCommands(VkDevice device
 	return commandBuffer;
 }
 
-void D3D::CommandpoolManager::EndSingleTimeCommands(VkDevice device, VkCommandBuffer commandBuffer, VkQueue graphicsQueue)
+void D3D::CommandpoolManager::EndSingleTimeCommands(GPUObject* pGPUObject, VkCommandBuffer commandBuffer)
 {
 	// End the command buffer
 	vkEndCommandBuffer(commandBuffer);
@@ -113,11 +114,14 @@ void D3D::CommandpoolManager::EndSingleTimeCommands(VkDevice device, VkCommandBu
 	// Give pointer to commandbuffer
 	submitInfo.pCommandBuffers = &commandBuffer;
 
+	// Get graphics queue
+	auto graphicsQueue{ pGPUObject->GetQueueObject().graphicsQueue };
+
 	// Submit graphics queue
 	vkQueueSubmit(graphicsQueue, 1, &submitInfo, VK_NULL_HANDLE);
 	// Wait until graphics queue is done
 	vkQueueWaitIdle(graphicsQueue);
 
 	// Free the command buffers
-	vkFreeCommandBuffers(device, m_CommandPool, 1, &commandBuffer);
+	vkFreeCommandBuffers(pGPUObject->GetDevice(), m_CommandPool, 1, &commandBuffer);
 }

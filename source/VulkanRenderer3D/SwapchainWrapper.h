@@ -22,13 +22,11 @@ namespace D3D
 	public:
 		// Constructor
 		// Parameter:
-		//     device: handle of the VkDevice
-		//     physicalDevice: handle of the VkPhysicalDevice
+		//     pGPUObject: pointer to the GPUObject
 		//     surface: handle of the VkSurfaceKHR
 		//     pImageManager: pointer to the image manager
 		//     msaaSamples: max amount of samples per pixel
-		SwapchainWrapper(VkDevice device, VkPhysicalDevice physicalDevice, VkSurfaceKHR surface,
-			D3D::ImageManager* pImageManager, VkSampleCountFlagBits msaaSamples);
+		SwapchainWrapper(GPUObject* pGPUObject, VkSurfaceKHR surface, D3D::ImageManager* pImageManager, VkSampleCountFlagBits msaaSamples);
 
 		// Delete default constructor
 		SwapchainWrapper() = delete;
@@ -44,12 +42,11 @@ namespace D3D
 
 		// Set up the color and depth image views
 		// Parameters:
-		//     device: handle of the VkDevice
-		//     physicalDevice: handle of the VkPhysicalDevice
+		//     pGPUObject: pointer to the GPUObject
 		//     pImageManager: pointer to the image manager
 		//     commandBuffer: commandbuffer that will be used to create depth image
 		//     renderPass: the renderpass that will be used with this swapchain
-		void SetupImageViews(VkDevice device, VkPhysicalDevice physicalDevice, D3D::ImageManager* pImageManager,
+		void SetupImageViews(GPUObject* pGPUObject, D3D::ImageManager* pImageManager,
 			VkCommandBuffer commandBuffer, VkRenderPass renderPass);
 
 		// Clean up allocated objects
@@ -59,13 +56,12 @@ namespace D3D
 
 		// Delete and recreate the swapchain
 		// Parameters:
-		//     device: handle of the VkDevice
-		//     physicalDevice: handle of the VkPhysicalDevice
+		//     pGPUObject: pointer to the GPUObject
 		//     surface: handle of the VkSurfaceKHR
 		//     pImageManager: pointer to the image manager
 		//     commandBuffer: commandbuffer that will be used to create depth image
 		//     renderpass: the renderpass that will be used with this swapchain
-		void RecreateSwapChain(VkDevice device, VkPhysicalDevice physicalDevice, VkSurfaceKHR surface,
+		void RecreateSwapChain(GPUObject* pGPUObject, VkSurfaceKHR surface,
 			D3D::ImageManager* pImageManager, VkCommandBuffer commandBuffer, VkRenderPass renderpass);
 
 		// Get the swapchain
@@ -114,21 +110,19 @@ namespace D3D
 
 		// Initialize the swapchain and other components
 		// Parameters:
-		//     device: handle of the VkDevice
-		//     physicalDevice: handle of the VkPhysicalDevice
+		//     pGPUObject: pointer to the GPUObject
 		//     surface: Handle of the VkSurfaceKHR
 		//     pImageManager: pointer to the image manager
 		//     commandBuffer: commandbuffer needed for creation of depth image
 		//     renderpass: the renderpass used with this swapchain
-		void SetupSwapchain(VkDevice device, VkPhysicalDevice physicalDevice, VkSurfaceKHR surface,
+		void SetupSwapchain(GPUObject* pGPUObject, VkSurfaceKHR surface,
 			D3D::ImageManager* pImageManager, VkCommandBuffer commandBuffer, VkRenderPass renderpass);
 
 		// Create the swapchain
 		// Parameters:
-		//     device: handle of the VkDevice
-		//     physicalDevice: handle of the physicalDevice
+		//     pGPUObject: pointer to the GPUObject
 		//     surface: handle of the VkSurfaceKHR
-		void CreateSwapChain(VkDevice device, VkPhysicalDevice physicalDevice, VkSurfaceKHR surface);
+		void CreateSwapChain(GPUObject* pGPUObject, VkSurfaceKHR surface);
 
 		// Create the color and depth image views
 		// Parameters:
@@ -140,12 +134,6 @@ namespace D3D
 		// Parameters:
 		//     device: handle of the VkDevice
 		void CreateFramebuffers(VkDevice device, VkRenderPass renderpass);
-
-		// Get necesarry detail for swapchainsupport
-		// Parameters:
-		//     physicalDevice: handle of the VkPhysicalDevice
-		//     surface: handle of the VkSurfaceKHR
-		D3D::SwapChainSupportDetails QuerySwapChainSupport(VkPhysicalDevice physicalDevice, VkSurfaceKHR surface);
 
 		// Get the format for the swapchain surface
 		// Parameters:

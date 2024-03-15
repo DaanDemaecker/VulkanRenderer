@@ -4,25 +4,26 @@
 #include "ImageManager.h"
 #include "STBIncludes.h"
 #include "VulkanUtils.h"
+#include "GPUObject.h"
 
 // Standard library includes
 #include <stdexcept>
 #include <cmath>
 
-D3D::ImageManager::ImageManager(VkDevice device, VkPhysicalDevice physicalDevice, CommandpoolManager* pCommandPoolManager, VkQueue graphicsQueue)
+D3D::ImageManager::ImageManager(GPUObject* pGPUObject, CommandpoolManager* pCommandPoolManager)
 {
 	// Initialize the default textures
-	CreateDefaultResources(device, physicalDevice, pCommandPoolManager, graphicsQueue);
+	CreateDefaultResources(pGPUObject, pCommandPoolManager);
 }
 
-void D3D::ImageManager::CreateDefaultResources(VkDevice device, VkPhysicalDevice physicalDevice, CommandpoolManager* pCommandPoolManager, VkQueue graphicsQueue)
+void D3D::ImageManager::CreateDefaultResources(GPUObject* pGPUObject,CommandpoolManager* pCommandPoolManager)
 {
 	// Create the default texture sampler
-	CreateTextureSampler(m_TextureSampler, m_MipLevels, device, physicalDevice);
+	CreateTextureSampler(pGPUObject, m_TextureSampler, m_MipLevels);
 	// Create the default texture image
-	CreateTextureImage(device, physicalDevice, m_DefaultTexture, m_DefaultTextureName, m_MipLevels, pCommandPoolManager, graphicsQueue);
+	CreateTextureImage(pGPUObject, m_DefaultTexture, m_DefaultTextureName, m_MipLevels, pCommandPoolManager);
 	// Create the default texture image view
-	m_DefaultTexture.imageView = CreateImageView(device, m_DefaultTexture.image, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_ASPECT_COLOR_BIT, m_MipLevels);
+	m_DefaultTexture.imageView = CreateImageView(pGPUObject->GetDevice(), m_DefaultTexture.image, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_ASPECT_COLOR_BIT, m_MipLevels);
 }
 
 VkImageView D3D::ImageManager::CreateImageView(VkDevice device, VkImage image, VkFormat format, VkImageAspectFlags aspectFlags, uint32_t mipLevels)
@@ -61,8 +62,11 @@ VkImageView D3D::ImageManager::CreateImageView(VkDevice device, VkImage image, V
 	return imageView;
 }
 
-void D3D::ImageManager::CreateCubeTexture(VkDevice device, VkPhysicalDevice physicalDevice, Texture& cubeTexture, const std::initializer_list<const std::string>& textureNames, uint32_t& miplevels, CommandpoolManager* pCommandPoolManager, VkQueue graphicsQueue)
+void D3D::ImageManager::CreateCubeTexture(GPUObject* pGPUObject, Texture& cubeTexture, const std::initializer_list<const std::string>& textureNames, uint32_t& miplevels, CommandpoolManager* pCommandPoolManager)
 {
+	// Get device
+	auto device{ pGPUObject->GetDevice() };
+
 	// Get the amount of images from the length of the textureNames list
 	uint32_t imageCount{ static_cast<uint32_t>(textureNames.size()) };
 
@@ -100,7 +104,7 @@ void D3D::ImageManager::CreateCubeTexture(VkDevice device, VkPhysicalDevice phys
 	VkDeviceMemory stagingBufferMemory{};
 
 	// Create the staging buffer, make it the size of the entire cube
-	VulkanUtils::CreateBuffer(device, physicalDevice, cubeSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
+	VulkanUtils::CreateBuffer(pGPUObject, cubeSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
 		stagingBuffer, stagingBufferMemory);
 
 	// Create void pointer to hold data
@@ -133,7 +137,7 @@ void D3D::ImageManager::CreateCubeTexture(VkDevice device, VkPhysicalDevice phys
 		mem_offset += i * faceSize;
 
 		// Copy the memory of the pixels with the correct offset
-		memcpy(mem_offset, pixels, static_cast<VkDeviceSize>(faceSize));
+		memcpy(mem_offset, pixels, static_cast<size_t>(faceSize));
 
 
 		// Free the pixels
@@ -185,7 +189,7 @@ void D3D::ImageManager::CreateCubeTexture(VkDevice device, VkPhysicalDevice phys
 	// Set allocation size to the size found in memory requirements
 	allocateInfo.allocationSize = memoryRequirements.size;
 	// Find the correct memory type
-	allocateInfo.memoryTypeIndex = VulkanUtils::FindMemoryType(physicalDevice, memoryRequirements.memoryTypeBits, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
+	allocateInfo.memoryTypeIndex = VulkanUtils::FindMemoryType(pGPUObject->GetPhysicalDevice(), memoryRequirements.memoryTypeBits, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
 
 	// Allocate the memory
 	if (vkAllocateMemory(device, &allocateInfo, nullptr, &cubeTexture.imageMemory) != VK_SUCCESS)
@@ -206,7 +210,7 @@ void D3D::ImageManager::CreateCubeTexture(VkDevice device, VkPhysicalDevice phys
 	// Transition the image layout from undifined to transfer destination optimal
 	TransitionImageLayout(cubeTexture.image, commandBuffer, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, miplevels, imageCount);
 	// End single time command buffer
-	pCommandPoolManager->EndSingleTimeCommands(device, commandBuffer, graphicsQueue);
+	pCommandPoolManager->EndSingleTimeCommands(pGPUObject, commandBuffer);
 
 	// Get new single time command buffer
 	commandBuffer = pCommandPoolManager->BeginSingleTimeCommands(device);
@@ -214,14 +218,14 @@ void D3D::ImageManager::CreateCubeTexture(VkDevice device, VkPhysicalDevice phys
 	CopyBufferToImage(commandBuffer, stagingBuffer, cubeTexture.image,
 		static_cast<uint32_t>(texWidth), static_cast<uint32_t>(texHeight), imageCount);
 	// End single time command buffer
-	pCommandPoolManager->EndSingleTimeCommands(device, commandBuffer, graphicsQueue);
+	pCommandPoolManager->EndSingleTimeCommands(pGPUObject, commandBuffer);
 
 	// Get single time command buffer
 	commandBuffer = pCommandPoolManager->BeginSingleTimeCommands(device);
 	// Transition the image layout from undifined to transfer destination optimal
 	TransitionImageLayout(cubeTexture.image, commandBuffer, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, miplevels, imageCount);
 	// End single time command buffer
-	pCommandPoolManager->EndSingleTimeCommands(device, commandBuffer, graphicsQueue);
+	pCommandPoolManager->EndSingleTimeCommands(pGPUObject, commandBuffer);
 
 	// Destroy the staging buffer
 	vkDestroyBuffer(device, stagingBuffer, nullptr);
@@ -258,7 +262,7 @@ void D3D::ImageManager::CreateCubeTexture(VkDevice device, VkPhysicalDevice phys
 	}
 }
 
-void D3D::ImageManager::CreateTextureSampler(VkSampler& sampler, uint32_t miplevels, VkDevice device, VkPhysicalDevice physicalDevice)
+void D3D::ImageManager::CreateTextureSampler(GPUObject* pGPUObject, VkSampler& sampler, uint32_t miplevels)
 {
 	// Create sampler create info
 	VkSamplerCreateInfo samplerInfo{};
@@ -278,7 +282,7 @@ void D3D::ImageManager::CreateTextureSampler(VkSampler& sampler, uint32_t miplev
 	// Create handle of physical device properties
 	VkPhysicalDeviceProperties properties{};
 	// Get the physical device properties
-	vkGetPhysicalDeviceProperties(physicalDevice, &properties);
+	vkGetPhysicalDeviceProperties(pGPUObject->GetPhysicalDevice(), &properties);
 
 	// Set anisotropy to enabled
 	samplerInfo.anisotropyEnable = VK_TRUE;
@@ -302,7 +306,7 @@ void D3D::ImageManager::CreateTextureSampler(VkSampler& sampler, uint32_t miplev
 	samplerInfo.maxLod = static_cast<float>(miplevels);
 
 	// Create the image sampler
-	if (vkCreateSampler(device, &samplerInfo, nullptr, &sampler) != VK_SUCCESS)
+	if (vkCreateSampler(pGPUObject->GetDevice(), &samplerInfo, nullptr, &sampler) != VK_SUCCESS)
 	{
 		// If unsuccessful, throw runtime error
 		throw std::runtime_error("failed to create texture sampler!");
@@ -489,8 +493,11 @@ void D3D::ImageManager::GenerateMipmaps(VkPhysicalDevice physicalDevice, VkComma
 		1, &barrier);
 }
 
-void D3D::ImageManager::CreateTextureImage(VkDevice device, VkPhysicalDevice physicalDevice, D3D::Texture& texture, const std::string& textureName, uint32_t& miplevels, D3D::CommandpoolManager* pCommandPoolManager, VkQueue graphicsQueue)
+void D3D::ImageManager::CreateTextureImage(GPUObject* pGPUObject, D3D::Texture& texture, const std::string& textureName, uint32_t& miplevels, D3D::CommandpoolManager* pCommandPoolManager)
 {
+	// Get device
+	auto device{ pGPUObject->GetDevice() };
+
 	// Create ints for texture width, texture height and texture channels
 	int texWidth, texHeight, texChannels;
 
@@ -515,7 +522,7 @@ void D3D::ImageManager::CreateTextureImage(VkDevice device, VkPhysicalDevice phy
 	VkDeviceMemory stagingBufferMemory{};
 
 	// Create the staging buffer
-	VulkanUtils::CreateBuffer(device, physicalDevice, imageSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
+	VulkanUtils::CreateBuffer(pGPUObject, imageSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
 		stagingBuffer, stagingBufferMemory);
 
 	// Create void pointer to hold data
@@ -532,7 +539,7 @@ void D3D::ImageManager::CreateTextureImage(VkDevice device, VkPhysicalDevice phy
 	stbi_image_free(pixels);
 
 	// Create the image
-	CreateImage(device, physicalDevice, texWidth, texHeight, miplevels, VK_SAMPLE_COUNT_1_BIT, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_TILING_OPTIMAL,
+	CreateImage(pGPUObject, texWidth, texHeight, miplevels, VK_SAMPLE_COUNT_1_BIT, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_TILING_OPTIMAL,
 		VK_IMAGE_USAGE_TRANSFER_SRC_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT,
 		texture);
 
@@ -544,14 +551,14 @@ void D3D::ImageManager::CreateTextureImage(VkDevice device, VkPhysicalDevice phy
 	// Transition the image layout from undifined to transfer destination optimal
 	TransitionImageLayout(texture.image, commandBuffer, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, miplevels);
 	// End single time command buffer
-	pCommandPoolManager->EndSingleTimeCommands(device, commandBuffer, graphicsQueue);
+	pCommandPoolManager->EndSingleTimeCommands(pGPUObject, commandBuffer);
 
 	// Get new single time command buffer
 	commandBuffer = pCommandPoolManager->BeginSingleTimeCommands(device);
 	// Coppy staging buffer to texture image
 	CopyBufferToImage(commandBuffer, stagingBuffer, texture.image, static_cast<uint32_t>(texWidth), static_cast<uint32_t>(texHeight));
 	// End single time command buffer
-	pCommandPoolManager->EndSingleTimeCommands(device, commandBuffer, graphicsQueue);
+	pCommandPoolManager->EndSingleTimeCommands(pGPUObject, commandBuffer);
 
 	// Destroy the staging buffer
 	vkDestroyBuffer(device, stagingBuffer, nullptr);
@@ -561,13 +568,16 @@ void D3D::ImageManager::CreateTextureImage(VkDevice device, VkPhysicalDevice phy
 	// Get new single time command buffer
 	commandBuffer = pCommandPoolManager->BeginSingleTimeCommands(device);
 	// Generate mipmaps for the image
-	GenerateMipmaps(physicalDevice, commandBuffer, texture.image, VK_FORMAT_R8G8B8A8_SRGB, texWidth, texHeight, miplevels);
+	GenerateMipmaps(pGPUObject->GetPhysicalDevice(), commandBuffer, texture.image, VK_FORMAT_R8G8B8A8_SRGB, texWidth, texHeight, miplevels);
 	// En single time command buffer
-	pCommandPoolManager->EndSingleTimeCommands(device, commandBuffer, graphicsQueue);
+	pCommandPoolManager->EndSingleTimeCommands(pGPUObject, commandBuffer);
 }
 
-void D3D::ImageManager::CreateImage(VkDevice device, VkPhysicalDevice physicalDevice, uint32_t width, uint32_t height, uint32_t mipLevels, VkSampleCountFlagBits numSamples, VkFormat format, VkImageTiling tiling, VkImageUsageFlags usage, VkMemoryPropertyFlags properties, Texture& texture)
+void D3D::ImageManager::CreateImage(GPUObject* pGPUObject, uint32_t width, uint32_t height, uint32_t mipLevels, VkSampleCountFlagBits numSamples, VkFormat format, VkImageTiling tiling, VkImageUsageFlags usage, VkMemoryPropertyFlags properties, Texture& texture)
 {
+	// Get device
+	auto device{ pGPUObject->GetDevice() };
+
 	// Create image create info object
 	VkImageCreateInfo imageInfo{};
 	// Set type to image create info
@@ -618,7 +628,7 @@ void D3D::ImageManager::CreateImage(VkDevice device, VkPhysicalDevice physicalDe
 	// Set allocation size to memory requirements size
 	allocInfo.allocationSize = memRequirements.size;
 	// Set find memory type and set it as the type index
-	allocInfo.memoryTypeIndex = VulkanUtils::FindMemoryType(physicalDevice, memRequirements.memoryTypeBits, properties);
+	allocInfo.memoryTypeIndex = VulkanUtils::FindMemoryType(pGPUObject->GetPhysicalDevice(), memRequirements.memoryTypeBits, properties);
 
 	// Allocate the memory
 	if (vkAllocateMemory(device, &allocInfo, nullptr, &texture.imageMemory) != VK_SUCCESS)

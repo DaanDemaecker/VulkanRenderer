@@ -11,18 +11,23 @@
 // Standard library includes
 #include <stdexcept>
 
+namespace D3D
+{
+	// Class forward declarations
+	class GPUObject;
+}
+
 namespace VulkanUtils
 {
 	// Create a VkBuffer
 	// Parameters:
-	//     device: handle of the VkDevice
-	//     physicalDevice: handle of the VkPhysicalDevice
+	//     pGPUObject : a pointer to the GPU object 
 	//     size: the size of the buffer
 	//     usage: the usage flags for the buffer
 	//     properties: the property flags for the buffer
 	//     buffer: a reference to the buffer that will be created
 	//     bufferMemory: a reference to the memory for the buffer that will be created
-	void CreateBuffer(VkDevice device, VkPhysicalDevice physicalDevice, VkDeviceSize size,
+	void CreateBuffer(D3D::GPUObject* pGPUObbject, VkDeviceSize size,
 		VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VkBuffer& buffer, VkDeviceMemory& bufferMemory);
 
 	// Get a memory type that satisfies the given properties
@@ -60,6 +65,12 @@ namespace VulkanUtils
 		// Parameters:
 		//     extensionName: the name of the extension that should be checked
 	bool CheckExtensionSupport(const char* extensionName);
+
+	// Get necesarry detail for swapchainsupport
+		// Parameters:
+		//     physicalDevice: handle of the VkPhysicalDevice
+		//     surface: handle of the VkSurfaceKHR
+	D3D::SwapChainSupportDetails QuerySwapChainSupport(VkPhysicalDevice physicalDevice, VkSurfaceKHR surface);
 }
 
 #endif // !VulkanUtilsIncluded

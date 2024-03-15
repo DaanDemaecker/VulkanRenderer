@@ -14,16 +14,17 @@
 
 namespace D3D
 {
+	// Class forward declarations
+	class GPUObject;
+
 	class ImageManager final
 	{
 	public:
 		// Constructor
 		// Parameter:
-		//     device: handle of the VkDevice
-		//     physicalDevice: handle of the VkPhysicalDevice
+		//     pGPUObject : a pointer to the GPU object 
 		//     pCommandPoolManager: a pointer to the commandpool manager
-		//     graphicsQueue: handle of the graphics queue
-		ImageManager(VkDevice device, VkPhysicalDevice physicalDevice, CommandpoolManager* pCommandPoolManager, VkQueue graphicsQueue);
+		ImageManager(GPUObject* pGPUObject, CommandpoolManager* pCommandPoolManager);
 		
 		// Delete default constructor
 		ImageManager() = delete;
@@ -72,35 +73,30 @@ namespace D3D
 
 		// Create a given texture image
 		// Parameters:
-		//     device: handle to the VkDevice
-		//     physicalDevice: handle to the VkPhysicalDevice
+		//     pGPUObject : a pointer to the GPU object 
 		//     texture: reference to the texture that will be created
 		//     textureName: filepath to the texture
 		//     mipLevels: the amount of mipmaps that will be created
 		//     pCommandPoolManager: pointer to the commandpool manager
-		//     graphicsqueue handle of the graphics queue
-		void CreateTextureImage(VkDevice device, VkPhysicalDevice physicalDevice, Texture& texture, const std::string& textureName,
-			uint32_t& miplevels, CommandpoolManager* pCommandPoolManager, VkQueue graphicsQueue);
+		void CreateTextureImage(GPUObject* pGPUObject, Texture& texture, const std::string& textureName,
+			uint32_t& miplevels, CommandpoolManager* pCommandPoolManager);
 
 		// Create a given cube texture image
 		// Parameters:
-		//     device: handle to the VkDevice
-		//     physicalDevice: handle to the VkPhysicalDevice
+		//     pGPUObject : a pointer to the GPU object 
 		//     cubeTexture: reference to the texture that will be created
 		//     textureNames: filepaths to the texture that make up the faces of the cube
 		//     mipLevels: the amount of mipmaps that will be created
 		//     pCommandPoolManager: pointer to the commandpool manager
-		//     graphicsqueue handle of the graphics queue
-		void CreateCubeTexture(VkDevice device, VkPhysicalDevice physicalDevice, Texture& cubeTexture, const std::initializer_list<const std::string>& textureNames,
-			uint32_t& miplevels, CommandpoolManager* pCommandPoolManager, VkQueue graphicsQueue);
+		void CreateCubeTexture(GPUObject* pGPUObject, Texture& cubeTexture, const std::initializer_list<const std::string>& textureNames,
+			uint32_t& miplevels, CommandpoolManager* pCommandPoolManager);
 
 		// Create a texture sampler
 		// Parameters:
+		//     pGPUObject : a pointer to the GPU object 
 		//     sampler: a reference to the sampler that will be created
 		//     samples: the max amount of samples
-		//     device: handle to the VkDevice
-		//     physicalDevice: handle to the VkPhysicalDevice
-		void CreateTextureSampler(VkSampler& sampler, uint32_t samples, VkDevice device, VkPhysicalDevice physicalDevice);
+		void CreateTextureSampler(GPUObject* pGPUObject, VkSampler& sampler, uint32_t samples);
 
 		// Create and return an image view
 		// Parameters:
@@ -126,8 +122,7 @@ namespace D3D
 
 		// Create an image
 		// Parameters:
-		//     device: handle of the VkDevice
-		//     physicalDevice: handle of the VkPhysicalDevice
+		//     pGPUObject : a pointer to the GPU object 
 		//     width: the width of the image
 		//     height: the height of the image
 		//     mipLevels: the amount of mipmaps
@@ -137,7 +132,7 @@ namespace D3D
 		//     usage: the usage for the image
 		//     properties: the requested properties for the image
 		//     texture: reference to the texture to be created
-		void CreateImage(VkDevice device, VkPhysicalDevice physicalDevice,
+		void CreateImage(GPUObject* pGPUObject,
 			uint32_t width, uint32_t height, uint32_t mipLevels,
 			VkSampleCountFlagBits numSamples, VkFormat format, VkImageTiling tiling,
 			VkImageUsageFlags usage, VkMemoryPropertyFlags properties, Texture& texture);
@@ -162,11 +157,9 @@ namespace D3D
 
 		// Create the default textures
 		// Parameters:
-		//     device: handle of the VkDevice
-		//     physicalDevice: handle of the VkPhysicalDevice
-		//     pCommandPoolManager: pointer to the commandpool manager
-		//     graphicsQueue: handle of the graphics queue
-		void CreateDefaultResources(VkDevice device, VkPhysicalDevice physicalDevice,  CommandpoolManager* pCommandPoolManager, VkQueue graphicsQueue);
+		//     pGPUObject : a pointer to the GPU object 
+		//     pCommandPoolManager: a pointer to the commandpool manager
+		void CreateDefaultResources(GPUObject* pGPUObject, CommandpoolManager* pCommandPoolManager);
 	};
 }
 #endif // !ImageManagerIncluded
