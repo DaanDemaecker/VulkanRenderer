@@ -7,287 +7,39 @@
 *.sln.docstates
 
 # Build results
-[Dd]ebug/
-[Dd]ebugPublic/
-[Rr]elease/
-[Rr]eleases/
-x64/
-build/
-bld/
+source/[Dd]ebug/
+source/[Dd]ebugPublic/
+source/[Rr]elease/
+source/[Rr]eleases/
+source/x64/
+source/build/
+source/bld/
+source/.vs
 [Bb]in/
 [Oo]bj/
 *.exe
 
-# CMake
-CMakeCache.txt
-CMakeFiles
-CMakeScripts
-Makefile
-cmake_install.cmake
-install_manifest.txt
+source/VulkanRenderer3D/[Dd]ebug/
+source/VulkanRenderer3D/[Dd]ebugPublic/
+source/VulkanRenderer3D/[Rr]elease/
+source/VulkanRenderer3D/[Rr]eleases/
+source/VulkanRenderer3D/x64/
+source/VulkanRenderer3D/build/
+source/VulkanRenderer3D/bld/
+source/VulkanRenderer3D/.vs
 
-# Roslyn cache directories
-*.ide/
+source/VulkanRenderer2D/[Dd]ebug/
+source/VulkanRenderer2D/[Dd]ebugPublic/
+source/VulkanRenderer2D/[Rr]elease/
+source/VulkanRenderer2D/[Rr]eleases/
+source/VulkanRenderer2D/x64/
+source/VulkanRenderer2D/build/
+source/VulkanRenderer2D/bld/
+source/VulkanRenderer2D/.vs
 
-# MSTest test Results
-[Tt]est[Rr]esult*/
-[Bb]uild[Ll]og.*
-
-#NUNIT
-*.VisualState.xml
-TestResult.xml
-
-# Build Results of an ATL Project
-[Dd]ebugPS/
-[Rr]eleasePS/
-dlldata.c
-
-*_i.c
-*_p.c
-*_i.h
-*.ilk
-*.meta
-*.obj
-*.pch
-*.pdb
-*.pgc
-*.pgd
-*.rsp
-*.sbr
-*.tlb
-*.tli
-*.tlh
-*.tmp
-*.tmp_proj
-*.log
-*.vspscc
-*.vssscc
-.builds
-*.pidb
-*.svclog
-*.scc
-
-# Chutzpah Test files
-_Chutzpah*
-
-# Visual C++ cache files
-ipch/
-*.aps
-*.ncb
-*.opensdf
-*.opendb
-*.sdf
-*.cachefile
-*.VC.db
-*.VC.VC.opendb
-
-# Visual Studio profiler
-*.psess
-*.vsp
-*.vspx
-
-# TFS 2012 Local Workspace
-$tf/
-
-# Guidance Automation Toolkit
-*.gpState
-
-# ReSharper is a .NET coding add-in
-_ReSharper*/
-*.[Rr]e[Ss]harper
-*.DotSettings.user
-
-# JustCode is a .NET coding addin-in
-.JustCode
-
-# TeamCity is a build add-in
-_TeamCity*
-
-# DotCover is a Code Coverage Tool
-*.dotCover
-
-# NCrunch
-_NCrunch_*
-.*crunch*.local.xml
-
-# MightyMoose
-*.mm.*
-AutoTest.Net/
-
-# Web workbench (sass)
-.sass-cache/
-
-# Installshield output folder
-[Ee]xpress/
-
-# DocProject is a documentation generator add-in
-DocProject/buildhelp/
-DocProject/Help/*.HxT
-DocProject/Help/*.HxC
-DocProject/Help/*.hhc
-DocProject/Help/*.hhk
-DocProject/Help/*.hhp
-DocProject/Help/Html2
-DocProject/Help/html
-
-# Click-Once directory
-publish/
-
-# Publish Web Output
-*.[Pp]ublish.xml
-*.azurePubxml
-## TODO: Comment the next line if you want to checkin your
-## web deploy settings but do note that will include unencrypted
-## passwords
-*.pubxml
-
-# NuGet Packages
-packages/*
-*.nupkg
-## TODO: If the tool you use requires repositories.config
-## uncomment the next line
-#!packages/repositories.config
-
-# Enable "build/" folder in the NuGet Packages folder since
-# NuGet packages use it for MSBuild targets.
-# This line needs to be after the ignore of the build folder
-# (and the packages folder if the line above has been uncommented)
-!packages/build/
-
-# Windows Azure Build Output
-csx/
-*.build.csdef
-
-# Windows Store app package directory
-AppPackages/
-
-# Others
-sql/
-*.Cache
-ClientBin/
-[Ss]tyle[Cc]op.*
-~$*
-*~
-*.dbmdl
-*.dbproj.schemaview
-*.pfx
-*.publishsettings
-node_modules/
-
-# RIA/Silverlight projects
-Generated_Code/
-
-# Backup & report files from converting an old project file
-# to a newer Visual Studio version. Backup files are not needed,
-# because we have git ;-)
-_UpgradeReport_Files/
-Backup*/
-UpgradeLog*.XML
-UpgradeLog*.htm
-
-# SQL Server files
-*.mdf
-*.ldf
-
-# Business Intelligence projects
-*.rdl.data
-*.bim.layout
-*.bim_*.settings
-
-# Microsoft Fakes
-FakesAssemblies/
-
-.vs/
-
-# Don't ignore 3d models in obj format
-!data/models/*.obj
-!data/models/lowpoly/*.obj
-!data/models/voyager/*.obj
-
-# DLLs in bin
-!bin/*.dll
-
-# Android validation layer libraries
-android/layers/*/*.so
-android/**/jni/
-
-# Downloadable assets
-vulkan_asset_pack_gltf.*
-data/textures/hdr/*.*
-data/readme.txt
-data/models/cerberus/*.*
-!data/textures/hdr/README.md
-
-*.args.json
-
-# Ignore VS project files
-*.sln
-*.vcxproj
-*.vcxproj.filters
-*.vcxproj.user
-
-# Ignore macOS .DS_Store
-.DS_Store
-
-# Assets that are part of the asset pack and should not be stored in the repo
-data/models/**
-data/textures/**
-data/README_asset_pack.md
-data/font*.*
-data/roboto*.*
-source/3rdParty/Vulkan/Win32/SPIRV-Toolsd.lib
-source/3rdParty/Vulkan/Win32/SPIRV-Tools.lib
-source/3rdParty/Vulkan/Win32/SPIRV-Tools-sharedd.lib
-source/3rdParty/Vulkan/Win32/SPIRV-Tools-shared.lib
-source/3rdParty/Vulkan/Win32/SPIRV-Tools-reduced.lib
-source/3rdParty/Vulkan/Win32/SPIRV-Tools-reduce.lib
-source/3rdParty/Vulkan/Win32/SPIRV-Tools-optd.lib
-source/3rdParty/Vulkan/Win32/SPIRV-Tools-lint.lib
-source/3rdParty/Vulkan/Win32/SPIRV-Tools-opt.lib
-source/3rdParty/Vulkan/Win32/SPIRV-Tools-lintd.lib
-source/3rdParty/Vulkan/Win32/SPIRV-Tools-linkd.lib
-source/3rdParty/Vulkan/Win32/SPIRV-Tools-link.lib
-source/3rdParty/Vulkan/Win32/SPIRV-Tools-diff.lib
-source/3rdParty/Vulkan/Win32/SPIRV-Tools-diffd.lib
-source/3rdParty/Vulkan/Win32/spirv-cross-utild.lib
-source/3rdParty/Vulkan/Win32/spirv-cross-util.lib
-source/3rdParty/Vulkan/Win32/spirv-cross-reflectd.lib
-source/3rdParty/Vulkan/Win32/spirv-cross-reflect.lib
-source/3rdParty/Vulkan/Win32/spirv-cross-msld.lib
-source/3rdParty/Vulkan/Win32/spirv-cross-msl.lib
-source/3rdParty/Vulkan/Win32/spirv-cross-hlsld.lib
-source/3rdParty/Vulkan/Win32/spirv-cross-hlsl.lib
-source/3rdParty/Vulkan/Win32/spirv-cross-glsld.lib
-source/3rdParty/Vulkan/Win32/spirv-cross-glsl.lib
-source/3rdParty/Vulkan/Win32/spirv-cross-cppd.lib
-source/3rdParty/Vulkan/Win32/spirv-cross-cpp.lib
-source/3rdParty/Vulkan/Win32/spirv-cross-cored.lib
-source/3rdParty/Vulkan/Win32/spirv-cross-core.lib
-source/3rdParty/Vulkan/Win32/spirv-cross-cd.lib
-source/3rdParty/Vulkan/Win32/spirv-cross-c.lib
-source/3rdParty/Vulkan/Win32/spirv-cross-c-sharedd.lib
-source/3rdParty/Vulkan/Win32/spirv-cross-c-shared.lib
-source/3rdParty/Vulkan/Win32/GenericCodeGen.lib
-source/3rdParty/Vulkan/Win32/GenericCodeGend.lib
-source/3rdParty/Vulkan/Win32/glslang-default-resource-limits.lib
-source/3rdParty/Vulkan/Win32/glslang-default-resource-limitsd.lib
-source/3rdParty/Vulkan/Win32/HLSL.lib
-source/3rdParty/Vulkan/Win32/HLSLd.lib
-source/3rdParty/Vulkan/Win32/MachineIndependent.lib
-source/3rdParty/Vulkan/Win32/MachineIndependentd.lib
-source/3rdParty/Vulkan/Win32/OGLCompiler.lib
-source/3rdParty/Vulkan/Win32/OGLCompilerd.lib
-source/3rdParty/Vulkan/Win32/OSDependent.lib
-source/3rdParty/Vulkan/Win32/OSDependentd.lib
-source/3rdParty/Vulkan/Win32/shaderc.lib
 source/3rdParty/Vulkan/Win32/shaderc_combined.lib
 source/3rdParty/Vulkan/Win32/shaderc_combinedd.lib
-source/3rdParty/Vulkan/Win32/shaderc_shared.lib
-source/3rdParty/Vulkan/Win32/shaderc_sharedd.lib
-source/3rdParty/Vulkan/Win32/shaderc_util.lib
-source/3rdParty/Vulkan/Win32/shaderc_utild.lib
-source/3rdParty/Vulkan/Win32/shadercd.lib
-source/3rdParty/Vulkan/Win32/SPIRV.lib
-source/3rdParty/Vulkan/Win32/SPIRVd.lib
-source/3rdParty/Vulkan/Win32/SPVRemapper.lib
-source/3rdParty/Vulkan/Win32/SPVRemapperd.lib
+source/3rdParty/Vulkan/x64/shaderc_combined.lib
+source/3rdParty/Vulkan/x64/shaderc_combinedd.lib
+
+*d.lib
