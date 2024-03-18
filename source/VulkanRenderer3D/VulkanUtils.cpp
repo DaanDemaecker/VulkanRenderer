@@ -6,55 +6,6 @@
 
 // Standard library includes
 
-void VulkanUtils::CreateBuffer(D3D::GPUObject* pGPUObject, VkDeviceSize size,
-	VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VkBuffer& buffer, VkDeviceMemory& bufferMemory)
-{
-	// Get device
-	auto device{ pGPUObject->GetDevice() };
-
-	// Create buffer create info
-	VkBufferCreateInfo bufferInfo{};
-	// Set type to buffer create info
-	bufferInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
-	// Set size to given size
-	bufferInfo.size = size;
-	// Set usage to given usage
-	bufferInfo.usage = usage;
-	// Set sharing mode to exclusive
-	bufferInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
-
-	// Create buffer
-	if (vkCreateBuffer(device, &bufferInfo, nullptr, &buffer) != VK_SUCCESS)
-	{
-		// If unsuccessful, throw runtime error
-		throw std::runtime_error("failed to create buffer!");
-	}
-
-	// Create memory requiremnts object
-	VkMemoryRequirements memRequirements;
-	// Get the memory requirements
-	vkGetBufferMemoryRequirements(device, buffer, &memRequirements);
-
-	// Create memory allocation info
-	VkMemoryAllocateInfo allocInfo{};
-	// Set type to memory allocate info
-	allocInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
-	// Set size to memory requirements size
-	allocInfo.allocationSize = memRequirements.size;
-	// Find a memory type that satisfies the requested properties
-	allocInfo.memoryTypeIndex = FindMemoryType(pGPUObject->GetPhysicalDevice(), memRequirements.memoryTypeBits, properties);
-
-	// Allocate the memory
-	if (vkAllocateMemory(device, &allocInfo, nullptr, &bufferMemory) != VK_SUCCESS)
-	{
-		// If unsuccessful, throw runtime error
-		throw std::runtime_error("failed to allocate buffer memory!");
-	}
-
-	// Bind the buffer to the buffer memory
-	vkBindBufferMemory(device, buffer, bufferMemory, 0);
-}
-
 uint32_t VulkanUtils::FindMemoryType(VkPhysicalDevice physicalDevice, uint32_t typeFilter, VkMemoryPropertyFlags properties)
 {
 	// Create physical device memory properties object

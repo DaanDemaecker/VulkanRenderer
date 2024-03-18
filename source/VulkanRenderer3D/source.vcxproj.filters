@@ -152,6 +152,9 @@
     <ClCompile Include="GPUObject.cpp">
       <Filter>Vulkan\Wrappers</Filter>
     </ClCompile>
+    <ClCompile Include="BufferManager.cpp">
+      <Filter>Vulkan\Wrappers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Utils.h">
@@ -269,6 +272,9 @@
       <Filter>DataTypes</Filter>
     </ClInclude>
     <ClInclude Include="GPUObject.h">
+      <Filter>Vulkan\Wrappers</Filter>
+    </ClInclude>
+    <ClInclude Include="BufferManager.h">
       <Filter>Vulkan\Wrappers</Filter>
     </ClInclude>
   </ItemGroup>

@@ -28,6 +28,8 @@ D3D::Model::~Model()
 
 void D3D::Model::LoadModel(const std::string& textPath)
 {
+	auto& renderer{ VulkanRenderer3D::GetInstance() };
+
 	// Check if model is initialized, if it is, clean up first
 	if (m_Initialized)
 	{
@@ -38,9 +40,9 @@ void D3D::Model::LoadModel(const std::string& textPath)
 	// Load model into vertex and index vectors
 	Utils::LoadModel(textPath, m_Vertices, m_Indices);
 	// Create vertex buffer
-	CreateVertexBuffer();
+	renderer.CreateVertexBuffer(m_Vertices, m_VertexBuffer, m_VertexBufferMemory);
 	// Create index buffer
-	CreateIndexBuffer();
+	renderer.CreateIndexBuffer(m_Indices, m_IndexBuffer, m_IndexBufferMemory);
 	// Create uniform buffer
 	CreateUniformBuffers();
 	// Create descriptorsets
@@ -115,83 +117,6 @@ void D3D::Model::SetScale(float x, float y, float z)
 	m_Scale = { x, y, z };
 	// Set dirty flags
 	SetDirtyFlags();
-}
-
-void D3D::Model::CreateVertexBuffer()
-{
-	// Get reference to renderer
-	auto& renderer{ VulkanRenderer3D::GetInstance() };
-	// Get reference to logical device
-	auto device = renderer.GetDevice();
-
-	// Calculate buffer size for vertices
-	VkDeviceSize bufferSize = sizeof(Vertex) * m_Vertices.size();
-
-	// Create staging buffer
-	VkBuffer stagingBuffer;
-	// Create staging buffer memory
-	VkDeviceMemory stagingBufferMemory;
-
-	// Create buffer
-	renderer.CreateBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, stagingBuffer, stagingBufferMemory);
-
-	// Create void pointer for data
-	void* data;
-
-	// Map memory of data to stagingbuffermemory
-	vkMapMemory(device, stagingBufferMemory, 0, bufferSize, 0, &data);
-	// Copy data from vertices to data pointer
-	memcpy(data, m_Vertices.data(), static_cast<size_t>(bufferSize));
-	// Unmap memory
-	vkUnmapMemory(device, stagingBufferMemory);
-
-	// Create the buffer
-	renderer.CreateBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, m_VertexBuffer, m_VertexBufferMemory);
-
-	// Copy buffer
-	renderer.CopyBuffer(stagingBuffer, m_VertexBuffer, bufferSize);
-
-	// Destroy staging buffer
-	vkDestroyBuffer(device, stagingBuffer, nullptr);
-	// Free staging buffer memory
-	vkFreeMemory(device, stagingBufferMemory, nullptr);
-}
-
-void D3D::Model::CreateIndexBuffer()
-{
-	// Get reference to renderer
-	auto& renderer{ VulkanRenderer3D::GetInstance() };
-	// Get reference to logical device
-	auto device = renderer.GetDevice();
-
-	// Calculate buffer size for indices
-	VkDeviceSize bufferSize = sizeof(uint32_t) * m_Indices.size();
-
-	// Create staging buffer
-	VkBuffer stagingBuffer;
-	// Create staging buffer memory
-	VkDeviceMemory stagingBufferMemory;
-	// Create buffer
-	renderer.CreateBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, stagingBuffer, stagingBufferMemory);
-
-	// Create void pointer for data
-	void* data;
-	// Map memory of data to staging buffer memory
-	vkMapMemory(device, stagingBufferMemory, 0, bufferSize, 0, &data);
-	// Copy memory from indices to data
-	memcpy(data, m_Indices.data(), static_cast<size_t>(bufferSize));
-
-	// Create buffer
-	renderer.CreateBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_INDEX_BUFFER_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, m_IndexBuffer, m_IndexBufferMemory);
-
-	// Copy staging buffer to index buffer
-	renderer.CopyBuffer(stagingBuffer, m_IndexBuffer, bufferSize);
-
-	// Destroy staging buffer
-	vkDestroyBuffer(device, stagingBuffer, nullptr);
-
-	// Free staging buffer memory
-	vkFreeMemory(device, stagingBufferMemory, nullptr);
 }
 
 void D3D::Model::CreateUniformBuffers()

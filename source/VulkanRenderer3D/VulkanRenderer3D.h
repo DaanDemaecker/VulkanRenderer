@@ -32,6 +32,7 @@ namespace D3D
     class SyncObjectManager;
     class DirectionalLightObject;
     class SkyBox;
+    class BufferManager;
 
     // Inherit from singleton
     class VulkanRenderer3D final : public Singleton<VulkanRenderer3D>
@@ -122,6 +123,10 @@ namespace D3D
         //     size: the size of the buffers
         void CopyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size);
 
+        void CreateVertexBuffer(std::vector<D3D::Vertex>& vertices, VkBuffer& vertexBuffer, VkDeviceMemory& vertexBufferMemory);
+
+        void CreateIndexBuffer(std::vector<uint32_t>& indices, VkBuffer& indexBuffer, VkDeviceMemory& indexBufferMemory);
+
         // Update uniform buffer with camera and projection transform
         // Parameters:
         //     buffer: reference to the uniform buffer object that needs updating
@@ -165,6 +170,8 @@ namespace D3D
 
         // Handle of the VkSurfaceKHR
         VkSurfaceKHR m_Surface{};
+
+        std::unique_ptr<BufferManager> m_pBufferManager{};
 
         // Pointer to the descriptor pool manager
         std::unique_ptr<DescriptorPoolManager> m_pDescriptorPoolManager{};

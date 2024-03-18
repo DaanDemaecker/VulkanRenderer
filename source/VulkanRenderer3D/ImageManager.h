@@ -16,15 +16,17 @@ namespace D3D
 {
 	// Class forward declarations
 	class GPUObject;
+	class BufferManager;
 
 	class ImageManager final
 	{
 	public:
 		// Constructor
 		// Parameter:
-		//     pGPUObject : a pointer to the GPU object 
+		//     pGPUObject : a pointer to the GPU object
+		//     pBufferManager: a poienter to the buffer manager
 		//     pCommandPoolManager: a pointer to the commandpool manager
-		ImageManager(GPUObject* pGPUObject, CommandpoolManager* pCommandPoolManager);
+		ImageManager(GPUObject* pGPUObject, D3D::BufferManager* pBufferManager, CommandpoolManager* pCommandPoolManager);
 		
 		// Delete default constructor
 		ImageManager() = delete;
@@ -74,21 +76,23 @@ namespace D3D
 		// Create a given texture image
 		// Parameters:
 		//     pGPUObject : a pointer to the GPU object 
+		//     pBufferManager: a poitner to the buffer manager object
 		//     texture: reference to the texture that will be created
 		//     textureName: filepath to the texture
 		//     mipLevels: the amount of mipmaps that will be created
 		//     pCommandPoolManager: pointer to the commandpool manager
-		void CreateTextureImage(GPUObject* pGPUObject, Texture& texture, const std::string& textureName,
+		void CreateTextureImage(GPUObject* pGPUObject, D3D::BufferManager* pBufferManager, Texture& texture, const std::string& textureName,
 			uint32_t& miplevels, CommandpoolManager* pCommandPoolManager);
 
 		// Create a given cube texture image
 		// Parameters:
 		//     pGPUObject : a pointer to the GPU object 
+		//     pBufferManager: pointer to the Buffermanager object
 		//     cubeTexture: reference to the texture that will be created
 		//     textureNames: filepaths to the texture that make up the faces of the cube
 		//     mipLevels: the amount of mipmaps that will be created
 		//     pCommandPoolManager: pointer to the commandpool manager
-		void CreateCubeTexture(GPUObject* pGPUObject, Texture& cubeTexture, const std::initializer_list<const std::string>& textureNames,
+		void CreateCubeTexture(GPUObject* pGPUObject, D3D::BufferManager* pBufferManager, Texture& cubeTexture, const std::initializer_list<const std::string>& textureNames,
 			uint32_t& miplevels, CommandpoolManager* pCommandPoolManager);
 
 		// Create a texture sampler
@@ -157,9 +161,10 @@ namespace D3D
 
 		// Create the default textures
 		// Parameters:
-		//     pGPUObject : a pointer to the GPU object 
+		//     pGPUObject: a pointer to the GPU object 
+		//     pBufferManager: a pointer to the buffer manager
 		//     pCommandPoolManager: a pointer to the commandpool manager
-		void CreateDefaultResources(GPUObject* pGPUObject, CommandpoolManager* pCommandPoolManager);
+		void CreateDefaultResources(GPUObject* pGPUObject, D3D::BufferManager* pBufferManager, CommandpoolManager* pCommandPoolManager);
 	};
 }
 #endif // !ImageManagerIncluded

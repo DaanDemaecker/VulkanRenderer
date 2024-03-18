@@ -20,6 +20,7 @@
 #include "DirectionalLightObject.h"
 #include "Window.h"
 #include "GPUObject.h"
+#include "BufferManager.h"
 
 #include "SkyBox.h"
 
@@ -84,6 +85,10 @@ void D3D::VulkanRenderer3D::CleanupSkybox()
 
 void D3D::VulkanRenderer3D::CleanupVulkan()
 {
+	// Create buffer manager
+	m_pBufferManager = std::make_unique<BufferManager>();
+
+
 	// Get handle to logical device
 	auto device{ m_pGpuObject->GetDevice() };
 
@@ -142,7 +147,7 @@ void D3D::VulkanRenderer3D::InitVulkan()
 	m_pCommandPoolManager = std::make_unique<CommandpoolManager>(pGPUObject, m_Surface, m_MaxFramesInFlight);
 
 	// Initialize the image manager
-	m_pImageManager = std::make_unique<ImageManager>(pGPUObject, m_pCommandPoolManager.get());
+	m_pImageManager = std::make_unique<ImageManager>(pGPUObject, m_pBufferManager.get(), m_pCommandPoolManager.get());
 
 	// Get the max amount of samples per pixel
 	auto msaaSamples = VulkanUtils::GetMaxUsableSampleCount(m_pGpuObject->GetPhysicalDevice());
@@ -567,24 +572,22 @@ void D3D::VulkanRenderer3D::TransitionImageLayout(VkImage image, VkFormat format
 void D3D::VulkanRenderer3D::CreateBuffer(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VkBuffer& buffer, VkDeviceMemory& bufferMemory)
 {
 	// Create the buffer trough vulkan utils
-	VulkanUtils::CreateBuffer(m_pGpuObject.get(), size, usage, properties, buffer, bufferMemory);
+	m_pBufferManager->CreateBuffer(m_pGpuObject.get(), size, usage, properties, buffer, bufferMemory);
 }
 
 void D3D::VulkanRenderer3D::CopyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size)
 {
-	// Begin a single time command buffer
-	VkCommandBuffer commandBuffer = BeginSingleTimeCommands();
+	m_pBufferManager->CopyBuffer(m_pGpuObject.get(), m_pCommandPoolManager.get(), srcBuffer, dstBuffer, size);
+}
 
-	// Create a buffer copy region
-	VkBufferCopy copyRegion{};
-	// Set size to the size of the buffer
-	copyRegion.size = size;
+void D3D::VulkanRenderer3D::CreateVertexBuffer(std::vector<D3D::Vertex>& vertices, VkBuffer& vertexBuffer, VkDeviceMemory& vertexBufferMemory)
+{
+	m_pBufferManager->CreateVertexBuffer(m_pGpuObject.get(), m_pCommandPoolManager.get(), vertices, vertexBuffer, vertexBufferMemory);
+}
 
-	// Copy the buffer
-	vkCmdCopyBuffer(commandBuffer, srcBuffer, dstBuffer, 1, &copyRegion);
-
-	// End the single time command
-	EndSingleTimeCommands(commandBuffer);
+void D3D::VulkanRenderer3D::CreateIndexBuffer(std::vector<uint32_t>& indices, VkBuffer& indexBuffer, VkDeviceMemory& indexBufferMemory)
+{
+	m_pBufferManager->CreateIndexBuffer(m_pGpuObject.get(), m_pCommandPoolManager.get(), indices, indexBuffer, indexBufferMemory);
 }
 
 void D3D::VulkanRenderer3D::UpdateUniformBuffer(UniformBufferObject& buffer)
@@ -602,14 +605,14 @@ std::vector<VkDescriptorSetLayout>& D3D::VulkanRenderer3D::GetDescriptorSetLayou
 void D3D::VulkanRenderer3D::CreateTexture(Texture& texture, const std::string& textureName, uint32_t& mipLevels)
 {
 	// Create the image trough the image manager
-	m_pImageManager->CreateTextureImage(m_pGpuObject.get(), texture, textureName, mipLevels, m_pCommandPoolManager.get());
+	m_pImageManager->CreateTextureImage(m_pGpuObject.get(), m_pBufferManager.get(), texture, textureName, mipLevels, m_pCommandPoolManager.get());
 	// Create the image view
 	texture.imageView = m_pImageManager->CreateImageView(m_pGpuObject->GetDevice(), texture.image, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_ASPECT_COLOR_BIT, mipLevels);
 }
 
 void D3D::VulkanRenderer3D::CreateCubeTexture(Texture& cubeTexture, const std::initializer_list<const std::string>& textureNames, uint32_t& miplevels)
 {
-	m_pImageManager->CreateCubeTexture(m_pGpuObject.get(), cubeTexture, textureNames, miplevels, m_pCommandPoolManager.get());
+	m_pImageManager->CreateCubeTexture(m_pGpuObject.get(), m_pBufferManager.get(), cubeTexture, textureNames, miplevels, m_pCommandPoolManager.get());
 }
 
 VkCommandBuffer D3D::VulkanRenderer3D::BeginSingleTimeCommands()

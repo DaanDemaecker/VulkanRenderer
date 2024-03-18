@@ -123,10 +123,6 @@ namespace D3D
 		//Material
 		std::shared_ptr<Material> m_pMaterial{};
 
-		// Create vertex buffer
-		void CreateVertexBuffer();
-		// Create index buffer
-		void CreateIndexBuffer();
 		// Create uniform buffer
 		void CreateUniformBuffers();
 

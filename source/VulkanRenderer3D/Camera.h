@@ -20,66 +20,66 @@ namespace D3D
 		// Set position
 		// Parameters:
 		//     position: new position
-		void SetPosition(glm::vec3& position) { m_Position = position; }
+		void SetPosition(glm::vec3& position) { m_Position = position; SetDirtyFlag(); }
 
 		// Set position
 		// Parameters:
 		//     position: new position
-		void SetPosition(glm::vec3&& position) { m_Position = position; }
+		void SetPosition(glm::vec3&& position) { m_Position = position; SetDirtyFlag(); }
 
 		// Set position
 		// Parameters:
 		//     x: x-position
 		//     y: y-position
 		//     z: z-position
-		void SetPosition(float x, float y, float z) { SetPosition(glm::vec3{ x,y,z }); }
+		void SetPosition(float x, float y, float z) { SetPosition(glm::vec3{ x,y,z }); SetDirtyFlag();}
 
 		// Set rotation
 		// Parameters:
 		//     rotation: new rotation
-		void SetRotation(glm::vec3& rotation) { m_Rotation = rotation; }
+		void SetRotation(glm::vec3& rotation) { m_Rotation = rotation; SetDirtyFlag();}
 		// Set rotation
 		// Parameters:
 		//     rotation: new rotation
-		void SetRotation(glm::vec3&& rotation) { m_Rotation = rotation; }
+		void SetRotation(glm::vec3&& rotation) { m_Rotation = rotation; SetDirtyFlag();}
 		// Set rotation
 		// Parameters:
 		//     x: x-rotation
 		//     y: y-rotation
 		//     z: z-rotation
-		void SetRotation(float x, float y, float z) { SetRotation(glm::vec3{ x,y,z }); }
+		void SetRotation(float x, float y, float z) { SetRotation(glm::vec3{ x,y,z }); SetDirtyFlag();}
 
 		// Set scale
 		// Parameters:
 		//     scale: new scale
-		void SetScale(glm::vec3& scale) { m_Scale = scale; }
+		void SetScale(glm::vec3& scale) { m_Scale = scale; SetDirtyFlag();}
 		// Set scale
 		// Parameters:
 		//     scale: new scale
-		void SetScale(glm::vec3&& scale) { m_Scale = scale; }
+		void SetScale(glm::vec3&& scale) { m_Scale = scale; SetDirtyFlag();}
 		// Set scale
 		// Parameters:
 		//     x: x-scale
 		//     y: y-scale
 		//     z: z-scale
-		void SetScale(float x, float y, float z) { SetScale(glm::vec3{ x,y,z }); }
+		void SetScale(float x, float y, float z) { SetScale(glm::vec3{ x,y,z }); SetDirtyFlag();}
 
 		// Set fov angle in radians
 		// Parameters:
 		//     angle: the angle in radians
-		void SetFovAngle(float angle) { m_FovAngle = angle; }
+		void SetFovAngle(float angle) { m_FovAngle = angle; SetDirtyFlag();}
 
 		// Set fov angle in degrees
 		// Parameters:
 		//     angle: the angle in degrees
-		void SetFovAngleDegrees(float angle) { m_FovAngle = glm::radians(angle); }
+		void SetFovAngleDegrees(float angle) { m_FovAngle = glm::radians(angle); SetDirtyFlag();}
 
 		// Get the position of the camera
-		glm::vec3& GetPosition() { SetDirtyFlag(); return m_Position; }
+		const glm::vec3& GetPosition() const {return m_Position; }
 		// Get the rotation of the camera
-		glm::vec3& GetRotation() { SetDirtyFlag(); return m_Rotation; }
+		const glm::vec3& GetRotation() const {return m_Rotation; }
 		// Get the scale of the camera
-		glm::vec3& GetScale() { SetDirtyFlag(); return m_Scale; }
+		const glm::vec3& GetScale() const { return m_Scale; }
 
 		// Update uniform buffer with camera transform
 		// Parameters:

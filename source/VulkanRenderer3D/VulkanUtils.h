@@ -19,16 +19,7 @@ namespace D3D
 
 namespace VulkanUtils
 {
-	// Create a VkBuffer
-	// Parameters:
-	//     pGPUObject : a pointer to the GPU object 
-	//     size: the size of the buffer
-	//     usage: the usage flags for the buffer
-	//     properties: the property flags for the buffer
-	//     buffer: a reference to the buffer that will be created
-	//     bufferMemory: a reference to the memory for the buffer that will be created
-	void CreateBuffer(D3D::GPUObject* pGPUObbject, VkDeviceSize size,
-		VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VkBuffer& buffer, VkDeviceMemory& bufferMemory);
+	
 
 	// Get a memory type that satisfies the given properties
 	// Parameters:
