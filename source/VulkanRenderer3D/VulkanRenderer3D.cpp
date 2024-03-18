@@ -590,14 +590,7 @@ void D3D::VulkanRenderer3D::CopyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, V
 void D3D::VulkanRenderer3D::UpdateUniformBuffer(UniformBufferObject& buffer)
 {
 	// Update the buffer with the camera transformation
-	m_pCamera->UpdateUniformBuffer(buffer);
-
-	// Get the swapchain extent
-	auto extent{ m_pSwapchainWrapper->GetExtent() };
-
-	// Set the projection matrix
-	buffer.proj = glm::perspective(glm::radians(45.0f), extent.width / static_cast<float>(extent.height), 0.1f, 100.0f);
-	buffer.proj[1][1] *= -1;
+	m_pCamera->UpdateUniformBuffer(buffer, m_pSwapchainWrapper->GetExtent());
 }
 
 std::vector<VkDescriptorSetLayout>& D3D::VulkanRenderer3D::GetDescriptorSetLayout(int vertexUbos, int fragmentUbos, int textureAmount)

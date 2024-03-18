@@ -64,6 +64,16 @@ namespace D3D
 		//     z: z-scale
 		void SetScale(float x, float y, float z) { SetScale(glm::vec3{ x,y,z }); }
 
+		// Set fov angle in radians
+		// Parameters:
+		//     angle: the angle in radians
+		void SetFovAngle(float angle) { m_FovAngle = angle; }
+
+		// Set fov angle in degrees
+		// Parameters:
+		//     angle: the angle in degrees
+		void SetFovAngleDegrees(float angle) { m_FovAngle = glm::radians(angle); }
+
 		// Get the position of the camera
 		glm::vec3& GetPosition() { SetDirtyFlag(); return m_Position; }
 		// Get the rotation of the camera
@@ -74,11 +84,15 @@ namespace D3D
 		// Update uniform buffer with camera transform
 		// Parameters:
 		//     buffer: reference to the uniform buffer object that needs updating
-		void UpdateUniformBuffer(UniformBufferObject& buffer);
+		//     extent: the extent of the swapchain
+		void UpdateUniformBuffer(UniformBufferObject& buffer, VkExtent2D extent);
 
 	private:
 		// Dirty flag
 		bool m_HasChanged{ true };
+
+		//FovAgnle
+		float m_FovAngle{ static_cast<float>(glm::radians(90.0)) };
 
 		// Vector 3 for the position
 		glm::vec3 m_Position{0, 0, 0};

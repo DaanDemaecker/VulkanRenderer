@@ -4,7 +4,7 @@
 #include "TimeManager.h"
 
 
-void D3D::Camera::UpdateUniformBuffer(UniformBufferObject& buffer)
+void D3D::Camera::UpdateUniformBuffer(UniformBufferObject& buffer, VkExtent2D extent)
 {
 	// If the camera transform has changed, update matrix
 	if (m_HasChanged)
@@ -12,6 +12,10 @@ void D3D::Camera::UpdateUniformBuffer(UniformBufferObject& buffer)
 
 	// Set buffer view matrix
 	buffer.view = m_Matrix;
+
+	// Set the projection matrix
+	buffer.proj = glm::perspective(m_FovAngle, extent.width / static_cast<float>(extent.height), 0.1f, 100.0f);
+	buffer.proj[1][1] *= -1;
 }
 
 void D3D::Camera::UpdateMatrix()

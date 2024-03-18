@@ -165,7 +165,7 @@ void D3D::D3DEngine::Run(const std::function<void()>& load)
 		time.SetDeltaTime(deltaTime);
 
 		// Print FPS
-		std::cout << time.GetFps() << std::endl;
+		std::cout << "FPS: " << time.GetFps() << std::endl;
 
 		// Poll input for the window
 		glfwPollEvents();
