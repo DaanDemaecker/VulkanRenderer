@@ -9,6 +9,7 @@
 
 // Standard library includes
 #include <vector>
+#include <iostream>
 
 namespace D3D
 {
@@ -55,7 +56,9 @@ namespace D3D
 		// Set the values for the application info
 		// Parameters:
 		//     applicationInfo: a reference to the VkApplicationInfo struct to avoid making a new one in the function
-		void SetupApplicationInfo(VkApplicationInfo& appInfo);
+		//     applicationName: a reference to an empty string to avoid the application name going out of scope
+		//     engineName: a reference to an empty string to avoid the engine name going out of scope
+		void SetupApplicationInfo(VkApplicationInfo& appInfo, std::string& applicationName, std::string& engineName);
 
 		// Helper function that checks if given validation layers are supported
 		// Parameters:

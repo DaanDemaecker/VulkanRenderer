@@ -18,8 +18,8 @@ namespace D3D
 	class PipelineManager final
 	{
 	public:
-		// Delete default constructor
-		PipelineManager() = delete;
+		// Constructor
+		PipelineManager();
 
 		// Default destructor
 		~PipelineManager() = default;
@@ -29,12 +29,6 @@ namespace D3D
 
 		PipelineManager& operator=(PipelineManager& other) = delete;
 		PipelineManager& operator=(PipelineManager&& other) = delete;
-
-		// Constructor
-		// Parameters:
-		//     defaultPipelineName: the name of the default pipeline
-		PipelineManager(const std::string& defaultPipelineName);
-
 
 		// Add a graphics pipeline to the vector
 		// Parameters:
@@ -52,6 +46,14 @@ namespace D3D
 		void AddGraphicsPipeline(VkDevice device, uint32_t maxFrames, VkRenderPass renderPass, VkSampleCountFlagBits sampleCount,
 			const std::string& pipelineName, const std::string& vertShaderName, const std::string& fragShaderName,
 			int vertexUbos, int fragmentUbos, int textureAmount, bool isSkybox = false);
+
+		// Add default pipeline to the vector
+		// Parameters:
+		//     device: the VkDevice handle
+		//     maxFrames: the max amount of frames in flight
+		//     renderPass: the handle of the VkRenderpass that will be used
+		//     sampleCount: the max useable sample count
+		void AddDefaultPipeline(VkDevice device, uint32_t maxFrames, VkRenderPass renderPass, VkSampleCountFlagBits sampleCount);
 
 		// Get a certain graphics pipeline
 		// Parameters:
@@ -85,10 +87,10 @@ namespace D3D
 		std::string m_DefaultPipelineName{};
 
 		// The name of the vertex funtion
-		std::string m_VertexFunction{ "main" };
+		std::string m_VertexFunction;
 
 		// The name of the vertex funtion
-		std::string m_FragmenFunction{ "main" };
+		std::string m_FragmenFunction;
 
 		// Create a new descriptor layout
 		// Parameters:

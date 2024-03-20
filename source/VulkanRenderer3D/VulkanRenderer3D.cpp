@@ -178,10 +178,9 @@ void D3D::VulkanRenderer3D::InitVulkan()
 	m_pDescriptorPoolManager = std::make_unique<DescriptorPoolManager>();
 
 	// Initialize graphics pipeline manager
-	m_pPipelineManager = std::make_unique<PipelineManager>(m_DefaultPipelineName);
-
-	// Add the default graphics pipeline
-	AddGraphicsPipeline(m_DefaultPipelineName, m_DefaultVertName, m_DefaultFragName, 1, 1, 0);
+	m_pPipelineManager = std::make_unique<PipelineManager>();
+	// Add the default pipeline
+	m_pPipelineManager->AddDefaultPipeline(m_pGpuObject->GetDevice(), m_MaxFramesInFlight, m_pRenderpassWrapper->GetRenderpass(), m_pSwapchainWrapper->GetMsaaSamples());
 
 	// Initialize the sync objects
 	m_pSyncObjectManager = std::make_unique<SyncObjectManager>(pGPUObject->GetDevice(), m_MaxFramesInFlight);

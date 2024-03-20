@@ -27,6 +27,16 @@ namespace D3D
 		//     propertyName: name of the property
 		std::string GetString(const std::string&& propertyName);
 
+		// Get int object from json
+		// Parameters:
+		//     propertyName: name of the property
+		int GetInt(const std::string& propertyName);
+
+		// Get int object from json
+		// Parameters:
+		//     propertyName: name of the property
+		int GetInt(const std::string&& propertyName);
+
 	private:
 		const std::string m_FileName { "Config.json" };
 

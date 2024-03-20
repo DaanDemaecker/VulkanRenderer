@@ -6,12 +6,14 @@
 #include "VulkanUtils.h"
 #include "GPUObject.h"
 #include "BufferManager.h"
+#include "ConfigManager.h"
 
 // Standard library includes
 #include <stdexcept>
 #include <cmath>
 
 D3D::ImageManager::ImageManager(GPUObject* pGPUObject, D3D::BufferManager* pBufferManager, CommandpoolManager* pCommandPoolManager)
+	:m_DefaultTextureName{ConfigManager::GetInstance().GetString("DefaultTextureName")}
 {
 	// Initialize the default textures
 	CreateDefaultResources(pGPUObject, pBufferManager, pCommandPoolManager);

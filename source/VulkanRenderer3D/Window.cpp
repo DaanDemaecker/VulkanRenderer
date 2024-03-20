@@ -2,16 +2,17 @@
 
 // File includes
 #include "Window.h"
+#include "ConfigManager.h"
 
 // Static library includes
 #include <functional>
 
-void D3D::Window::CreateWindow(int width, int height)
+D3D::Window::Window()
 {
 	// Set the width of the window
-	m_Window.Width = width;
+	m_Window.Width = ConfigManager::GetInstance().GetInt("WindowWidth");
 	// Set the height of the window
-	m_Window.Height = height;
+	m_Window.Height = ConfigManager::GetInstance().GetInt("WindowHeight");
 
 	// Initialize the window
 	InitWindow();
@@ -41,7 +42,7 @@ void D3D::Window::InitWindow()
 	glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
 
 	//Initialize the window
-	m_Window.pWindow = glfwCreateWindow(m_Window.Width, m_Window.Height, "Vulkan", nullptr, nullptr);
+	m_Window.pWindow = glfwCreateWindow(m_Window.Width, m_Window.Height, ConfigManager::GetInstance().GetString("WindowName").c_str(), nullptr, nullptr);
 	glfwSetWindowUserPointer(m_Window.pWindow, this);
 	glfwSetFramebufferSizeCallback(m_Window.pWindow, FramebufferResizeCallback);
 }

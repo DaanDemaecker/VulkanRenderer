@@ -14,10 +14,10 @@
 #include <chrono>
 #include <thread>
 
-D3D::D3DEngine::D3DEngine(int width, int height)
+D3D::D3DEngine::D3DEngine()
 {
 	// Create the window with the given width and height
-	D3D::Window::GetInstance().CreateWindow(width, height);
+	D3D::Window::GetInstance();
 }
 
 D3D::D3DEngine::~D3DEngine()
@@ -30,9 +30,6 @@ void D3D::D3DEngine::Run(const std::function<void()>& load)
 {
 	// Run the load function
 	load();
-
-	auto& configManager{ ConfigManager::GetInstance() };
-	std::cout << configManager.GetString("ApplicationName");
 
 	auto& renderer{ VulkanRenderer3D::GetInstance() };
 	auto& window{ Window::GetInstance() };
@@ -169,7 +166,7 @@ void D3D::D3DEngine::Run(const std::function<void()>& load)
 		time.SetDeltaTime(deltaTime);
 
 		// Print FPS
-		//std::cout << "FPS: " << time.GetFps() << std::endl;
+		std::cout << "FPS: " << time.GetFps() << std::endl;
 
 		// Poll input for the window
 		glfwPollEvents();

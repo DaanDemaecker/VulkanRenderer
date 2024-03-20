@@ -40,8 +40,8 @@ D3D::ConfigManager::ConfigManager()
 
 std::string D3D::ConfigManager::GetString(const std::string& propertyName)
 {
-
-	if (m_JsonFile[propertyName.c_str()].IsString())
+	// Check if file contains property, if not, return default string
+	if (m_JsonFile.HasMember(propertyName.c_str()) && m_JsonFile[propertyName.c_str()].IsString())
 	{
 		return m_JsonFile[propertyName.c_str()].GetString();
 	}
@@ -52,4 +52,20 @@ std::string D3D::ConfigManager::GetString(const std::string& propertyName)
 std::string D3D::ConfigManager::GetString(const std::string&& propertyName)
 {
 	return GetString(propertyName);
+}
+
+int D3D::ConfigManager::GetInt(const std::string& propertyName)
+{
+
+	// Check if file contains property, if not, return 0
+	if (m_JsonFile.HasMember(propertyName.c_str()) && m_JsonFile[propertyName.c_str()].IsInt())
+	{
+		return m_JsonFile[propertyName.c_str()].GetInt();
+	}
+	return 0;
+}
+
+int D3D::ConfigManager::GetInt(const std::string&& propertyName)
+{
+	return GetInt(propertyName);
 }

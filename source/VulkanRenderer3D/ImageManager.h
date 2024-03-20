@@ -149,7 +149,7 @@ namespace D3D
 		uint32_t m_MipLevels{};
 
 		// The textpath to the default texture
-		const std::string m_DefaultTextureName{ "../resources/DefaultResources/DefaultTexture.png" };
+		const std::string m_DefaultTextureName;
 		
 		// The default sampler
 		VkSampler m_TextureSampler{};

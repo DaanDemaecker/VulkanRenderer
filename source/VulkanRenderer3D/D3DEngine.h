@@ -13,10 +13,7 @@ namespace D3D
 	{
 	public:
 		// Constructor
-		// Parameters:
-		//     - width: window width
-		//     - height: window height
-		D3DEngine(int width, int height);
+		D3DEngine();
 
 		// Destructor
 		~D3DEngine();

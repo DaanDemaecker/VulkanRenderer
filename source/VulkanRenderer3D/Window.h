@@ -27,14 +27,8 @@ namespace D3D
 	class Window : public Singleton<Window>
 	{
 	public:
-		// Default constructor
-		Window() = default;
-
-		// Create the glfw window
-		// Parameters:
-		//     width: the window width
-		//     height: the window height
-		void CreateWindow(int width, int height);
+		// Constructor
+		Window();
 
 		// Default
 		~Window();

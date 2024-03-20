@@ -4,6 +4,7 @@
 #include "InstanceWrapper.h"
 #include "GlfwIncludes.h"
 #include "VulkanUtils.h"
+#include "ConfigManager.h"
 
 // Standard library includes
 #include <stdexcept>
@@ -26,9 +27,10 @@ D3D::InstanceWrapper::InstanceWrapper()
 #endif
 
 	//provide usefull information to the driver to optimize application
-	VkApplicationInfo appInfo{};;
+	VkApplicationInfo appInfo{};
+	std::string applicationName{}, engineName{};
 	// Setup application info
-	SetupApplicationInfo(appInfo);
+	SetupApplicationInfo(appInfo, applicationName, engineName);
 
 	// Create instance create info
 	VkInstanceCreateInfo createInfo{};
@@ -91,18 +93,27 @@ D3D::InstanceWrapper::~InstanceWrapper()
 	vkDestroyInstance(m_Instance, nullptr);
 }
 
-void D3D::InstanceWrapper::SetupApplicationInfo(VkApplicationInfo& appInfo)
+void D3D::InstanceWrapper::SetupApplicationInfo(VkApplicationInfo& appInfo, std::string& applicationName, std::string& engineName)
 {
+	// Get config manager
+	auto& configManager{ ConfigManager::GetInstance() };
+
 	// Set type to application info
 	appInfo.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
-	// Set name of application
-	appInfo.pApplicationName = "Vulkan Renderer";
+	// Get name of application from config
+	applicationName = configManager.GetString("ApplicationName");
+	appInfo.pApplicationName = applicationName.c_str();
 	// Set version of application
-	appInfo.applicationVersion = VK_MAKE_VERSION(1, 0, 0);
-	// Set name of engine
-	appInfo.pEngineName = "D3D";
+	appInfo.applicationVersion = VK_MAKE_VERSION(configManager.GetInt("ApplicationVersionMajor"), 
+		configManager.GetInt("ApplicationVersionMinor"), 
+		configManager.GetInt("ApplicationVersionPatch"));
+	// Get name of engine from config
+	engineName = configManager.GetString("EngineName");
+	appInfo.pEngineName = engineName.c_str();
 	// Set version of engine
-	appInfo.engineVersion = VK_MAKE_VERSION(1, 0, 0);
+	appInfo.engineVersion = VK_MAKE_VERSION(configManager.GetInt("EngineVersionMajor"),
+		configManager.GetInt("EngineVersionMinor"),
+		configManager.GetInt("EngineVersionPatch"));
 	// Set version of api
 	appInfo.apiVersion = VK_API_VERSION_1_0;
 }

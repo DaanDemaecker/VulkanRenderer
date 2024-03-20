@@ -1,3 +1,22 @@
 {
-    "ApplicationName": "VulkanRenderer3D"
+    "WindowName" : "Vulkan",
+    "WindowWidth" : 800,
+    "WindowHeight" : 600,
+    "ApplicationName": "VulkanRenderer3D",
+    "ApplicationVersionMajor" : 1,
+    "ApplicationVersionMinor" : 0,
+    "ApplicationVersoinPatch" : 0,
+    "EngineName" : "D3D",
+    "EngineVersionMajor" : 1,
+    "EngineVersionMinor" : 0,
+    "EnginenVersoinPatch" : 0,
+    "DefaultTextureName" : "../resources/DefaultResources/DefaultTexture.png",
+    "DefaultPipelineName" : "Default",
+    "DefaultVertName" : "../resources/DefaultResources/Default.Vert.spv",
+    "DefaultFragName" : "../resources/DefaultResources/Default.Frag.spv",
+    "DefaultPipelineVertexUbos" : 1,
+    "DefaultPipelineFragmentUbos" : 1,
+    "DefaultPipelineTextures" : 0,
+    "VertexFunction" : "main",
+    "FragmentFunction" : "main"
 }

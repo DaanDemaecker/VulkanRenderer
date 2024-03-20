@@ -3,10 +3,11 @@
 // File includes
 #include "PipelineManager.h"
 #include "Utils.h"
+#include "ConfigManager.h"
 
-D3D::PipelineManager::PipelineManager(const std::string& defaultPipelineName)
-	// Initialize the default pipeline name
-	:m_DefaultPipelineName{defaultPipelineName}
+D3D::PipelineManager::PipelineManager()
+	:m_VertexFunction{ConfigManager::GetInstance().GetString("VertexFunction")},
+	m_FragmenFunction{ConfigManager::GetInstance().GetString("FragmentFunction")}
 {
 }
 
@@ -25,6 +26,24 @@ void D3D::PipelineManager::Cleanup(VkDevice device)
 		// Call cleanup function
 		pipeline.second.Cleanup(device);
 	}
+}
+
+void D3D::PipelineManager::AddDefaultPipeline(VkDevice device, uint32_t maxFrames, VkRenderPass renderPass, VkSampleCountFlagBits sampleCount)
+{
+	// Get config manager
+	auto& configManager{ ConfigManager::GetInstance() };
+
+	// Initialize default pipeline name 
+	m_DefaultPipelineName = configManager.GetString("DefaultPipelineName");
+
+	// Add default pipeline
+	AddGraphicsPipeline(device, maxFrames, renderPass, sampleCount, m_DefaultPipelineName,
+		configManager.GetString("DefaultVertName"),
+		configManager.GetString("DefaultFragName"),
+		configManager.GetInt("DefaultPipelineVertexUbos"),
+		configManager.GetInt("DefaultPipelineFragmentUbos"),
+		configManager.GetInt("DefaultPipelineTextures"), false);
+
 }
 
 

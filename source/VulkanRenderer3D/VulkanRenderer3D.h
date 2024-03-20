@@ -206,13 +206,6 @@ namespace D3D
         // Pointer to the camera
         std::unique_ptr<Camera> m_pCamera{};
 
-        // Name of the default pipeline
-        const std::string m_DefaultPipelineName{ "Default" };
-        // Textpath to the default vertex shader
-        const std::string m_DefaultVertName{ "../resources/DefaultResources/Default.Vert.spv" };
-        // Textpath to the default fragment shader
-        const std::string m_DefaultFragName{ "../resources/DefaultResources/Default.Frag.spv" };
-
         // Clean up all vulkan objects
         void CleanupVulkan();
 
