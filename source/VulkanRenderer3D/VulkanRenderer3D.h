@@ -240,6 +240,7 @@ namespace D3D
 
         // Begin a command buffer for a single command
         VkCommandBuffer BeginSingleTimeCommands();
+
         // End a command buffer after a single command
         // Parameters:
         //     commandBuffer: handle of the buffer to be ended

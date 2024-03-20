@@ -178,6 +178,7 @@
     <ClCompile Include="BufferManager.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="CommandpoolManager.cpp" />
+    <ClCompile Include="ConfigManager.cpp" />
     <ClCompile Include="CubeMapMaterial.cpp" />
     <ClCompile Include="D3DEngine.cpp" />
     <ClCompile Include="DescriptorPoolManager.cpp" />
@@ -219,6 +220,7 @@
     <ClInclude Include="BufferManager.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="CommandpoolManager.h" />
+    <ClInclude Include="ConfigManager.h" />
     <ClInclude Include="CubeMapMaterial.h" />
     <ClInclude Include="D3DEngine.h" />
     <ClInclude Include="DescriptorPoolManager.h" />
@@ -231,6 +233,7 @@
     <ClInclude Include="ImGuiWrapper.h" />
     <ClInclude Include="InstanceWrapper.h" />
     <ClInclude Include="PipelineManager.h" />
+    <ClInclude Include="RapidJSONIncludes.h" />
     <ClInclude Include="RenderpassWrapper.h" />
     <ClInclude Include="SkyBox.h" />
     <ClInclude Include="SwapchainWrapper.h" />

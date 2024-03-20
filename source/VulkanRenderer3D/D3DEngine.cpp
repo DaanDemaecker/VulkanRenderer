@@ -8,6 +8,7 @@
 #include "Material.h"
 #include "TexturedMaterial.h"
 #include "Window.h"
+#include "ConfigManager.h"
 
 // Standard library includes
 #include <chrono>
@@ -29,6 +30,9 @@ void D3D::D3DEngine::Run(const std::function<void()>& load)
 {
 	// Run the load function
 	load();
+
+	auto& configManager{ ConfigManager::GetInstance() };
+	std::cout << configManager.GetString("ApplicationName");
 
 	auto& renderer{ VulkanRenderer3D::GetInstance() };
 	auto& window{ Window::GetInstance() };
@@ -165,7 +169,7 @@ void D3D::D3DEngine::Run(const std::function<void()>& load)
 		time.SetDeltaTime(deltaTime);
 
 		// Print FPS
-		std::cout << "FPS: " << time.GetFps() << std::endl;
+		//std::cout << "FPS: " << time.GetFps() << std::endl;
 
 		// Poll input for the window
 		glfwPollEvents();

@@ -19,8 +19,6 @@ namespace D3D
 
 namespace VulkanUtils
 {
-	
-
 	// Get a memory type that satisfies the given properties
 	// Parameters:
 	//     physicalDevice: handle of the VkPhysicalDevice
