@@ -16,7 +16,6 @@ namespace D3D
 		// Constructor
 		ConfigManager();
 
-
 		// Get string object from json
 		// Parameters:
 		//     propertyName: name of the property
@@ -58,10 +57,13 @@ namespace D3D
 		float GetFloat(const std::string&& propertyName);
 
 	private:
+		// File name of the config file
 		const std::string m_FileName { "Config.json" };
 
+		// The default string when none is found
 		const std::string m_DefaultString{ "Not availabe" };
 
+		// The json file object
 		rapidjson::Document m_JsonFile{};
 	};
 }

@@ -97,7 +97,9 @@ bool D3D::GPUObject::IsDeviceSuitable(VkPhysicalDevice device, VkSurfaceKHR surf
 	// The extensions are all supported
 	// The swapchain is adequate
 	// Sampler anisotropy is supported
-	return indices.isComplete() && extensionsSupported && swapChainAdequate && supportedFeatures.samplerAnisotropy;
+	// Geometry shaders are supported
+	return indices.isComplete() && extensionsSupported && swapChainAdequate && supportedFeatures.samplerAnisotropy
+		&& supportedFeatures.geometryShader;
 }
 
 
