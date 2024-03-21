@@ -35,14 +35,16 @@ void D3D::Window::SetFrameBufferResized(bool value)
 
 void D3D::Window::InitWindow()
 {
-	//Initialize glfw
 	glfwInit();
 
 	//Tell GLFW not to create an OpenGL context
 	glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
 
+
+
 	//Initialize the window
-	m_Window.pWindow = glfwCreateWindow(m_Window.Width, m_Window.Height, ConfigManager::GetInstance().GetString("WindowName").c_str(), nullptr, nullptr);
+	m_Window.pWindow = glfwCreateWindow(m_Window.Width, m_Window.Height, ConfigManager::GetInstance().GetString("WindowName").c_str(),
+		nullptr, nullptr);
 	glfwSetWindowUserPointer(m_Window.pWindow, this);
 	glfwSetFramebufferSizeCallback(m_Window.pWindow, FramebufferResizeCallback);
 }

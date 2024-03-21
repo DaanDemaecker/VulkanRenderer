@@ -37,6 +37,26 @@ namespace D3D
 		//     propertyName: name of the property
 		int GetInt(const std::string&& propertyName);
 
+		// Get bool object from json
+		// Parameters:
+		//     propertyName: name of the property
+		bool GetBool(const std::string& propertyName);
+
+		// Get bool object from json
+		// Parameters:
+		//     propertyName: name of the property
+		bool GetBool(const std::string&& propertyName);
+
+		// Get float object from json
+		// Parameters:
+		//     propertyName: name of the property
+		float GetFloat(const std::string& propertyName);
+
+		// Get float object from json
+		// Parameters:
+		//     propertyName: name of the property
+		float GetFloat(const std::string&& propertyName);
+
 	private:
 		const std::string m_FileName { "Config.json" };
 

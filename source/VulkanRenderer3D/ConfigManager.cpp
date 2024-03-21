@@ -69,3 +69,33 @@ int D3D::ConfigManager::GetInt(const std::string&& propertyName)
 {
 	return GetInt(propertyName);
 }
+
+bool D3D::ConfigManager::GetBool(const std::string& propertyName)
+{
+	// Check if file contains property, if not, return false
+	if (m_JsonFile.HasMember(propertyName.c_str()) && m_JsonFile[propertyName.c_str()].IsBool())
+	{
+		return m_JsonFile[propertyName.c_str()].IsBool();
+	}
+	return false;
+}
+
+bool D3D::ConfigManager::GetBool(const std::string&& propertyName)
+{
+	return GetBool(propertyName);
+}
+
+float D3D::ConfigManager::GetFloat(const std::string& propertyName)
+{
+	// Check if file contains property, if not, return 0
+	if (m_JsonFile.HasMember(propertyName.c_str()) && m_JsonFile[propertyName.c_str()].IsFloat())
+	{
+		return m_JsonFile[propertyName.c_str()].IsFloat();
+	}
+	return 0;
+}
+
+float D3D::ConfigManager::GetFloat(const std::string&& propertyName)
+{
+	return GetFloat(propertyName);
+}
