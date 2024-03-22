@@ -160,7 +160,11 @@ void D3D::PipelineManager::AddGraphicsPipeline(VkDevice device, uint32_t maxFram
 	// Create pipeline layout info
 	VkPipelineLayoutCreateInfo pipelineLayoutInfo{};
 	// Set pipeline layout info
-	SetPipelineLayoutCreateInfo(pipelineLayoutInfo, device, maxFrames, vertexUbos, fragmentUbos, textureAmount);
+	auto descriptorCounts{ ShaderDescriptorCounts() };
+	descriptorCounts.vertexUbos = vertexUbos;
+	descriptorCounts.fragmentUbos = fragmentUbos;
+	descriptorCounts.fragmentSamplers = textureAmount;
+	SetPipelineLayoutCreateInfo(pipelineLayoutInfo, device, maxFrames, descriptorCounts);
 
 	// Create pipeline layout
 	if (vkCreatePipelineLayout(device, &pipelineLayoutInfo, nullptr, &m_GraphicPipelines[pipelineName].pipelineLayout) != VK_SUCCESS)
@@ -230,29 +234,26 @@ D3D::PipelinePair& D3D::PipelineManager::GetPipeline(const std::string& name)
 	}
 }
 
-std::vector<VkDescriptorSetLayout>& D3D::PipelineManager::GetDescriptorSetLayout(VkDevice device, uint32_t maxFrames, int vertexUbos, int fragmentUbos, int textureAmount)
+std::vector<VkDescriptorSetLayout>& D3D::PipelineManager::GetDescriptorSetLayout(VkDevice device, uint32_t maxFrames, ShaderDescriptorCounts& descriptorCounts)
 {
-	// Create tuple for vertexUbos, fragmentUbos and texture amount to use as key in the map
-	std::tuple<int, int, int> tuple{ vertexUbos, fragmentUbos, textureAmount };
-
 	// Check if map contains the requestet layout
-	if (!m_DescriptorSetLayouts.contains(tuple))
+	if (!m_DescriptorSetLayouts.contains(descriptorCounts))
 	{
 		// If not, create it
-		CreateDescriptorLayout(device, maxFrames, vertexUbos, fragmentUbos, textureAmount);
+		CreateDescriptorLayout(device, maxFrames, descriptorCounts);
 	}
 
 	// Return the requested layout
-	return m_DescriptorSetLayouts[tuple];
+	return m_DescriptorSetLayouts[descriptorCounts];
 }
 
-void D3D::PipelineManager::CreateDescriptorLayout(VkDevice device, uint32_t maxFrames, int vertexUbos, int fragmentUbos, int textureAmount)
+void D3D::PipelineManager::CreateDescriptorLayout(VkDevice device, uint32_t maxFrames, ShaderDescriptorCounts& descriptorCounts)
 {
 	// Create vector of descriptorsetlayoutbindings the size of the sum of vertexUbos, fragmentUbos and textureamount;
-	std::vector<VkDescriptorSetLayoutBinding> bindings(vertexUbos + fragmentUbos + textureAmount);
+	std::vector<VkDescriptorSetLayoutBinding> bindings(descriptorCounts.GetTotal());
 
 	// Loop trough the amount of vertex ubos, starting with 0
-	for (int i{}; i < vertexUbos; ++i)
+	for (int i{}; i < descriptorCounts.vertexUbos; ++i)
 	{
 		// Create uboLayoutbinding
 		VkDescriptorSetLayoutBinding uboLayoutBinding{};
@@ -272,7 +273,7 @@ void D3D::PipelineManager::CreateDescriptorLayout(VkDevice device, uint32_t maxF
 	}
 
 	// Loop trough the amount of fragment ubos starting at the number of vertex ubos
-	for (int i{ vertexUbos }; i < fragmentUbos + vertexUbos; ++i)
+	for (int i{ descriptorCounts.vertexUbos }; i < descriptorCounts.fragmentUbos + descriptorCounts.vertexUbos; ++i)
 	{
 		// Create ubolayoutbinding
 		VkDescriptorSetLayoutBinding uboLayoutBinding{};
@@ -292,7 +293,7 @@ void D3D::PipelineManager::CreateDescriptorLayout(VkDevice device, uint32_t maxF
 	}
 
 	// Loop trough the amount of textures, starting at the sum of the amount of vertex and fragment ubos
-	for (int i{ vertexUbos + fragmentUbos }; i < vertexUbos + fragmentUbos + textureAmount; ++i)
+	for (int i{ descriptorCounts.vertexUbos + descriptorCounts.fragmentUbos }; i < descriptorCounts.vertexUbos + descriptorCounts.fragmentUbos + descriptorCounts.fragmentSamplers; ++i)
 	{
 		// Create sampler layout binding
 		VkDescriptorSetLayoutBinding samplerLayoutBinding{};
@@ -320,9 +321,6 @@ void D3D::PipelineManager::CreateDescriptorLayout(VkDevice device, uint32_t maxF
 	// Set bindings to the data of bindings vector
 	layoutInfo.pBindings = bindings.data();
 
-	// Create tuble to use as a key in the descriptorsetlayout map
-	std::tuple<int, int, int> tuple{ vertexUbos, fragmentUbos, textureAmount };
-
 	// Create descriptorsetlayout handle, initialize with VK_NULL_HANDLE
 	VkDescriptorSetLayout layout = VK_NULL_HANDLE;                                                                                                                                                                                                             
 
@@ -334,7 +332,7 @@ void D3D::PipelineManager::CreateDescriptorLayout(VkDevice device, uint32_t maxF
 	}
 
 	// Create a vector of descriptorsets the size of the max amount of frames in flight and place it in the map
-	m_DescriptorSetLayouts[tuple] = std::vector<VkDescriptorSetLayout>(maxFrames, layout);
+	m_DescriptorSetLayouts[descriptorCounts] = std::vector<VkDescriptorSetLayout>(maxFrames, layout);
 }
 
 VkShaderModule D3D::PipelineManager::CreateShaderModule(VkDevice device, const std::vector<char>& code)
@@ -497,14 +495,14 @@ void D3D::PipelineManager::SetColorblendStateCreateInfo(VkPipelineColorBlendStat
 	colorBlending.blendConstants[3] = 0.0f;
 }
 
-VkPipelineLayoutCreateInfo D3D::PipelineManager::SetPipelineLayoutCreateInfo(VkPipelineLayoutCreateInfo& pipelineLayoutInfo, VkDevice device, uint32_t maxFrames, int vertexUbos, int fragmentUbos, int textureAmount)
+VkPipelineLayoutCreateInfo D3D::PipelineManager::SetPipelineLayoutCreateInfo(VkPipelineLayoutCreateInfo& pipelineLayoutInfo, VkDevice device, uint32_t maxFrames, ShaderDescriptorCounts& descriptorCounts)
 {
 	// Set type to pipeline layout create info
 	pipelineLayoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
 	// Set layoutcount to 1
 	pipelineLayoutInfo.setLayoutCount = 1;
 	// Get the correct layout
-	pipelineLayoutInfo.pSetLayouts = &GetDescriptorSetLayout(device, maxFrames, vertexUbos, fragmentUbos, textureAmount)[0];
+	pipelineLayoutInfo.pSetLayouts = &GetDescriptorSetLayout(device, maxFrames, descriptorCounts)[0];
 
 	// Code for adding push constant
 	/*VkPushConstantRange pushConstantRange = {};

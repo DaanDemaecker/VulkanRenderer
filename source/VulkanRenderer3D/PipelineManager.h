@@ -64,10 +64,8 @@ namespace D3D
 		// Parameters:
 		//     device: handle of the VkDevice
 		//     maxFrames: the max amount of frames in flight
-		//     vertexUbos: the amount of uniform buffer objects in the vertex shader
-		//     fragmentUbos: the amount of uniform buffer objects in the fragment shader
-		//     textureAmount: the amount of textures used in the fragment shader
-		std::vector<VkDescriptorSetLayout>& GetDescriptorSetLayout(VkDevice device, uint32_t maxFrames, int vertexUbos, int fragmentUbos, int textureAmount);
+		//     descriptorCounts: an object that hold the amount of descriptors for each shader stage
+		std::vector<VkDescriptorSetLayout>& GetDescriptorSetLayout(VkDevice device, uint32_t maxFrames, ShaderDescriptorCounts& descriptorCounts);
 
 		// Clean up everything
 		// Parameters:
@@ -76,8 +74,8 @@ namespace D3D
 
 	private:
 		// A map of descriptorset layouts
-		// A tuple is used to indicate the amount of vertexubos, fragmentubos and textures respectively
-		std::map<std::tuple<int, int, int>, std::vector<VkDescriptorSetLayout>> m_DescriptorSetLayouts{};
+		// A ShaderDescriptorCounts is used as key of the map
+		std::map<ShaderDescriptorCounts, std::vector<VkDescriptorSetLayout>> m_DescriptorSetLayouts{};
 
 		// A map of all the graphics pipelines
 		// A string is used to as key for the pipelines
@@ -96,10 +94,8 @@ namespace D3D
 		// Parameters:
 		//     device: handle of the VkDevice
 		//     maxFrames: the max amount of frames in flight
-		//     vertexUbos: the amount of uniform buffer objects in the vertex shader
-		//     fragmentUbos: the amount of uniform buffer objects in the fragment shader
-		//     textureAmount: the amount of textures used in the fragment shader
-		void CreateDescriptorLayout(VkDevice device, uint32_t maxFrames, int vertexUbos, int fragmentUbos, int textureAmount);
+		//     descriptorCounts: an object that hold the amount of descriptors for each shader stage
+		void CreateDescriptorLayout(VkDevice device, uint32_t maxFrames, ShaderDescriptorCounts& descriptorCounts);
 
 		// Create a vulkan shader module from binary code
 		// Parameters:
@@ -147,11 +143,8 @@ namespace D3D
 		//     pipelineLayoutInfo: a reference to the layout create info to avoid creating a new one in the function
 		//     device: handle of the VkDevice
 		//     maxFrames: the max amount of frames in flight
-		//     vertexUbos: the amount of uniform buffer objects in the vertex shader
-		//     fragmentUbos: the amount of uniform buffer objects in the fragment shader
-		//     textureAmount: the amount of textures used in the fragment shader
-		VkPipelineLayoutCreateInfo SetPipelineLayoutCreateInfo(VkPipelineLayoutCreateInfo& pipelineLayoutInfo,VkDevice device, uint32_t maxFrames,
-																int vertexUbos, int fragmentUbos, int textureAmount);
+		//     descriptorCounts: an object that hold the amount of descriptors for each shader stage
+		VkPipelineLayoutCreateInfo SetPipelineLayoutCreateInfo(VkPipelineLayoutCreateInfo& pipelineLayoutInfo,VkDevice device, uint32_t maxFrames, ShaderDescriptorCounts& descriptorCounts);
 	};
 }
 

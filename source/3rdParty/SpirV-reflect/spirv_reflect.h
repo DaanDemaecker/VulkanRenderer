@@ -1737,12 +1737,16 @@ inline ShaderModule::~ShaderModule() {
   spvReflectDestroyShaderModule(&m_module);
 }
 
-
+#pragma warning(push)
+#pragma warning(disable : 26439)
 inline ShaderModule::ShaderModule(ShaderModule&& other)
 {
     *this = std::move(other);
 }
+#pragma warning(pop)
 
+#pragma warning(push)
+#pragma warning(disable : 26439)
 inline ShaderModule& ShaderModule::operator=(ShaderModule&& other)
 {
     m_result = std::move(other.m_result);
@@ -1751,6 +1755,7 @@ inline ShaderModule& ShaderModule::operator=(ShaderModule&& other)
     other.m_module = {};
     return *this;
 }
+#pragma warning(pop)
 
 /*! @fn GetResult
 

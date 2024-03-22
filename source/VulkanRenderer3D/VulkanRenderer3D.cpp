@@ -597,8 +597,12 @@ void D3D::VulkanRenderer3D::UpdateUniformBuffer(UniformBufferObject& buffer)
 
 std::vector<VkDescriptorSetLayout>& D3D::VulkanRenderer3D::GetDescriptorSetLayout(int vertexUbos, int fragmentUbos, int textureAmount)
 {
+	auto descriptorCounts{ ShaderDescriptorCounts() };
+	descriptorCounts.vertexUbos = vertexUbos;
+	descriptorCounts.fragmentUbos = fragmentUbos;
+	descriptorCounts.fragmentSamplers = textureAmount;
 	// Return the requested descriptor set layout trough the pipeline manager
-	return m_pPipelineManager->GetDescriptorSetLayout(m_pGpuObject->GetDevice(), m_MaxFramesInFlight, vertexUbos, fragmentUbos, textureAmount);
+	return m_pPipelineManager->GetDescriptorSetLayout(m_pGpuObject->GetDevice(), m_MaxFramesInFlight, descriptorCounts);
 }
 
 void D3D::VulkanRenderer3D::CreateTexture(Texture& texture, const std::string& textureName, uint32_t& mipLevels)
