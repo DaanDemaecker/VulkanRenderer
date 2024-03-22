@@ -39,6 +39,9 @@
     <Filter Include="Vulkan\Managers">
       <UniqueIdentifier>{88998c34-3eed-4f5a-a373-22e7f0eada43}</UniqueIdentifier>
     </Filter>
+    <Filter Include="spirV-reflect">
+      <UniqueIdentifier>{275b52a0-e9e5-49fe-baaf-5f56a994c023}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -157,6 +160,12 @@
     </ClCompile>
     <ClCompile Include="ConfigManager.cpp">
       <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\3rdParty\SpirV-reflect\spirv_reflect.c">
+      <Filter>spirV-reflect</Filter>
+    </ClCompile>
+    <ClCompile Include="..\3rdParty\SpirV-reflect\spirv_reflect.cpp">
+      <Filter>spirV-reflect</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -285,6 +294,12 @@
     </ClInclude>
     <ClInclude Include="RapidJSONIncludes.h">
       <Filter>Includes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\3rdParty\SpirV-reflect\spirv_reflect.h">
+      <Filter>spirV-reflect</Filter>
+    </ClInclude>
+    <ClInclude Include="..\3rdParty\SpirV-reflect\include\spirv\unified1\spirv.h">
+      <Filter>spirV-reflect</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -76,6 +76,7 @@ void D3D::PipelineManager::AddGraphicsPipeline(VkDevice device, uint32_t maxFram
 	// Give the name of the function
 	vertShaderStageInfo.pName = m_VertexFunction.c_str();
 
+
 	// Create shader stage create info
 	VkPipelineShaderStageCreateInfo fragShaderStageInfo{};
 	// Set type to pipeline shader stage create info

@@ -175,6 +175,8 @@
     <ClCompile Include="..\3rdParty\Imgui\imgui_draw.cpp" />
     <ClCompile Include="..\3rdParty\Imgui\imgui_tables.cpp" />
     <ClCompile Include="..\3rdParty\Imgui\imgui_widgets.cpp" />
+    <ClCompile Include="..\3rdParty\SpirV-reflect\spirv_reflect.c" />
+    <ClCompile Include="..\3rdParty\SpirV-reflect\spirv_reflect.cpp" />
     <ClCompile Include="BufferManager.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="CommandpoolManager.cpp" />
@@ -217,6 +219,8 @@
     <ClInclude Include="..\3rdParty\Imgui\imstb_rectpack.h" />
     <ClInclude Include="..\3rdParty\Imgui\imstb_textedit.h" />
     <ClInclude Include="..\3rdParty\Imgui\imstb_truetype.h" />
+    <ClInclude Include="..\3rdParty\SpirV-reflect\include\spirv\unified1\spirv.h" />
+    <ClInclude Include="..\3rdParty\SpirV-reflect\spirv_reflect.h" />
     <ClInclude Include="BufferManager.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="CommandpoolManager.h" />
