@@ -167,6 +167,9 @@
     <ClCompile Include="..\3rdParty\SpirV-reflect\spirv_reflect.cpp">
       <Filter>spirV-reflect</Filter>
     </ClCompile>
+    <ClCompile Include="ShaderModuleWrapper.cpp">
+      <Filter>Vulkan\Wrappers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Utils.h">
@@ -300,6 +303,9 @@
     </ClInclude>
     <ClInclude Include="..\3rdParty\SpirV-reflect\include\spirv\unified1\spirv.h">
       <Filter>spirV-reflect</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderModuleWrapper.h">
+      <Filter>Vulkan\Wrappers</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

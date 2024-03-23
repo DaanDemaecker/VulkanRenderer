@@ -90,7 +90,7 @@
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <TreatWarningAsError>true</TreatWarningAsError>
-      <AdditionalIncludeDirectories>$(SolutionDir)3rdParty\Vulkan\Include;$(SolutionDir)3rdParty\glm;$(SolutionDir)3rdParty\GLFW\$(Platform)\include;$(SolutionDir)3rdParty\stb;$(SolutionDir)3rdParty\TinyObjLoader;$(SolutionDir)3rdParty\SDL2\include;$(SolutionDir)3rdParty\imgui;$(SolutionDir)3rdParty\RapidJson\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)3rdParty\Vulkan\Include;$(SolutionDir)3rdParty\glm;$(SolutionDir)3rdParty\GLFW\$(Platform)\include;$(SolutionDir)3rdParty\stb;$(SolutionDir)3rdParty\TinyObjLoader;$(SolutionDir)3rdParty\SDL2\include;$(SolutionDir)3rdParty\imgui;$(SolutionDir)3rdParty\RapidJson\include;$(SolutionDir)3rdParty\SpirV-reflect</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
     </ClCompile>
@@ -111,7 +111,7 @@
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <TreatWarningAsError>true</TreatWarningAsError>
-      <AdditionalIncludeDirectories>$(SolutionDir)3rdParty\Vulkan\Include;$(SolutionDir)3rdParty\glm;$(SolutionDir)3rdParty\GLFW\$(Platform)\include;$(SolutionDir)3rdParty\stb;$(SolutionDir)3rdParty\TinyObjLoader;$(SolutionDir)3rdParty\SDL2\include;$(SolutionDir)3rdParty\imgui;$(SolutionDir)3rdParty\RapidJson\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)3rdParty\Vulkan\Include;$(SolutionDir)3rdParty\glm;$(SolutionDir)3rdParty\GLFW\$(Platform)\include;$(SolutionDir)3rdParty\stb;$(SolutionDir)3rdParty\TinyObjLoader;$(SolutionDir)3rdParty\SDL2\include;$(SolutionDir)3rdParty\imgui;$(SolutionDir)3rdParty\RapidJson\include;$(SolutionDir)3rdParty\SpirV-reflect</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
     </ClCompile>
@@ -131,7 +131,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)3rdParty\Vulkan\Include;$(SolutionDir)3rdParty\glm;$(SolutionDir)3rdParty\GLFW\$(Platform)\include;$(SolutionDir)3rdParty\stb;$(SolutionDir)3rdParty\TinyObjLoader;$(SolutionDir)3rdParty\SDL2\include;$(SolutionDir)3rdParty\imgui;$(SolutionDir)3rdParty\RapidJson\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)3rdParty\Vulkan\Include;$(SolutionDir)3rdParty\glm;$(SolutionDir)3rdParty\GLFW\$(Platform)\include;$(SolutionDir)3rdParty\stb;$(SolutionDir)3rdParty\TinyObjLoader;$(SolutionDir)3rdParty\SDL2\include;$(SolutionDir)3rdParty\imgui;$(SolutionDir)3rdParty\RapidJson\include;$(SolutionDir)3rdParty\SpirV-reflect</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <TreatWarningAsError>true</TreatWarningAsError>
@@ -152,7 +152,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)3rdParty\Vulkan\Include;$(SolutionDir)3rdParty\glm;$(SolutionDir)3rdParty\GLFW\$(Platform)\include;$(SolutionDir)3rdParty\stb;$(SolutionDir)3rdParty\TinyObjLoader;$(SolutionDir)3rdParty\SDL2\include;$(SolutionDir)3rdParty\imgui;$(SolutionDir)3rdParty\RapidJson\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)3rdParty\Vulkan\Include;$(SolutionDir)3rdParty\glm;$(SolutionDir)3rdParty\GLFW\$(Platform)\include;$(SolutionDir)3rdParty\stb;$(SolutionDir)3rdParty\TinyObjLoader;$(SolutionDir)3rdParty\SDL2\include;$(SolutionDir)3rdParty\imgui;$(SolutionDir)3rdParty\RapidJson\include;$(SolutionDir)3rdParty\SpirV-reflect</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <TreatWarningAsError>true</TreatWarningAsError>
@@ -194,6 +194,7 @@
     <ClCompile Include="InstanceWrapper.cpp" />
     <ClCompile Include="PipelineManager.cpp" />
     <ClCompile Include="RenderpassWrapper.cpp" />
+    <ClCompile Include="ShaderModuleWrapper.cpp" />
     <ClCompile Include="SkyBox.cpp" />
     <ClCompile Include="STBIncludes.cpp" />
     <ClCompile Include="STBIncludes.h" />
@@ -239,6 +240,7 @@
     <ClInclude Include="PipelineManager.h" />
     <ClInclude Include="RapidJSONIncludes.h" />
     <ClInclude Include="RenderpassWrapper.h" />
+    <ClInclude Include="ShaderModuleWrapper.h" />
     <ClInclude Include="SkyBox.h" />
     <ClInclude Include="SwapchainWrapper.h" />
     <ClInclude Include="SyncObjectManager.h" />

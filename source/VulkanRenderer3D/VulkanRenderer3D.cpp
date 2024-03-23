@@ -64,7 +64,7 @@ void D3D::VulkanRenderer3D::SetupSkybox()
 	const std::string fragShaderName{ "../Resources/Shaders/Skybox.Frag.spv" };
 
 	// Create the graphics pipeline for the skybox
-	AddGraphicsPipeline("Skybox", vertShaderName, fragShaderName, 1, 0, 1, true);
+	AddGraphicsPipeline("Skybox", { vertShaderName, fragShaderName }, 1, 0, 1, true);
 
 	// Create the skybox
 	m_pSkyBox = std::make_unique<SkyBox>(
@@ -221,11 +221,11 @@ void D3D::VulkanRenderer3D::InitImGui()
 	EndSingleTimeCommands(commandBuffer);
 }
 
-void D3D::VulkanRenderer3D::AddGraphicsPipeline(const std::string& pipelineName, const std::string& vertShaderName, const std::string& fragShaderName, int vertexUbos, int fragmentUbos, int textureAmount, bool isSkybox)
+void D3D::VulkanRenderer3D::AddGraphicsPipeline(const std::string& pipelineName, std::initializer_list<const std::string>&& filePaths, int vertexUbos, int fragmentUbos, int textureAmount, bool isSkybox)
 {
 	// Add a graphics pipeline trough the pipeline manager
 	m_pPipelineManager->AddGraphicsPipeline(m_pGpuObject->GetDevice(), m_MaxFramesInFlight, m_pRenderpassWrapper->GetRenderpass(),
-		m_pSwapchainWrapper->GetMsaaSamples(), pipelineName, vertShaderName, fragShaderName,
+		m_pSwapchainWrapper->GetMsaaSamples(), pipelineName, filePaths,
 		vertexUbos, fragmentUbos, textureAmount, isSkybox);
 }
 

@@ -4,6 +4,7 @@
 #include "PipelineManager.h"
 #include "Utils.h"
 #include "ConfigManager.h"
+#include "ShaderModuleWrapper.h"
 
 D3D::PipelineManager::PipelineManager()
 	:m_VertexFunction{ConfigManager::GetInstance().GetString("VertexFunction")},
@@ -37,17 +38,22 @@ void D3D::PipelineManager::AddDefaultPipeline(VkDevice device, uint32_t maxFrame
 	m_DefaultPipelineName = configManager.GetString("DefaultPipelineName");
 
 	// Add default pipeline
-	AddGraphicsPipeline(device, maxFrames, renderPass, sampleCount, m_DefaultPipelineName,
+	AddGraphicsPipeline(device, maxFrames, renderPass, sampleCount, m_DefaultPipelineName, {
 		configManager.GetString("DefaultVertName"),
-		configManager.GetString("DefaultFragName"),
+		configManager.GetString("DefaultFragName") },
 		configManager.GetInt("DefaultPipelineVertexUbos"),
 		configManager.GetInt("DefaultPipelineFragmentUbos"),
 		configManager.GetInt("DefaultPipelineTextures"), false);
 
 }
 
+void D3D::PipelineManager::AddGraphicsPipeline(VkDevice device, uint32_t maxFrames, VkRenderPass renderPass, VkSampleCountFlagBits sampleCount, const std::string& pipelineName, std::initializer_list<const std::string>&& filePaths, int vertexUbos, int fragmentUbos, int textureAmount, bool isSkybox)
+{
+	AddGraphicsPipeline(device, maxFrames, renderPass, sampleCount, pipelineName, filePaths, vertexUbos, fragmentUbos,
+		textureAmount, isSkybox);
+}
 
-void D3D::PipelineManager::AddGraphicsPipeline(VkDevice device, uint32_t maxFrames, VkRenderPass renderPass, VkSampleCountFlagBits sampleCount, const std::string& pipelineName, const std::string& vertShaderName, const std::string& fragShaderName, int vertexUbos, int fragmentUbos, int textureAmount, bool isSkybox)
+void D3D::PipelineManager::AddGraphicsPipeline(VkDevice device, uint32_t maxFrames, VkRenderPass renderPass, VkSampleCountFlagBits sampleCount, const std::string& pipelineName, std::initializer_list<const std::string>& filePaths, int vertexUbos, int fragmentUbos, int textureAmount, bool isSkybox)
 {
 	// Check if pipeline already exists, if it does, delete it
 	if (m_GraphicPipelines.contains(pipelineName))
@@ -55,41 +61,29 @@ void D3D::PipelineManager::AddGraphicsPipeline(VkDevice device, uint32_t maxFram
 		m_GraphicPipelines[pipelineName].Cleanup(device);
 	}
 
-	// Read in vertex shader
-	auto vertShaderCode = Utils::readFile(vertShaderName);
-	// Read in fragment shader
-	auto fragShaderCode = Utils::readFile(fragShaderName);
+	auto descriptorCounts{ ShaderDescriptorCounts() };
+	descriptorCounts.vertexUbos = vertexUbos;
+	descriptorCounts.fragmentUbos = fragmentUbos;
+	descriptorCounts.fragmentSamplers = textureAmount;
 
-	// Creeate vertex shader module
-	VkShaderModule vertShaderModule = CreateShaderModule(device, vertShaderCode);
-	// Create fragment shader module
-	VkShaderModule fragShaderModule = CreateShaderModule(device, fragShaderCode);
+	std::vector<std::unique_ptr<D3D::ShaderModuleWrapper>> shaderModuleWrappers(filePaths.size());
 
-	// Create shader stage create info
-	VkPipelineShaderStageCreateInfo vertShaderStageInfo{};
-	// Set type to pipeline shader stage create info
-	vertShaderStageInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
-	// Set stage to vertex
-	vertShaderStageInfo.stage = VK_SHADER_STAGE_VERTEX_BIT;
-	// Give the correct shader module
-	vertShaderStageInfo.module = vertShaderModule;
-	// Give the name of the function
-	vertShaderStageInfo.pName = m_VertexFunction.c_str();
+	int index{};
 
+	for (auto& filePath : filePaths)
+	{
+		shaderModuleWrappers[index] = std::make_unique<D3D::ShaderModuleWrapper>(device, filePath);
 
-	// Create shader stage create info
-	VkPipelineShaderStageCreateInfo fragShaderStageInfo{};
-	// Set type to pipeline shader stage create info
-	fragShaderStageInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
-	// Set stage to fragment
-	fragShaderStageInfo.stage = VK_SHADER_STAGE_FRAGMENT_BIT;
-	// Give the correct shader module
-	fragShaderStageInfo.module = fragShaderModule;
-	// Give the name of the function
-	fragShaderStageInfo.pName = m_VertexFunction.c_str();
+		index++;
+	}
 
-	// Create array for shaderstages
-	VkPipelineShaderStageCreateInfo shaderStages[] = { vertShaderStageInfo, fragShaderStageInfo };
+	std::vector<VkPipelineShaderStageCreateInfo> shaderStages(shaderModuleWrappers.size());
+
+	for (int i{}; i < shaderStages.size(); i++)
+	{
+		shaderStages[i] = shaderModuleWrappers[i]->GetShaderStageCreateInfo();
+	}
+
 
 	
 	// Get the binding description for the vertex
@@ -160,10 +154,6 @@ void D3D::PipelineManager::AddGraphicsPipeline(VkDevice device, uint32_t maxFram
 	// Create pipeline layout info
 	VkPipelineLayoutCreateInfo pipelineLayoutInfo{};
 	// Set pipeline layout info
-	auto descriptorCounts{ ShaderDescriptorCounts() };
-	descriptorCounts.vertexUbos = vertexUbos;
-	descriptorCounts.fragmentUbos = fragmentUbos;
-	descriptorCounts.fragmentSamplers = textureAmount;
 	SetPipelineLayoutCreateInfo(pipelineLayoutInfo, device, maxFrames, descriptorCounts);
 
 	// Create pipeline layout
@@ -178,9 +168,9 @@ void D3D::PipelineManager::AddGraphicsPipeline(VkDevice device, uint32_t maxFram
 	// Set type to graphics pipeline create info
 	pipelineInfo.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
 	// Set stage count to 2
-	pipelineInfo.stageCount = 2;
+	pipelineInfo.stageCount = static_cast<uint32_t>(shaderStages.size());
 	// Give shaderstages
-	pipelineInfo.pStages = shaderStages;
+	pipelineInfo.pStages = shaderStages.data();
 	// Give vertex input info
 	pipelineInfo.pVertexInputState = &vertexInputInfo;
 	// Give input assembly
@@ -213,10 +203,10 @@ void D3D::PipelineManager::AddGraphicsPipeline(VkDevice device, uint32_t maxFram
 		throw std::runtime_error("failed to create graphics pipeline!");
 	}
 
-	// Delete fragment shader module
-	vkDestroyShaderModule(device, fragShaderModule, nullptr);
-	// Delete vertex shader module
-	vkDestroyShaderModule(device, vertShaderModule, nullptr);
+	for (auto& shaderModule : shaderModuleWrappers)
+	{
+		shaderModule->Cleanup(device);
+	}
 }
 
 D3D::PipelinePair& D3D::PipelineManager::GetPipeline(const std::string& name)

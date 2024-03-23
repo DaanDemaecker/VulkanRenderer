@@ -65,13 +65,12 @@ namespace D3D
         // Add a new graphics pipeline
         // Parameters:
         //     pipelineName: the name of the new pipeline
-        //     vertShaderName: the textpath to the vertex shader
-        //     fragShaderName: the textpath to the fragment shader
+        //     filePaths: a list of shader file names for this pipeline
         //     vertexUbos: the amount of uniform buffer objects in the vertex shader
         //     fragmentUbos: the amount of uniform buffer objects in the fragment shader
         //     textureAmount: the amount of textures in the fragment shader
         //     isSkybox: boolean that indicates if this pipeline is for the skybox
-        void AddGraphicsPipeline(const std::string& pipelineName, const std::string& vertShaderName, const std::string& fragShaderName,
+        void AddGraphicsPipeline(const std::string& pipelineName, std::initializer_list<const std::string>&& filePaths,
             int vertexUbos, int fragmentUbos, int textureAmount, bool isSkybox = false);
 
         // Get the maximum amount of frames in flight

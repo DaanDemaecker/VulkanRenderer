@@ -10,6 +10,7 @@
 
 // Standard library includes
 #include <stdexcept>
+#include <vector>
 
 namespace D3D
 {

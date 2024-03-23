@@ -12,6 +12,7 @@
 #include <string>
 #include <map>
 #include <vector>
+#include <initializer_list>
 
 namespace D3D
 {
@@ -37,14 +38,29 @@ namespace D3D
 		//     renderPass: the handle of the VkRenderpass that will be used
 		//     sampleCount: the max useable sample count
 		//     pipelineName: the name for this pipeLine
-		//     vertShaderName: the filepath to the vertex shader
-		//     fragShaderName: the filepath to the fragment shader
+		//     filePaths: a list of shader file names for this pipeline
 		//     vertexUbos: the amount of uniform buffer objects used in the vertex shader
 		//     fragmentUbos: the amount of uniform buffer objects used in thes fragment shader
 		//     textureAmount: the amount of textures used in the fragment shader
 		//     isSkybox: boolean that indicates if this pipeline is for the skybox or not
 		void AddGraphicsPipeline(VkDevice device, uint32_t maxFrames, VkRenderPass renderPass, VkSampleCountFlagBits sampleCount,
-			const std::string& pipelineName, const std::string& vertShaderName, const std::string& fragShaderName,
+			const std::string& pipelineName, std::initializer_list<const std::string>& filePaths,
+			int vertexUbos, int fragmentUbos, int textureAmount, bool isSkybox = false);
+
+		// Add a graphics pipeline to the vector
+		// Parameters:
+		//     device: the VkDevice handle
+		//     maxFrames: the max amount of frames in flight
+		//     renderPass: the handle of the VkRenderpass that will be used
+		//     sampleCount: the max useable sample count
+		//     pipelineName: the name for this pipeLine
+		//     filePaths: a list of shader file names for this pipeline
+		//     vertexUbos: the amount of uniform buffer objects used in the vertex shader
+		//     fragmentUbos: the amount of uniform buffer objects used in thes fragment shader
+		//     textureAmount: the amount of textures used in the fragment shader
+		//     isSkybox: boolean that indicates if this pipeline is for the skybox or not
+		void AddGraphicsPipeline(VkDevice device, uint32_t maxFrames, VkRenderPass renderPass, VkSampleCountFlagBits sampleCount,
+			const std::string& pipelineName, std::initializer_list<const std::string>&& filePaths,
 			int vertexUbos, int fragmentUbos, int textureAmount, bool isSkybox = false);
 
 		// Add default pipeline to the vector

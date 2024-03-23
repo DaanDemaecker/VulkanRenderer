@@ -36,17 +36,17 @@ void D3D::D3DEngine::Run(const std::function<void()>& load)
 
 	renderer.SetupSkybox();
 
-	renderer.AddGraphicsPipeline("Diffuse", "../Resources/Shaders/Diffuse.Vert.spv", "../Resources/Shaders/Diffuse.Frag.spv",1, 1, 1);
-	renderer.AddGraphicsPipeline("NormalMap", "../Resources/Shaders/NormalMap.Vert.spv", "../Resources/Shaders/NormalMap.Frag.spv", 1, 1, 1);
-	renderer.AddGraphicsPipeline("DiffNorm", "../Resources/Shaders/DiffNorm.Vert.spv", "../Resources/Shaders/DiffNorm.Frag.spv", 1, 1, 2);
+	renderer.AddGraphicsPipeline("Diffuse", { "../Resources/Shaders/Diffuse.Vert.spv", "../Resources/Shaders/Diffuse.Frag.spv" }, 1, 1, 1);
+	renderer.AddGraphicsPipeline("NormalMap", { "../Resources/Shaders/NormalMap.Vert.spv", "../Resources/Shaders/NormalMap.Frag.spv" }, 1, 1, 1);
+	renderer.AddGraphicsPipeline("DiffNorm", { "../Resources/Shaders/DiffNorm.Vert.spv", "../Resources/Shaders/DiffNorm.Frag.spv" }, 1, 1, 2);
 	
-	renderer.AddGraphicsPipeline("Test", "../Resources/Shaders/Test.Vert.spv", "../Resources/Shaders/Test.Frag.spv", 1, 1, 2);
+	renderer.AddGraphicsPipeline("Test", { "../Resources/Shaders/Test.Vert.spv", "../Resources/Shaders/Test.Frag.spv" }, 1, 1, 2);
 	
-	renderer.AddGraphicsPipeline("DiffuseUnshaded", "../Resources/Shaders/DiffuseUnshaded.Vert.spv", "../Resources/Shaders/DiffuseUnshaded.Frag.spv", 1, 1, 1);
+	renderer.AddGraphicsPipeline("DiffuseUnshaded", { "../Resources/Shaders/DiffuseUnshaded.Vert.spv", "../Resources/Shaders/DiffuseUnshaded.Frag.spv" }, 1, 1, 1);
 
-	renderer.AddGraphicsPipeline("Specular", "../Resources/Shaders/Specular.Vert.spv", "../Resources/Shaders/Specular.Frag.spv", 1, 1, 2);
+	renderer.AddGraphicsPipeline("Specular", { "../Resources/Shaders/Specular.Vert.spv", "../Resources/Shaders/Specular.Frag.spv" }, 1, 1, 2);
 
-	renderer.AddGraphicsPipeline("DiffNormSpec", "../Resources/Shaders/DiffNormSpec.Vert.spv", "../Resources/Shaders/DiffNormSpec.Frag.spv", 1, 1, 4);
+	renderer.AddGraphicsPipeline("DiffNormSpec", { "../Resources/Shaders/DiffNormSpec.Vert.spv", "../Resources/Shaders/DiffNormSpec.Frag.spv" }, 1, 1, 4);
 
 
 	
@@ -166,7 +166,7 @@ void D3D::D3DEngine::Run(const std::function<void()>& load)
 		time.SetDeltaTime(deltaTime);
 
 		// Print FPS
-		//std::cout << "FPS: " << time.GetFps() << std::endl;
+		std::cout << "FPS: " << time.GetFps() << std::endl;
 
 		// Poll input for the window
 		glfwPollEvents();
