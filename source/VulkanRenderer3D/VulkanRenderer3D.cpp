@@ -21,6 +21,7 @@
 #include "Window.h"
 #include "GPUObject.h"
 #include "BufferManager.h"
+#include "PipelineWrapper.h"
 
 #include "SkyBox.h"
 
@@ -444,10 +445,10 @@ void D3D::VulkanRenderer3D::RecordCommandBuffer(VkCommandBuffer& commandBuffer, 
 	}
 }
 
-void D3D::VulkanRenderer3D::Render(Model* pModel, VkCommandBuffer& commandBuffer, const VkDescriptorSet* descriptorSet, const PipelinePair& pipeline)
+void D3D::VulkanRenderer3D::Render(Model* pModel, VkCommandBuffer& commandBuffer, const VkDescriptorSet* descriptorSet, const PipelineWrapper* pipeline)
 {
 	// Bind the correct pipeline
-	vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline.pipeline);
+	vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline->GetPipeline());
 
 	//vkCmdPushConstants(commandBuffer, pipeline.pipelineLayout, VK_SHADER_STAGE_FRAGMENT_BIT, 0, sizeof(LightObject), &m_GlobalLight);
 
@@ -462,7 +463,7 @@ void D3D::VulkanRenderer3D::Render(Model* pModel, VkCommandBuffer& commandBuffer
 	vkCmdBindIndexBuffer(commandBuffer, pModel->GetIndexBuffer(), 0, VK_INDEX_TYPE_UINT32);
 
 	// Bind the descriptor sets
-	vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline.pipelineLayout, 0, 1, descriptorSet, 0, nullptr);
+	vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline->GetPipelineLayout(), 0, 1, descriptorSet, 0, nullptr);
 
 	// Draw the current model
 	vkCmdDrawIndexed(commandBuffer, static_cast<uint32_t>(pModel->GetIndexAmount()), 1, 0, 0, 0);
@@ -485,7 +486,7 @@ VkSampler& D3D::VulkanRenderer3D::GetSampler()
 	return m_pImageManager->GetSampler();
 }
 
-D3D::PipelinePair& D3D::VulkanRenderer3D::GetPipeline(const std::string& name)
+D3D::PipelineWrapper* D3D::VulkanRenderer3D::GetPipeline(const std::string& name)
 {
 	// Return the requested pipeline trough the pipeline manager
 	return m_pPipelineManager->GetPipeline(name);

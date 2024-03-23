@@ -18,7 +18,5 @@
     "DefaultFragName" : "../resources/DefaultResources/Default.Frag.spv",
     "DefaultPipelineVertexUbos" : 1,
     "DefaultPipelineFragmentUbos" : 1,
-    "DefaultPipelineTextures" : 0,
-    "VertexFunction" : "main",
-    "FragmentFunction" : "main"
+    "DefaultPipelineTextures" : 0
 }

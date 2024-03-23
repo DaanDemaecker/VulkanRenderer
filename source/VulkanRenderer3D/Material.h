@@ -13,10 +13,10 @@
 
 namespace D3D
 {
-	// Class forward declaration for descriptorpoolwrapper
+	// Class forward declarations
 	class DescriptorPoolWrapper;
-	// Class forward declaration for model
 	class Model;
+	class PipelineWrapper;
 
 	class Material
 	{
@@ -34,8 +34,8 @@ namespace D3D
 		Material& operator=(Material& other) = delete;
 		Material& operator=(Material&& other) = delete; 
 
-		// Get the pipeline pair that is used by this material
-		PipelinePair& GetPipeline() { return m_PipelinePair; }
+		// Get the pipeline that is used by this material
+		PipelineWrapper* GetPipeline();
 
 		// Create the descriptorsets
 		// Parameters:
@@ -57,7 +57,7 @@ namespace D3D
 
 	protected:
 		// The pipeline pair that is used for this material
-		PipelinePair m_PipelinePair{};
+		PipelineWrapper* m_PipelinePair{};
 	};
 }
 #endif // !MaterialIncluded

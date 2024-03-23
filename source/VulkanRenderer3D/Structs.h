@@ -109,26 +109,6 @@ namespace D3D
 		}
 	};
 
-	// Struct to compact pipeline and pipeline layout
-	struct PipelinePair
-	{
-		// Pipeline
-		VkPipeline pipeline{};
-		// Pipeline layout
-		VkPipelineLayout pipelineLayout{};
-
-		// Cleanup function
-		// Parameters: 
-		//     device: handle to VkDevice
-		void Cleanup(VkDevice device)
-		{
-			// Destroy the pipeline
-			vkDestroyPipeline(device, pipeline, nullptr);
-			//Destroy the pipeline layout
-			vkDestroyPipelineLayout(device, pipelineLayout, nullptr);
-		}
-	};
-
 	// Vertex struct for rendering
 	struct Vertex
 	{

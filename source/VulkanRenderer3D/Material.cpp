@@ -7,11 +7,17 @@
 #include "DescriptorPoolWrapper.h"
 #include "DescriptorPoolManager.h"
 #include "STBIncludes.h"
+#include "PipelineWrapper.h"
 
 D3D::Material::Material(const std::string& pipelineName)
 {
 	// Get the requested pipeline from the renderer
 	m_PipelinePair = VulkanRenderer3D::GetInstance().GetPipeline(pipelineName);
+}
+
+D3D::PipelineWrapper* D3D::Material::GetPipeline()
+{
+	return m_PipelinePair;
 }
 
 void D3D::Material::CreateDescriptorSets(Model* pModel, std::vector<VkDescriptorSet>& descriptorSets)

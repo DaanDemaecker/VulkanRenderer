@@ -170,6 +170,9 @@
     <ClCompile Include="ShaderModuleWrapper.cpp">
       <Filter>Vulkan\Wrappers</Filter>
     </ClCompile>
+    <ClCompile Include="PipelineWrapper.cpp">
+      <Filter>Vulkan\Wrappers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Utils.h">
@@ -305,6 +308,9 @@
       <Filter>spirV-reflect</Filter>
     </ClInclude>
     <ClInclude Include="ShaderModuleWrapper.h">
+      <Filter>Vulkan\Wrappers</Filter>
+    </ClInclude>
+    <ClInclude Include="PipelineWrapper.h">
       <Filter>Vulkan\Wrappers</Filter>
     </ClInclude>
   </ItemGroup>

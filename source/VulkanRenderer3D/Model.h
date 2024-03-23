@@ -17,6 +17,7 @@ namespace D3D
 {
 	// Class forward declaration for material
 	class Material;
+	class PipelineWrapper;
 
 	class Model final : public std::enable_shared_from_this<Model>
 	{
@@ -135,7 +136,7 @@ namespace D3D
 		void UpdateUniformBuffer(uint32_t frame);
 
 		// Get the pipeline that the material is bound to
-		PipelinePair& GetPipeline();
+		PipelineWrapper* GetPipeline();
 
 		// CLeanup
 		void Cleanup();

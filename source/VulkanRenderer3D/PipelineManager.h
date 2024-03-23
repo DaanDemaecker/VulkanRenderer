@@ -16,6 +16,8 @@
 
 namespace D3D
 {
+	class PipelineWrapper;
+
 	class PipelineManager final
 	{
 	public:
@@ -74,7 +76,7 @@ namespace D3D
 		// Get a certain graphics pipeline
 		// Parameters:
 		//     name: the name of the requested pipeline
-		PipelinePair& GetPipeline(const std::string& name);
+		PipelineWrapper* GetPipeline(const std::string& name);
 
 		// Get the descriptor set layouts
 		// Parameters:
@@ -95,16 +97,10 @@ namespace D3D
 
 		// A map of all the graphics pipelines
 		// A string is used to as key for the pipelines
-		std::map<std::string, PipelinePair> m_GraphicPipelines{};
+		std::map<std::string, PipelineWrapper> m_GraphicPipelines{};
 
 		// The name of the default pipeline
 		std::string m_DefaultPipelineName{};
-
-		// The name of the vertex funtion
-		std::string m_VertexFunction;
-
-		// The name of the vertex funtion
-		std::string m_FragmenFunction;
 
 		// Create a new descriptor layout
 		// Parameters:

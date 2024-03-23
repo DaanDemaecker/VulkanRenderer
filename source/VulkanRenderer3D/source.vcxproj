@@ -193,6 +193,7 @@
     <ClCompile Include="ImGuiWrapper.cpp" />
     <ClCompile Include="InstanceWrapper.cpp" />
     <ClCompile Include="PipelineManager.cpp" />
+    <ClCompile Include="PipelineWrapper.cpp" />
     <ClCompile Include="RenderpassWrapper.cpp" />
     <ClCompile Include="ShaderModuleWrapper.cpp" />
     <ClCompile Include="SkyBox.cpp" />
@@ -238,6 +239,7 @@
     <ClInclude Include="ImGuiWrapper.h" />
     <ClInclude Include="InstanceWrapper.h" />
     <ClInclude Include="PipelineManager.h" />
+    <ClInclude Include="PipelineWrapper.h" />
     <ClInclude Include="RapidJSONIncludes.h" />
     <ClInclude Include="RenderpassWrapper.h" />
     <ClInclude Include="ShaderModuleWrapper.h" />

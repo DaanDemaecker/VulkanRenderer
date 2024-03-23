@@ -5,10 +5,9 @@
 #include "Utils.h"
 #include "ConfigManager.h"
 #include "ShaderModuleWrapper.h"
+#include "PipelineWrapper.h"
 
 D3D::PipelineManager::PipelineManager()
-	:m_VertexFunction{ConfigManager::GetInstance().GetString("VertexFunction")},
-	m_FragmenFunction{ConfigManager::GetInstance().GetString("FragmentFunction")}
 {
 }
 
@@ -156,12 +155,16 @@ void D3D::PipelineManager::AddGraphicsPipeline(VkDevice device, uint32_t maxFram
 	// Set pipeline layout info
 	SetPipelineLayoutCreateInfo(pipelineLayoutInfo, device, maxFrames, descriptorCounts);
 
+	VkPipelineLayout layout{};
+
 	// Create pipeline layout
-	if (vkCreatePipelineLayout(device, &pipelineLayoutInfo, nullptr, &m_GraphicPipelines[pipelineName].pipelineLayout) != VK_SUCCESS)
+	if (vkCreatePipelineLayout(device, &pipelineLayoutInfo, nullptr, &layout) != VK_SUCCESS)
 	{
 		// If unsuccessful, throw runtime error
 		throw std::runtime_error("failed to create pipeline layout!");
 	}
+
+	m_GraphicPipelines[pipelineName].SetPipelineLayout(layout);
 
 	// Create pipeline create info
 	VkGraphicsPipelineCreateInfo pipelineInfo{};
@@ -188,7 +191,7 @@ void D3D::PipelineManager::AddGraphicsPipeline(VkDevice device, uint32_t maxFram
 	// Give depth stencil state
 	pipelineInfo.pDepthStencilState = &depthStencil;
 	// Give pipeline layout
-	pipelineInfo.layout = m_GraphicPipelines[pipelineName].pipelineLayout;
+	pipelineInfo.layout = m_GraphicPipelines[pipelineName].GetPipelineLayout();
 	// Give renderpass
 	pipelineInfo.renderPass = renderPass;
 	// Set subpass to 0
@@ -196,12 +199,16 @@ void D3D::PipelineManager::AddGraphicsPipeline(VkDevice device, uint32_t maxFram
 	// Set basepipeline to null handle
 	pipelineInfo.basePipelineHandle = VK_NULL_HANDLE;
 
+	VkPipeline pipeline{};
+
 	// Create graphics pipeline
-	if (vkCreateGraphicsPipelines(device, VK_NULL_HANDLE, 1, &pipelineInfo, nullptr, &m_GraphicPipelines[pipelineName].pipeline) != VK_SUCCESS)
+	if (vkCreateGraphicsPipelines(device, VK_NULL_HANDLE, 1, &pipelineInfo, nullptr, &pipeline) != VK_SUCCESS)
 	{
 		// If unsuccessful, throw runtime error
 		throw std::runtime_error("failed to create graphics pipeline!");
 	}
+
+	m_GraphicPipelines[pipelineName].SetPipeline(pipeline);
 
 	for (auto& shaderModule : shaderModuleWrappers)
 	{
@@ -209,18 +216,18 @@ void D3D::PipelineManager::AddGraphicsPipeline(VkDevice device, uint32_t maxFram
 	}
 }
 
-D3D::PipelinePair& D3D::PipelineManager::GetPipeline(const std::string& name)
+D3D::PipelineWrapper* D3D::PipelineManager::GetPipeline(const std::string& name)
 {
 	// Check if pipeline exists
 	if (m_GraphicPipelines.contains(name))
 	{
 		// If it exists, return the correct pipeline
-		return m_GraphicPipelines[name];
+		return &m_GraphicPipelines[name];
 	}
 	else
 	{
 		// If not, return default pipeline
-		return m_GraphicPipelines[m_DefaultPipelineName];
+		return &m_GraphicPipelines[m_DefaultPipelineName];
 	}
 }
 

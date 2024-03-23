@@ -33,6 +33,7 @@ namespace D3D
     class DirectionalLightObject;
     class SkyBox;
     class BufferManager;
+    class PipelineWrapper;
 
     // Inherit from singleton
     class VulkanRenderer3D final : public Singleton<VulkanRenderer3D>
@@ -59,8 +60,8 @@ namespace D3D
         //     pModel: pointer to the model that has to be rendered
         //     commandBuffer: the commandbuffer that will handle rendering
         //     descriptorSet: pointer to the descriptorset connected to the model
-        //     pipeline: the graphics pipeline used for rendering this model
-        void Render(Model* pModel, VkCommandBuffer& commandBuffer, const VkDescriptorSet* descriptorSet, const PipelinePair& pipeline);
+        //     pipeline: the graphics pipeline wrapper used for rendering this model
+        void Render(Model* pModel, VkCommandBuffer& commandBuffer, const VkDescriptorSet* descriptorSet, const PipelineWrapper* pipeline);
 
         // Add a new graphics pipeline
         // Parameters:
@@ -91,7 +92,7 @@ namespace D3D
         // Get the pipeline with the given name
         // Parameters:
         //     name: the name of the requested pipeline, "Default" by default
-        PipelinePair& GetPipeline(const std::string& name = "Default");
+        PipelineWrapper* GetPipeline(const std::string& name = "Default");
 
         // Get the commandbuffer currently in use
         VkCommandBuffer& GetCurrentCommandBuffer();

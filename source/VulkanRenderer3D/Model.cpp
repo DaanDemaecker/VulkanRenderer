@@ -7,6 +7,7 @@
 #include "Material.h"
 #include "TimeManager.h"
 #include "DescriptorPoolWrapper.h"
+#include "PipelineWrapper.h"
 
 // Standard library includes
 #include <memory>
@@ -196,7 +197,7 @@ void D3D::Model::UpdateUniformBuffer(uint32_t frame)
 	memcpy(m_UbosMapped[frame], &m_Ubos[frame], sizeof(m_Ubos[frame]));
 }
 
-D3D::PipelinePair& D3D::Model::GetPipeline()
+D3D::PipelineWrapper* D3D::Model::GetPipeline()
 {
 	// Check if material exist, if not, return default
 	if (m_pMaterial != nullptr)
