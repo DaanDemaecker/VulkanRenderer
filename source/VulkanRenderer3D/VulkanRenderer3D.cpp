@@ -65,7 +65,7 @@ void D3D::VulkanRenderer3D::SetupSkybox()
 	const std::string fragShaderName{ "../Resources/Shaders/Skybox.Frag.spv" };
 
 	// Create the graphics pipeline for the skybox
-	AddGraphicsPipeline("Skybox", { vertShaderName, fragShaderName }, 1, 0, 1, true);
+	AddGraphicsPipeline("Skybox", { vertShaderName, fragShaderName }, false);
 
 	// Create the skybox
 	m_pSkyBox = std::make_unique<SkyBox>(
@@ -88,7 +88,6 @@ void D3D::VulkanRenderer3D::CleanupVulkan()
 {
 	// Create buffer manager
 	m_pBufferManager = std::make_unique<BufferManager>();
-
 
 	// Get handle to logical device
 	auto device{ m_pGpuObject->GetDevice() };
@@ -181,7 +180,7 @@ void D3D::VulkanRenderer3D::InitVulkan()
 	// Initialize graphics pipeline manager
 	m_pPipelineManager = std::make_unique<PipelineManager>();
 	// Add the default pipeline
-	m_pPipelineManager->AddDefaultPipeline(m_pGpuObject->GetDevice(), m_MaxFramesInFlight, m_pRenderpassWrapper->GetRenderpass(), m_pSwapchainWrapper->GetMsaaSamples());
+	m_pPipelineManager->AddDefaultPipeline(m_pGpuObject->GetDevice(), m_pRenderpassWrapper->GetRenderpass(), m_pSwapchainWrapper->GetMsaaSamples());
 
 	// Initialize the sync objects
 	m_pSyncObjectManager = std::make_unique<SyncObjectManager>(pGPUObject->GetDevice(), m_MaxFramesInFlight);
@@ -222,12 +221,11 @@ void D3D::VulkanRenderer3D::InitImGui()
 	EndSingleTimeCommands(commandBuffer);
 }
 
-void D3D::VulkanRenderer3D::AddGraphicsPipeline(const std::string& pipelineName, std::initializer_list<const std::string>&& filePaths, int vertexUbos, int fragmentUbos, int textureAmount, bool isSkybox)
+void D3D::VulkanRenderer3D::AddGraphicsPipeline(const std::string& pipelineName, std::initializer_list<const std::string>&& filePaths, bool hasDepthStencil)
 {
 	// Add a graphics pipeline trough the pipeline manager
-	m_pPipelineManager->AddGraphicsPipeline(m_pGpuObject->GetDevice(), m_MaxFramesInFlight, m_pRenderpassWrapper->GetRenderpass(),
-		m_pSwapchainWrapper->GetMsaaSamples(), pipelineName, filePaths,
-		vertexUbos, fragmentUbos, textureAmount, isSkybox);
+	m_pPipelineManager->AddGraphicsPipeline(m_pGpuObject->GetDevice(), m_pRenderpassWrapper->GetRenderpass(),
+		m_pSwapchainWrapper->GetMsaaSamples(), pipelineName, filePaths, hasDepthStencil);
 }
 
 void D3D::VulkanRenderer3D::Render(std::vector<std::unique_ptr<Model>>& pModels)
@@ -594,16 +592,6 @@ void D3D::VulkanRenderer3D::UpdateUniformBuffer(UniformBufferObject& buffer)
 {
 	// Update the buffer with the camera transformation
 	m_pCamera->UpdateUniformBuffer(buffer, m_pSwapchainWrapper->GetExtent());
-}
-
-std::vector<VkDescriptorSetLayout>& D3D::VulkanRenderer3D::GetDescriptorSetLayout(int vertexUbos, int fragmentUbos, int textureAmount)
-{
-	auto descriptorCounts{ ShaderDescriptorCounts() };
-	descriptorCounts.vertexUbos = vertexUbos;
-	descriptorCounts.fragmentUbos = fragmentUbos;
-	descriptorCounts.fragmentSamplers = textureAmount;
-	// Return the requested descriptor set layout trough the pipeline manager
-	return m_pPipelineManager->GetDescriptorSetLayout(m_pGpuObject->GetDevice(), m_MaxFramesInFlight, descriptorCounts);
 }
 
 void D3D::VulkanRenderer3D::CreateTexture(Texture& texture, const std::string& textureName, uint32_t& mipLevels)

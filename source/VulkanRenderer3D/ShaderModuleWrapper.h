@@ -34,19 +34,32 @@ namespace D3D
 
 		VkPipelineShaderStageCreateInfo GetShaderStageCreateInfo() const { return m_ShaderstageCreateInfo; }
 
+		void AddDescriptorSetLayoutBindings(std::vector<VkDescriptorSetLayoutBinding>& bindings);
+
+		void GetUboTextureAmount(uint32_t& uboAmount, uint32_t& textureAmount);
+
 	private:
+		// The binary code from the shader
 		std::vector<char> m_ShaderCode{};
 
+		// The vulkan shader module
 		VkShaderModule m_ShaderModule{};
 
+		// The createInfo for the shader stage
 		VkPipelineShaderStageCreateInfo m_ShaderstageCreateInfo{};
 
+		// The shade info from spirv-reflect
 		SpvReflectShaderModule m_ReflectShaderModule{};
 
+		// Create a vulkan shader module from binary code
+		// Parameters:
+		//     device: handle of the VkDevice
 		void CreateShaderModule(VkDevice device);
 
+		// Read in the shader information with SpirV-reflect
 		void ReflectShader();
 
+		// Create the info for the shader stage
 		void CreateShaderStageInfo();
 	};
 }

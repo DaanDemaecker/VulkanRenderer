@@ -59,17 +59,3 @@ void D3D::CubeMapMaterial::UpdateDescriptorSets(std::vector<VkBuffer>& uboBuffer
 	// Update descriptorsets
 	descriptorPool->UpdateDescriptorSets(descriptorSets, uboBuffferList, uboSizes, &texture);
 }
-
-std::vector<VkDescriptorSetLayout>& D3D::CubeMapMaterial::GetDescriptorLayout()
-{
-	// Get descriptorlayout for this material
-	// CubeMapMaterial material standardly has 1 vertex ubo, 0 fragment ubos and 1 texture
-	return VulkanRenderer3D::GetInstance().GetDescriptorSetLayout(1,0,1);
-}
-
-D3D::DescriptorPoolWrapper* D3D::CubeMapMaterial::GetDescriptorPool()
-{
-	// Get descriptorpool for this material
-	// CubeMapMaterial material standardly has 1 vertex ubo, 0 fragment ubos and 1 texture
-	return D3D::VulkanRenderer3D::GetInstance().GetDescriptorPoolManager()->GetDescriptorPool(1, 1);
-}

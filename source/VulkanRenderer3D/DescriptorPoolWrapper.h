@@ -52,9 +52,9 @@ namespace D3D
 
 		// This function will create a descriptorset with the given layout
 		// Parameters:
-		//     layouts: a vector of the Vulkan descriptor set layout that is needed for the creation of descriptor sets
+		//     layout: the layout of the descriprot set
 		//     descriptorSets: the vector of descriptor sets that should be created in this function
-		void CreateDescriptorSets(std::vector<VkDescriptorSetLayout>& layouts, std::vector<VkDescriptorSet>& descriptorSets);
+		void CreateDescriptorSets(VkDescriptorSetLayout layouts, std::vector<VkDescriptorSet>& descriptorSets);
 		
 		// This function will update the given descriptorsets
 		// Parameters:

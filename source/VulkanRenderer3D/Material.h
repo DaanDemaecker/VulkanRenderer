@@ -50,14 +50,14 @@ namespace D3D
 		virtual void UpdateDescriptorSets(std::vector<VkBuffer>& uboBuffers, std::vector<VkDescriptorSet>& descriptorSets);
 
 		// Get the descriptor set layout
-		virtual std::vector<VkDescriptorSetLayout>& GetDescriptorLayout();
+		VkDescriptorSetLayout GetDescriptorLayout();
 
 		// Get the descriptorpool wrapper
-		virtual DescriptorPoolWrapper* GetDescriptorPool();
+		DescriptorPoolWrapper* GetDescriptorPool();
 
 	protected:
 		// The pipeline pair that is used for this material
-		PipelineWrapper* m_PipelinePair{};
+		PipelineWrapper* m_Pipeline{};
 	};
 }
 #endif // !MaterialIncluded

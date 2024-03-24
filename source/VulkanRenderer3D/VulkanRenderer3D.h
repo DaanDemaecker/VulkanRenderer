@@ -9,6 +9,7 @@
 #include "Structs.h"
 #include "PipelineManager.h"
 #include "Camera.h"
+#include "DescriptorPoolManager.h"
 
 // Standard library includes
 #include <memory>
@@ -22,7 +23,6 @@ namespace D3D
     // Class forward declarations
     class Model;
     class GPUObject;
-    class DescriptorPoolManager;
     class ImGuiWrapper;
     class InstanceWrapper;
     class ImageManager;
@@ -67,12 +67,9 @@ namespace D3D
         // Parameters:
         //     pipelineName: the name of the new pipeline
         //     filePaths: a list of shader file names for this pipeline
-        //     vertexUbos: the amount of uniform buffer objects in the vertex shader
-        //     fragmentUbos: the amount of uniform buffer objects in the fragment shader
-        //     textureAmount: the amount of textures in the fragment shader
-        //     isSkybox: boolean that indicates if this pipeline is for the skybox
+        //     hasDepthStencil: boolean that indicates if this pipeline needs a depth stencil
         void AddGraphicsPipeline(const std::string& pipelineName, std::initializer_list<const std::string>&& filePaths,
-            int vertexUbos, int fragmentUbos, int textureAmount, bool isSkybox = false);
+            bool hasDepthStencil = true);
 
         // Get the maximum amount of frames in flight
         size_t GetMaxFrames() const { return m_MaxFramesInFlight; }
@@ -131,13 +128,6 @@ namespace D3D
         // Parameters:
         //     buffer: reference to the uniform buffer object that needs updating
         void UpdateUniformBuffer(UniformBufferObject& buffer);
-
-        // Get a requested descriptor set layout
-        // Parameters:
-        //     vertexUbos: amount of uniform buffer objects in the vertex shader
-        //     fragmentUbos: amount of uniform buffer objects in the fragment shader
-        //     textureAmount: amount of textures in the fragment shader
-        std::vector<VkDescriptorSetLayout>& GetDescriptorSetLayout(int vertexUbos, int fragmentUbos, int textureAmount);
 
         // Create a texture
         // Parameters:

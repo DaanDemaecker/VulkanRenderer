@@ -76,20 +76,6 @@ void D3D::TexturedMaterial::UpdateDescriptorSets(std::vector<VkBuffer>& uboBuffe
 	descriptorPool->UpdateDescriptorSets(descriptorSets, uboBuffferList, uboSizes,  &m_Textures);
 }
 
-std::vector<VkDescriptorSetLayout>& D3D::TexturedMaterial::GetDescriptorLayout()
-{
-	// Get descriptorlayout for this material
-	// Textured material standardly has 1 veretx ubo, 1 fragment ubo and the amount of textures that was requested
-	return VulkanRenderer3D::GetInstance().GetDescriptorSetLayout(1, 1, static_cast<int>(m_Textures.size()));
-}
-
-D3D::DescriptorPoolWrapper* D3D::TexturedMaterial::GetDescriptorPool()
-{
-	// Get descriptorpool for this material
-	// Textured material standardly has 2 ubos and the amount of textures that was requested
-	return D3D::VulkanRenderer3D::GetInstance().GetDescriptorPoolManager()->GetDescriptorPool(2, m_TextureAmount);
-}
-
 void D3D::TexturedMaterial::CreateTextureSampler()
 {
 	// Get sampler

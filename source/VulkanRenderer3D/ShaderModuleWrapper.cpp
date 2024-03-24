@@ -27,6 +27,48 @@ void D3D::ShaderModuleWrapper::Cleanup(VkDevice device)
 	vkDestroyShaderModule(device, m_ShaderModule, nullptr);
 }
 
+void D3D::ShaderModuleWrapper::AddDescriptorSetLayoutBindings(std::vector<VkDescriptorSetLayoutBinding>& bindings)
+{
+	auto stage{ static_cast<VkShaderStageFlagBits>(m_ReflectShaderModule.shader_stage) };
+
+	auto amount{ m_ReflectShaderModule.descriptor_binding_count };
+
+	auto descriptorBindings{ m_ReflectShaderModule.descriptor_bindings };
+	
+	for (uint32_t i{}; i < amount; i++)
+	{
+		// Create ubolayoutbinding and get the information from the reflect shader module
+		VkDescriptorSetLayoutBinding binding{};
+		binding.binding = descriptorBindings[i].binding;
+		binding.descriptorType = static_cast<VkDescriptorType>(descriptorBindings[i].descriptor_type);
+		binding.descriptorCount = descriptorBindings[i].count;
+		binding.stageFlags = stage;
+		binding.pImmutableSamplers = nullptr;
+
+		// Place binding in the vector of bindings
+		bindings.push_back(binding);
+	}
+}
+
+void D3D::ShaderModuleWrapper::GetUboTextureAmount(uint32_t& uboAmount, uint32_t& textureAmount)
+{
+	auto amount{ m_ReflectShaderModule.descriptor_binding_count };
+
+	auto descriptorBindings{ m_ReflectShaderModule.descriptor_bindings };
+
+	for (uint32_t i{}; i < amount; i++)
+	{
+		if (descriptorBindings[i].descriptor_type == SPV_REFLECT_DESCRIPTOR_TYPE_UNIFORM_BUFFER)
+		{
+			uboAmount++;
+		}
+		else if (descriptorBindings[i].descriptor_type == SPV_REFLECT_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER)
+		{
+			textureAmount++;
+		}
+	}
+}
+
 void D3D::ShaderModuleWrapper::CreateShaderModule(VkDevice device)
 {
 	// Create modlue create info

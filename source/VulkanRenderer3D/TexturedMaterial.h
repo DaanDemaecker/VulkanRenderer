@@ -38,12 +38,6 @@ namespace D3D
 		//     descriptorsets: a vector of the descriptorsets that have to be updated
 		virtual void UpdateDescriptorSets(std::vector<VkBuffer>& uboBuffers, std::vector<VkDescriptorSet>& descriptorSets) override;
 
-		// Get the descriptorsetlayout used in this material
-		virtual std::vector<VkDescriptorSetLayout>& GetDescriptorLayout() override;
-
-		// Get the descriptorpoolwrapper associated with this material
-		virtual DescriptorPoolWrapper* GetDescriptorPool() override;
-
 	private:
 		// The amount of textures this material uses
 		int m_TextureAmount{};

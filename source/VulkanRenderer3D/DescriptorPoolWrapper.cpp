@@ -37,7 +37,7 @@ void D3D::DescriptorPoolWrapper::RemoveModel(Model* pModel)
 	m_pModels.erase(std::remove(m_pModels.begin(), m_pModels.end(), pModel), m_pModels.end());
 }
 
-void D3D::DescriptorPoolWrapper::CreateDescriptorSets(std::vector<VkDescriptorSetLayout>& layouts, std::vector<VkDescriptorSet>& descriptorSets)
+void D3D::DescriptorPoolWrapper::CreateDescriptorSets(VkDescriptorSetLayout layout, std::vector<VkDescriptorSet>& descriptorSets)
 {
 	// Check if the amount of already allocated descriptorsets is larger or equal to the max amoount, if it is, resize and return
 	if (m_AllocatedDescriptorSets >= m_MaxDescriptorSets)
@@ -60,7 +60,8 @@ void D3D::DescriptorPoolWrapper::CreateDescriptorSets(std::vector<VkDescriptorSe
 	allocInfo.descriptorPool = m_DescriptorPool;
 	// Give the amount of descriptorsets to be allocated
 	allocInfo.descriptorSetCount = static_cast<uint32_t>(maxFrames);
-	// Give the layout of the descriptorsets
+	// Create vector of descriptorsets the size of maxFrames and fill with layout
+	std::vector<VkDescriptorSetLayout> layouts(maxFrames, layout);
 	allocInfo.pSetLayouts = layouts.data();
 
 	// Resize descriptorsets to right amount
