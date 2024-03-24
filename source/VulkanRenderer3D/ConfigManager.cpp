@@ -46,6 +46,7 @@ std::string D3D::ConfigManager::GetString(const std::string& propertyName)
 		return m_JsonFile[propertyName.c_str()].GetString();
 	}
 
+	std::cout << "String property " << propertyName << " is not availabel\n";
 	return m_DefaultString;
 }
 
@@ -62,6 +63,9 @@ int D3D::ConfigManager::GetInt(const std::string& propertyName)
 	{
 		return m_JsonFile[propertyName.c_str()].GetInt();
 	}
+
+	std::cout << "Int property " << propertyName << " is not availabel\n";
+
 	return 0;
 }
 
@@ -77,6 +81,8 @@ bool D3D::ConfigManager::GetBool(const std::string& propertyName)
 	{
 		return m_JsonFile[propertyName.c_str()].GetBool();
 	}
+
+	std::cout << "Bool property " << propertyName << " is not availabel\n";
 	return false;
 }
 
@@ -92,6 +98,8 @@ float D3D::ConfigManager::GetFloat(const std::string& propertyName)
 	{
 		return m_JsonFile[propertyName.c_str()].GetFloat();
 	}
+
+	std::cout << "Float property " << propertyName << " is not availabel\n";
 	return 0;
 }
 
