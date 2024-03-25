@@ -2,8 +2,9 @@
 //
 
 #include <iostream>
+#include "ConfigManager.h"
 
 int main()
 {
-    std::cout << "Hello World!\n";
+    std::cout << D2D::ConfigManager::GetInstance().GetString("ApplicationName") << "\n";
 }

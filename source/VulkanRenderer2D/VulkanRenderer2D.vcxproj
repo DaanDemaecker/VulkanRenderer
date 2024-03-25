@@ -143,10 +143,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="ConfigManager.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="VulkanRenderer2D.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ConfigManager.h" />
+    <ClInclude Include="RapidJSONIncludes.h" />
     <ClInclude Include="Singleton.h" />
     <ClInclude Include="VulkanRenderer2D.h" />
   </ItemGroup>

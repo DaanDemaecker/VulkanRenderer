@@ -11,6 +11,9 @@
     <Filter Include="Vulkan">
       <UniqueIdentifier>{15c6a596-cfed-45c6-95d7-f1f3cdfc90d1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Includes">
+      <UniqueIdentifier>{3036a9c4-221e-4a72-a5f3-15b2a11d9b41}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -19,6 +22,9 @@
     <ClCompile Include="VulkanRenderer2D.cpp">
       <Filter>Vulkan</Filter>
     </ClCompile>
+    <ClCompile Include="ConfigManager.cpp">
+      <Filter>Engine Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Singleton.h">
@@ -26,6 +32,12 @@
     </ClInclude>
     <ClInclude Include="VulkanRenderer2D.h">
       <Filter>Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="ConfigManager.h">
+      <Filter>Engine Files</Filter>
+    </ClInclude>
+    <ClInclude Include="RapidJSONIncludes.h">
+      <Filter>Includes</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
