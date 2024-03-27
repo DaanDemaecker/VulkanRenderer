@@ -16,40 +16,6 @@
 
 namespace D3D
 {
-	// Struct that will store the descriptor counts for shader stages
-	struct ShaderDescriptorCounts
-	{
-		// The amount of uniform buffer objects in the vertex shader
-		int vertexUbos{};
-		// The amount of texture samplers in the vertex shader
-		int vertexSamplers{};
-		// The amount of uniform buffer objects in the fragment shader
-		int fragmentUbos{};
-		// The amount of texture samplers in the fragment shader
-		int fragmentSamplers{};
-		// The amount of uniform buffer objects in the geometry shader
-		int geometryUbos{};
-		// The amount of texture samplers in the geometry shader
-		int geometrySamplers{};
-
-		int GetTotal() const
-		{
-			return vertexUbos + vertexSamplers + fragmentUbos + fragmentSamplers + geometryUbos + geometrySamplers;
-		}
-
-		bool const operator==(const ShaderDescriptorCounts& other) const {
-			return vertexUbos == other.vertexUbos && vertexSamplers == other.vertexSamplers &&
-				fragmentUbos == other.fragmentUbos && fragmentSamplers == other.fragmentSamplers &&
-				geometryUbos == other.geometryUbos && geometrySamplers == other.geometrySamplers;
-		}
-
-		bool const operator<(const ShaderDescriptorCounts& other) const {
-			return std::tie(vertexUbos, vertexSamplers, fragmentUbos, fragmentSamplers, geometryUbos, geometrySamplers) <
-				std::tie(other.vertexUbos, other.vertexSamplers, other.fragmentUbos, other.fragmentSamplers, other.geometryUbos, other.geometrySamplers);
-
-		}
-	};
-
 	// Struct needed for vulkan setup
 	struct QueueFamilyIndices
 	{
