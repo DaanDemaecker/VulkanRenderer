@@ -80,12 +80,15 @@ void Utils::LoadModel(const std::string& filename, std::vector<D3D::Vertex>& ver
 				};
 			}
 
-			// Add normal to vertex
-			vertex.normal = {
-				attrib.normals[static_cast<uint64_t>(3) * index.normal_index],
-				attrib.normals[static_cast<uint64_t>(3) * index.normal_index + static_cast<uint64_t>(1)],
-				attrib.normals[static_cast<uint64_t>(3) * index.normal_index + static_cast<uint64_t>(2)]
-			};
+			if (index.normal_index >= 0 && index.normal_index < +attrib.texcoords.size() / 3)
+			{
+				// Add normal to vertex
+				vertex.normal = {
+					attrib.normals[static_cast<uint64_t>(3) * index.normal_index],
+					attrib.normals[static_cast<uint64_t>(3) * index.normal_index + static_cast<uint64_t>(1)],
+					attrib.normals[static_cast<uint64_t>(3) * index.normal_index + static_cast<uint64_t>(2)]
+				};
+			}
 
 			// Add color to vertex
 			vertex.color = {

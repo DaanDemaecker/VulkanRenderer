@@ -32,7 +32,7 @@ void D3D::PipelineManager::AddDefaultPipeline(VkDevice device, VkRenderPass rend
 	// Add default pipeline
 	AddGraphicsPipeline(device, renderPass, sampleCount, m_DefaultPipelineName, {
 		configManager.GetString("DefaultVertName"),
-		configManager.GetString("DefaultFragName") }, false);
+		configManager.GetString("DefaultFragName") });
 
 }
 

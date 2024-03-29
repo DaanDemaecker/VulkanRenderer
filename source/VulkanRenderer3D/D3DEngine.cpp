@@ -87,38 +87,38 @@ void D3D::D3DEngine::Run(const std::function<void()>& load)
 		pModels.push_back(std::move(pCurrModel));*/
 
 
-		//pCurrModel = std::make_unique<Model>();
+		pCurrModel = std::make_unique<Model>();
 
-		//pCurrModel->LoadModel("../Resources/Models/vehicle.obj");
-		//pCurrModel->SetMaterial(pVehicle3Material);
-		////pModel->SetMaterial(pTestMaterial);
-		//pCurrModel->SetPosition(0.f, 0, 10.f);
-		//pCurrModel->SetRotation(0.f, glm::radians(75.0f), 0.f);
-		//pCurrModel->SetScale(0.25f, 0.25f, 0.25f);
+		pCurrModel->LoadModel("../Resources/Models/vehicle.obj");
+		pCurrModel->SetMaterial(pVehicle3Material);
+		//pModel->SetMaterial(pTestMaterial);
+		pCurrModel->SetPosition(0.f, 0, 10.f);
+		pCurrModel->SetRotation(0.f, glm::radians(75.0f), 0.f);
+		pCurrModel->SetScale(0.25f, 0.25f, 0.25f);
 
-		//pModels.push_back(std::move(pCurrModel));
+		pModels.push_back(std::move(pCurrModel));
 
-
-		//pCurrModel = std::make_unique<Model>();
-
-		//pCurrModel->LoadModel("../Resources/Models/fireFX.obj");
-		//pCurrModel->SetMaterial(pFireMaterial);
-		//pCurrModel->SetPosition(0.f, 0, 10.f);
-		//pCurrModel->SetRotation(0.f, glm::radians(75.0f), 0.f);
-		//pCurrModel->SetScale(0.25f, 0.25f, 0.25f);
-
-		//pModels.push_back(std::move(pCurrModel));
 
 		pCurrModel = std::make_unique<Model>();
 
-		pCurrModel->LoadModel("../Resources/Models/desk.obj");
-		pCurrModel->SetMaterial(std::make_shared<D3D::Material>("Default"));
-		//pModel->SetMaterial(pTestMaterial);
-		pCurrModel->SetPosition(0.f, 0, 3.f);
+		pCurrModel->LoadModel("../Resources/Models/fireFX.obj");
+		pCurrModel->SetMaterial(pFireMaterial);
+		pCurrModel->SetPosition(0.f, 0, 10.f);
 		pCurrModel->SetRotation(0.f, glm::radians(75.0f), 0.f);
-		//pCurrModel->SetScale(0.25f, 0.25f, 0.25f);
+		pCurrModel->SetScale(0.25f, 0.25f, 0.25f);
 
 		pModels.push_back(std::move(pCurrModel));
+
+		//pCurrModel = std::make_unique<Model>();
+
+		//pCurrModel->LoadModel("../Resources/Models/Desk_unwrap.obj");
+		//pCurrModel->SetMaterial(pVehicleMaterial);
+		////pModel->SetMaterial(pTestMaterial);
+		//pCurrModel->SetPosition(0.f, 0, 3.f);
+		//pCurrModel->SetRotation(0.f, glm::radians(75.0f), 0.f);
+		////pCurrModel->SetScale(0.25f, 0.25f, 0.25f);
+
+		//pModels.push_back(std::move(pCurrModel));
 
 
 	/*for (int i{}; i < 20; ++i)
