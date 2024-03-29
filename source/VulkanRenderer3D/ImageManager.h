@@ -79,10 +79,9 @@ namespace D3D
 		//     pBufferManager: a poitner to the buffer manager object
 		//     texture: reference to the texture that will be created
 		//     textureName: filepath to the texture
-		//     mipLevels: the amount of mipmaps that will be created
 		//     pCommandPoolManager: pointer to the commandpool manager
-		void CreateTextureImage(GPUObject* pGPUObject, D3D::BufferManager* pBufferManager, Texture& texture, const std::string& textureName,
-			uint32_t& miplevels, CommandpoolManager* pCommandPoolManager);
+		void CreateTextureImage(GPUObject* pGPUObject, D3D::BufferManager* pBufferManager, Texture& texture,
+			const std::string& textureName, CommandpoolManager* pCommandPoolManager);
 
 		// Create a given cube texture image
 		// Parameters:
@@ -144,9 +143,6 @@ namespace D3D
 	private:
 		// The default texture
 		Texture m_DefaultTexture{};
-
-		// The max amount of miplevels
-		uint32_t m_MipLevels{};
 
 		// The textpath to the default texture
 		const std::string m_DefaultTextureName;

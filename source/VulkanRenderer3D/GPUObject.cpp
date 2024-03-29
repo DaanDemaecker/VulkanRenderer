@@ -60,6 +60,7 @@ void D3D::GPUObject::PickPhysicalDevice(InstanceWrapper* pInstanceWrapper, VkSur
 		}
 	}
 
+
 	// Check if physical device is null handle
 	if (m_PhysicalDevice == VK_NULL_HANDLE)
 	{

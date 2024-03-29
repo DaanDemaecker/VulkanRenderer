@@ -26,7 +26,7 @@ D3D::TexturedMaterial::TexturedMaterial(std::initializer_list<const std::string>
 	for (const auto& path : filePaths)
 	{
 		// Create texture
-		renderer.CreateTexture(m_Textures[index], path, m_MipLevels);
+		renderer.CreateTexture(m_Textures[index], path);
 
 		// Increment index
 		++index;

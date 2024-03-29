@@ -60,6 +60,8 @@ namespace D3D
 		VkDeviceMemory imageMemory{};
 		// VkImageView object
 		VkImageView imageView{};
+		// The amount of levels the mipmap will have
+		uint32_t mipLevels{};
 
 		// Cleanup function
 		// Parameters: 

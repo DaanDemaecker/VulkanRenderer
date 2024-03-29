@@ -133,8 +133,7 @@ namespace D3D
         // Parameters:
         //     texture: reference to the texture object that will hold the texture
         //     textureName: textpath to the image
-        //     mipLevels: the amount of mipmaps to be created
-        void CreateTexture(Texture& texture, const std::string& textureName, uint32_t& mipLevels);
+        void CreateTexture(Texture& texture, const std::string& textureName);
 
         void CreateCubeTexture(Texture& cubeTexture, const std::initializer_list<std::string const>& textureNames, uint32_t& miplevels);
 

@@ -22,11 +22,11 @@ D3D::ImageManager::ImageManager(GPUObject* pGPUObject, D3D::BufferManager* pBuff
 void D3D::ImageManager::CreateDefaultResources(GPUObject* pGPUObject, D3D::BufferManager* pBufferManager,CommandpoolManager* pCommandPoolManager)
 {
 	// Create the default texture sampler
-	CreateTextureSampler(pGPUObject, m_TextureSampler, m_MipLevels);
+	CreateTextureSampler(pGPUObject, m_TextureSampler, m_DefaultTexture.mipLevels);
 	// Create the default texture image
-	CreateTextureImage(pGPUObject, pBufferManager, m_DefaultTexture, m_DefaultTextureName, m_MipLevels, pCommandPoolManager);
+	CreateTextureImage(pGPUObject, pBufferManager, m_DefaultTexture, m_DefaultTextureName, pCommandPoolManager);
 	// Create the default texture image view
-	m_DefaultTexture.imageView = CreateImageView(pGPUObject->GetDevice(), m_DefaultTexture.image, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_ASPECT_COLOR_BIT, m_MipLevels);
+	m_DefaultTexture.imageView = CreateImageView(pGPUObject->GetDevice(), m_DefaultTexture.image, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_ASPECT_COLOR_BIT, m_DefaultTexture.mipLevels);
 }
 
 VkImageView D3D::ImageManager::CreateImageView(VkDevice device, VkImage image, VkFormat format, VkImageAspectFlags aspectFlags, uint32_t mipLevels)
@@ -496,7 +496,7 @@ void D3D::ImageManager::GenerateMipmaps(VkPhysicalDevice physicalDevice, VkComma
 		1, &barrier);
 }
 
-void D3D::ImageManager::CreateTextureImage(GPUObject* pGPUObject, D3D::BufferManager* pBufferManager, D3D::Texture& texture, const std::string& textureName, uint32_t& miplevels, D3D::CommandpoolManager* pCommandPoolManager)
+void D3D::ImageManager::CreateTextureImage(GPUObject* pGPUObject, D3D::BufferManager* pBufferManager, D3D::Texture& texture, const std::string& textureName, D3D::CommandpoolManager* pCommandPoolManager)
 {
 	// Get device
 	auto device{ pGPUObject->GetDevice() };
@@ -508,7 +508,7 @@ void D3D::ImageManager::CreateTextureImage(GPUObject* pGPUObject, D3D::BufferMan
 	stbi_uc* pixels = stbi_load(textureName.c_str(), &texWidth, &texHeight, &texChannels, STBI_rgb_alpha);
 
 	// Calculate max amount of miplevels based on texwidth and texheight
-	miplevels = static_cast<uint32_t>(std::floor(std::log2(std::max(texWidth, texHeight)))) + 1;
+	texture.mipLevels = static_cast<uint32_t>(std::floor(std::log2(std::max(texWidth, texHeight)))) + 1;
 
 	// Calculate the image size
 	VkDeviceSize imageSize = static_cast<uint64_t>(texWidth) * static_cast<uint64_t>(texHeight) * static_cast<uint64_t>(4);
@@ -542,7 +542,7 @@ void D3D::ImageManager::CreateTextureImage(GPUObject* pGPUObject, D3D::BufferMan
 	stbi_image_free(pixels);
 
 	// Create the image
-	CreateImage(pGPUObject, texWidth, texHeight, miplevels, VK_SAMPLE_COUNT_1_BIT, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_TILING_OPTIMAL,
+	CreateImage(pGPUObject, texWidth, texHeight, texture.mipLevels, VK_SAMPLE_COUNT_1_BIT, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_TILING_OPTIMAL,
 		VK_IMAGE_USAGE_TRANSFER_SRC_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT,
 		texture);
 
@@ -552,7 +552,7 @@ void D3D::ImageManager::CreateTextureImage(GPUObject* pGPUObject, D3D::BufferMan
 	// Get single time command buffer
 	commandBuffer = pCommandPoolManager->BeginSingleTimeCommands(device);
 	// Transition the image layout from undifined to transfer destination optimal
-	TransitionImageLayout(texture.image, commandBuffer, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, miplevels);
+	TransitionImageLayout(texture.image, commandBuffer, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, texture.mipLevels);
 	// End single time command buffer
 	pCommandPoolManager->EndSingleTimeCommands(pGPUObject, commandBuffer);
 
@@ -571,7 +571,7 @@ void D3D::ImageManager::CreateTextureImage(GPUObject* pGPUObject, D3D::BufferMan
 	// Get new single time command buffer
 	commandBuffer = pCommandPoolManager->BeginSingleTimeCommands(device);
 	// Generate mipmaps for the image
-	GenerateMipmaps(pGPUObject->GetPhysicalDevice(), commandBuffer, texture.image, VK_FORMAT_R8G8B8A8_SRGB, texWidth, texHeight, miplevels);
+	GenerateMipmaps(pGPUObject->GetPhysicalDevice(), commandBuffer, texture.image, VK_FORMAT_R8G8B8A8_SRGB, texWidth, texHeight, texture.mipLevels);
 	// En single time command buffer
 	pCommandPoolManager->EndSingleTimeCommands(pGPUObject, commandBuffer);
 }

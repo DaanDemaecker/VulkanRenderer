@@ -183,6 +183,7 @@
     <ClCompile Include="ConfigManager.cpp" />
     <ClCompile Include="CubeMapMaterial.cpp" />
     <ClCompile Include="D3DEngine.cpp" />
+    <ClCompile Include="DescriptorObject.cpp" />
     <ClCompile Include="DescriptorPoolManager.cpp" />
     <ClCompile Include="DescriptorPoolWrapper.cpp" />
     <ClCompile Include="DirectionalLightObject.cpp" />
@@ -201,12 +202,14 @@
     <ClCompile Include="STBIncludes.h" />
     <ClCompile Include="SwapchainWrapper.cpp" />
     <ClCompile Include="SyncObjectManager.cpp" />
+    <ClCompile Include="TextureDescriptorObject.cpp" />
     <ClCompile Include="TexturedMaterial.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Material.cpp" />
     <ClCompile Include="Model.cpp" />
     <ClCompile Include="TimeManager.cpp" />
     <ClCompile Include="TinyObjLoaderIncludes.cpp" />
+    <ClCompile Include="UboDescriptorObject.cpp" />
     <ClCompile Include="Utils.cpp" />
     <ClCompile Include="VulkanRenderer3D.cpp" />
     <ClCompile Include="VulkanUtils.cpp" />
@@ -229,6 +232,7 @@
     <ClInclude Include="ConfigManager.h" />
     <ClInclude Include="CubeMapMaterial.h" />
     <ClInclude Include="D3DEngine.h" />
+    <ClInclude Include="DescriptorObject.h" />
     <ClInclude Include="DescriptorPoolManager.h" />
     <ClInclude Include="DescriptorPoolWrapper.h" />
     <ClInclude Include="DirectionalLightObject.h" />
@@ -246,6 +250,7 @@
     <ClInclude Include="SkyBox.h" />
     <ClInclude Include="SwapchainWrapper.h" />
     <ClInclude Include="SyncObjectManager.h" />
+    <ClInclude Include="TextureDescriptorObject.h" />
     <ClInclude Include="TexturedMaterial.h" />
     <ClInclude Include="Material.h" />
     <ClInclude Include="Model.h" />
@@ -253,6 +258,7 @@
     <ClInclude Include="Structs.h" />
     <ClInclude Include="TimeManager.h" />
     <ClInclude Include="TinyObjLoaderIncludes.h" />
+    <ClInclude Include="UboDescriptorObject.h" />
     <ClInclude Include="Utils.h" />
     <ClInclude Include="GLMIncludes.h" />
     <ClInclude Include="VulkanIncludes.h" />

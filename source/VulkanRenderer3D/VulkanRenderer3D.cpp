@@ -594,12 +594,12 @@ void D3D::VulkanRenderer3D::UpdateUniformBuffer(UniformBufferObject& buffer)
 	m_pCamera->UpdateUniformBuffer(buffer, m_pSwapchainWrapper->GetExtent());
 }
 
-void D3D::VulkanRenderer3D::CreateTexture(Texture& texture, const std::string& textureName, uint32_t& mipLevels)
+void D3D::VulkanRenderer3D::CreateTexture(Texture& texture, const std::string& textureName)
 {
 	// Create the image trough the image manager
-	m_pImageManager->CreateTextureImage(m_pGpuObject.get(), m_pBufferManager.get(), texture, textureName, mipLevels, m_pCommandPoolManager.get());
+	m_pImageManager->CreateTextureImage(m_pGpuObject.get(), m_pBufferManager.get(), texture, textureName, m_pCommandPoolManager.get());
 	// Create the image view
-	texture.imageView = m_pImageManager->CreateImageView(m_pGpuObject->GetDevice(), texture.image, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_ASPECT_COLOR_BIT, mipLevels);
+	texture.imageView = m_pImageManager->CreateImageView(m_pGpuObject->GetDevice(), texture.image, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_ASPECT_COLOR_BIT, texture.mipLevels);
 }
 
 void D3D::VulkanRenderer3D::CreateCubeTexture(Texture& cubeTexture, const std::initializer_list<const std::string>& textureNames, uint32_t& miplevels)

@@ -1,10 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Source Files">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
-    </Filter>
     <Filter Include="Utils">
       <UniqueIdentifier>{3a27e938-8684-4cce-9d9b-0ff2ee97ab3a}</UniqueIdentifier>
     </Filter>
@@ -29,10 +25,6 @@
     <Filter Include="Includes">
       <UniqueIdentifier>{4aeb2f0b-2e4c-484a-a934-3ab2e74b9015}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Resource Files">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
-    </Filter>
     <Filter Include="Vulkan\Wrappers">
       <UniqueIdentifier>{45f80921-179a-4057-9e52-7dbfb2c7c0cc}</UniqueIdentifier>
     </Filter>
@@ -42,11 +34,11 @@
     <Filter Include="spirV-reflect">
       <UniqueIdentifier>{275b52a0-e9e5-49fe-baaf-5f56a994c023}</UniqueIdentifier>
     </Filter>
+    <Filter Include="DataTypes\DescriptorObjects">
+      <UniqueIdentifier>{c78643c2-69de-45f2-8cf9-6283a5c1ae99}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Utils.cpp">
       <Filter>Utils</Filter>
     </ClCompile>
@@ -172,6 +164,18 @@
     </ClCompile>
     <ClCompile Include="PipelineWrapper.cpp">
       <Filter>Vulkan\Wrappers</Filter>
+    </ClCompile>
+    <ClCompile Include="DescriptorObject.cpp">
+      <Filter>DataTypes\DescriptorObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="UboDescriptorObject.cpp">
+      <Filter>DataTypes\DescriptorObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="TextureDescriptorObject.cpp">
+      <Filter>DataTypes\DescriptorObjects</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -312,6 +316,15 @@
     </ClInclude>
     <ClInclude Include="PipelineWrapper.h">
       <Filter>Vulkan\Wrappers</Filter>
+    </ClInclude>
+    <ClInclude Include="DescriptorObject.h">
+      <Filter>DataTypes\DescriptorObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="UboDescriptorObject.h">
+      <Filter>DataTypes\DescriptorObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="TextureDescriptorObject.h">
+      <Filter>DataTypes\DescriptorObjects</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
