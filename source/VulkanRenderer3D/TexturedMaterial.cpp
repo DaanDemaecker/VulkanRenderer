@@ -4,9 +4,9 @@
 #include "TexturedMaterial.h"
 #include "VulkanRenderer3D.h"
 #include "Utils.h"
-#include "DescriptorPoolManager.h"
 #include "DescriptorPoolWrapper.h"
 #include "STBIncludes.h"
+#include "TextureDescriptorObject.h"
 
 D3D::TexturedMaterial::TexturedMaterial(std::initializer_list<const std::string>&& filePaths, const std::string& pipelineName)
 	:Material(pipelineName)
@@ -31,6 +31,8 @@ D3D::TexturedMaterial::TexturedMaterial(std::initializer_list<const std::string>
 		// Increment index
 		++index;
 	}
+
+	m_pDescriptorObject = std::make_unique<D3D::TextureDescriptorObject>(filePaths);
 
 	// Create sampler
 	CreateTextureSampler();
@@ -58,22 +60,24 @@ void D3D::TexturedMaterial::CreateDescriptorSets(Model* pModel, std::vector<VkDe
 	descriptorPool->CreateDescriptorSets(GetDescriptorLayout(), descriptorSets);
 }
 
-void D3D::TexturedMaterial::UpdateDescriptorSets(std::vector<VkBuffer>& uboBuffers, std::vector<VkDescriptorSet>& descriptorSets)
+void D3D::TexturedMaterial::UpdateDescriptorSets(std::vector<VkDescriptorSet>& descriptorSets, std::vector<DescriptorObject*>& descriptorObjects)
 {
-	// Get descriptorpool associated with this material
+	// Get pointer to the descriptorpool wrapper
 	auto descriptorPool = GetDescriptorPool();
-	// Create vector of vector of ubo buffers
-	std::vector<std::vector<VkBuffer>> uboBuffferList{ uboBuffers, D3D::VulkanRenderer3D::GetInstance().GetLightBuffers() };
 
-	// Create vector for buffersizes
-	std::vector<VkDeviceSize> uboSizes(2);
-	// Set first size to size of UniformBufferObject
-	uboSizes[0] = sizeof(UniformBufferObject);
-	// Set second size to size of LightObject
-	uboSizes[1] = sizeof(DirectionalLightStruct);
+	std::vector<DescriptorObject*> descriptorObjectList{};
+
+	for (auto& descriptorObject : descriptorObjects)
+	{
+		descriptorObjectList.push_back(descriptorObject);
+	}
+
+	descriptorObjectList.push_back(VulkanRenderer3D::GetInstance().GetLightDescriptor());
+
+	descriptorObjectList.push_back(m_pDescriptorObject.get());
 
 	// Update descriptorsets
-	descriptorPool->UpdateDescriptorSets(descriptorSets, uboBuffferList, uboSizes,  &m_Textures);
+	descriptorPool->UpdateDescriptorSets(descriptorSets, descriptorObjectList);
 }
 
 void D3D::TexturedMaterial::CreateTextureSampler()

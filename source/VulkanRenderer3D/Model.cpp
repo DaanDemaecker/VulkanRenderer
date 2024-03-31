@@ -16,6 +16,8 @@ D3D::Model::Model()
 {
 	// Crate default material as placeholder
 	m_pMaterial = std::make_shared<D3D::Material>();
+
+	m_pUboDescriptorObject = std::make_unique<D3D::UboDescriptorObject<UniformBufferObject>>();
 }
 
 D3D::Model::~Model()
@@ -127,15 +129,6 @@ void D3D::Model::CreateUniformBuffers()
 	// Get amount of frames
 	auto frames = renderer.GetMaxFrames();
 
-	// Get size of Uniform Buffer Object
-	VkDeviceSize bufferSize = sizeof(UniformBufferObject);
-
-	// Resize ubobuffers to amount of frames
-	m_UboBuffers.resize(frames);
-	// Resize ubo memory to amount of frames
-	m_UbosMemory.resize(frames);
-	// Resize mapped memory to amount of frames
-	m_UbosMapped.resize(frames);
 	// Resize ubos to amount of frames
 	m_Ubos.resize(frames);
 	// Resize dirty flages to amount of frames
@@ -143,17 +136,6 @@ void D3D::Model::CreateUniformBuffers()
 
 	// Set dirty flag
 	SetDirtyFlags();
-
-	// Loop for the amount of frames there are
-	for (size_t i = 0; i < frames; ++i)
-	{
-		// Create memory
-		renderer.CreateBuffer(bufferSize, VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
-			m_UboBuffers[i], m_UbosMemory[i]);
-
-		// Map memory from uboMemory to ubosmapped
-		vkMapMemory(renderer.GetDevice(), m_UbosMemory[i], 0, bufferSize, 0, &m_UbosMapped[i]);
-	}
 }
 
 void D3D::Model::CreateDescriptorSets()
@@ -166,35 +148,40 @@ void D3D::Model::CreateDescriptorSets()
 
 void D3D::Model::UpdateDescriptorSets()
 {
+	std::vector<DescriptorObject*> descriptors{ m_pUboDescriptorObject.get() };
+
 	// Update descriptorsets
-	m_pMaterial->UpdateDescriptorSets(m_UboBuffers, m_DescriptorSets);
+	m_pMaterial->UpdateDescriptorSets(m_DescriptorSets, descriptors);
 }
 
 void D3D::Model::UpdateUniformBuffer(uint32_t frame)
 {
-	// Get translation matrix
-	glm::mat4 translationMatrix = glm::translate(glm::mat4(1.0f), m_Position);
 
-	// Convert rotation to quaternion
-	glm::quat quaternion = glm::quat(m_Rotation);
-	// Get rotation matrix
-	glm::mat4 rotationMatrix = glm::mat4_cast(quaternion);
+	if (m_UboChanged[frame])
+	{
+		// Get translation matrix
+		glm::mat4 translationMatrix = glm::translate(glm::mat4(1.0f), m_Position);
 
-	// Get scaling matrix
-	glm::mat4 scalingMatrix = glm::scale(glm::mat4(1.0f), m_Scale);
+		// Convert rotation to quaternion
+		glm::quat quaternion = glm::quat(m_Rotation);
+		// Get rotation matrix
+		glm::mat4 rotationMatrix = glm::mat4_cast(quaternion);
 
-	// Set Ubo
-	m_Ubos[frame].model = translationMatrix * rotationMatrix * scalingMatrix;
+		// Get scaling matrix
+		glm::mat4 scalingMatrix = glm::scale(glm::mat4(1.0f), m_Scale);
+
+		// Set Ubo
+		m_Ubos[frame].model = translationMatrix * rotationMatrix * scalingMatrix;
+
+		// Reset dirty flag
+		m_UboChanged[frame] = false;
+	}
 
 	// Update ubo
 	// Send to renderer to update camera matrix
 	VulkanRenderer3D::GetInstance().UpdateUniformBuffer(m_Ubos[frame]);
 
-	// Reset dirty flag
-	m_UboChanged[frame] = false;
-
-	// Copy memory from ubos to ubosmapped
-	memcpy(m_UbosMapped[frame], &m_Ubos[frame], sizeof(m_Ubos[frame]));
+	m_pUboDescriptorObject->UpdateUboBuffer(m_Ubos[frame], frame);
 }
 
 D3D::PipelineWrapper* D3D::Model::GetPipeline()
@@ -227,15 +214,6 @@ void D3D::Model::Cleanup()
 	vkDestroyBuffer(device, m_VertexBuffer, nullptr);
 	// Free vertex buffer
 	vkFreeMemory(device, m_VertexBufferMemory, nullptr);
-
-	// Loop for the amount of frames
-	for (size_t i = 0; i < renderer.GetMaxFrames(); ++i)
-	{
-		// Destroy uboBuffers
-		vkDestroyBuffer(device, m_UboBuffers[i], nullptr);
-		// Free ubo buffer memory
-		vkFreeMemory(device, m_UbosMemory[i], nullptr);
-	}
 }
 
 void D3D::Model::SetDirtyFlags()

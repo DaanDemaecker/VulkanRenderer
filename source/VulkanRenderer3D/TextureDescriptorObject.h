@@ -12,12 +12,12 @@
 
 namespace D3D
 {
-    class TextureDescriptorObject :public DescriptorObject
+    class TextureDescriptorObject final : public DescriptorObject
     {
     public:
         TextureDescriptorObject() = delete;
 
-        TextureDescriptorObject(Texture&& texture);
+        TextureDescriptorObject(Texture& texture);
 
         TextureDescriptorObject(std::initializer_list<const std::string>& filePaths);
 

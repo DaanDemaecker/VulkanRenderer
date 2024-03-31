@@ -5,9 +5,9 @@
 #include "VulkanRenderer3D.h"
 #include "Utils.h"
 #include "DescriptorPoolWrapper.h"
-#include "DescriptorPoolManager.h"
 #include "STBIncludes.h"
 #include "PipelineWrapper.h"
+#include "DescriptorObject.h"
 
 D3D::Material::Material(const std::string& pipelineName)
 {
@@ -30,22 +30,22 @@ void D3D::Material::CreateDescriptorSets(Model* pModel, std::vector<VkDescriptor
 	descriptorPool->CreateDescriptorSets(GetDescriptorLayout(), descriptorSets);
 }
 
-void D3D::Material::UpdateDescriptorSets(std::vector<VkBuffer>& uboBuffers, std::vector<VkDescriptorSet>& descriptorSets)
+void D3D::Material::UpdateDescriptorSets(std::vector<VkDescriptorSet>& descriptorSets, std::vector<DescriptorObject*>& descriptorObjects)
 {
 	// Get pointer to the descriptorpool wrapper
 	auto descriptorPool = GetDescriptorPool();
-	// Create vector of vectors of vkBuffers
-	std::vector<std::vector<VkBuffer>> uboList{ uboBuffers, D3D::VulkanRenderer3D::GetInstance().GetLightBuffers()};
 
-	// Create vector for buffersizes
-	std::vector<VkDeviceSize> uboSizes(2);
-	// Set first size to size of UniformBufferObject
-	uboSizes[0] = sizeof(UniformBufferObject);
-	// Set second size to size of LightObject
-	uboSizes[1] = sizeof(DirectionalLightStruct);
+	std::vector<DescriptorObject*> descriptorObjectList{};
+
+	for (auto& descriptorObject : descriptorObjects)
+	{
+		descriptorObjectList.push_back(descriptorObject);
+	}
+
+	descriptorObjectList.push_back(VulkanRenderer3D::GetInstance().GetLightDescriptor());
 
 	// Update descriptorsets
-	descriptorPool->UpdateDescriptorSets(descriptorSets, uboList, uboSizes);
+	descriptorPool->UpdateDescriptorSets(descriptorSets, descriptorObjectList);
 }
 
 VkDescriptorSetLayout D3D::Material::GetDescriptorLayout()

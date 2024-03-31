@@ -6,6 +6,7 @@
 #include "ConfigManager.h"
 #include "ShaderModuleWrapper.h"
 #include "PipelineWrapper.h"
+#include "DescriptorPoolWrapper.h"
 
 D3D::PipelineManager::PipelineManager()
 {

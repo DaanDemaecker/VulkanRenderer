@@ -8,22 +8,22 @@
 // File includes
 #include "VulkanIncludes.h"
 #include "Structs.h"
+#include "ShaderModuleWrapper.h"
 
 // Standard library includes
 #include <vector>
+#include <map>
+#include <memory>
 
 namespace D3D
 {
 	class Model;
+	class DescriptorObject;
 
 	class DescriptorPoolWrapper final
 	{
 	public:
-		// Constructor
-		// Parameters:
-		//     uboAmount: the amount of universal buffers per model this pool will contain
-		//     textureAmount: the amount of textures per model this pool will contain
-		DescriptorPoolWrapper(uint32_t uboAmount, uint32_t textureAmount);
+		DescriptorPoolWrapper(std::vector<std::unique_ptr<D3D::ShaderModuleWrapper>>& shaderModules);
 
 		// Standard descriptor
 		~DescriptorPoolWrapper() = default;
@@ -58,18 +58,10 @@ namespace D3D
 		
 		// This function will update the given descriptorsets
 		// Parameters:
-		//     descriptorSets: a vector of the vulkan descriptorsets that need to be updated
-		//     uboBuffers: a vector of vectors of buffers that will be bound to the descriptorsets
-		//     uboSizes: a vector containing the size of the object contained in the uboBuffers
-		//     imageViews: a pointer to all the imageViews that will need to be bound to the descriptorsets
-		void UpdateDescriptorSets(std::vector<VkDescriptorSet>& descriptorSets, std::vector<std::vector<VkBuffer>>& uboBuffers, std::vector<VkDeviceSize>& uboSizes, std::vector<Texture>* textures = nullptr);
-
+		void UpdateDescriptorSets(std::vector<VkDescriptorSet>& descriptorSets, std::vector<DescriptorObject*>& descriptorObjects);
 	private:
-		// The amount of uniform buffer objects per descriptorsets in this pool
-		const uint32_t m_UboAmount;
 
-		// The amount of texture objects per descriptorsets in this pool
-		const uint32_t m_TextureAmount;
+		std::map<VkDescriptorType, int> m_DescriptorTypeCount{};
 
 		// The max amount of descriptorsets that can be allocated with this pool
 		int m_MaxDescriptorSets{ 8 };
@@ -91,6 +83,8 @@ namespace D3D
 
 		// Resizing of descriptorPool
 		void ResizeDescriptorPool();
+
+		void ReadDescriptorTypeCount(std::vector<std::unique_ptr<D3D::ShaderModuleWrapper>>& shaderModules);
 	};
 }
 

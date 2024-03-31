@@ -4,10 +4,12 @@
 #include "TextureDescriptorObject.h"
 #include "VulkanRenderer3D.h"
 
-D3D::TextureDescriptorObject::TextureDescriptorObject(Texture&& texture)
+D3D::TextureDescriptorObject::TextureDescriptorObject(Texture& texture)
 	:DescriptorObject(VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER)
 {
 	m_Textures.push_back(texture);
+
+	SetupImageInfos();
 }
 
 D3D::TextureDescriptorObject::TextureDescriptorObject(std::initializer_list<const std::string>& filePaths)
@@ -16,7 +18,6 @@ D3D::TextureDescriptorObject::TextureDescriptorObject(std::initializer_list<cons
 	SetupTextures(filePaths);
 
 	SetupImageInfos();
-
 }
 
 void D3D::TextureDescriptorObject::AddDescriptorWrite(VkDescriptorSet descriptorSet, std::vector<VkWriteDescriptorSet>& descriptorWrites, int& binding, int /*index*/)

@@ -54,11 +54,7 @@ namespace D3D
 		// Descriptor set layout
 		VkDescriptorSetLayout m_DescriptorSetLayout{};
 
-		// The amount of uniform buffer objects per descriptorsets in this pipeline
-		uint32_t m_UboAmount{};
-
-		// The amount of texture objects per descriptorsets in this pipeline
-		uint32_t m_TextureAmount{};
+		std::unique_ptr<DescriptorPoolWrapper> m_pDescriptorPool{};
 
 		// Create the graphics pipeline
 		// Parameters:

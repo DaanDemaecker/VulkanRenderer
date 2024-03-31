@@ -17,6 +17,7 @@ namespace D3D
 	class DescriptorPoolWrapper;
 	class Model;
 	class PipelineWrapper;
+	class DescriptorObject;
 
 	class Material
 	{
@@ -47,7 +48,7 @@ namespace D3D
 		// Parameters:
 		//     uboBuffers: vector of the buffers for Uniform Buffer Objects
 		//     descriptorsets: the descriptorsets that should be updated
-		virtual void UpdateDescriptorSets(std::vector<VkBuffer>& uboBuffers, std::vector<VkDescriptorSet>& descriptorSets);
+		virtual void UpdateDescriptorSets(std::vector<VkDescriptorSet>& descriptorSets, std::vector<DescriptorObject*>& descriptorObjects);
 
 		// Get the descriptor set layout
 		VkDescriptorSetLayout GetDescriptorLayout();

@@ -34,6 +34,8 @@ void D3D::D3DEngine::Run(const std::function<void()>& load)
 	auto& renderer{ VulkanRenderer3D::GetInstance() };
 	auto& window{ Window::GetInstance() };
 
+	renderer.SetupDefaultPipeline();
+	renderer.SetupLight();
 	renderer.SetupSkybox();
 
 	renderer.AddGraphicsPipeline("Diffuse", { "../Resources/Shaders/Diffuse.Vert.spv", "../Resources/Shaders/Diffuse.Frag.spv" });
@@ -177,7 +179,7 @@ void D3D::D3DEngine::Run(const std::function<void()>& load)
 		time.SetDeltaTime(deltaTime);
 
 		// Print FPS
-		std::cout << "FPS: " << time.GetFps() << std::endl;
+		//std::cout << "FPS: " << time.GetFps() << std::endl;
 
 		// Poll input for the window
 		glfwPollEvents();
@@ -227,4 +229,5 @@ void D3D::D3DEngine::Run(const std::function<void()>& load)
 	}
 
 	renderer.CleanupSkybox();
+	renderer.CleanupLight();
 }

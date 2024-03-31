@@ -11,6 +11,7 @@
 // Standard library includes
 #include <string>
 #include <vector>
+#include <map>
 
 
 namespace D3D
@@ -36,8 +37,7 @@ namespace D3D
 
 		void AddDescriptorSetLayoutBindings(std::vector<VkDescriptorSetLayoutBinding>& bindings);
 
-		void GetUboTextureAmount(uint32_t& uboAmount, uint32_t& textureAmount);
-
+		void AddDescriptorTypeCount(std::map<VkDescriptorType, int>& typeCount);
 	private:
 		// The binary code from the shader
 		std::vector<char> m_ShaderCode{};

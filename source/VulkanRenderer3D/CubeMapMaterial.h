@@ -6,6 +6,8 @@
 
 namespace D3D
 {
+	class TextureDescriptorObject;
+
 	class CubeMapMaterial final : public Material
 	{
 	public:
@@ -38,11 +40,13 @@ namespace D3D
 		// Parameters:
 		//     uboBuffers: a vector of the Uniform buffer objects
 		//     descriptorsets: a vector of the descriptorsets that have to be updated
-		virtual void UpdateDescriptorSets(std::vector<VkBuffer>& uboBuffers, std::vector<VkDescriptorSet>& descriptorSets) override;
+		virtual void UpdateDescriptorSets(std::vector<VkDescriptorSet>& descriptorSets, std::vector<DescriptorObject*>& descriptorObjects) override;
 
 	private:
 		// Texture struct
 		Texture m_CubeTexture{};
+
+		std::unique_ptr<TextureDescriptorObject> m_pDescriptorObject{};
 
 		// The amount of levels the mipmap will have
 		uint32_t m_MipLevels{};

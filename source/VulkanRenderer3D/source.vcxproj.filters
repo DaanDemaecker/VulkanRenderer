@@ -96,9 +96,6 @@
     <ClCompile Include="ImGuiWrapper.cpp">
       <Filter>Vulkan\Wrappers</Filter>
     </ClCompile>
-    <ClCompile Include="DescriptorPoolManager.cpp">
-      <Filter>Vulkan\Managers</Filter>
-    </ClCompile>
     <ClCompile Include="PipelineManager.cpp">
       <Filter>Vulkan\Managers</Filter>
     </ClCompile>
@@ -241,9 +238,6 @@
     </ClInclude>
     <ClInclude Include="ImGuiWrapper.h">
       <Filter>Vulkan\Wrappers</Filter>
-    </ClInclude>
-    <ClInclude Include="DescriptorPoolManager.h">
-      <Filter>Vulkan\Managers</Filter>
     </ClInclude>
     <ClInclude Include="PipelineManager.h">
       <Filter>Vulkan\Managers</Filter>

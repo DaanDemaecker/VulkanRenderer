@@ -8,6 +8,7 @@
 #include "GLFWIncludes.h"
 #include "GLMIncludes.h"
 #include "Structs.h"
+#include "UboDescriptorObject.h"
 
 // Standard library includes
 #include <memory>
@@ -96,12 +97,7 @@ namespace D3D
 		// Vector of dirty flags for UBOs
 		std::vector<bool> m_UboChanged{};
 
-		// Vector of buffers for UBOs
-		std::vector<VkBuffer> m_UboBuffers{};
-		// Vector for memories for UBOs
-		std::vector<VkDeviceMemory> m_UbosMemory{};
-		// Pointers to mapped UBOs
-		std::vector<void*> m_UbosMapped{};
+		std::unique_ptr<D3D::UboDescriptorObject<UniformBufferObject>> m_pUboDescriptorObject{};
 
 		// Vector of descriptorsets
 		std::vector<VkDescriptorSet> m_DescriptorSets{};

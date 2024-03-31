@@ -11,10 +11,12 @@
 namespace D3D
 {
 	template <typename T>
-	class UboDescriptorObject final : DescriptorObject
+	class UboDescriptorObject final : public DescriptorObject
 	{
 	public:
 		UboDescriptorObject();
+
+		virtual ~UboDescriptorObject();
 
 		virtual void AddDescriptorWrite(VkDescriptorSet descriptorSet, std::vector<VkWriteDescriptorSet>& descriptorWrites, int& binding, int index) override;
 
@@ -34,6 +36,8 @@ namespace D3D
 		void SetupBuffers();
 
 		void SetupBufferInfos();
+
+		void Cleanup();
 	};
 
 
@@ -44,6 +48,12 @@ namespace D3D
 		SetupBuffers();
 
 		SetupBufferInfos();
+	}
+
+	template<typename T>
+	inline UboDescriptorObject<T>::~UboDescriptorObject()
+	{
+		Cleanup();
 	}
 
 	template<typename T>
@@ -110,6 +120,8 @@ namespace D3D
 	template<typename T>
 	inline void UboDescriptorObject<T>::SetupBufferInfos()
 	{
+		m_BufferInfos.resize(m_UboBuffers.size());
+
 		for(int i{}; i < m_BufferInfos.size(); i++)
 		{
 			// BufferInfos
@@ -119,6 +131,26 @@ namespace D3D
 			m_BufferInfos[i].offset = 0;
 			// Give the correct size of the buffer object
 			m_BufferInfos[i].range = sizeof(T);
+		}
+	}
+	template<typename T>
+	inline void UboDescriptorObject<T>::Cleanup()
+	{
+		// Get reference to renderer
+		auto& renderer = D3D::VulkanRenderer3D::GetInstance();
+		// Get reference to device
+		auto device = renderer.GetDevice();
+
+		// Wait until device is idle
+		vkDeviceWaitIdle(device);
+
+		// Loop for the amount of frames
+		for (size_t i = 0; i < renderer.GetMaxFrames(); ++i)
+		{
+			// Destroy uboBuffers
+			vkDestroyBuffer(device, m_UboBuffers[i], nullptr);
+			// Free ubo buffer memory
+			vkFreeMemory(device, m_UbosMemory[i], nullptr);
 		}
 	}
 }

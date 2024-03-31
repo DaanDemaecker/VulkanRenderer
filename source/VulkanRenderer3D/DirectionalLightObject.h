@@ -8,6 +8,7 @@
 #include "GLFWIncludes.h"
 #include "Structs.h"
 #include "GLMIncludes.h"
+#include "UboDescriptorObject.h"
 
 namespace D3D
 {
@@ -17,12 +18,6 @@ namespace D3D
 	class DirectionalLightObject
 	{
 	public:
-		//Constructor
-		// This constructor will only be called from in the renderer itsel
-		// Parameters:
-		//     renderer: a pointer to the vulkanRenderer
-		DirectionalLightObject(VulkanRenderer3D* renderer);
-		
 		// Default constructor
 		DirectionalLightObject();
 		
@@ -71,7 +66,7 @@ namespace D3D
 		void SetIntensity(float intensity);
 		
 		// Public getter for the vulkan buffers needed for the shader
-		std::vector<VkBuffer>& GetLightBuffers() { return m_LightBuffers; }
+		DescriptorObject* GetDescriptorObject();
 
 		// Public getter to get the struct that holds the values
 		const DirectionalLightStruct& GetLight() const { return m_BufferObject; }
@@ -83,19 +78,11 @@ namespace D3D
 		// Vector for dirty flags
 		std::vector<bool> m_LightChanged{};
 		
-		// Vector with buffers for the data
-		std::vector<VkBuffer> m_LightBuffers{};
-
-		// Vector with device memories
-		std::vector<VkDeviceMemory> m_LightMemory{};
-
-		// Vector with mapped memory of light
-		std::vector<void*> m_LightMapped{};
+		std::unique_ptr<UboDescriptorObject<DirectionalLightStruct>> m_DescriptorObject{};
+		
 
 		// Function for creating the buffers
-		// Parameters:
-		//     renderer: pointer to vulkan renderer
-		void CreateLightBuffer(VulkanRenderer3D* renderer);
+		void CreateLightBuffer();
 		
 		// Function to set all dirty flags
 		void SetDirtyFlags();

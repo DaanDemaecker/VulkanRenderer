@@ -50,7 +50,7 @@ void D3D::ShaderModuleWrapper::AddDescriptorSetLayoutBindings(std::vector<VkDesc
 	}
 }
 
-void D3D::ShaderModuleWrapper::GetUboTextureAmount(uint32_t& uboAmount, uint32_t& textureAmount)
+void D3D::ShaderModuleWrapper::AddDescriptorTypeCount(std::map<VkDescriptorType, int>& typeCount)
 {
 	auto amount{ m_ReflectShaderModule.descriptor_binding_count };
 
@@ -58,13 +58,15 @@ void D3D::ShaderModuleWrapper::GetUboTextureAmount(uint32_t& uboAmount, uint32_t
 
 	for (uint32_t i{}; i < amount; i++)
 	{
-		if (descriptorBindings[i].descriptor_type == SPV_REFLECT_DESCRIPTOR_TYPE_UNIFORM_BUFFER)
+		auto currentType{ static_cast<VkDescriptorType>(descriptorBindings[i].descriptor_type) };
+
+		if (typeCount.contains(currentType))
 		{
-			uboAmount++;
+			typeCount[currentType]++;
 		}
-		else if (descriptorBindings[i].descriptor_type == SPV_REFLECT_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER)
+		else
 		{
-			textureAmount++;
+			typeCount[currentType] = 1;
 		}
 	}
 }

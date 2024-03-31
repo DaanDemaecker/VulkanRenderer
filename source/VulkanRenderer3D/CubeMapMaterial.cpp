@@ -3,8 +3,8 @@
 // File includes
 #include "CubeMapMaterial.h"
 #include "VulkanRenderer3D.h"
-#include "DescriptorPoolManager.h"
 #include "DescriptorPoolWrapper.h"
+#include "TextureDescriptorObject.h"
 
 // Standard library includes
 #include <stdexcept>
@@ -20,6 +20,8 @@ D3D::CubeMapMaterial::CubeMapMaterial(const std::initializer_list<const std::str
 {
 	// Create the cube texture
 	VulkanRenderer3D::GetInstance().CreateCubeTexture(m_CubeTexture, filePaths, m_MipLevels);
+
+	m_pDescriptorObject = std::make_unique<TextureDescriptorObject>(m_CubeTexture);
 }
 
 D3D::CubeMapMaterial::~CubeMapMaterial()
@@ -41,21 +43,22 @@ void D3D::CubeMapMaterial::CreateDescriptorSets(Model* pModel, std::vector<VkDes
 	descriptorPool->CreateDescriptorSets(GetDescriptorLayout(), descriptorSets);
 }
 
-void D3D::CubeMapMaterial::UpdateDescriptorSets(std::vector<VkBuffer>& uboBuffers, std::vector<VkDescriptorSet>& descriptorSets)
+void D3D::CubeMapMaterial::UpdateDescriptorSets(std::vector<VkDescriptorSet>& descriptorSets, std::vector<DescriptorObject*>& descriptorObjects)
 {
-	// Get descriptorpool associated with this material
+	// Get pointer to the descriptorpool wrapper
 	auto descriptorPool = GetDescriptorPool();
-	// Create vector of vector of ubo buffers
-	std::vector<std::vector<VkBuffer>> uboBuffferList{ uboBuffers};
 
-	// Create vector for buffersizes
-	std::vector<VkDeviceSize> uboSizes(1);
-	// Set first size to size of UniformBufferObject
-	uboSizes[0] = sizeof(UniformBufferObject);
+	std::vector<DescriptorObject*> descriptorObjectList{};
 
-	// Create a vector to hold this texture
-	auto texture = std::vector<Texture>{ m_CubeTexture };
+	for (auto& descriptorObject : descriptorObjects)
+	{
+		descriptorObjectList.push_back(descriptorObject);
+	}
+
+	///descriptorObjectList.push_back(VulkanRenderer3D::GetInstance().GetLightDescriptor());
+
+	descriptorObjectList.push_back(m_pDescriptorObject.get());
 
 	// Update descriptorsets
-	descriptorPool->UpdateDescriptorSets(descriptorSets, uboBuffferList, uboSizes, &texture);
+	descriptorPool->UpdateDescriptorSets(descriptorSets, descriptorObjectList);
 }

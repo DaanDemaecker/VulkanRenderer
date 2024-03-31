@@ -9,7 +9,6 @@
 #include "Structs.h"
 #include "PipelineManager.h"
 #include "Camera.h"
-#include "DescriptorPoolManager.h"
 
 // Standard library includes
 #include <memory>
@@ -30,10 +29,11 @@ namespace D3D
     class RenderpassWrapper;
     class SwapchainWrapper;
     class SyncObjectManager;
-    class DirectionalLightObject;
+    class DirectionalLightObject; 
     class SkyBox;
     class BufferManager;
     class PipelineWrapper;
+    class DescriptorObject;
 
     // Inherit from singleton
     class VulkanRenderer3D final : public Singleton<VulkanRenderer3D>
@@ -94,14 +94,11 @@ namespace D3D
         // Get the commandbuffer currently in use
         VkCommandBuffer& GetCurrentCommandBuffer();
 
-        // Get the descriptorpool manager
-        DescriptorPoolManager* GetDescriptorPoolManager() const;
-
         // Get the global light object
         const DirectionalLightStruct& GetGlobalLight() const;
 
         // Get the VkBuffers of the lights
-        std::vector<VkBuffer>& GetLightBuffers();
+        DescriptorObject* GetLightDescriptor();
 
 
         // Create a buffer
@@ -146,6 +143,12 @@ namespace D3D
         // Clean up skybox
         void CleanupSkybox();
 
+        void SetupLight();
+
+        void SetupDefaultPipeline();
+
+        void CleanupLight();
+
     private:
         std::unique_ptr<SkyBox> m_pSkyBox{};
 
@@ -161,9 +164,6 @@ namespace D3D
         VkSurfaceKHR m_Surface{};
 
         std::unique_ptr<BufferManager> m_pBufferManager{};
-
-        // Pointer to the descriptor pool manager
-        std::unique_ptr<DescriptorPoolManager> m_pDescriptorPoolManager{};
 
         // Pointer to the ImGui wrapper
         std::unique_ptr<ImGuiWrapper> m_pImGuiWrapper{};

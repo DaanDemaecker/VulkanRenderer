@@ -184,7 +184,6 @@
     <ClCompile Include="CubeMapMaterial.cpp" />
     <ClCompile Include="D3DEngine.cpp" />
     <ClCompile Include="DescriptorObject.cpp" />
-    <ClCompile Include="DescriptorPoolManager.cpp" />
     <ClCompile Include="DescriptorPoolWrapper.cpp" />
     <ClCompile Include="DirectionalLightObject.cpp" />
     <ClCompile Include="GLFWIncludes.h" />
@@ -233,7 +232,6 @@
     <ClInclude Include="CubeMapMaterial.h" />
     <ClInclude Include="D3DEngine.h" />
     <ClInclude Include="DescriptorObject.h" />
-    <ClInclude Include="DescriptorPoolManager.h" />
     <ClInclude Include="DescriptorPoolWrapper.h" />
     <ClInclude Include="DirectionalLightObject.h" />
     <ClInclude Include="GPUObject.h" />

@@ -14,6 +14,8 @@
 
 namespace D3D
 {
+	class TextureDescriptorObject;
+
 	class TexturedMaterial final : public Material
 	{
 	public:
@@ -36,7 +38,7 @@ namespace D3D
 		// Parameters:
 		//     uboBuffers: a vector of the Uniform buffer objects
 		//     descriptorsets: a vector of the descriptorsets that have to be updated
-		virtual void UpdateDescriptorSets(std::vector<VkBuffer>& uboBuffers, std::vector<VkDescriptorSet>& descriptorSets) override;
+		virtual void UpdateDescriptorSets(std::vector<VkDescriptorSet>& descriptorSets, std::vector<DescriptorObject*>& descriptorObjects) override;
 
 	private:
 		// The amount of textures this material uses
@@ -44,6 +46,8 @@ namespace D3D
 
 		// Vector of textures
 		std::vector<Texture> m_Textures{};
+
+		std::unique_ptr<TextureDescriptorObject> m_pDescriptorObject{};
 
 		// The sampler for the textures
 		VkSampler m_TextureSampler{};

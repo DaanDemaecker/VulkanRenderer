@@ -6,7 +6,6 @@
 #include "Utils.h"
 #include "Model.h"
 #include "VulkanUtils.h"
-#include "DescriptorPoolManager.h"
 #include "DescriptorPoolWrapper.h"
 #include "ImGuiIncludes.h"
 #include "ImGuiWrapper.h"
@@ -84,6 +83,29 @@ void D3D::VulkanRenderer3D::CleanupSkybox()
 	m_pSkyBox = nullptr;
 }
 
+void D3D::VulkanRenderer3D::SetupLight()
+{
+	// Create global light
+	m_pGlobalLight = std::make_unique<DirectionalLightObject>();
+	// Set direction of global light
+	m_pGlobalLight->SetDirection(glm::vec3{ -.577, -.577f, .577 });
+	// Set color of global light
+	m_pGlobalLight->SetColor(glm::vec3{ 1.f, 1.f, 1.f });
+	// Set intensity of global light
+	m_pGlobalLight->SetIntensity(1.f);
+}
+
+void D3D::VulkanRenderer3D::SetupDefaultPipeline()
+{
+	// Add the default pipeline
+	m_pPipelineManager->AddDefaultPipeline(m_pGpuObject->GetDevice(), m_pRenderpassWrapper->GetRenderpass(), m_pSwapchainWrapper->GetMsaaSamples());
+}
+
+void D3D::VulkanRenderer3D::CleanupLight()
+{
+	m_pGlobalLight = nullptr;
+}
+
 void D3D::VulkanRenderer3D::CleanupVulkan()
 {
 	// Create buffer manager
@@ -100,9 +122,6 @@ void D3D::VulkanRenderer3D::CleanupVulkan()
 
 	// Clean up image manager
 	m_pImageManager->Cleanup(device);
-
-	// Clean up descriptorpools
-	m_pDescriptorPoolManager->Cleanup(device);
 
 	// Clean up graphics pipelines
 	m_pPipelineManager->Cleanup(device);
@@ -165,22 +184,8 @@ void D3D::VulkanRenderer3D::InitVulkan()
 	// End the single time command buffer
 	m_pCommandPoolManager->EndSingleTimeCommands(pGPUObject, commandBuffer);
 
-	// Create global light
-	m_pGlobalLight = std::make_unique<DirectionalLightObject>(this);
-	// Set direction of global light
-	m_pGlobalLight->SetDirection(glm::vec3{-.577, -.577f, .577});
-	// Set color of global light
-	m_pGlobalLight->SetColor(glm::vec3{1.f, 1.f, 1.f} );
-	// Set intensity of global light
-	m_pGlobalLight->SetIntensity(1.f);
-
-	// Initialize descriptorpools
-	m_pDescriptorPoolManager = std::make_unique<DescriptorPoolManager>();
-
 	// Initialize graphics pipeline manager
 	m_pPipelineManager = std::make_unique<PipelineManager>();
-	// Add the default pipeline
-	m_pPipelineManager->AddDefaultPipeline(m_pGpuObject->GetDevice(), m_pRenderpassWrapper->GetRenderpass(), m_pSwapchainWrapper->GetMsaaSamples());
 
 	// Initialize the sync objects
 	m_pSyncObjectManager = std::make_unique<SyncObjectManager>(pGPUObject->GetDevice(), m_MaxFramesInFlight);
@@ -496,22 +501,16 @@ VkCommandBuffer& D3D::VulkanRenderer3D::GetCurrentCommandBuffer()
 	return m_pCommandPoolManager->GetCommandBuffer(m_CurrentFrame);
 }
 
-D3D::DescriptorPoolManager* D3D::VulkanRenderer3D::GetDescriptorPoolManager() const
-{
-	// Get the descriptor pool manager
-	return m_pDescriptorPoolManager.get();
-}
-
 const D3D::DirectionalLightStruct& D3D::VulkanRenderer3D::GetGlobalLight() const
 {
 	// Get a reference to the global light struct
 	return m_pGlobalLight->GetLight();
 }
 
-std::vector<VkBuffer>& D3D::VulkanRenderer3D::GetLightBuffers()
+D3D::DescriptorObject* D3D::VulkanRenderer3D::GetLightDescriptor()
 {
 	// Return buffers of the global light object
-	return m_pGlobalLight->GetLightBuffers();
+	return m_pGlobalLight->GetDescriptorObject();
 }
 
 void D3D::VulkanRenderer3D::CreateSurface()

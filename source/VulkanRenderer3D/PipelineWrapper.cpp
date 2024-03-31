@@ -4,6 +4,7 @@
 #include "PipelineWrapper.h"
 #include "ShaderModuleWrapper.h"
 #include "VulkanRenderer3D.h"
+#include "DescriptorPoolWrapper.h"
 
 // Standard library include
 #include <stdexcept>
@@ -28,7 +29,7 @@ void D3D::PipelineWrapper::Cleanup(VkDevice device)
 D3D::DescriptorPoolWrapper* D3D::PipelineWrapper::GetDescriptorPool()
 {
 	// Get descriptorpoolwrapper
-	return D3D::VulkanRenderer3D::GetInstance().GetDescriptorPoolManager()->GetDescriptorPool(m_UboAmount, m_TextureAmount);
+	return m_pDescriptorPool.get();
 }
 
 void D3D::PipelineWrapper::CreatePipeline(VkDevice device, VkRenderPass renderPass,
@@ -47,6 +48,8 @@ void D3D::PipelineWrapper::CreatePipeline(VkDevice device, VkRenderPass renderPa
 	}
 
 	CreateDescriptorSetLayout(device, shaderModuleWrappers);
+
+	m_pDescriptorPool = std::make_unique<DescriptorPoolWrapper>(shaderModuleWrappers);
 
 	std::vector<VkPipelineShaderStageCreateInfo> shaderStages(shaderModuleWrappers.size());
 
@@ -187,7 +190,6 @@ void D3D::PipelineWrapper::CreateDescriptorSetLayout(VkDevice device, std::vecto
 	for (auto& module : shaderModules)
 	{
 		module->AddDescriptorSetLayoutBindings(bindings);
-		module->GetUboTextureAmount(m_UboAmount, m_TextureAmount);
 	}
 
 	// Create layout info

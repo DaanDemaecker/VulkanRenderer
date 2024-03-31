@@ -4,14 +4,16 @@
 #include "DescriptorPoolWrapper.h"
 #include "VulkanRenderer3D.h"
 #include "Model.h" 
+#include "DescriptorObject.h"
 
-D3D::DescriptorPoolWrapper::DescriptorPoolWrapper(uint32_t uboAmount, uint32_t textureAmount)
-	//Initialize amount of ubos and textures
-	:m_UboAmount{uboAmount}, m_TextureAmount{textureAmount}
+
+D3D::DescriptorPoolWrapper::DescriptorPoolWrapper(std::vector<std::unique_ptr<D3D::ShaderModuleWrapper>>& shaderModules)
 {
-	// Initialize the descriptorPool
+	ReadDescriptorTypeCount(shaderModules);
+
 	InitDescriptorPool();
 }
+
 
 void D3D::DescriptorPoolWrapper::Cleanup(VkDevice device)
 {
@@ -77,80 +79,20 @@ void D3D::DescriptorPoolWrapper::CreateDescriptorSets(VkDescriptorSetLayout layo
 	m_AllocatedDescriptorSets++;
 }
 
-void D3D::DescriptorPoolWrapper::UpdateDescriptorSets(std::vector<VkDescriptorSet>& descriptorSets, std::vector<std::vector<VkBuffer>>& uboBuffers, std::vector<VkDeviceSize>& uboSizes,  std::vector<Texture>* textures)
+void D3D::DescriptorPoolWrapper::UpdateDescriptorSets(std::vector<VkDescriptorSet>& descriptorSets, std::vector<DescriptorObject*>& descriptorObjects)
 {
-	// Get reference to renderer for later use
-	auto& renderer{ D3D::VulkanRenderer3D::GetInstance() };
-
-	// Loop for the amount off frames there are
-	for (size_t i = 0; i < renderer.GetMaxFrames(); i++)
+	// Get reference
+	for (int i{}; i < descriptorSets.size(); i++)
 	{
-		// Create vector of descriptorwrites the size of the uniform buffers and texture amount combined
-		std::vector<VkWriteDescriptorSet> descriptorWrites(m_UboAmount + m_TextureAmount);
+		std::vector<VkWriteDescriptorSet> descriptorWrites{};
 
-		// Create vector for the buffer infos
-		std::vector<VkDescriptorBufferInfo> bufferInfos{ m_UboAmount };
+		int binding{};
 
-		// Loop for the amount off uniform buffers needed
-		for (uint32_t j{ 0 }; j < m_UboAmount; ++j)
+		for (auto& descriptorObject : descriptorObjects)
 		{
-			// BufferInfos
-			// Set the correct buffer
-			bufferInfos[j].buffer = uboBuffers[j][i];
-			// Offset should be 0
-			bufferInfos[j].offset = 0;
-			// Give the correct size of the buffer object
-			bufferInfos[j].range = uboSizes[j];
-
-			// DescriptorWrites
-			// Set the type to WriteDescriptorSet
-			descriptorWrites[j].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-			// Give the correct descriptorset
-			descriptorWrites[j].dstSet = descriptorSets[i];
-			// Set the binding used in the shader
-			descriptorWrites[j].dstBinding = j;
-			// Set array index
-			descriptorWrites[j].dstArrayElement = 0;
-			// Set descriptor type
-			descriptorWrites[j].descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-			// Set descriptor amount
-			descriptorWrites[j].descriptorCount = 1;
-			// Set the correct bufferInfo
-			descriptorWrites[j].pBufferInfo = &bufferInfos[j];
+			descriptorObject->AddDescriptorWrite(descriptorSets[i], descriptorWrites, binding, i);
 		}
 
-		// Create vector for imageInfos
-		std::vector<VkDescriptorImageInfo> imageInfos{ m_TextureAmount };
-
-		// Loop for the amount of imageInfos there are+
-		for (size_t j{}; j < m_TextureAmount; j++)
-		{
-			// Set imageLayout to read only 
-			imageInfos[j].imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
-			// Give correct image views
-			imageInfos[j].imageView = (*textures)[j].imageView;
-			// Set sampler
-			imageInfos[j].sampler = renderer.GetSampler();
-		}
-
-		// Loop for the amount of textures, starting from the amount of uniform buffers
-		for (uint32_t j{ m_UboAmount }; j < m_UboAmount + m_TextureAmount; ++j)
-		{
-			// Set type to write descriptor set
-			descriptorWrites[j].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-			// Give correct descriptorSet
-			descriptorWrites[j].dstSet = descriptorSets[i];
-			// Set binding used in shader
-			descriptorWrites[j].dstBinding = j;
-			// Set array index
-			descriptorWrites[j].dstArrayElement = 0;
-			// Set descriptor type to combined image sampler
-			descriptorWrites[j].descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
-			// Set descriptor amount
-			descriptorWrites[j].descriptorCount = 1;
-			// Give correct imageInfo
-			descriptorWrites[j].pImageInfo = &imageInfos[j - m_UboAmount];
-		}
 
 		// Update descriptorsets
 		vkUpdateDescriptorSets(VulkanRenderer3D::GetInstance().GetDevice(), static_cast<uint32_t>(descriptorWrites.size()), descriptorWrites.data(), 0, nullptr);
@@ -177,67 +119,45 @@ void D3D::DescriptorPoolWrapper::ResizeDescriptorPool()
 	}
 }
 
+void D3D::DescriptorPoolWrapper::ReadDescriptorTypeCount(std::vector<std::unique_ptr<D3D::ShaderModuleWrapper>>& shaderModules)
+{
+	for (auto& shaderModule : shaderModules)
+	{
+		shaderModule->AddDescriptorTypeCount(m_DescriptorTypeCount);
+	}
+}
+
 void D3D::DescriptorPoolWrapper::InitDescriptorPool()
 {
-	// Get reference to renderer for later use
 	auto& renderer{ VulkanRenderer3D::GetInstance() };
-	// Get amount of frames
-	auto maxFrames = renderer.GetMaxFrames();
 
-	// Check if textures need to be allocated in descriptorpool
-	if (m_TextureAmount > 0)
+	auto frames{ renderer.GetMaxFrames() };
+
+	std::vector<VkDescriptorPoolSize> poolSizes{};
+
+	for (auto& pair : m_DescriptorTypeCount)
 	{
-		// Create array for poolsizes for buffers and textures
-		std::array<VkDescriptorPoolSize, 2> poolSizes{};
-		// Set type of first poolsize to Uniform Buffer
-		poolSizes[0].type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-		// Set count of descriptors to ubo amount * max amount of descriptorsets * amount of frames
-		poolSizes[0].descriptorCount = static_cast<uint32_t>(maxFrames * m_MaxDescriptorSets * m_UboAmount);
-		// Set type for second poolsize to combined image sampler
-		poolSizes[1].type = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
-		// Set count of descriptors to texture amount * max amount of descriptorsets * amount of frames
-		poolSizes[1].descriptorCount = static_cast<uint32_t>(maxFrames * m_MaxDescriptorSets * m_TextureAmount);
-
-		// Create pool info
-		VkDescriptorPoolCreateInfo poolInfo{};
-		// Set type to descriptor pool create info
-		poolInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
-		// Set sizecount to the size of poolsizes
-		poolInfo.poolSizeCount = static_cast<uint32_t>(poolSizes.size());
-		// Give poolSizes
-		poolInfo.pPoolSizes = poolSizes.data();
-		// Give max sets
-		poolInfo.maxSets = static_cast<uint32_t>(maxFrames * m_MaxDescriptorSets);
-
-		// Created descriptorpool, if not successful, throw runtime error
-		if (vkCreateDescriptorPool(renderer.GetDevice(), &poolInfo, nullptr, &m_DescriptorPool) != VK_SUCCESS) {
-			throw std::runtime_error("failed to create descriptor pool!");
-		}
+		VkDescriptorPoolSize descriptorPoolSize{};
+		descriptorPoolSize.type = pair.first;
+		descriptorPoolSize.descriptorCount = static_cast<uint32_t>(pair.second * m_MaxDescriptorSets * frames);
+	
+		poolSizes.push_back(descriptorPoolSize);
 	}
-	else
-	{
-		// Create poolsize
-		VkDescriptorPoolSize poolSize{};
-		// Set type to uniform buffer
-		poolSize.type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-		// Set count of descriptors to ubo amount * max amount of descriptorsets * amount of frames
-		poolSize.descriptorCount = static_cast<uint32_t>(maxFrames * m_MaxDescriptorSets * m_UboAmount);
 
-		// Create poolinfo
-		VkDescriptorPoolCreateInfo poolInfo{};
-		// Set type to descriptor pool create info
-		poolInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
-		// Set sizeCount to 1
-		poolInfo.poolSizeCount = 1;
-		// Give poolsize
-		poolInfo.pPoolSizes = &poolSize;
-		// Give max sets
-		poolInfo.maxSets = static_cast<uint32_t>(maxFrames * m_MaxDescriptorSets);
+	// Create pool info
+	VkDescriptorPoolCreateInfo poolInfo{};
+	// Set type to descriptor pool create info
+	poolInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
+	// Set sizecount to the size of poolsizes
+	poolInfo.poolSizeCount = static_cast<uint32_t>(poolSizes.size());
+	// Give poolSizes
+	poolInfo.pPoolSizes = poolSizes.data();
+	// Give max sets
+	poolInfo.maxSets = static_cast<uint32_t>(frames * m_MaxDescriptorSets);
 
-		// Created descriptorpool, if not successful, throw runtime error
-		if (vkCreateDescriptorPool(renderer.GetDevice(), &poolInfo, nullptr, &m_DescriptorPool) != VK_SUCCESS) {
-			throw std::runtime_error("failed to create descriptor pool!");
-		}
+	// Created descriptorpool, if not successful, throw runtime error
+	if (vkCreateDescriptorPool(renderer.GetDevice(), &poolInfo, nullptr, &m_DescriptorPool) != VK_SUCCESS) {
+		throw std::runtime_error("failed to create descriptor pool!");
 	}
 }
 
