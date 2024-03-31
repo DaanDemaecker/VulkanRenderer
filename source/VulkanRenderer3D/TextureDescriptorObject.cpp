@@ -20,6 +20,16 @@ D3D::TextureDescriptorObject::TextureDescriptorObject(std::initializer_list<cons
 	SetupImageInfos();
 }
 
+D3D::TextureDescriptorObject::~TextureDescriptorObject()
+{
+	auto device{ VulkanRenderer3D::GetInstance().GetDevice() };
+
+	for (auto& texture : m_Textures)
+	{
+		texture.Cleanup(device);
+	}
+}
+
 void D3D::TextureDescriptorObject::AddDescriptorWrite(VkDescriptorSet descriptorSet, std::vector<VkWriteDescriptorSet>& descriptorWrites, int& binding, int /*index*/)
 {
 	descriptorWrites.resize(binding + m_Textures.size());

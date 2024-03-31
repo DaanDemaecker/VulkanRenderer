@@ -21,7 +21,7 @@ namespace D3D
 
         TextureDescriptorObject(std::initializer_list<const std::string>& filePaths);
 
-        virtual ~TextureDescriptorObject() = default;
+        virtual ~TextureDescriptorObject();
 
         virtual void AddDescriptorWrite(VkDescriptorSet descriptorSet, std::vector<VkWriteDescriptorSet>& descriptorWrites, int& binding, int index) override;
     private:

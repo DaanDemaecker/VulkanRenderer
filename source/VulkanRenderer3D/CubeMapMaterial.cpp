@@ -18,19 +18,17 @@ D3D::CubeMapMaterial::CubeMapMaterial(const std::initializer_list<const std::str
 D3D::CubeMapMaterial::CubeMapMaterial(const std::initializer_list<const std::string>& filePaths)
 	:Material("Skybox")
 {
-	// Create the cube texture
-	VulkanRenderer3D::GetInstance().CreateCubeTexture(m_CubeTexture, filePaths, m_MipLevels);
+	Texture cubeTexture{};
 
-	m_pDescriptorObject = std::make_unique<TextureDescriptorObject>(m_CubeTexture);
+	// Create the cube texture
+	VulkanRenderer3D::GetInstance().CreateCubeTexture(cubeTexture, filePaths, m_MipLevels);
+
+	m_pDescriptorObject = std::make_unique<TextureDescriptorObject>(cubeTexture);
 }
 
 D3D::CubeMapMaterial::~CubeMapMaterial()
 {
-	// Get reference to device for later use
-	auto device{ VulkanRenderer3D::GetInstance().GetDevice() };
 
-	// Clean up the texture
-	m_CubeTexture.Cleanup(device);
 }
 
 void D3D::CubeMapMaterial::CreateDescriptorSets(Model* pModel, std::vector<VkDescriptorSet>& descriptorSets)

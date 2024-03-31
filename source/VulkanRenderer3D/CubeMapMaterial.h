@@ -43,9 +43,6 @@ namespace D3D
 		virtual void UpdateDescriptorSets(std::vector<VkDescriptorSet>& descriptorSets, std::vector<DescriptorObject*>& descriptorObjects) override;
 
 	private:
-		// Texture struct
-		Texture m_CubeTexture{};
-
 		std::unique_ptr<TextureDescriptorObject> m_pDescriptorObject{};
 
 		// The amount of levels the mipmap will have

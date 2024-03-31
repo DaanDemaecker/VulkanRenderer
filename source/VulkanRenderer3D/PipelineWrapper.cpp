@@ -18,6 +18,7 @@ D3D::PipelineWrapper::PipelineWrapper(VkDevice device, VkRenderPass renderPass,
 
 void D3D::PipelineWrapper::Cleanup(VkDevice device)
 {
+	m_pDescriptorPool->Cleanup(device);
 	// Destroy the pipeline
 	vkDestroyPipeline(device, m_Pipeline, nullptr);
 	//Destroy the pipeline layout
