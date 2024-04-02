@@ -7,7 +7,6 @@
 // File includes
 #include "VulkanIncludes.h"
 #include "Structs.h"
-#include "CommandpoolManager.h"
 
 // Standard library includes
 #include <iostream>
@@ -17,6 +16,8 @@ namespace D3D
 	// Class forward declarations
 	class GPUObject;
 	class BufferManager;
+	class CommandpoolManager;
+
 
 	class ImageManager final
 	{

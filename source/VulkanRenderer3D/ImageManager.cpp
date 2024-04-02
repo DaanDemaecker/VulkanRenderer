@@ -7,6 +7,7 @@
 #include "GPUObject.h"
 #include "BufferManager.h"
 #include "ConfigManager.h"
+#include "CommandpoolManager.h"
 
 // Standard library includes
 #include <stdexcept>

@@ -8,7 +8,6 @@
 // File includes
 #include "VulkanIncludes.h"
 #include "Structs.h"
-#include "ShaderModuleWrapper.h"
 
 // Standard library includes
 #include <vector>
@@ -17,8 +16,10 @@
 
 namespace D3D
 {
+	// Class forward declarations
 	class Model;
 	class DescriptorObject;
+	class ShaderModuleWrapper;
 
 	class DescriptorPoolWrapper final
 	{

@@ -7,14 +7,12 @@
 // File includes
 #include "Singleton.h"
 #include "Structs.h"
-#include "PipelineManager.h"
-#include "Camera.h"
 
 // Standard library includes
 #include <memory>
 #include <vector>
 #include <map>
-#include <iostream>
+#include <string>
 
 
 namespace D3D
@@ -34,6 +32,8 @@ namespace D3D
     class BufferManager;
     class PipelineWrapper;
     class DescriptorObject;
+    class Camera;
+    class PipelineManager;
 
     // Inherit from singleton
     class VulkanRenderer3D final : public Singleton<VulkanRenderer3D>

@@ -7,24 +7,27 @@
 // File includes
 #include "VulkanIncludes.h"
 #include "Structs.h"
-#include "PipelineWrapper.h"
 
 // Standard library includes
 #include <string>
 #include <map>
 #include <vector>
 #include <initializer_list>
+#include <memory>
 
 namespace D3D
 {
+	// Class forward declarations
+	class PipelineWrapper;
+
 	class PipelineManager final
 	{
 	public:
 		// Constructor
 		PipelineManager();
 
-		// Default destructor
-		~PipelineManager() = default;
+		// Destructor
+		~PipelineManager();
 
 		// Delete copy and move functions
 		PipelineManager(PipelineManager& other) = delete;

@@ -5,7 +5,6 @@
 #define SwapchainWrapperIncluded
 
 // File includes
-#include "ImageViewManager.h"
 #include "VulkanIncludes.h"
 #include "Structs.h"
 
@@ -14,8 +13,10 @@
 
 namespace D3D
 {
-	// Class forward declaration for imagemanager
+	// Class forward declarations
 	class ImageManager;
+	class ImageViewManager;
+	class GPUObject;
 
 	class SwapchainWrapper final
 	{
@@ -31,8 +32,8 @@ namespace D3D
 		// Delete default constructor
 		SwapchainWrapper() = delete;
 
-		// Default destructort
-		~SwapchainWrapper() = default;
+		// Destructor
+		~SwapchainWrapper();
 
 		// Delete copy and move functions
 		SwapchainWrapper(SwapchainWrapper& other) = delete;
@@ -82,7 +83,7 @@ namespace D3D
 		VkFramebuffer GetFrameBuffer(uint32_t index) const { return m_SwapChainFramebuffers[index]; }
 
 		// Get the amound of samples per pixel
-		VkSampleCountFlagBits GetMsaaSamples() const { return m_pImageViewManager->GetMsaaSamples(); }
+		VkSampleCountFlagBits GetMsaaSamples() const;
 	private:
 		// The image view manager that hold the color and depth image
 		std::unique_ptr<ImageViewManager> m_pImageViewManager{};

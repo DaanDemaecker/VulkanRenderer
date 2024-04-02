@@ -2,13 +2,15 @@
 
 // File includes
 #include "PipelineManager.h"
-#include "Utils.h"
 #include "ConfigManager.h"
-#include "ShaderModuleWrapper.h"
 #include "PipelineWrapper.h"
 #include "DescriptorPoolWrapper.h"
 
 D3D::PipelineManager::PipelineManager()
+{
+}
+
+D3D::PipelineManager::~PipelineManager()
 {
 }
 

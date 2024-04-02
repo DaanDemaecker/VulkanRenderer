@@ -8,6 +8,7 @@
 // Standard library includes
 #include <string>
 
+
 namespace D3D
 {
 	class ConfigManager : public Singleton<ConfigManager>

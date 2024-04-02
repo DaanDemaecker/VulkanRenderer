@@ -9,7 +9,6 @@
 #include "Structs.h"
 
 // Standard library includes
-#include <stdexcept>
 #include <vector>
 
 namespace D3D
@@ -62,5 +61,4 @@ namespace VulkanUtils
 		//     surface: handle of the VkSurfaceKHR
 	D3D::SwapChainSupportDetails QuerySwapChainSupport(VkPhysicalDevice physicalDevice, VkSurfaceKHR surface);
 }
-
 #endif // !VulkanUtilsIncluded

@@ -2,11 +2,11 @@
 
 // File includes
 #include "SwapchainWrapper.h"
-#include "D3DEngine.h"
+#include "GPUObject.h"
+#include "ImageViewManager.h"
+#include "Window.h"
 #include "ImageManager.h"
 #include "VulkanUtils.h"
-#include "Window.h"
-#include "GPUObject.h"
 
 // Standard library includes
 #include <stdexcept>
@@ -22,6 +22,10 @@ D3D::SwapchainWrapper::SwapchainWrapper(GPUObject* pGPUObject, VkSurfaceKHR surf
 	CreateSwapChain(pGPUObject, surface);
 	// Initialize the image views
 	CreateSwapchainImageViews(pGPUObject->GetDevice(), pImageManager);
+}
+
+D3D::SwapchainWrapper::~SwapchainWrapper()
+{
 }
 
 void D3D::SwapchainWrapper::SetupImageViews(GPUObject* pGPUObject, D3D::ImageManager* pImageManager,
@@ -193,6 +197,11 @@ void D3D::SwapchainWrapper::RecreateSwapChain(GPUObject* pGPUObject, VkSurfaceKH
 	
 	// Set swapchain again
 	SetupSwapchain(pGPUObject, surface, pImageManager, commandBuffer, renderpass);
+}
+
+VkSampleCountFlagBits D3D::SwapchainWrapper::GetMsaaSamples() const
+{
+	return m_pImageViewManager->GetMsaaSamples();
 }
 
 

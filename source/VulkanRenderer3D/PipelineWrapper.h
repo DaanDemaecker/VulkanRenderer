@@ -14,8 +14,6 @@
 #include <string>
 #include <initializer_list>
 
-#include <iostream>
-
 namespace D3D
 {
 	// Class forward declarations

@@ -5,6 +5,7 @@
 #include "GPUObject.h"
 
 // Standard library includes
+#include <stdexcept>
 
 uint32_t VulkanUtils::FindMemoryType(VkPhysicalDevice physicalDevice, uint32_t typeFilter, VkMemoryPropertyFlags properties)
 {

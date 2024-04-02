@@ -5,6 +5,7 @@
 #include "VulkanRenderer3D.h"
 #include "Model.h" 
 #include "DescriptorObject.h"
+#include "ShaderModuleWrapper.h"
 
 
 D3D::DescriptorPoolWrapper::DescriptorPoolWrapper(std::vector<std::unique_ptr<D3D::ShaderModuleWrapper>>& shaderModules)
