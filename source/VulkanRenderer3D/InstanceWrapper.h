@@ -22,9 +22,9 @@ namespace D3D
 		// Destructor
 		~InstanceWrapper();
 
+		// Delete copy and move functions
 		InstanceWrapper(InstanceWrapper& other) = delete;
 		InstanceWrapper(InstanceWrapper&& other) = delete;
-
 		InstanceWrapper& operator=(InstanceWrapper& other) = delete;
 		InstanceWrapper& operator=(InstanceWrapper&& other) = delete;
 

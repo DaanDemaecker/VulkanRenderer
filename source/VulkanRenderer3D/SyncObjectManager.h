@@ -27,9 +27,9 @@ namespace D3D
 		// Default destructor
 		~SyncObjectManager() = default;
 
+		// Delete copy and move functions
 		SyncObjectManager(SyncObjectManager& other) = delete;
 		SyncObjectManager(SyncObjectManager&& other) = delete;
-
 		SyncObjectManager& operator=(SyncObjectManager& other) = delete;
 		SyncObjectManager& operator=(SyncObjectManager&& other) = delete;
 

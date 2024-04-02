@@ -25,9 +25,9 @@ namespace D3D
 		// Dafault destructor
 		~ImageViewManager() = default;
 
+		// Delete copy and move functions
 		ImageViewManager(ImageViewManager& other) = delete;
 		ImageViewManager(ImageViewManager&& other) = delete;
-
 		ImageViewManager& operator=(ImageViewManager& other) = delete;
 		ImageViewManager& operator=(ImageViewManager&& other) = delete;
 

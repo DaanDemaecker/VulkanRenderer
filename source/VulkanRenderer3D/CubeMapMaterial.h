@@ -21,12 +21,12 @@ namespace D3D
 		//     filePaths: list of filepaths to the textures
 		CubeMapMaterial(const std::initializer_list<const std::string>& filePaths);
 
-		// Destructor
-		~CubeMapMaterial();
+		// Default destructor
+		virtual ~CubeMapMaterial() = default;
 
+		// Delete copy and move functions
 		CubeMapMaterial(CubeMapMaterial& other) = delete;
 		CubeMapMaterial(CubeMapMaterial&& other) = delete;
-
 		CubeMapMaterial& operator=(CubeMapMaterial& other) = delete;
 		CubeMapMaterial& operator=(CubeMapMaterial&& other) = delete;
 
@@ -38,11 +38,12 @@ namespace D3D
 
 		// Update the descriptorsets
 		// Parameters:
-		//     uboBuffers: a vector of the Uniform buffer objects
 		//     descriptorsets: a vector of the descriptorsets that have to be updated
+		//     descriptorObjects: a vector of pointers to descriptorobjects in the same order as the shader code
 		virtual void UpdateDescriptorSets(std::vector<VkDescriptorSet>& descriptorSets, std::vector<DescriptorObject*>& descriptorObjects) override;
 
 	private:
+		// Pointer to the descriptor object
 		std::unique_ptr<TextureDescriptorObject> m_pDescriptorObject{};
 
 		// The amount of levels the mipmap will have

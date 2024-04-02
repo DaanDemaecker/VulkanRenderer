@@ -6,9 +6,9 @@
 #include "VulkanRenderer3D.h"
 #include "Model.h"
 #include "CubeMapMaterial.h"
+#include "TextureDescriptorObject.h"
 
 // Standard library includes
-#include <string>
 
 D3D::SkyBox::SkyBox(std::initializer_list<const std::string>&& filePaths)
 {

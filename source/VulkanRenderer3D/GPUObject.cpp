@@ -12,7 +12,10 @@
 
 D3D::GPUObject::GPUObject(InstanceWrapper* pInstanceWrapper, VkSurfaceKHR surface)
 {
+	// Pick the physical device
 	PickPhysicalDevice(pInstanceWrapper, surface);
+
+	// Create the logical device
 	CreateLogicalDevice(pInstanceWrapper, surface);
 }
 
@@ -26,6 +29,7 @@ void D3D::GPUObject::CleanUp()
 
 void D3D::GPUObject::WaitIdle()
 {
+	// Wait until the device is idle
 	vkDeviceWaitIdle(m_Device);
 }
 

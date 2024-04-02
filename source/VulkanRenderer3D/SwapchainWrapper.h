@@ -34,9 +34,9 @@ namespace D3D
 		// Default destructort
 		~SwapchainWrapper() = default;
 
+		// Delete copy and move functions
 		SwapchainWrapper(SwapchainWrapper& other) = delete;
 		SwapchainWrapper(SwapchainWrapper&& other) = delete;
-
 		SwapchainWrapper& operator=(SwapchainWrapper& other) = delete;
 		SwapchainWrapper& operator=(SwapchainWrapper&& other) = delete;
 

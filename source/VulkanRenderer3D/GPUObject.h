@@ -18,24 +18,37 @@ namespace D3D
 	class GPUObject
 	{
 	public:
+		// Constructor
+		// Parameters:
+		//     pInstanceWrapper: a pointer to the incstanceWrapper
+		//     surface: handle of the VkSurfaceKHR
 		GPUObject(InstanceWrapper* pInstanceWrapper, VkSurfaceKHR surface);
 
+		// Delete the default constructor
 		GPUObject() = delete;
 
+		// Default destructor
 		~GPUObject() = default;
 
+		// Delete copy and move functions
 		GPUObject(GPUObject& other) = delete;
 		GPUObject(GPUObject&& other) = delete;
-
 		GPUObject& operator=(GPUObject& other) = delete;
 		GPUObject& operator=(GPUObject&& other) = delete;
 
+		// Clean up the devices
 		void CleanUp();
 		
+		// Wait untile the device is idle
 		void WaitIdle();
 
+		// Return the physical device
 		VkPhysicalDevice GetPhysicalDevice() const { return m_PhysicalDevice; }
+
+		// Return the logical device
 		VkDevice GetDevice() const { return m_Device; }
+
+		// Get eh object holding information about graphics- and present queues
 		const QueueObject& GetQueueObject() const { return m_QueueObject; }
 
 

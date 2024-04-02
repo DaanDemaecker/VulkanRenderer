@@ -1,7 +1,7 @@
+// Camera.cpp
+
+// File includes
 #include "Camera.h"
-
-
-#include "TimeManager.h"
 
 
 void D3D::Camera::UpdateUniformBuffer(UniformBufferObject& buffer, VkExtent2D extent)

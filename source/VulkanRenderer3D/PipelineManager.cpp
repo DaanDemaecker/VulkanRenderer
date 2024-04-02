@@ -50,6 +50,7 @@ void D3D::PipelineManager::AddGraphicsPipeline(VkDevice device, VkRenderPass ren
 		m_GraphicPipelines[pipelineName]->Cleanup(device);
 	}
 
+	// Create a new pipeline in the correct spot in the map
 	m_GraphicPipelines[pipelineName] = std::make_unique<D3D::PipelineWrapper>
 		(device, renderPass, sampleCount, filePaths, hasDepthStencil);
 	

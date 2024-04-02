@@ -26,9 +26,9 @@ namespace D3D
 		// Default destructor
 		~PipelineManager() = default;
 
+		// Delete copy and move functions
 		PipelineManager(PipelineManager& other) = delete;
 		PipelineManager(PipelineManager&& other) = delete;
-
 		PipelineManager& operator=(PipelineManager& other) = delete;
 		PipelineManager& operator=(PipelineManager&& other) = delete;
 

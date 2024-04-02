@@ -23,14 +23,20 @@ namespace D3D
 	class DescriptorPoolWrapper final
 	{
 	public:
+		// Constructor
+		// Parameters:
+		//     shaderModules: a vector of shaderModules of the different requested shader files
 		DescriptorPoolWrapper(std::vector<std::unique_ptr<D3D::ShaderModuleWrapper>>& shaderModules);
+
+		// Delete default constructor
+		DescriptorPoolWrapper() = delete;
 
 		// Standard descriptor
 		~DescriptorPoolWrapper() = default;
 
+		// Delete copy and move functions
 		DescriptorPoolWrapper(DescriptorPoolWrapper& other) = delete;
 		DescriptorPoolWrapper(DescriptorPoolWrapper&& other) = delete;
-
 		DescriptorPoolWrapper& operator=(DescriptorPoolWrapper& other) = delete;
 		DescriptorPoolWrapper& operator=(DescriptorPoolWrapper&& other) = delete;
 
@@ -60,7 +66,7 @@ namespace D3D
 		// Parameters:
 		void UpdateDescriptorSets(std::vector<VkDescriptorSet>& descriptorSets, std::vector<DescriptorObject*>& descriptorObjects);
 	private:
-
+		// The amount of bindings per descriptor set type
 		std::map<VkDescriptorType, int> m_DescriptorTypeCount{};
 
 		// The max amount of descriptorsets that can be allocated with this pool
@@ -84,6 +90,9 @@ namespace D3D
 		// Resizing of descriptorPool
 		void ResizeDescriptorPool();
 
+		// Read the amount of bindings per type from the shader modules
+		// Parameters:
+		//     shaderModules: a vector of shaderModules of the different requested shader files
 		void ReadDescriptorTypeCount(std::vector<std::unique_ptr<D3D::ShaderModuleWrapper>>& shaderModules);
 	};
 }

@@ -44,9 +44,9 @@ namespace D3D
         // Destructor
         ~VulkanRenderer3D();
 
+        // Delete copy and move functions
         VulkanRenderer3D(VulkanRenderer3D& other) = delete;
         VulkanRenderer3D(VulkanRenderer3D&& other) = delete;
-
         VulkanRenderer3D& operator=(VulkanRenderer3D& other) = delete;
         VulkanRenderer3D& operator=(VulkanRenderer3D&& other) = delete;
 
@@ -67,7 +67,7 @@ namespace D3D
         // Parameters:
         //     pipelineName: the name of the new pipeline
         //     filePaths: a list of shader file names for this pipeline
-        //     hasDepthStencil: boolean that indicates if this pipeline needs a depth stencil
+        //     hasDepthStencil: boolean that indicates if this pipeline needs a depth stencil, true by default
         void AddGraphicsPipeline(const std::string& pipelineName, std::initializer_list<const std::string>&& filePaths,
             bool hasDepthStencil = true);
 
@@ -97,7 +97,7 @@ namespace D3D
         // Get the global light object
         const DirectionalLightStruct& GetGlobalLight() const;
 
-        // Get the VkBuffers of the lights
+        // Get a pointer to the DescriptorObject of the global light
         DescriptorObject* GetLightDescriptor();
 
 
@@ -117,8 +117,18 @@ namespace D3D
         //     size: the size of the buffers
         void CopyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size);
 
+        // Create a vertex buffer
+        // Parameters:
+        //     vertices: reference to vector of vertices 
+        //     vertexBuffer: handle to the vertex buffer to be created
+        //     vertexBufferMemory: handle of the vertex buffer memory
         void CreateVertexBuffer(std::vector<D3D::Vertex>& vertices, VkBuffer& vertexBuffer, VkDeviceMemory& vertexBufferMemory);
 
+        // Create a vertex buffer
+        // Parameters:
+        //     indices: reference to vector of indices 
+        //     indexBuffer: handle to the index buffer to be created
+        //     indexBufferMemory: handle of the index buffer memory
         void CreateIndexBuffer(std::vector<uint32_t>& indices, VkBuffer& indexBuffer, VkDeviceMemory& indexBufferMemory);
 
         // Update uniform buffer with camera and projection transform
@@ -132,7 +142,11 @@ namespace D3D
         //     textureName: textpath to the image
         void CreateTexture(Texture& texture, const std::string& textureName);
 
-        void CreateCubeTexture(Texture& cubeTexture, const std::initializer_list<std::string const>& textureNames, uint32_t& miplevels);
+        // Create a cube texture
+        // Parameters:
+        //     cubeTexture: reference to the texture object
+        //     textureNames: a list of the file paths for the cube faces in order: right,left,up,down,front,back
+        void CreateCubeTexture(Texture& cubeTexture, const std::initializer_list<std::string const>& textureNames);
 
         // Pointer for the camera
         Camera* GetCamera() { return m_pCamera.get(); }
@@ -143,19 +157,24 @@ namespace D3D
         // Clean up skybox
         void CleanupSkybox();
 
+        // Set up the global light
         void SetupLight();
 
-        void SetupDefaultPipeline();
-
+        // Clean up the global light
         void CleanupLight();
 
+        // Initialize the default pipeline
+        void SetupDefaultPipeline();
+
     private:
+        // Pointer to the skybox object
         std::unique_ptr<SkyBox> m_pSkyBox{};
 
+        // Pointer to the gpu wrapper object
         std::unique_ptr<GPUObject> m_pGpuObject{};
 
         // The maximum amount of frames in flight
-        const uint32_t m_MaxFramesInFlight{ 3 };
+        const uint32_t m_MaxFramesInFlight{ 2 };
 
         // The current frame
         uint32_t m_CurrentFrame = 0;
@@ -163,6 +182,7 @@ namespace D3D
         // Handle of the VkSurfaceKHR
         VkSurfaceKHR m_Surface{};
 
+        // Pointer to the buffer manager
         std::unique_ptr<BufferManager> m_pBufferManager{};
 
         // Pointer to the ImGui wrapper
@@ -236,8 +256,6 @@ namespace D3D
         //     newLayout: the new layout of the image
         //     mipLevels: the amount of mipmaps in this image
         void TransitionImageLayout(VkImage image, VkFormat format, VkImageLayout oldLayout, VkImageLayout newLayout, uint32_t mipLevels);
-
-        
     };
 }
 

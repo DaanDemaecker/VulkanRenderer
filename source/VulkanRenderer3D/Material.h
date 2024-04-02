@@ -29,9 +29,9 @@ namespace D3D
 		// Default constructor
 		virtual ~Material() = default;
 
+		// Delete copy and move functions
 		Material(Material& other) = delete;
 		Material(Material&& other) = delete;
-
 		Material& operator=(Material& other) = delete;
 		Material& operator=(Material&& other) = delete; 
 
@@ -46,8 +46,8 @@ namespace D3D
 
 		// Update the descriptorsets
 		// Parameters:
-		//     uboBuffers: vector of the buffers for Uniform Buffer Objects
 		//     descriptorsets: the descriptorsets that should be updated
+		//     descriptorObjects: a vector of pointers to descriptorobjects in the same order as the shader code
 		virtual void UpdateDescriptorSets(std::vector<VkDescriptorSet>& descriptorSets, std::vector<DescriptorObject*>& descriptorObjects);
 
 		// Get the descriptor set layout

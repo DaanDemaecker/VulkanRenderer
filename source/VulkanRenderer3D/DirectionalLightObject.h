@@ -24,9 +24,9 @@ namespace D3D
 		// Default destructor
 		~DirectionalLightObject() = default;
 
+		// Delete copy and move functions
 		DirectionalLightObject(DirectionalLightObject& other) = delete;
 		DirectionalLightObject(DirectionalLightObject&& other) = delete;
-
 		DirectionalLightObject& operator=(DirectionalLightObject& other) = delete;
 		DirectionalLightObject& operator=(DirectionalLightObject&& other) = delete;
 		

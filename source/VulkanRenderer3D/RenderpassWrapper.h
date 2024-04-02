@@ -27,9 +27,9 @@ namespace D3D
 		// Default destructor
 		~RenderpassWrapper() = default;
 
+		// Delete copy and move functions
 		RenderpassWrapper(RenderpassWrapper& other) = delete;
 		RenderpassWrapper(RenderpassWrapper&& other) = delete;
-
 		RenderpassWrapper& operator=(RenderpassWrapper& other) = delete;
 		RenderpassWrapper& operator=(RenderpassWrapper&& other) = delete;
 	

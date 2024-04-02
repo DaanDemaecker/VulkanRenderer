@@ -11,43 +11,11 @@
 D3D::TexturedMaterial::TexturedMaterial(std::initializer_list<const std::string>&& filePaths, const std::string& pipelineName)
 	:Material(pipelineName)
 {
-	// Set texture amount to the size of the initializer list
-	m_TextureAmount = static_cast<int>(filePaths.size());
-	
-	// Resize textures to textureAmount
-	m_Textures.resize(m_TextureAmount);
-
-	// Initialize index variable
-	int index{};
-
-	auto& renderer{ VulkanRenderer3D::GetInstance() };
-
-	// Loop trough all filePaths
-	for (const auto& path : filePaths)
-	{
-		// Create texture
-		renderer.CreateTexture(m_Textures[index], path);
-
-		// Increment index
-		++index;
-	}
-
+	// Create a descriptor object with the list of file paths given
 	m_pDescriptorObject = std::make_unique<D3D::TextureDescriptorObject>(filePaths);
 
 	// Create sampler
 	CreateTextureSampler();
-}
-
-D3D::TexturedMaterial::~TexturedMaterial()
-{
-	// Get reference to device for later use
-	auto device{ VulkanRenderer3D::GetInstance().GetDevice() };
-
-	// Loop trough textures and destroy them
-	for (auto& texture : m_Textures)
-	{
-		texture.Cleanup(device);
-	}
 }
 
 void D3D::TexturedMaterial::CreateDescriptorSets(Model* pModel, std::vector<VkDescriptorSet>& descriptorSets)
@@ -65,6 +33,7 @@ void D3D::TexturedMaterial::UpdateDescriptorSets(std::vector<VkDescriptorSet>& d
 	// Get pointer to the descriptorpool wrapper
 	auto descriptorPool = GetDescriptorPool();
 
+	// Create list of descriptor objects and add the objects of the model to it
 	std::vector<DescriptorObject*> descriptorObjectList{};
 
 	for (auto& descriptorObject : descriptorObjects)
@@ -72,8 +41,10 @@ void D3D::TexturedMaterial::UpdateDescriptorSets(std::vector<VkDescriptorSet>& d
 		descriptorObjectList.push_back(descriptorObject);
 	}
 
+	// Add the descriptor object of the global light
 	descriptorObjectList.push_back(VulkanRenderer3D::GetInstance().GetLightDescriptor());
 
+	// Add the descriptor object holding the textures
 	descriptorObjectList.push_back(m_pDescriptorObject.get());
 
 	// Update descriptorsets

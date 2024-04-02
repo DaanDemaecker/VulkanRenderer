@@ -29,9 +29,9 @@ namespace D3D
 		// Delete default constructor
 		ImGuiWrapper() = delete;
 
+		// Delete copy and move functions
 		ImGuiWrapper(ImGuiWrapper& other) = delete;
 		ImGuiWrapper(ImGuiWrapper&& other) = delete;
-
 		ImGuiWrapper& operator=(ImGuiWrapper& other) = delete;
 		ImGuiWrapper& operator=(ImGuiWrapper&& other) = delete;
 

@@ -14,7 +14,7 @@
 
 namespace D3D
 {
-	// Class forward declaratoin for model
+	// Class forward declarations
 	class Model;
 
 	class SkyBox
@@ -31,9 +31,9 @@ namespace D3D
 		// Default destructor
 		~SkyBox() = default;
 
+		// Delete copy and move functions
 		SkyBox(SkyBox& other) = delete;
 		SkyBox(SkyBox&& other) = delete;
-
 		SkyBox& operator=(SkyBox& other) = delete;
 		SkyBox& operator=(SkyBox&& other) = delete;
 

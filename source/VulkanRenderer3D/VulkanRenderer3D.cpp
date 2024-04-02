@@ -21,7 +21,6 @@
 #include "GPUObject.h"
 #include "BufferManager.h"
 #include "PipelineWrapper.h"
-
 #include "SkyBox.h"
 
 // Standard library includes
@@ -103,6 +102,7 @@ void D3D::VulkanRenderer3D::SetupDefaultPipeline()
 
 void D3D::VulkanRenderer3D::CleanupLight()
 {
+	// Set the global light to nullptr, the unique pointer will take care of the destruction
 	m_pGlobalLight = nullptr;
 }
 
@@ -474,6 +474,7 @@ void D3D::VulkanRenderer3D::Render(Model* pModel, VkCommandBuffer& commandBuffer
 
 VkDevice D3D::VulkanRenderer3D::GetDevice()
 {
+	// Return the logical device
 	return m_pGpuObject->GetDevice();
 }
 
@@ -574,16 +575,19 @@ void D3D::VulkanRenderer3D::CreateBuffer(VkDeviceSize size, VkBufferUsageFlags u
 
 void D3D::VulkanRenderer3D::CopyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size)
 {
+	// Copy a buffer trough the bufferManager
 	m_pBufferManager->CopyBuffer(m_pGpuObject.get(), m_pCommandPoolManager.get(), srcBuffer, dstBuffer, size);
 }
 
 void D3D::VulkanRenderer3D::CreateVertexBuffer(std::vector<D3D::Vertex>& vertices, VkBuffer& vertexBuffer, VkDeviceMemory& vertexBufferMemory)
 {
+	// Create a vertex buffer trough the buffer manager
 	m_pBufferManager->CreateVertexBuffer(m_pGpuObject.get(), m_pCommandPoolManager.get(), vertices, vertexBuffer, vertexBufferMemory);
 }
 
 void D3D::VulkanRenderer3D::CreateIndexBuffer(std::vector<uint32_t>& indices, VkBuffer& indexBuffer, VkDeviceMemory& indexBufferMemory)
 {
+	// Create an index buffer trough the buffer manager
 	m_pBufferManager->CreateIndexBuffer(m_pGpuObject.get(), m_pCommandPoolManager.get(), indices, indexBuffer, indexBufferMemory);
 }
 
@@ -601,9 +605,10 @@ void D3D::VulkanRenderer3D::CreateTexture(Texture& texture, const std::string& t
 	texture.imageView = m_pImageManager->CreateImageView(m_pGpuObject->GetDevice(), texture.image, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_ASPECT_COLOR_BIT, texture.mipLevels);
 }
 
-void D3D::VulkanRenderer3D::CreateCubeTexture(Texture& cubeTexture, const std::initializer_list<const std::string>& textureNames, uint32_t& miplevels)
+void D3D::VulkanRenderer3D::CreateCubeTexture(Texture& cubeTexture, const std::initializer_list<const std::string>& textureNames)
 {
-	m_pImageManager->CreateCubeTexture(m_pGpuObject.get(), m_pBufferManager.get(), cubeTexture, textureNames, miplevels, m_pCommandPoolManager.get());
+	// Create a cube texture trough image manager
+	m_pImageManager->CreateCubeTexture(m_pGpuObject.get(), m_pBufferManager.get(), cubeTexture, textureNames, m_pCommandPoolManager.get());
 }
 
 VkCommandBuffer D3D::VulkanRenderer3D::BeginSingleTimeCommands()

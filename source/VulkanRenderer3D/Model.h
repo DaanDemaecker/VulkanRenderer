@@ -16,7 +16,7 @@
 
 namespace D3D
 {
-	// Class forward declaration for material
+	// Class forward declarations
 	class Material;
 	class PipelineWrapper;
 
@@ -28,9 +28,9 @@ namespace D3D
 		// Destructor
 		~Model();
 
+		// Delete copy and move functions
 		Model(Model& other) = delete;
 		Model(Model&& other) = delete;
-
 		Model& operator=(Model& other) = delete;
 		Model& operator=(Model&& other) = delete;
 

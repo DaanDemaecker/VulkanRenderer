@@ -17,6 +17,7 @@ D3D::Material::Material(const std::string& pipelineName)
 
 D3D::PipelineWrapper* D3D::Material::GetPipeline()
 {
+	// Return the pipeline
 	return m_Pipeline;
 }
 
@@ -35,6 +36,7 @@ void D3D::Material::UpdateDescriptorSets(std::vector<VkDescriptorSet>& descripto
 	// Get pointer to the descriptorpool wrapper
 	auto descriptorPool = GetDescriptorPool();
 
+	// Create list of descriptor objects and add the objects of the model to it
 	std::vector<DescriptorObject*> descriptorObjectList{};
 
 	for (auto& descriptorObject : descriptorObjects)
@@ -42,6 +44,7 @@ void D3D::Material::UpdateDescriptorSets(std::vector<VkDescriptorSet>& descripto
 		descriptorObjectList.push_back(descriptorObject);
 	}
 
+	// Add the descriptor of the global light object
 	descriptorObjectList.push_back(VulkanRenderer3D::GetInstance().GetLightDescriptor());
 
 	// Update descriptorsets

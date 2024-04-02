@@ -19,24 +19,38 @@ namespace D3D
 	class ShaderModuleWrapper
 	{
 	public:
-		ShaderModuleWrapper() = default;
+		// Delete default constructor
+		ShaderModuleWrapper() = delete;
 
+		// Constructor
+		// Parameters:
+		//     device: handle of the logical device
+		//     filePath: path to the shader file
 		ShaderModuleWrapper(VkDevice device, const std::string& filePath);
 
+		// Default destructor
 		~ShaderModuleWrapper() = default;
 
+		// Delete copy and move functions
 		ShaderModuleWrapper(ShaderModuleWrapper& other) = delete;
 		ShaderModuleWrapper(ShaderModuleWrapper&& other) = delete;
-
 		ShaderModuleWrapper& operator=(ShaderModuleWrapper& other) = delete;
 		ShaderModuleWrapper& operator=(ShaderModuleWrapper&& other) = delete;
 
+		// Clean up allocated objects
+		// Parameters:
+		//     device: handle of the logical device
 		void Cleanup(VkDevice device);
-
+		
+		// Return the create info for the shader stage
 		VkPipelineShaderStageCreateInfo GetShaderStageCreateInfo() const { return m_ShaderstageCreateInfo; }
 
+		// Add the descriptor set layout bindings
+		// Parameters:
+		//     bindings: vector of bindings that this function will add to
 		void AddDescriptorSetLayoutBindings(std::vector<VkDescriptorSetLayoutBinding>& bindings);
 
+		// Add the amount of each descriptor type
 		void AddDescriptorTypeCount(std::map<VkDescriptorType, int>& typeCount);
 	private:
 		// The binary code from the shader

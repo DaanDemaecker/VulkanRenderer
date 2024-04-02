@@ -13,11 +13,13 @@ D3D::PipelineWrapper::PipelineWrapper(VkDevice device, VkRenderPass renderPass,
 	VkSampleCountFlagBits sampleCount,
 	std::initializer_list<const std::string>& filePaths, bool hasDepthStencil)
 {
+	// Create the pipeline
 	CreatePipeline(device, renderPass, sampleCount, filePaths, hasDepthStencil);
 }
 
 void D3D::PipelineWrapper::Cleanup(VkDevice device)
 {
+	// Clean up the descriptor pool
 	m_pDescriptorPool->Cleanup(device);
 	// Destroy the pipeline
 	vkDestroyPipeline(device, m_Pipeline, nullptr);
@@ -37,10 +39,12 @@ void D3D::PipelineWrapper::CreatePipeline(VkDevice device, VkRenderPass renderPa
 	VkSampleCountFlagBits sampleCount,
 	std::initializer_list<const std::string>& filePaths, bool hasDepthStencil)
 {
+	// Create a vector of shader modules the size of the filepaths list
 	std::vector<std::unique_ptr<D3D::ShaderModuleWrapper>> shaderModuleWrappers(filePaths.size());
 
 	int index{};
-
+	
+	// Loop trough the file paths and create a shader module for it
 	for (auto& filePath : filePaths)
 	{
 		shaderModuleWrappers[index] = std::make_unique<D3D::ShaderModuleWrapper>(device, filePath);
@@ -48,12 +52,16 @@ void D3D::PipelineWrapper::CreatePipeline(VkDevice device, VkRenderPass renderPa
 		index++;
 	}
 
+	// Create hte descriptor set layout
 	CreateDescriptorSetLayout(device, shaderModuleWrappers);
 
+	// Create the descriptor pool
 	m_pDescriptorPool = std::make_unique<DescriptorPoolWrapper>(shaderModuleWrappers);
 
+	// Create a vector of shader stages the size of shader module wrappers
 	std::vector<VkPipelineShaderStageCreateInfo> shaderStages(shaderModuleWrappers.size());
 
+	// Set the shader stages for all the shader modules
 	for (int i{}; i < shaderStages.size(); i++)
 	{
 		shaderStages[i] = shaderModuleWrappers[i]->GetShaderStageCreateInfo();
@@ -176,6 +184,7 @@ void D3D::PipelineWrapper::CreatePipeline(VkDevice device, VkRenderPass renderPa
 		throw std::runtime_error("failed to create graphics pipeline!");
 	}
 
+	// Delete all shader modules
 	for (auto& shaderModule : shaderModuleWrappers)
 	{
 		shaderModule->Cleanup(device);
@@ -188,6 +197,7 @@ void D3D::PipelineWrapper::CreateDescriptorSetLayout(VkDevice device, std::vecto
 	// Create vector of descriptorsetlayoutbindings the size of the sum of vertexUbos, fragmentUbos and textureamount;
 	std::vector<VkDescriptorSetLayoutBinding> bindings{};
 
+	// Add the descriptor layout bindings for each shader module
 	for (auto& module : shaderModules)
 	{
 		module->AddDescriptorSetLayoutBindings(bindings);

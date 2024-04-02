@@ -9,8 +9,10 @@
 
 D3D::DescriptorPoolWrapper::DescriptorPoolWrapper(std::vector<std::unique_ptr<D3D::ShaderModuleWrapper>>& shaderModules)
 {
+	// Read the number of bindings per type
 	ReadDescriptorTypeCount(shaderModules);
 
+	// Initialize the descriptor pool
 	InitDescriptorPool();
 }
 
@@ -81,13 +83,16 @@ void D3D::DescriptorPoolWrapper::CreateDescriptorSets(VkDescriptorSetLayout layo
 
 void D3D::DescriptorPoolWrapper::UpdateDescriptorSets(std::vector<VkDescriptorSet>& descriptorSets, std::vector<DescriptorObject*>& descriptorObjects)
 {
-	// Get reference
+	// Loop trough all the descriptor sets
 	for (int i{}; i < descriptorSets.size(); i++)
 	{
+		// Create a vector of descriptor writes
 		std::vector<VkWriteDescriptorSet> descriptorWrites{};
 
+		// Initialize current binding with 0
 		int binding{};
 
+		// Loop trough all descriptor objects and add the descriptor writes
 		for (auto& descriptorObject : descriptorObjects)
 		{
 			descriptorObject->AddDescriptorWrite(descriptorSets[i], descriptorWrites, binding, i);
@@ -121,6 +126,7 @@ void D3D::DescriptorPoolWrapper::ResizeDescriptorPool()
 
 void D3D::DescriptorPoolWrapper::ReadDescriptorTypeCount(std::vector<std::unique_ptr<D3D::ShaderModuleWrapper>>& shaderModules)
 {
+	// Loop trough all shader modules and add the descriptor count
 	for (auto& shaderModule : shaderModules)
 	{
 		shaderModule->AddDescriptorTypeCount(m_DescriptorTypeCount);
@@ -129,18 +135,25 @@ void D3D::DescriptorPoolWrapper::ReadDescriptorTypeCount(std::vector<std::unique
 
 void D3D::DescriptorPoolWrapper::InitDescriptorPool()
 {
+	// Get a reference to the renderer
 	auto& renderer{ VulkanRenderer3D::GetInstance() };
 
+	// Get the amount of frames in flight
 	auto frames{ renderer.GetMaxFrames() };
 
+	// Create a vector of pool sizes
 	std::vector<VkDescriptorPoolSize> poolSizes{};
 
+	// Loop trough all the descriptor types
 	for (auto& pair : m_DescriptorTypeCount)
 	{
 		VkDescriptorPoolSize descriptorPoolSize{};
+		// Set the type of the poolsize
 		descriptorPoolSize.type = pair.first;
+		// Calculate the amount of descriptors needed from this type
 		descriptorPoolSize.descriptorCount = static_cast<uint32_t>(pair.second * m_MaxDescriptorSets * frames);
 	
+		// Add the descriptor poolsize to the vector
 		poolSizes.push_back(descriptorPoolSize);
 	}
 

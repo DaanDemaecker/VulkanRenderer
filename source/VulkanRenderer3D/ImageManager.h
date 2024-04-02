@@ -34,9 +34,9 @@ namespace D3D
 		// Default destructor
 		~ImageManager() = default;
 
+		// Delete move and copy functions
 		ImageManager(ImageManager& other) = delete;
 		ImageManager(ImageManager&& other) = delete;
-
 		ImageManager& operator=(ImageManager& other) = delete;
 		ImageManager& operator=(ImageManager&& other) = delete;
 
@@ -89,10 +89,9 @@ namespace D3D
 		//     pBufferManager: pointer to the Buffermanager object
 		//     cubeTexture: reference to the texture that will be created
 		//     textureNames: filepaths to the texture that make up the faces of the cube
-		//     mipLevels: the amount of mipmaps that will be created
 		//     pCommandPoolManager: pointer to the commandpool manager
-		void CreateCubeTexture(GPUObject* pGPUObject, D3D::BufferManager* pBufferManager, Texture& cubeTexture, const std::initializer_list<const std::string>& textureNames,
-			uint32_t& miplevels, CommandpoolManager* pCommandPoolManager);
+		void CreateCubeTexture(GPUObject* pGPUObject, D3D::BufferManager* pBufferManager, Texture& cubeTexture,
+			const std::initializer_list<const std::string>& textureNames, CommandpoolManager* pCommandPoolManager);
 
 		// Create a texture sampler
 		// Parameters:

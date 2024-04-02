@@ -10,7 +10,7 @@
 
 // Standard library includes
 #include <initializer_list>
-#include <iostream>
+#include <string>
 
 namespace D3D
 {
@@ -26,7 +26,7 @@ namespace D3D
 		TexturedMaterial(std::initializer_list<const std::string>&& filePaths, const std::string& pipelineName = "Default");
 		
 		// Destructor
-		~TexturedMaterial();
+		virtual ~TexturedMaterial() = default;
 
 		// Create the descriptorsets
 		// Parameters:
@@ -36,23 +36,16 @@ namespace D3D
 		
 		// Update the descriptorsets
 		// Parameters:
-		//     uboBuffers: a vector of the Uniform buffer objects
 		//     descriptorsets: a vector of the descriptorsets that have to be updated
+		//     descriptorObjects: a vector of pointers to descriptorobjects in the same order as the shader code
 		virtual void UpdateDescriptorSets(std::vector<VkDescriptorSet>& descriptorSets, std::vector<DescriptorObject*>& descriptorObjects) override;
 
 	private:
-		// The amount of textures this material uses
-		int m_TextureAmount{};
-
-		// Vector of textures
-		std::vector<Texture> m_Textures{};
-
 		std::unique_ptr<TextureDescriptorObject> m_pDescriptorObject{};
 
 		// The sampler for the textures
 		VkSampler m_TextureSampler{};
-		// The amount of levels the mipmap will have
-		uint32_t m_MipLevels{};
+
 
 		// Create the texture sampler
 		void CreateTextureSampler();

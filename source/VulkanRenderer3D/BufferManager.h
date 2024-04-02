@@ -20,13 +20,15 @@ namespace D3D
 	class BufferManager final
 	{
 	public:
+		// Default constructor
 		BufferManager() = default;
 
+		// Default destructor
 		~BufferManager() = default;
 
+		// Delete copy and move functions
 		BufferManager(BufferManager& other) = delete;
 		BufferManager(BufferManager&& other) = delete;
-
 		BufferManager& operator=(BufferManager& other) = delete;
 		BufferManager& operator=(BufferManager&& other) = delete;
 
@@ -50,9 +52,27 @@ namespace D3D
 		//     size: the size of the buffers
 		void CopyBuffer(D3D::GPUObject* pGPUObject, D3D::CommandpoolManager* pCommandPoolManager, VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size);
 
+		// Create a vertex buffer
+		// Parameters:
+		// Copy a buffer to another buffer
+		// Parameters:
+		//     pGPUObject: pointer to the GPU object
+		//     pCommandPoolManager: pointer to the Command Pool Manager
+		//     vertices: a vector of vertex objects to store in a buffer
+		//     vertexBuffer: handle of the vkBuffer to store the vertices in
+		//     vertexBufferMemory: handle of the VkDeviceMemory object
 		void CreateVertexBuffer(D3D::GPUObject* pGPUObject, D3D::CommandpoolManager* pCommandPoolManager,
 			std::vector<D3D::Vertex>& vertices, VkBuffer& vertexBuffer, VkDeviceMemory& vertexBufferMemory);
 
+		// Create a vertex buffer
+		// Parameters:
+		// Copy a buffer to another buffer
+		// Parameters:
+		//     pGPUObject: pointer to the GPU object
+		//     pCommandPoolManager: pointer to the Command Pool Manager
+		//     indices: a vector of indices to store in a buffer
+		//     indexBuffer: handle of the vkBuffer to store the indices in
+		//     indexBufferMemory: handle of the VkDeviceMemory object
 		void CreateIndexBuffer(D3D::GPUObject* pGPUObject, D3D::CommandpoolManager* pCommandPoolManager,
 			std::vector<uint32_t>& indices, VkBuffer& indexBuffer, VkDeviceMemory& indexBufferMemory);
 

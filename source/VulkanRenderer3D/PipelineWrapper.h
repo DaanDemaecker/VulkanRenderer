@@ -14,36 +14,54 @@
 #include <string>
 #include <initializer_list>
 
+#include <iostream>
+
 namespace D3D
 {
+	// Class forward declarations
 	class ShaderModuleWrapper;
 	class DescriptorPoolWrapper;
 
 	class PipelineWrapper
 	{
 	public:
-		PipelineWrapper() = default;
+		// Delete default constructor
+		PipelineWrapper() = delete;
 
+		// Constructor
+		// Parameters:
+		//     device: handle of the logical device
+		//     renerPass: handle of the renderpass
+		//     sampleCount: the amount of samples per pixel
+		//     filePaths: the filepaths to the shader objects
+		//     hasDepthStencil: boolean that indicates if this pipeline needs a depth stencil
 		PipelineWrapper(VkDevice device, VkRenderPass renderPass, VkSampleCountFlagBits sampleCount,
 			std::initializer_list<const std::string>& filePaths, bool hasDepthStencil = true);
 
+		// Default destructor
 		~PipelineWrapper() = default;
 
+		// Delete copy and move functions
 		PipelineWrapper(PipelineWrapper& other) = delete;
 		PipelineWrapper(PipelineWrapper&& other) = delete;
-
 		PipelineWrapper& operator=(PipelineWrapper& other) = delete;
 		PipelineWrapper& operator=(PipelineWrapper&& other) = delete;
 
+		// Clean up all allocated objects
+		// Parameters:
+		//     device: handle of the logical device
 		void Cleanup(VkDevice device);
 
-		void SetPipeline(VkPipeline pipeline) { m_Pipeline = pipeline; }
-		void SetPipelineLayout(VkPipelineLayout layout) { m_PipelineLayout = layout; }
-
+		// Get a the handle of the pipeline
 		VkPipeline GetPipeline() const { return m_Pipeline; }
+
+		// Get the handle of the pipeline layout
 		VkPipelineLayout GetPipelineLayout() const { return m_PipelineLayout; }
+
+		// Get the handle of the descriptor layout
 		VkDescriptorSetLayout GetDescriptorSetLayout() const { return m_DescriptorSetLayout; }
 
+		// Get a pointer to the descriptor pool wrapper
 		D3D::DescriptorPoolWrapper* GetDescriptorPool();
 
 	private:
@@ -54,6 +72,7 @@ namespace D3D
 		// Descriptor set layout
 		VkDescriptorSetLayout m_DescriptorSetLayout{};
 
+		// Pointer to the descriptor pool wrapper
 		std::unique_ptr<DescriptorPoolWrapper> m_pDescriptorPool{};
 
 		// Create the graphics pipeline

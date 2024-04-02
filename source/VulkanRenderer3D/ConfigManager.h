@@ -6,7 +6,7 @@
 #include "RapidJSONIncludes.h"
 
 // Standard library includes
-#include <iostream>
+#include <string>
 
 namespace D3D
 {
@@ -65,6 +65,8 @@ namespace D3D
 
 		// The json file object
 		rapidjson::Document m_JsonFile{};
+
+		void ReadFile();
 	};
 }
 

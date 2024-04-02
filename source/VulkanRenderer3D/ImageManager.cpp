@@ -65,7 +65,7 @@ VkImageView D3D::ImageManager::CreateImageView(VkDevice device, VkImage image, V
 	return imageView;
 }
 
-void D3D::ImageManager::CreateCubeTexture(GPUObject* pGPUObject, D3D::BufferManager* pBufferManager, Texture& cubeTexture, const std::initializer_list<const std::string>& textureNames, uint32_t& miplevels, CommandpoolManager* pCommandPoolManager)
+void D3D::ImageManager::CreateCubeTexture(GPUObject* pGPUObject, D3D::BufferManager* pBufferManager, Texture& cubeTexture, const std::initializer_list<const std::string>& textureNames, CommandpoolManager* pCommandPoolManager)
 {
 	// Get device
 	auto device{ pGPUObject->GetDevice() };
@@ -95,7 +95,7 @@ void D3D::ImageManager::CreateCubeTexture(GPUObject* pGPUObject, D3D::BufferMana
 	}
 
 	// Set miplevels to 1 as cube textures generally don't need them
-	miplevels = 1;
+	cubeTexture.mipLevels = 1;
 	// Calculate the size of a single image
 	VkDeviceSize faceSize = texWidth * texHeight * texChannels;
 	// Calcualte the size of the entire cubemap
@@ -158,7 +158,7 @@ void D3D::ImageManager::CreateCubeTexture(GPUObject* pGPUObject, D3D::BufferMana
 	// Set the width and height of the texture as the extent
 	imageCreateInfo.extent = { static_cast<uint32_t>(texWidth), static_cast<uint32_t>(texHeight), 1 };
 	// Give the miplevels
-	imageCreateInfo.mipLevels = miplevels;
+	imageCreateInfo.mipLevels = cubeTexture.mipLevels;
 	// Set arrayLayers to the amount of textures
 	imageCreateInfo.arrayLayers = imageCount;
 	// Set samples to 1 bit
@@ -211,7 +211,7 @@ void D3D::ImageManager::CreateCubeTexture(GPUObject* pGPUObject, D3D::BufferMana
 	// Get single time command buffer
 	commandBuffer = pCommandPoolManager->BeginSingleTimeCommands(device);
 	// Transition the image layout from undifined to transfer destination optimal
-	TransitionImageLayout(cubeTexture.image, commandBuffer, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, miplevels, imageCount);
+	TransitionImageLayout(cubeTexture.image, commandBuffer, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, cubeTexture.mipLevels, imageCount);
 	// End single time command buffer
 	pCommandPoolManager->EndSingleTimeCommands(pGPUObject, commandBuffer);
 
@@ -226,7 +226,7 @@ void D3D::ImageManager::CreateCubeTexture(GPUObject* pGPUObject, D3D::BufferMana
 	// Get single time command buffer
 	commandBuffer = pCommandPoolManager->BeginSingleTimeCommands(device);
 	// Transition the image layout from undifined to transfer destination optimal
-	TransitionImageLayout(cubeTexture.image, commandBuffer, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, miplevels, imageCount);
+	TransitionImageLayout(cubeTexture.image, commandBuffer, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, cubeTexture.mipLevels, imageCount);
 	// End single time command buffer
 	pCommandPoolManager->EndSingleTimeCommands(pGPUObject, commandBuffer);
 
@@ -251,7 +251,7 @@ void D3D::ImageManager::CreateCubeTexture(GPUObject* pGPUObject, D3D::BufferMana
 	// Set base mip level to 0
 	viewInfo.subresourceRange.baseMipLevel = 0;
 	// Set levelcount to the amount of miplevels
-	viewInfo.subresourceRange.levelCount = miplevels;
+	viewInfo.subresourceRange.levelCount = cubeTexture.mipLevels;
 	// Set base array layer to 0
 	viewInfo.subresourceRange.baseArrayLayer = 0;
 	// Set layercount to 1

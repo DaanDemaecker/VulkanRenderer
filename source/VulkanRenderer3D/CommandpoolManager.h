@@ -32,9 +32,9 @@ namespace D3D
 		// Default destructor
 		~CommandpoolManager() = default;
 
+		// Delete the move and copy functions
 		CommandpoolManager(CommandpoolManager& other) = delete;
 		CommandpoolManager(CommandpoolManager&& other) = delete;
-
 		CommandpoolManager& operator=(CommandpoolManager& other) = delete;
 		CommandpoolManager& operator=(CommandpoolManager&& other) = delete;
 

@@ -21,14 +21,10 @@ D3D::CubeMapMaterial::CubeMapMaterial(const std::initializer_list<const std::str
 	Texture cubeTexture{};
 
 	// Create the cube texture
-	VulkanRenderer3D::GetInstance().CreateCubeTexture(cubeTexture, filePaths, m_MipLevels);
-
+	VulkanRenderer3D::GetInstance().CreateCubeTexture(cubeTexture, filePaths);
+	
+	// Create the descriptor object and give the cube texture by value
 	m_pDescriptorObject = std::make_unique<TextureDescriptorObject>(cubeTexture);
-}
-
-D3D::CubeMapMaterial::~CubeMapMaterial()
-{
-
 }
 
 void D3D::CubeMapMaterial::CreateDescriptorSets(Model* pModel, std::vector<VkDescriptorSet>& descriptorSets)
@@ -37,24 +33,25 @@ void D3D::CubeMapMaterial::CreateDescriptorSets(Model* pModel, std::vector<VkDes
 	auto descriptorPool = GetDescriptorPool();
 	// Add model to descriptorpool
 	descriptorPool->AddModel(pModel);
-	// Create descriptorpool
+	// Create descriptor sets
 	descriptorPool->CreateDescriptorSets(GetDescriptorLayout(), descriptorSets);
 }
 
 void D3D::CubeMapMaterial::UpdateDescriptorSets(std::vector<VkDescriptorSet>& descriptorSets, std::vector<DescriptorObject*>& descriptorObjects)
 {
-	// Get pointer to the descriptorpool wrapper
+	// Get pointer to the descriptorpool
 	auto descriptorPool = GetDescriptorPool();
 
+	// Create a vector for the descriptor objects
 	std::vector<DescriptorObject*> descriptorObjectList{};
 
+	// Add all the descriptor objects of the model to the list
 	for (auto& descriptorObject : descriptorObjects)
 	{
 		descriptorObjectList.push_back(descriptorObject);
 	}
 
-	///descriptorObjectList.push_back(VulkanRenderer3D::GetInstance().GetLightDescriptor());
-
+	// Add the descriptor object holding the texture
 	descriptorObjectList.push_back(m_pDescriptorObject.get());
 
 	// Update descriptorsets

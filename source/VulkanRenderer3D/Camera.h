@@ -15,6 +15,12 @@ namespace D3D
 
 		// Defualt destructor
 		~Camera() = default;
+		
+		// Delete copy and move functions
+		Camera(Camera& other) = delete;
+		Camera(Camera&& other) = delete;
+		Camera& operator=(Camera& other) = delete;
+		Camera& operator=(Camera&& other) = delete;
 
 
 		// Set position
