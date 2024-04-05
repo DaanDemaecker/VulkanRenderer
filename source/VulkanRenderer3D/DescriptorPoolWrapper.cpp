@@ -85,7 +85,7 @@ void D3D::DescriptorPoolWrapper::CreateDescriptorSets(VkDescriptorSetLayout layo
 void D3D::DescriptorPoolWrapper::UpdateDescriptorSets(std::vector<VkDescriptorSet>& descriptorSets, std::vector<DescriptorObject*>& descriptorObjects)
 {
 	// Loop trough all the descriptor sets
-	for (int i{}; i < descriptorSets.size(); i++)
+	for (int i{}; i < static_cast<int>(descriptorSets.size()); i++)
 	{
 		// Create a vector of descriptor writes
 		std::vector<VkWriteDescriptorSet> descriptorWrites{};

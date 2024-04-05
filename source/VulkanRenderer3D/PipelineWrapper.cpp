@@ -62,7 +62,7 @@ void D3D::PipelineWrapper::CreatePipeline(VkDevice device, VkRenderPass renderPa
 	std::vector<VkPipelineShaderStageCreateInfo> shaderStages(shaderModuleWrappers.size());
 
 	// Set the shader stages for all the shader modules
-	for (int i{}; i < shaderStages.size(); i++)
+	for (size_t i{}; i < shaderStages.size(); i++)
 	{
 		shaderStages[i] = shaderModuleWrappers[i]->GetShaderStageCreateInfo();
 	}

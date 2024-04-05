@@ -122,7 +122,7 @@ namespace D3D
 	{
 		m_BufferInfos.resize(m_UboBuffers.size());
 
-		for(int i{}; i < m_BufferInfos.size(); i++)
+		for(size_t i{}; i < m_BufferInfos.size(); i++)
 		{
 			// BufferInfos
 		// Set the correct buffer

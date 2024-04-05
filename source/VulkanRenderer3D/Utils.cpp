@@ -71,7 +71,7 @@ void Utils::LoadModel(const std::string& filename, std::vector<D3D::Vertex>& ver
 				attrib.vertices[static_cast<uint64_t>(3) * index.vertex_index + static_cast<uint64_t>(2)]
 			};
 
-			if (index.texcoord_index >= 0 && index.texcoord_index < +attrib.texcoords.size() / 2)
+			if (index.texcoord_index >= 0 && index.texcoord_index < static_cast<int>(attrib.texcoords.size() / 2))
 			{
 				// Add UV coords to vertex
 				vertex.texCoord = {
@@ -80,7 +80,7 @@ void Utils::LoadModel(const std::string& filename, std::vector<D3D::Vertex>& ver
 				};
 			}
 
-			if (index.normal_index >= 0 && index.normal_index < +attrib.texcoords.size() / 3)
+			if (index.normal_index >= 0 && index.normal_index < + static_cast<int>(attrib.texcoords.size() / 3))
 			{
 				// Add normal to vertex
 				vertex.normal = {
