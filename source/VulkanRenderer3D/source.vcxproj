@@ -199,6 +199,7 @@
     <ClCompile Include="SkyBox.cpp" />
     <ClCompile Include="STBIncludes.cpp" />
     <ClCompile Include="STBIncludes.h" />
+    <ClCompile Include="SurfaceWrapper.cpp" />
     <ClCompile Include="SwapchainWrapper.cpp" />
     <ClCompile Include="SyncObjectManager.cpp" />
     <ClCompile Include="TextureDescriptorObject.cpp" />
@@ -246,6 +247,7 @@
     <ClInclude Include="RenderpassWrapper.h" />
     <ClInclude Include="ShaderModuleWrapper.h" />
     <ClInclude Include="SkyBox.h" />
+    <ClInclude Include="SurfaceWrapper.h" />
     <ClInclude Include="SwapchainWrapper.h" />
     <ClInclude Include="SyncObjectManager.h" />
     <ClInclude Include="TextureDescriptorObject.h" />

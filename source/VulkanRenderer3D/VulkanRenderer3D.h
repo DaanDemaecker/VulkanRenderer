@@ -34,6 +34,7 @@ namespace D3D
     class DescriptorObject;
     class Camera;
     class PipelineManager;
+    class SurfaceWrapper;
 
     // Inherit from singleton
     class VulkanRenderer3D final : public Singleton<VulkanRenderer3D>
@@ -179,8 +180,8 @@ namespace D3D
         // The current frame
         uint32_t m_CurrentFrame = 0;
 
-        // Handle of the VkSurfaceKHR
-        VkSurfaceKHR m_Surface{};
+        // Pointer to the surface wrapper
+        std::unique_ptr<SurfaceWrapper> m_pSurfaceWrapper{};
 
         // Pointer to the buffer manager
         std::unique_ptr<BufferManager> m_pBufferManager{};
@@ -226,9 +227,6 @@ namespace D3D
 
         // Initialize ImGui
         void InitImGui();
-
-        // Initialize the VkSurfaceKHR
-        void CreateSurface();
 
         // Recreate the swapchain
         void RecreateSwapChain();

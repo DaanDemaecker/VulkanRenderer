@@ -17,6 +17,7 @@
 #include "DescriptorPoolWrapper.h"
 #include "PipelineWrapper.h"
 #include "CommandpoolManager.h"
+#include "SurfaceWrapper.h"
 
 
 #include "Camera.h"
@@ -139,7 +140,7 @@ void D3D::VulkanRenderer3D::CleanupVulkan()
 	m_pGpuObject->CleanUp();
 
 	// Destroy the surface
-	vkDestroySurfaceKHR(m_pInstanceWrapper->GetInstance(), m_Surface, nullptr);
+	m_pSurfaceWrapper->Cleanup(m_pInstanceWrapper->GetInstance());
 }
 
 void D3D::VulkanRenderer3D::CleanupImGui()
@@ -154,16 +155,18 @@ void D3D::VulkanRenderer3D::InitVulkan()
 	m_pInstanceWrapper = std::make_unique<InstanceWrapper>();
 
 	// Initialize the surface
-	CreateSurface();
+	m_pSurfaceWrapper = std::make_unique<SurfaceWrapper>(m_pInstanceWrapper->GetInstance());
+
+	auto surface{ m_pSurfaceWrapper->GetSurface() };
 
 	// Initialize the gpu object
-	m_pGpuObject = std::make_unique<GPUObject>(m_pInstanceWrapper.get(), m_Surface);
+	m_pGpuObject = std::make_unique<GPUObject>(m_pInstanceWrapper.get(), surface);
 
 	// Get pointer to gpu object
 	GPUObject* pGPUObject{ m_pGpuObject.get() };
 
 	// Initialize command pool manager
-	m_pCommandPoolManager = std::make_unique<CommandpoolManager>(pGPUObject, m_Surface, m_MaxFramesInFlight);
+	m_pCommandPoolManager = std::make_unique<CommandpoolManager>(pGPUObject, surface, m_MaxFramesInFlight);
 
 	// Initialize the image manager
 	m_pImageManager = std::make_unique<ImageManager>(pGPUObject, m_pBufferManager.get(), m_pCommandPoolManager.get());
@@ -172,7 +175,7 @@ void D3D::VulkanRenderer3D::InitVulkan()
 	auto msaaSamples = VulkanUtils::GetMaxUsableSampleCount(m_pGpuObject->GetPhysicalDevice());
 
 	// Initialize the swapchain
-	m_pSwapchainWrapper = std::make_unique<SwapchainWrapper>(pGPUObject, m_Surface,	m_pImageManager.get(), msaaSamples);
+	m_pSwapchainWrapper = std::make_unique<SwapchainWrapper>(pGPUObject, surface,	m_pImageManager.get(), msaaSamples);
 
 	// Initialize the renderpass
 	m_pRenderpassWrapper = std::make_unique<RenderpassWrapper>(pGPUObject->GetDevice(), m_pSwapchainWrapper->GetFormat(), VulkanUtils::FindDepthFormat(pGPUObject->GetPhysicalDevice()), msaaSamples);
@@ -514,16 +517,6 @@ D3D::DescriptorObject* D3D::VulkanRenderer3D::GetLightDescriptor()
 	return m_pGlobalLight->GetDescriptorObject();
 }
 
-void D3D::VulkanRenderer3D::CreateSurface()
-{
-	// Create the window surface
-	if (glfwCreateWindowSurface(m_pInstanceWrapper->GetInstance(), Window::GetInstance().GetWindowStruct().pWindow, nullptr, &m_Surface) != VK_SUCCESS)
-	{
-		// If unsuccessful, throw runtime error
-		throw std::runtime_error("failed to create window surface!");
-	}
-}
-
 
 void D3D::VulkanRenderer3D::RecreateSwapChain()
 {
@@ -547,7 +540,7 @@ void D3D::VulkanRenderer3D::RecreateSwapChain()
 	auto commandBuffer{ BeginSingleTimeCommands() };
 
 	// Recreate the swapchain
-	m_pSwapchainWrapper->RecreateSwapChain(m_pGpuObject.get(), m_Surface, m_pImageManager.get(),
+	m_pSwapchainWrapper->RecreateSwapChain(m_pGpuObject.get(), m_pSurfaceWrapper->GetSurface(), m_pImageManager.get(),
 		commandBuffer, m_pRenderpassWrapper->GetRenderpass());
 
 	// End single time command
