@@ -2,7 +2,6 @@
 
 // File includes
 #include "VulkanUtils.h"
-#include "GPUObject.h"
 
 // Standard library includes
 #include <stdexcept>

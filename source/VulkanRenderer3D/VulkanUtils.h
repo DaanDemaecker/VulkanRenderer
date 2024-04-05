@@ -11,12 +11,6 @@
 // Standard library includes
 #include <vector>
 
-namespace D3D
-{
-	// Class forward declarations
-	class GPUObject;
-}
-
 namespace VulkanUtils
 {
 	// Get a memory type that satisfies the given properties

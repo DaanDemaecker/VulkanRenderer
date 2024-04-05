@@ -147,9 +147,6 @@
     <ClCompile Include="BufferManager.cpp">
       <Filter>Vulkan\Wrappers</Filter>
     </ClCompile>
-    <ClCompile Include="ConfigManager.cpp">
-      <Filter>Engine</Filter>
-    </ClCompile>
     <ClCompile Include="..\3rdParty\SpirV-reflect\spirv_reflect.c">
       <Filter>spirV-reflect</Filter>
     </ClCompile>
@@ -173,6 +170,9 @@
     </ClCompile>
     <ClCompile Include="TextureDescriptorObject.cpp">
       <Filter>DataTypes\DescriptorObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="ConfigManager.cpp">
+      <Filter>Engine</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -293,9 +293,6 @@
     <ClInclude Include="BufferManager.h">
       <Filter>Vulkan\Wrappers</Filter>
     </ClInclude>
-    <ClInclude Include="ConfigManager.h">
-      <Filter>Engine</Filter>
-    </ClInclude>
     <ClInclude Include="RapidJSONIncludes.h">
       <Filter>Includes</Filter>
     </ClInclude>
@@ -319,6 +316,9 @@
     </ClInclude>
     <ClInclude Include="TextureDescriptorObject.h">
       <Filter>DataTypes\DescriptorObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="ConfigManager.h">
+      <Filter>Engine</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
