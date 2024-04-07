@@ -25,6 +25,9 @@
     <ClCompile Include="ConfigManager.cpp">
       <Filter>Engine Files</Filter>
     </ClCompile>
+    <ClCompile Include="STBIncludes.cpp">
+      <Filter>Includes</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Singleton.h">
@@ -49,6 +52,9 @@
       <Filter>Includes</Filter>
     </ClInclude>
     <ClInclude Include="ImGuiIncludes.h">
+      <Filter>Includes</Filter>
+    </ClInclude>
+    <ClInclude Include="STBIncludes.h">
       <Filter>Includes</Filter>
     </ClInclude>
   </ItemGroup>

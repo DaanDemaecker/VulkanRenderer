@@ -145,6 +145,7 @@
   <ItemGroup>
     <ClCompile Include="ConfigManager.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="STBIncludes.cpp" />
     <ClCompile Include="VulkanRenderer2D.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -154,6 +155,7 @@
     <ClInclude Include="ImGuiIncludes.h" />
     <ClInclude Include="RapidJSONIncludes.h" />
     <ClInclude Include="Singleton.h" />
+    <ClInclude Include="STBIncludes.h" />
     <ClInclude Include="VulkanIncludes.h" />
     <ClInclude Include="VulkanRenderer2D.h" />
   </ItemGroup>
