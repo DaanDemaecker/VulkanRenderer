@@ -144,9 +144,6 @@
     <ClCompile Include="GPUObject.cpp">
       <Filter>Vulkan\Wrappers</Filter>
     </ClCompile>
-    <ClCompile Include="BufferManager.cpp">
-      <Filter>Vulkan\Wrappers</Filter>
-    </ClCompile>
     <ClCompile Include="..\3rdParty\SpirV-reflect\spirv_reflect.c">
       <Filter>spirV-reflect</Filter>
     </ClCompile>
@@ -176,6 +173,9 @@
     </ClCompile>
     <ClCompile Include="SurfaceWrapper.cpp">
       <Filter>Vulkan\Wrappers</Filter>
+    </ClCompile>
+    <ClCompile Include="BufferManager.cpp">
+      <Filter>Vulkan\Managers</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -293,9 +293,6 @@
     <ClInclude Include="GPUObject.h">
       <Filter>Vulkan\Wrappers</Filter>
     </ClInclude>
-    <ClInclude Include="BufferManager.h">
-      <Filter>Vulkan\Wrappers</Filter>
-    </ClInclude>
     <ClInclude Include="RapidJSONIncludes.h">
       <Filter>Includes</Filter>
     </ClInclude>
@@ -325,6 +322,9 @@
     </ClInclude>
     <ClInclude Include="SurfaceWrapper.h">
       <Filter>Vulkan\Wrappers</Filter>
+    </ClInclude>
+    <ClInclude Include="BufferManager.h">
+      <Filter>Vulkan\Managers</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

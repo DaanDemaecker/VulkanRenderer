@@ -62,6 +62,10 @@ void D3D::GPUObject::PickPhysicalDevice(InstanceWrapper* pInstanceWrapper, VkSur
 			m_PhysicalDevice = device;
 			break;
 		}
+
+
+
+
 	}
 
 

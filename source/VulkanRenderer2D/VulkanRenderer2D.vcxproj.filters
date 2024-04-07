@@ -39,5 +39,8 @@
     <ClInclude Include="RapidJSONIncludes.h">
       <Filter>Includes</Filter>
     </ClInclude>
+    <ClInclude Include="VulkanIncludes.h">
+      <Filter>Includes</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

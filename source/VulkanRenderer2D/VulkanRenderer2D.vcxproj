@@ -151,6 +151,7 @@
     <ClInclude Include="ConfigManager.h" />
     <ClInclude Include="RapidJSONIncludes.h" />
     <ClInclude Include="Singleton.h" />
+    <ClInclude Include="VulkanIncludes.h" />
     <ClInclude Include="VulkanRenderer2D.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
