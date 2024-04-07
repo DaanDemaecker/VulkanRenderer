@@ -42,5 +42,8 @@
     <ClInclude Include="VulkanIncludes.h">
       <Filter>Includes</Filter>
     </ClInclude>
+    <ClInclude Include="GLFWIncludes.h">
+      <Filter>Includes</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
