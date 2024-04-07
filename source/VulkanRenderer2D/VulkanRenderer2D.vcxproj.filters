@@ -45,5 +45,8 @@
     <ClInclude Include="GLFWIncludes.h">
       <Filter>Includes</Filter>
     </ClInclude>
+    <ClInclude Include="GLMIncludes.h">
+      <Filter>Includes</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
