@@ -48,5 +48,8 @@
     <ClInclude Include="GLMIncludes.h">
       <Filter>Includes</Filter>
     </ClInclude>
+    <ClInclude Include="ImGuiIncludes.h">
+      <Filter>Includes</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
