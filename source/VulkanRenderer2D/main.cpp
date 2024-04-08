@@ -2,9 +2,9 @@
 //
 
 #include <iostream>
-#include "ConfigManager.h"
+#include "Window.h"
 
 int main()
 {
-    std::cout << D2D::ConfigManager::GetInstance().GetString("ApplicationName") << "\n";
+    D2D::Window::GetInstance();
 }

@@ -11,7 +11,7 @@
 
 namespace D2D
 {
-	class VulkanRenderer2D : public Singleton<VulkanRenderer2D>
+	class VulkanRenderer2D final : public Singleton<VulkanRenderer2D>
 	{
 	public:
 

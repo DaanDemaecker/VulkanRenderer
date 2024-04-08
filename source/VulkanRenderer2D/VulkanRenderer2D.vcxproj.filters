@@ -28,6 +28,9 @@
     <ClCompile Include="STBIncludes.cpp">
       <Filter>Includes</Filter>
     </ClCompile>
+    <ClCompile Include="Window.cpp">
+      <Filter>Engine Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Singleton.h">
@@ -56,6 +59,9 @@
     </ClInclude>
     <ClInclude Include="STBIncludes.h">
       <Filter>Includes</Filter>
+    </ClInclude>
+    <ClInclude Include="Window.h">
+      <Filter>Engine Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
