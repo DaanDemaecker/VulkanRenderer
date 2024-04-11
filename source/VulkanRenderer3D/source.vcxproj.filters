@@ -156,14 +156,8 @@
     <ClCompile Include="PipelineWrapper.cpp">
       <Filter>Vulkan\Wrappers</Filter>
     </ClCompile>
-    <ClCompile Include="DescriptorObject.cpp">
-      <Filter>DataTypes\DescriptorObjects</Filter>
-    </ClCompile>
     <ClCompile Include="main.cpp">
       <Filter>Engine</Filter>
-    </ClCompile>
-    <ClCompile Include="UboDescriptorObject.cpp">
-      <Filter>DataTypes\DescriptorObjects</Filter>
     </ClCompile>
     <ClCompile Include="TextureDescriptorObject.cpp">
       <Filter>DataTypes\DescriptorObjects</Filter>

@@ -3,8 +3,10 @@
 
 #include <iostream>
 #include "Window.h"
+#include "VulkanRenderer2D.h"
 
 int main()
 {
     D2D::Window::GetInstance();
+    D2D::VulkanRenderer2D::GetInstance();
 }

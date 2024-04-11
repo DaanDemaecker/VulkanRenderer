@@ -183,7 +183,6 @@
     <ClCompile Include="ConfigManager.cpp" />
     <ClCompile Include="CubeMapMaterial.cpp" />
     <ClCompile Include="D3DEngine.cpp" />
-    <ClCompile Include="DescriptorObject.cpp" />
     <ClCompile Include="DescriptorPoolWrapper.cpp" />
     <ClCompile Include="DirectionalLightObject.cpp" />
     <ClCompile Include="GLFWIncludes.h" />
@@ -209,7 +208,6 @@
     <ClCompile Include="Model.cpp" />
     <ClCompile Include="TimeManager.cpp" />
     <ClCompile Include="TinyObjLoaderIncludes.cpp" />
-    <ClCompile Include="UboDescriptorObject.cpp" />
     <ClCompile Include="Utils.cpp" />
     <ClCompile Include="VulkanRenderer3D.cpp" />
     <ClCompile Include="VulkanUtils.cpp" />

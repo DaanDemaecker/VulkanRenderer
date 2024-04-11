@@ -75,8 +75,6 @@ namespace D3D
 		//     indexBufferMemory: handle of the VkDeviceMemory object
 		void CreateIndexBuffer(D3D::GPUObject* pGPUObject, D3D::CommandpoolManager* pCommandPoolManager,
 			std::vector<uint32_t>& indices, VkBuffer& indexBuffer, VkDeviceMemory& indexBufferMemory);
-
-		
 	};
 }
 #endif // !BufferManagerIncluded

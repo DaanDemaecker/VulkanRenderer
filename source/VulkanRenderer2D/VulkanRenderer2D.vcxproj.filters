@@ -14,6 +14,9 @@
     <Filter Include="Includes">
       <UniqueIdentifier>{3036a9c4-221e-4a72-a5f3-15b2a11d9b41}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Vulkan\Wrappers">
+      <UniqueIdentifier>{1c95d9e8-f0d7-46a2-aefb-c8fcd633c856}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -30,6 +33,9 @@
     </ClCompile>
     <ClCompile Include="Window.cpp">
       <Filter>Engine Files</Filter>
+    </ClCompile>
+    <ClCompile Include="InstanceWrapper.cpp">
+      <Filter>Vulkan\Wrappers</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -62,6 +68,9 @@
     </ClInclude>
     <ClInclude Include="Window.h">
       <Filter>Engine Files</Filter>
+    </ClInclude>
+    <ClInclude Include="InstanceWrapper.h">
+      <Filter>Vulkan\Wrappers</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

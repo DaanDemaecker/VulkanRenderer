@@ -109,9 +109,6 @@ void D3D::VulkanRenderer3D::CleanupLight()
 
 void D3D::VulkanRenderer3D::CleanupVulkan()
 {
-	// Create buffer manager
-	m_pBufferManager = std::make_unique<BufferManager>();
-
 	// Get handle to logical device
 	auto device{ m_pGpuObject->GetDevice() };
 
@@ -151,6 +148,9 @@ void D3D::VulkanRenderer3D::CleanupImGui()
 
 void D3D::VulkanRenderer3D::InitVulkan()
 {
+	// Create buffer manager
+	m_pBufferManager = std::make_unique<BufferManager>();
+
 	// Initialize the vulkan instance
 	m_pInstanceWrapper = std::make_unique<InstanceWrapper>();
 
@@ -181,11 +181,11 @@ void D3D::VulkanRenderer3D::InitVulkan()
 	m_pRenderpassWrapper = std::make_unique<RenderpassWrapper>(pGPUObject->GetDevice(), m_pSwapchainWrapper->GetFormat(), VulkanUtils::FindDepthFormat(pGPUObject->GetPhysicalDevice()), msaaSamples);
 
 	// Create a single time command buffer
-	auto commandBuffer{ m_pCommandPoolManager->BeginSingleTimeCommands(pGPUObject->GetDevice())};
+	auto commandBuffer{ BeginSingleTimeCommands()};
 	// Initialize swapchain
 	m_pSwapchainWrapper->SetupImageViews(pGPUObject, m_pImageManager.get(),commandBuffer, m_pRenderpassWrapper->GetRenderpass());
 	// End the single time command buffer
-	m_pCommandPoolManager->EndSingleTimeCommands(pGPUObject, commandBuffer);
+	EndSingleTimeCommands(commandBuffer);
 
 	// Initialize graphics pipeline manager
 	m_pPipelineManager = std::make_unique<PipelineManager>();

@@ -169,6 +169,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="ConfigManager.cpp" />
+    <ClCompile Include="InstanceWrapper.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="STBIncludes.cpp" />
     <ClCompile Include="VulkanRenderer2D.cpp" />
@@ -179,6 +180,7 @@
     <ClInclude Include="GLFWIncludes.h" />
     <ClInclude Include="GLMIncludes.h" />
     <ClInclude Include="ImGuiIncludes.h" />
+    <ClInclude Include="InstanceWrapper.h" />
     <ClInclude Include="RapidJSONIncludes.h" />
     <ClInclude Include="Singleton.h" />
     <ClInclude Include="STBIncludes.h" />
