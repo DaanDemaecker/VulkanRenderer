@@ -5,10 +5,12 @@
     "FullScreen" : false,
     "Monitor" : 0,
     "ApplicationName": "VulkanRenderer2D",
+    "ApplicationVersionVariant" : 1,
     "ApplicationVersionMajor" : 1,
     "ApplicationVersionMinor" : 0,
     "ApplicationVersionPatch" : 0,
     "EngineName" : "D2D",
+    "EngineVersionVariant" : 1,
     "EngineVersionMajor" : 1,
     "EngineVersionMinor" : 0,
     "EngineVersionPatch" : 0

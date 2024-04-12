@@ -38,7 +38,7 @@ D2D::ConfigManager::ConfigManager()
 	fclose(pFile);
 }
 
-std::string D2D::ConfigManager::GetString(const std::string& propertyName)
+const char* D2D::ConfigManager::GetString(const std::string& propertyName)
 {
 	// Check if file contains property, if not, return default string
 	if (m_JsonFile.HasMember(propertyName.c_str()) && m_JsonFile[propertyName.c_str()].IsString())
@@ -47,10 +47,10 @@ std::string D2D::ConfigManager::GetString(const std::string& propertyName)
 	}
 
 	std::cout << "String property " << propertyName << " is not availabel\n";
-	return m_DefaultString;
+	return m_DefaultString.c_str();
 }
 
-std::string D2D::ConfigManager::GetString(const std::string&& propertyName)
+const char* D2D::ConfigManager::GetString(const std::string&& propertyName)
 {
 	return GetString(propertyName);
 }

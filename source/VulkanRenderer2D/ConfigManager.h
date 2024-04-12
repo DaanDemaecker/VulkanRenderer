@@ -19,12 +19,12 @@ namespace D2D
 		// Get string object from json
 		// Parameters:
 		//     propertyName: name of the property
-		std::string GetString(const std::string& propertyName);
+		const char* GetString(const std::string& propertyName);
 
 		// Get string object from json
 		// Parameters:
 		//     propertyName: name of the property
-		std::string GetString(const std::string&& propertyName);
+		const char* GetString(const std::string&& propertyName);
 
 		// Get int object from json
 		// Parameters:

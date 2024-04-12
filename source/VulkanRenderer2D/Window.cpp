@@ -42,11 +42,11 @@ void D2D::Window::InitWindow()
 	// If fullscreen is requested, create a fullscreen window, if not, create a normal window
 	if (fullscreen)
 	{
-		CreateFullscreenWindow(title.c_str(), monitorIndex);
+		CreateFullscreenWindow(title, monitorIndex);
 	}
 	else
 	{
-		CreateWindow(title.c_str(), monitorIndex);
+		CreateWindow(title, monitorIndex);
 	}
 
 	// If a window was successfully created, set the frame buffer resize callback function
