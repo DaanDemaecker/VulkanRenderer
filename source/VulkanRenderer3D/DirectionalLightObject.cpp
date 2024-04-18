@@ -45,6 +45,8 @@ void D3D::DirectionalLightObject::UpdateBuffer(int frame)
 		return;
 
 	m_DescriptorObject->UpdateUboBuffer(m_BufferObject, frame);
+
+	m_LightChanged[frame] = false;
 }
 
 void D3D::DirectionalLightObject::SetDirection(glm::vec3& direction)

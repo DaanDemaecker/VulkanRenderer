@@ -5,7 +5,6 @@
 #define SkyBoxIncluded
 
 // File includes
-#include "Structs.h"
 
 // Standard libraryincludes
 #include <memory>

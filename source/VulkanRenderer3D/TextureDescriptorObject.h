@@ -9,7 +9,6 @@
 #include <initializer_list>
 #include <string>
 
-
 namespace D3D
 {
     class TextureDescriptorObject final : public DescriptorObject

@@ -3,7 +3,6 @@
 // File includes
 #include "PipelineWrapper.h"
 #include "ShaderModuleWrapper.h"
-#include "VulkanRenderer3D.h"
 #include "DescriptorPoolWrapper.h"
 
 // Standard library include

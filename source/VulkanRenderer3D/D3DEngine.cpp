@@ -19,6 +19,12 @@ D3D::D3DEngine::D3DEngine()
 {
 	// Create the window with the given width and height
 	D3D::Window::GetInstance();
+
+	auto& renderer{ VulkanRenderer3D::GetInstance() };
+
+	renderer.SetupDefaultPipeline();
+	renderer.SetupLight();
+	renderer.SetupSkybox();
 }
 
 D3D::D3DEngine::~D3DEngine()
@@ -34,10 +40,6 @@ void D3D::D3DEngine::Run(const std::function<void()>& load)
 
 	auto& renderer{ VulkanRenderer3D::GetInstance() };
 	auto& window{ Window::GetInstance() };
-
-	renderer.SetupDefaultPipeline();
-	renderer.SetupLight();
-	renderer.SetupSkybox();
 
 	renderer.AddGraphicsPipeline("Diffuse", { "../Resources/Shaders/Diffuse.Vert.spv", "../Resources/Shaders/Diffuse.Frag.spv" });
 	renderer.AddGraphicsPipeline("NormalMap", { "../Resources/Shaders/NormalMap.Vert.spv", "../Resources/Shaders/NormalMap.Frag.spv" });
