@@ -18,6 +18,12 @@ namespace D3D
 
 		virtual ~UboDescriptorObject();
 
+		// Add the descriptor write objects to the list of descriptorWrites
+		// Parameters:
+		//     descriptorSet: the current descriptorset connected to this descriptor object
+		//     descriptorWrites: the list of descriptorWrites this function will add to
+		//     binding: the current binding in the shader files
+		//     index: the current frame index of the renderer
 		virtual void AddDescriptorWrite(VkDescriptorSet descriptorSet, std::vector<VkWriteDescriptorSet>& descriptorWrites, int& binding, int index) override;
 
 		void UpdateUboBuffer(T& uboObject, uint32_t frame);

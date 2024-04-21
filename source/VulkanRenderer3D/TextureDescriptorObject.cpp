@@ -6,22 +6,29 @@
 
 D3D::TextureDescriptorObject::TextureDescriptorObject(Texture& texture)
 	:DescriptorObject(VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER)
+
 {
+	// Add the texture to the list of textures
 	m_Textures.push_back(texture);
 
+	// Set up the image infos
 	SetupImageInfos();
 }
 
 D3D::TextureDescriptorObject::TextureDescriptorObject(std::initializer_list<const std::string>& filePaths)
 	:DescriptorObject(VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER)
 {
+	// Set up all textures
 	SetupTextures(filePaths);
 
+	// Set up the image infos
 	SetupImageInfos();
 }
 
 D3D::TextureDescriptorObject::~TextureDescriptorObject()
 {
+	// Get the device and clean up all the textures
+
 	auto device{ VulkanRenderer3D::GetInstance().GetDevice() };
 
 	for (auto& texture : m_Textures)
@@ -32,14 +39,18 @@ D3D::TextureDescriptorObject::~TextureDescriptorObject()
 
 void D3D::TextureDescriptorObject::AddDescriptorWrite(VkDescriptorSet descriptorSet, std::vector<VkWriteDescriptorSet>& descriptorWrites, int& binding, int /*index*/)
 {
+	// Resize the descriptor writes vector
 	descriptorWrites.resize(binding + m_Textures.size());
 
+	// Loop trough all the image infos
 	for (auto& imageInfo : m_ImageInfos)
 	{
+		// Create new binding
 		auto& currentBinding{ descriptorWrites[binding] };
 
 		currentBinding.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
 
+		// Set all fields of current binding with correct values
 		currentBinding.dstBinding = binding;
 		currentBinding.dstArrayElement = 0;
 		currentBinding.descriptorType = m_Type;
@@ -47,6 +58,7 @@ void D3D::TextureDescriptorObject::AddDescriptorWrite(VkDescriptorSet descriptor
 		currentBinding.pImageInfo = &imageInfo;
 		currentBinding.dstSet = descriptorSet;
 
+		// Increase the binding index
 		binding++;
 	}
 }
@@ -74,16 +86,22 @@ void D3D::TextureDescriptorObject::SetupTextures(std::initializer_list<const std
 
 void D3D::TextureDescriptorObject::SetupImageInfos()
 {
+	// resize image infos
 	m_ImageInfos.resize(m_Textures.size());
 	
+	// Get the sampler
 	auto& sampler{ VulkanRenderer3D::GetInstance().GetSampler() };
 
 	int index{};
 
+	// Loop trough all the textures
 	for (auto& texture : m_Textures)
 	{
+		// Set image layout to shader read optimal
 		m_ImageInfos[index].imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+		// Set correct image view
 		m_ImageInfos[index].imageView = texture.imageView;
+		// Set sampler
 		m_ImageInfos[index].sampler = sampler;
 
 		index++;
