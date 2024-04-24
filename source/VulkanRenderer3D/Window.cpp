@@ -97,9 +97,16 @@ void D3D::Window::InitWindow()
 		glfwSetWindowMonitor(m_Window.pWindow, nullptr, newX, newY, m_Window.Width, m_Window.Height, refreshRate);
 	}
 
+	// If the window isn't fullscreen and should be maximized, maximize it
+	if (!fullScreen && configManager.GetBool("Maximized"))
+	{
+		glfwMaximizeWindow(m_Window.pWindow);
+	}
+
 	// Set window user pointer and callbacks
 	glfwSetWindowUserPointer(m_Window.pWindow, this);
 	glfwSetFramebufferSizeCallback(m_Window.pWindow, FramebufferResizeCallback);
+	glfwSetWindowMaximizeCallback(m_Window.pWindow, MaximizeWindowCallback);
 }
 
 void D3D::Window::FramebufferResizeCallback(GLFWwindow* pWindow, int width, int height)
@@ -112,4 +119,9 @@ void D3D::Window::FramebufferResizeCallback(GLFWwindow* pWindow, int width, int 
 	window.pWindow = pWindow;
 	window.Width = width;
 	window.Height = height;
+}
+
+void D3D::Window::MaximizeWindowCallback(GLFWwindow* /*pWindow*/, int /*maximized*/)
+{
+
 }

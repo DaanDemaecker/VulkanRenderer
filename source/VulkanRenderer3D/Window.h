@@ -44,12 +44,19 @@ namespace D3D
 		// Function that will initialize the glfw window
 		void InitWindow();
 
-		// Function needed for resizing of glfw window
+		// Function that is called when window is resized
 		// Parameters:
 		//     pWindow: pointer to the window
 		//     width: the new width of the window
 		//     height: the new height of the window
 		static void FramebufferResizeCallback(GLFWwindow* pWindow, int width, int height);
+
+		// Function that is called when window is maximized or minimized
+		// Parameters:
+		//     pWindow: pointer to the window
+		//     maximized: int that indicates if window was maximized or restored
+		static void MaximizeWindowCallback(GLFWwindow* pWindow, int maximized);
+
 
 		// The window struct object
 		WindowStruct m_Window{};
