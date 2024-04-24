@@ -47,6 +47,7 @@ void D3D::Window::InitWindow()
 	// Get info ffrom config manager
 	bool fullScreen{configManager.GetBool("FullScreen")};
 	int monitorIndex{ configManager.GetInt("Monitor") };
+	bool maximized{ configManager.GetBool("Maximized") };
 
 	// Get a list of all the available monitors
 	int count{};
@@ -68,6 +69,10 @@ void D3D::Window::InitWindow()
 		{
 			monitor = glfwGetPrimaryMonitor();
 		}
+	}
+	else if (maximized)
+	{
+		glfwWindowHint(GLFW_MAXIMIZED, GLFW_TRUE);
 	}
 
 	//Initialize the window
@@ -97,8 +102,8 @@ void D3D::Window::InitWindow()
 		glfwSetWindowMonitor(m_Window.pWindow, nullptr, newX, newY, m_Window.Width, m_Window.Height, refreshRate);
 	}
 
-	// If the window isn't fullscreen and should be maximized, maximize it
-	if (!fullScreen && configManager.GetBool("Maximized"))
+	// If the window isn't fullscreen, should be maximized and isn't yet, maximize it
+	if (!fullScreen && maximized && !glfwGetWindowAttrib(m_Window.pWindow, GLFW_MAXIMIZED))
 	{
 		glfwMaximizeWindow(m_Window.pWindow);
 	}
