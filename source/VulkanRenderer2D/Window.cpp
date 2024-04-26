@@ -53,6 +53,7 @@ void D2D::Window::InitWindow()
 	if (m_Window.pWindow != nullptr)
 	{
 		glfwSetFramebufferSizeCallback(m_Window.pWindow, resize_callback);
+		glfwSetWindowMaximizeCallback(m_Window.pWindow, maximize_callback);
 	}
 }
 
@@ -85,11 +86,16 @@ void D2D::Window::CreateWindow(const char* title, int monitorIndex)
 	// Get the amount and a list of all available monitors
 	int count{};
 	auto monitors{ glfwGetMonitors(&count) };
+	auto maximized{ D2D::ConfigManager::GetInstance().GetBool("Maximized") };
 
 	// If the monitor index is available, set monitor
 	if (monitorIndex < count)
 	{
 		monitor = monitors[monitorIndex];
+		if (maximized)
+		{
+			glfwWindowHint(GLFW_MAXIMIZED, GLFW_TRUE);
+		}
 	}
 
 	// Create the window
@@ -112,6 +118,11 @@ void D2D::Window::CreateWindow(const char* title, int monitorIndex)
 
 		// Set the new window position
 		glfwSetWindowMonitor(m_Window.pWindow, nullptr, newX, newY, m_Window.Width, m_Window.Height, refreshRate);
+	}
+
+	if (maximized && !glfwGetWindowAttrib(m_Window.pWindow, GLFW_MAXIMIZED))
+	{
+		glfwMaximizeWindow(m_Window.pWindow);
 	}
 }
 
@@ -136,5 +147,10 @@ void D2D::Window::resize_callback(GLFWwindow* pWindow, int width, int height)
 {
 	// Pass along values to non static callback function
 	Window::GetInstance().ResizeCallback(pWindow, width, height);
+}
+
+void D2D::Window::maximize_callback(GLFWwindow* /*pWindow*/, int /*maximized*/)
+{
+
 }
 
