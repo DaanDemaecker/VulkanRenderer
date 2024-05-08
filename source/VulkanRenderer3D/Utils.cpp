@@ -142,3 +142,11 @@ void Utils::LoadModel(const std::string& filename, std::vector<D3D::Vertex>& ver
 		v2.tangent += tangent;
 	}
 }
+
+std::string Utils::GetExtension(const std::string& filename)
+{
+	// Get the index of the final period in the name, all characters after it indicate the extension
+	auto index = filename.find_last_of(".");
+
+	return filename.substr(index + 1, filename.size());
+}
