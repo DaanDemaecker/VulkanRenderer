@@ -22,6 +22,7 @@ namespace D3D
 		Camera& operator=(Camera& other) = delete;
 		Camera& operator=(Camera&& other) = delete;
 
+		void Update();
 
 		// Set position
 		// Parameters:
@@ -93,7 +94,22 @@ namespace D3D
 		//     extent: the extent of the swapchain
 		void UpdateUniformBuffer(UniformBufferObject& buffer, VkExtent2D extent);
 
+		glm::vec3 GetForward();
+
+		glm::vec3 GetRight();
+
+		glm::vec3 GetUp();
+
 	private:
+		const float m_Speed{ 5.f };
+		const float m_AngularSpeed{ 0.5f };
+
+		float m_TotalPitch{};
+		float m_TotalYaw{};
+
+		double m_PrevXPos{};
+		double m_PrevYPos{};
+
 		// Dirty flag
 		bool m_HasChanged{ true };
 

@@ -10,6 +10,7 @@
 #include "Window.h"
 #include "ConfigManager.h"
 #include "TextureDescriptorObject.h"
+#include "Camera.h"
 
 // Standard library includes
 #include <chrono>
@@ -53,7 +54,7 @@ void D3D::D3DEngine::Run(const std::function<void()>& load)
 
 	renderer.AddGraphicsPipeline("DiffNormSpec", { "../Resources/Shaders/DiffNormSpec.Vert.spv", "../Resources/Shaders/DiffNormSpec.Frag.spv" });
 
-
+	std::shared_ptr<D3D::TexturedMaterial> pGroundPlaneMaterial{ std::make_shared<D3D::TexturedMaterial>(std::initializer_list<const std::string>{"../resources/images/GroundPlane.png"}, "Diffuse") };
 	
 	std::shared_ptr<D3D::TexturedMaterial> pVikingMaterial{ std::make_shared<D3D::TexturedMaterial>(std::initializer_list<const std::string>{"../resources/images/viking_room.png"}, "Diffuse") };
 	std::shared_ptr<D3D::TexturedMaterial> pVehicleMaterial{ std::make_shared<D3D::TexturedMaterial>(std::initializer_list<const std::string>{"../resources/images/vehicle_diffuse.png"}, "Diffuse") };
@@ -81,6 +82,14 @@ void D3D::D3DEngine::Run(const std::function<void()>& load)
 
 		std::unique_ptr<Model> pCurrModel{};
 
+		pCurrModel = std::make_unique<Model>();
+
+		pCurrModel->LoadModel("../Resources/Models/Plane.obj");
+		pCurrModel->SetMaterial(pGroundPlaneMaterial);
+
+
+		pModels.push_back(std::move(pCurrModel));
+
 		/*pCurrModel = std::make_unique<Model>();
 
 		pCurrModel->LoadModel("../Resources/Models/vehicle.obj");
@@ -97,7 +106,7 @@ void D3D::D3DEngine::Run(const std::function<void()>& load)
 		pCurrModel->LoadModel("../Resources/Models/vehicle.obj");
 		pCurrModel->SetMaterial(pVehicle3Material);
 		//pModel->SetMaterial(pTestMaterial);
-		pCurrModel->SetPosition(0.f, 0, 10.f);
+		pCurrModel->SetPosition(0.f, 5, 0.f);
 		pCurrModel->SetRotation(0.f, glm::radians(75.0f), 0.f);
 		pCurrModel->SetScale(0.25f, 0.25f, 0.25f);
 
@@ -108,7 +117,7 @@ void D3D::D3DEngine::Run(const std::function<void()>& load)
 
 		pCurrModel->LoadModel("../Resources/Models/fireFX.obj");
 		pCurrModel->SetMaterial(pFireMaterial);
-		pCurrModel->SetPosition(0.f, 0, 10.f);
+		pCurrModel->SetPosition(0.f, 5, 0.f);
 		pCurrModel->SetRotation(0.f, glm::radians(75.0f), 0.f);
 		pCurrModel->SetScale(0.25f, 0.25f, 0.25f);
 
@@ -143,6 +152,11 @@ void D3D::D3DEngine::Run(const std::function<void()>& load)
 		pModel->SetScale(1000, 1000, 1000);
 		pModels.push_back(std::move(pModel));
 	}*/
+
+	auto pCamera =	renderer.GetCamera();
+	pCamera->SetPosition(0, 5, -15);
+	auto rot{ glm::quat(glm::lookAt(pCamera->GetPosition(), glm::vec3{ 0, 0, 0 }, glm::vec3{ 0, 1, 0 }))};
+	pCamera->SetRotation(glm::eulerAngles(rot));
 	
 
 	// Get the timemanager locally to prevent calling it every frame
@@ -193,15 +207,7 @@ void D3D::D3DEngine::Run(const std::function<void()>& load)
 			pModel->Update();
 		}
 
-		//auto rot{ renderer.GetCamera()->GetRotation() };
-		//// Initialize rotation speed
-		//constexpr float rotSpeed{ -glm::radians(15.f) };
-
-		//// Calculate amount of rotation
-		//float rotAmount{ rotSpeed * TimeManager::GetInstance().GetDeltaTime() };
-
-		//// Set new rotation
-		//renderer.GetCamera()->SetRotation(rot.x, rot.y + rotAmount, rot.z);
+		renderer.GetCamera()->Update();
 		
 
 		// Render all models
