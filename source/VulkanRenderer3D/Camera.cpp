@@ -77,9 +77,20 @@ void D3D::Camera::UpdateUniformBuffer(UniformBufferObject& buffer, VkExtent2D ex
 	// Set buffer view matrix
 	buffer.view = m_Matrix;
 
-	// Set the projection matrix
-	buffer.proj = glm::perspective(m_FovAngle, extent.width / static_cast<float>(extent.height), 0.1f, 100.0f);
-	buffer.proj[1][1] *= -1;
+	switch (m_Type)
+	{
+	case D3D::CameraType::Perspective:
+		// Set the projection matrix
+		buffer.proj = glm::perspective(m_FovAngle, extent.width / static_cast<float>(extent.height), 0.1f, 100.0f);
+		buffer.proj[1][1] *= -1;
+		break;
+	case D3D::CameraType::Ortographic:
+		break;
+	default:
+		break;
+	}
+
+	
 }
 
 void D3D::Camera::UpdateMatrix()

@@ -7,6 +7,12 @@
 
 namespace D3D
 {
+	enum class CameraType
+	{
+		Perspective,
+		Ortographic
+	};
+
 	class Camera
 	{
 	public:
@@ -100,7 +106,12 @@ namespace D3D
 
 		glm::vec3 GetUp();
 
+		void SetCameraType(CameraType type) { m_Type = type; m_HasChanged = true; }
+		CameraType GetCameraType() const { return m_Type; }
+
 	private:
+		CameraType m_Type{ CameraType::Perspective };
+
 		const float m_Speed{ 5.f };
 		const float m_AngularSpeed{ 0.5f };
 
