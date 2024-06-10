@@ -57,8 +57,8 @@ void D3D::Camera::Update()
 		double deltaY = ypos - m_PrevYPos;
 
 
-		m_TotalPitch += static_cast<float>(deltaY * deltaTime * m_AngularSpeed);
-		m_TotalYaw += static_cast<float>(deltaX * deltaTime * m_AngularSpeed);
+		m_TotalPitch -= static_cast<float>(deltaY * deltaTime * m_AngularSpeed);
+		m_TotalYaw -= static_cast<float>(deltaX * deltaTime * m_AngularSpeed);
 
 		// Rotate the camera based on mouse movement
 		SetRotation(m_TotalPitch, m_TotalYaw, 0);
@@ -98,28 +98,24 @@ void D3D::Camera::UpdateMatrix()
 	// Set hasChanged to false
 	m_HasChanged = false;
 
-	// Create translation matrix
-	glm::mat4 translationMatrix = glm::translate(glm::mat4(1.0f), m_Position);
-
-	// Cast rotation vector to quaternion
-	glm::quat quaternion = glm::quat(m_Rotation);
 	// Create rotation matrix
-	glm::mat4 rotationMatrix = glm::mat4_cast(quaternion);
-	// Create scaling matrix
-	glm::mat4 scalingMatrix = glm::scale(glm::mat4(1.0f), m_Scale);
+	glm::mat4 rotationMatrix = glm::mat4_cast(glm::conjugate(GetRotation()));
 
-	// Multiply matrices
-	m_Matrix = translationMatrix * rotationMatrix * scalingMatrix;
+	// Create translation matrix
+	glm::mat4 translationMatrix = glm::translate(glm::mat4(1.0f), -GetPosition());
+
+	// Multiply matrices (apply rotation first, then translation)
+	m_Matrix = rotationMatrix * translationMatrix;
 }
 
 glm::vec3 D3D::Camera::GetForward()
 {
 	
 	// Create the rotation matrix from the quaternion
-	glm::mat4 rotationMatrix = glm::mat4_cast(glm::quat(GetRotation()));
+	glm::mat4 rotationMatrix = glm::mat4_cast(GetRotation());
 
 	// Apply the rotation to the vector using the rotation matrix
-	glm::vec4 rotatedVector = rotationMatrix * glm::vec4(0.f, 0.f, 1.f, 0.0f);
+	glm::vec4 rotatedVector = rotationMatrix * glm::vec4(0.f, 0.f, -1.f, 0.0f);
 
 	// Extract the rotated glm::vec3 from the glm::vec4
 	glm::vec3 finalRotatedVector = glm::vec3(rotatedVector);
@@ -130,7 +126,7 @@ glm::vec3 D3D::Camera::GetForward()
 glm::vec3 D3D::Camera::GetUp()
 {
 	// Create the rotation matrix from the quaternion
-	glm::mat4 rotationMatrix = glm::mat4_cast(glm::quat(GetRotation()));
+	glm::mat4 rotationMatrix = glm::mat4_cast(GetRotation());
 
 	// Apply the rotation to the vector using the rotation matrix
 	glm::vec4 rotatedVector = rotationMatrix * glm::vec4(0.f, 1.f, 0.f, 0.0f);  // Use (0, 1, 0) for the up vector
@@ -144,10 +140,10 @@ glm::vec3 D3D::Camera::GetUp()
 glm::vec3 D3D::Camera::GetRight()
 {
 	// Create the rotation matrix from the quaternion
-	glm::mat4 rotationMatrix = glm::mat4_cast(glm::quat(GetRotation()));
+	glm::mat4 rotationMatrix = glm::mat4_cast(GetRotation());
 
 	// Apply the rotation to the vector using the rotation matrix
-	glm::vec4 rotatedVector = rotationMatrix * glm::vec4(-1.f, 0.f, 0.f, 0.0f);  // Use (1, 0, 0) for the right vector
+	glm::vec4 rotatedVector = rotationMatrix * glm::vec4(1.f, 0.f, 0.f, 0.0f);  // Use (1, 0, 0) for the right vector
 
 	// Extract the rotated glm::vec3 from the glm::vec4
 	glm::vec3 finalRotatedVector = glm::vec3(rotatedVector);

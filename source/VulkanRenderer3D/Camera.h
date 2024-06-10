@@ -50,17 +50,17 @@ namespace D3D
 		// Set rotation
 		// Parameters:
 		//     rotation: new rotation
-		void SetRotation(glm::vec3& rotation) { m_Rotation = rotation; SetDirtyFlag();}
+		void SetRotation(glm::vec3& rotation) { m_Rotation = glm::quat(rotation); SetDirtyFlag();}
 		// Set rotation
 		// Parameters:
 		//     rotation: new rotation
-		void SetRotation(glm::vec3&& rotation) { m_Rotation = rotation; SetDirtyFlag();}
+		void SetRotation(glm::vec3&& rotation) {SetRotation(rotation);}
 		// Set rotation
 		// Parameters:
 		//     x: x-rotation
 		//     y: y-rotation
 		//     z: z-rotation
-		void SetRotation(float x, float y, float z) { SetRotation(glm::vec3{ x,y,z }); SetDirtyFlag();}
+		void SetRotation(float x, float y, float z) { SetRotation(glm::vec3{ x,y,z }); SetDirtyFlag(); }
 
 		// Set scale
 		// Parameters:
@@ -90,7 +90,7 @@ namespace D3D
 		// Get the position of the camera
 		const glm::vec3& GetPosition() const {return m_Position; }
 		// Get the rotation of the camera
-		const glm::vec3& GetRotation() const {return m_Rotation; }
+		const glm::quat& GetRotation() const {return m_Rotation; }
 		// Get the scale of the camera
 		const glm::vec3& GetScale() const { return m_Scale; }
 
@@ -131,7 +131,7 @@ namespace D3D
 		glm::vec3 m_Position{0, 0, 0};
 
 		// Vector 3 for the rotation
-		glm::vec3 m_Rotation{0, 0, 0};
+		glm::quat m_Rotation{ glm::identity<glm::quat>() };
 
 		// Vector 3 for the scale
 		glm::vec3 m_Scale{1, 1, 1};

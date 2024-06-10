@@ -4,7 +4,7 @@
     "WindowHeight" : 600,
     "FullScreen" : false,
     "Maximized" : true,
-    "Monitor" : 1,
+    "Monitor" : 0,
     "ApplicationName": "VulkanRenderer3D",
     "ApplicationVersionMajor" : 1,
     "ApplicationVersionMinor" : 0,
