@@ -85,6 +85,7 @@ void D3D::Camera::UpdateUniformBuffer(UniformBufferObject& buffer, VkExtent2D ex
 		buffer.proj[1][1] *= -1;
 		break;
 	case D3D::CameraType::Ortographic:
+		buffer.proj = glm::ortho( m_OrthoBorders.x, m_OrthoBorders.y, m_OrthoBorders.z, m_OrthoBorders.w, 0.1f, 100.f);
 		break;
 	default:
 		break;

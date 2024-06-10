@@ -427,8 +427,12 @@ void D3D::VulkanRenderer3D::RecordCommandBuffer(VkCommandBuffer& commandBuffer, 
 	// Update the buffer of the global light
 	m_pGlobalLight->UpdateBuffer(m_CurrentFrame);
 
-	// Render the skybox
-	m_pSkyBox->Render();
+
+	if (m_pCamera->GetCameraType() == CameraType::Perspective)
+	{
+		// Render the skybox
+		m_pSkyBox->Render();
+	}
 
 	// Loop trough the amount of models
 	for (size_t i = 0; i < pModels.size(); ++i)

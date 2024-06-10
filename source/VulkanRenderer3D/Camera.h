@@ -106,11 +106,16 @@ namespace D3D
 
 		glm::vec3 GetUp();
 
-		void SetCameraType(CameraType type) { m_Type = type; m_HasChanged = true; }
+		void SetCameraType(CameraType type) { m_Type = type; SetDirtyFlag(); }
 		CameraType GetCameraType() const { return m_Type; }
 
+		void SetOrthographicBorders(glm::vec4&& borders) { SetOrthographicBorders(borders); }
+		void SetOrthographicBorders(glm::vec4& borders) { m_OrthoBorders = borders; SetDirtyFlag(); }
+		void SetOrthographicBorders(float left, float right, float top, float bottom) { SetOrthographicBorders(glm::vec4{ left, right, top, bottom }); }
+
+		glm::vec4 GetOrtographicBorders() const { return m_OrthoBorders; }
 	private:
-		CameraType m_Type{ CameraType::Perspective };
+		CameraType m_Type{ CameraType::Ortographic };
 
 		const float m_Speed{ 5.f };
 		const float m_AngularSpeed{ 0.5f };
@@ -126,6 +131,8 @@ namespace D3D
 
 		//FovAgnle
 		float m_FovAngle{ static_cast<float>(glm::radians(90.0)) };
+		
+		glm::vec4 m_OrthoBorders{ -5, 5, -5, 5 };
 
 		// Vector 3 for the position
 		glm::vec3 m_Position{0, 0, 0};
