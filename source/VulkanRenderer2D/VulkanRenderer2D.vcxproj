@@ -169,6 +169,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="ConfigManager.cpp" />
+    <ClCompile Include="D2DEngine.cpp" />
     <ClCompile Include="InstanceWrapper.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="STBIncludes.cpp" />
@@ -177,6 +178,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ConfigManager.h" />
+    <ClInclude Include="D2DEngine.h" />
     <ClInclude Include="GLFWIncludes.h" />
     <ClInclude Include="GLMIncludes.h" />
     <ClInclude Include="ImGuiIncludes.h" />

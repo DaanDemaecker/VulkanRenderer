@@ -5,14 +5,14 @@
 #include "ConfigManager.h"
 
 // Standard library includes
-#include <iostream>
+#include <functional>
+#include <string>
 
 D2D::Window::Window()
 {
-	// Read window width from config file
+	// Set the width of the window
 	m_Window.Width = ConfigManager::GetInstance().GetInt("WindowWidth");
-
-	// Read window height from config file
+	// Set the height of the window
 	m_Window.Height = ConfigManager::GetInstance().GetInt("WindowHeight");
 
 	// Initialize the window
@@ -21,9 +21,17 @@ D2D::Window::Window()
 
 D2D::Window::~Window()
 {
+	// Destroy the window
+	glfwDestroyWindow(m_Window.pWindow);
+
 	// Terminate glfw
 	glfwTerminate();
+}
 
+void D2D::Window::SetFrameBufferResized(bool value)
+{
+	// Set the value of frameBufferResized to the requested value
+	m_Window.FrameBufferResized = value;
 }
 
 void D2D::Window::InitWindow()
@@ -31,126 +39,94 @@ void D2D::Window::InitWindow()
 	// Initialize glfw
 	glfwInit();
 
-	// Set the error callback
-	glfwSetErrorCallback(error_callback);
+	//Tell GLFW not to create an OpenGL context
+	glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
 
-	// Read necesarry information from config file
-	bool fullscreen{ConfigManager::GetInstance().GetBool("FullScreen")};
-	auto title{ ConfigManager::GetInstance().GetString("WindowName") };
-	int monitorIndex{ ConfigManager::GetInstance().GetInt("Monitor") };
+	// Get a reference to the configmanager for later use
+	auto& configManager{ ConfigManager::GetInstance() };
 
-	// If fullscreen is requested, create a fullscreen window, if not, create a normal window
-	if (fullscreen)
-	{
-		CreateFullscreenWindow(title, monitorIndex);
-	}
-	else
-	{
-		CreateWindow(title, monitorIndex);
-	}
+	// Get info ffrom config manager
+	bool fullScreen{ configManager.GetBool("FullScreen") };
+	int monitorIndex{ configManager.GetInt("Monitor") };
+	bool maximized{ configManager.GetBool("Maximized") };
 
-	// If a window was successfully created, set the frame buffer resize callback function
-	if (m_Window.pWindow != nullptr)
-	{
-		glfwSetFramebufferSizeCallback(m_Window.pWindow, resize_callback);
-		glfwSetWindowMaximizeCallback(m_Window.pWindow, maximize_callback);
-	}
-}
-
-void D2D::Window::CreateFullscreenWindow(const char* title, int monitorIndex)
-{
-	GLFWmonitor* monitor{};
-
-	// Get the amount and a list of the monitors
+	// Get a list of all the available monitors
 	int count{};
-	auto monitors{ glfwGetMonitors(&count) };
+	GLFWmonitor** monitors{ glfwGetMonitors(&count) };
 
-	// If the index is available, set the monitor, if not, set the primary monitor
-	if (monitorIndex < count)
+	// Create monitor variable and initialize with nullptr
+	// If fullscreen is enabled, this will hold the correct monitor
+	// If fullscreen is not enabled, this will stay nullptr
+	GLFWmonitor* monitor{ nullptr };
+
+	if (fullScreen)
 	{
-		monitor = monitors[monitorIndex];
-	}
-	else
-	{
-		monitor = glfwGetPrimaryMonitor();
-	}
-
-	// Create the window
-	m_Window.pWindow = glfwCreateWindow(m_Window.Width, m_Window.Height, title, monitor, nullptr);
-}
-
-void D2D::Window::CreateWindow(const char* title, int monitorIndex)
-{
-	GLFWmonitor* monitor{};
-
-	// Get the amount and a list of all available monitors
-	int count{};
-	auto monitors{ glfwGetMonitors(&count) };
-	auto maximized{ D2D::ConfigManager::GetInstance().GetBool("Maximized") };
-
-	// If the monitor index is available, set monitor
-	if (monitorIndex < count)
-	{
-		monitor = monitors[monitorIndex];
-		if (maximized)
+		// If the monitor index is available, set monitor, if not, get primary monitor
+		if (monitorIndex < count)
 		{
-			glfwWindowHint(GLFW_MAXIMIZED, GLFW_TRUE);
+			monitor = monitors[monitorIndex];
+		}
+		else
+		{
+			monitor = glfwGetPrimaryMonitor();
 		}
 	}
+	else if (maximized)
+	{
+		glfwWindowHint(GLFW_MAXIMIZED, GLFW_TRUE);
+	}
 
-	// Create the window
-	m_Window.pWindow = glfwCreateWindow(m_Window.Width, m_Window.Height, title, nullptr, nullptr);
+	//Initialize the window
+	m_Window.pWindow = glfwCreateWindow(m_Window.Width, m_Window.Height, configManager.GetString("WindowName"), monitor, nullptr);
 
-	// If a monitor is requested, calculate and set a new position for the window on the requested monitor
-	if (monitor != nullptr)
+
+	// If fullscreen is disabled, the monitor index is available and isn't 0, calculate position for the window on the requested monitor
+	if (!fullScreen && monitorIndex != 0 && monitorIndex < count)
 	{
 		int x, y, w, h;
 
+		// Get the current monitor
+		auto currentMonitor{ monitors[monitorIndex] };
+
 		// Get all the measurements of the monitor
-		glfwGetMonitorWorkarea(monitor, &x, &y, &w, &h);
+		glfwGetMonitorWorkarea(currentMonitor, &x, &y, &w, &h);
 
 		// Calculate new position for the screen
 		int newX{ x + (w / 2) - (m_Window.Width / 2) };
 		int newY{ y + (h / 2) - (m_Window.Width / 2) };
 
 		// Get refreshrate
-		auto refreshRate{ glfwGetVideoMode(monitor)->refreshRate };
+		auto refreshRate{ glfwGetVideoMode(currentMonitor)->refreshRate };
 
 		// Set the new window position
 		glfwSetWindowMonitor(m_Window.pWindow, nullptr, newX, newY, m_Window.Width, m_Window.Height, refreshRate);
 	}
 
-	if (maximized && !glfwGetWindowAttrib(m_Window.pWindow, GLFW_MAXIMIZED))
+	// If the window isn't fullscreen, should be maximized and isn't yet, maximize it
+	if (!fullScreen && maximized && !glfwGetWindowAttrib(m_Window.pWindow, GLFW_MAXIMIZED))
 	{
 		glfwMaximizeWindow(m_Window.pWindow);
 	}
+
+	// Set window user pointer and callbacks
+	glfwSetWindowUserPointer(m_Window.pWindow, this);
+	glfwSetFramebufferSizeCallback(m_Window.pWindow, FramebufferResizeCallback);
+	glfwSetWindowMaximizeCallback(m_Window.pWindow, MaximizeWindowCallback);
 }
 
-void D2D::Window::ResizeCallback(GLFWwindow* pWindow, int width, int height)
+void D2D::Window::FramebufferResizeCallback(GLFWwindow* pWindow, int width, int height)
 {
-	// If the given window is the current window, set new values
-	if (m_Window.pWindow == pWindow)
-	{
-		m_Window.Width = width;
-		m_Window.Height = height;
-		m_Window.FrameBufferResized = true;
-	}
+	// Get a reference to the window struct
+	auto& window = GetInstance().GetWindowStruct();
+
+	// Update values of global window variable after resizing
+	window.FrameBufferResized = true;
+	window.pWindow = pWindow;
+	window.Width = width;
+	window.Height = height;
 }
 
-void D2D::Window::error_callback(int /*error*/, const char* description)
-{
-	// Print the error
-	std::cout << "GLFW error: " << description << "\n";
-}
-
-void D2D::Window::resize_callback(GLFWwindow* pWindow, int width, int height)
-{
-	// Pass along values to non static callback function
-	Window::GetInstance().ResizeCallback(pWindow, width, height);
-}
-
-void D2D::Window::maximize_callback(GLFWwindow* /*pWindow*/, int /*maximized*/)
+void D2D::Window::MaximizeWindowCallback(GLFWwindow* /*pWindow*/, int /*maximized*/)
 {
 
 }
-

@@ -1,3 +1,6 @@
+// Window.h
+// This class will hold the singleton for the GLFW window
+
 #ifndef WindowIncluded
 #define WindowIncluded
 
@@ -27,53 +30,37 @@ namespace D2D
 		// Constructor
 		Window();
 
-		// Destructor
+		// Default
 		~Window();
 
-	private:
-		// Window struct object
-		WindowStruct m_Window{};
+		// Get a reference to the windowstruct object
+		WindowStruct& GetWindowStruct() { return m_Window; }
 
-		// Initialize the window
+		// Set the FrameBufferResized variable
+		void SetFrameBufferResized(bool value);
+
+	private:
+
+		// Function that will initialize the glfw window
 		void InitWindow();
 
-		// Create a fullscreen window
+		// Function that is called when window is resized
 		// Parameters:
-		//     title: a c-string of the window title
-		//     monitorIndex: the index of the requested monitor
-		void CreateFullscreenWindow(const char* title, int monitorIndex);
-
-		// Create a non-fullscreen window
-		// Parameters:
-		//     title: a c-string of the window title
-		//     monitorIndex: the index of the requested monitor
-		void CreateWindow(const char* title, int monitorIndex);
-
-		// A function that will be called when the window is resized
-		// Parameters:
-		//     pWindow: a pointer to the window in question
+		//     pWindow: pointer to the window
 		//     width: the new width of the window
 		//     height: the new height of the window
-		void ResizeCallback(GLFWwindow* pWindow, int width, int height);
-
-		// A static error callback function for glfw
-		// Parameters:
-		//     error: the index of the error type
-		//     description: a c-string holding a description of the error
-		static void error_callback(int error, const char* description);
-
-		// A static resize callback funciton for glfw
-		// Parameters:
-		//     pWindow: a pointer to the window in question
-		//     width: the new width of the window
-		//     height: the new height of the window
-		static void resize_callback(GLFWwindow* pWindow, int width, int height);
+		static void FramebufferResizeCallback(GLFWwindow* pWindow, int width, int height);
 
 		// Function that is called when window is maximized or minimized
 		// Parameters:
 		//     pWindow: pointer to the window
 		//     maximized: int that indicates if window was maximized or restored
-		static void maximize_callback(GLFWwindow* pWindow, int maximized);
+		static void MaximizeWindowCallback(GLFWwindow* pWindow, int maximized);
+
+
+		// The window struct object
+		WindowStruct m_Window{};
+
 	};
 }
 

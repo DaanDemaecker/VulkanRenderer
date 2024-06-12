@@ -2,11 +2,12 @@
 //
 
 #include <iostream>
-#include "Window.h"
-#include "VulkanRenderer2D.h"
+#include "D2DEngine.h"
 
 int main()
 {
-    D2D::Window::GetInstance();
-    D2D::VulkanRenderer2D::GetInstance();
+	D2D::D2DEngine engine{};
+	engine.Run();
+
+	return EXIT_SUCCESS;
 }

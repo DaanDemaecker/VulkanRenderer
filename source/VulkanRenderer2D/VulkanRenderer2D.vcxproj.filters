@@ -37,6 +37,9 @@
     <ClCompile Include="InstanceWrapper.cpp">
       <Filter>Vulkan\Wrappers</Filter>
     </ClCompile>
+    <ClCompile Include="D2DEngine.cpp">
+      <Filter>Engine Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Singleton.h">
@@ -71,6 +74,9 @@
     </ClInclude>
     <ClInclude Include="InstanceWrapper.h">
       <Filter>Vulkan\Wrappers</Filter>
+    </ClInclude>
+    <ClInclude Include="D2DEngine.h">
+      <Filter>Engine Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
