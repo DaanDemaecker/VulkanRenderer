@@ -170,6 +170,7 @@
   <ItemGroup>
     <ClCompile Include="ConfigManager.cpp" />
     <ClCompile Include="D2DEngine.cpp" />
+    <ClCompile Include="GPUObject.cpp" />
     <ClCompile Include="InstanceWrapper.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="STBIncludes.cpp" />
@@ -181,6 +182,7 @@
     <ClInclude Include="D2DEngine.h" />
     <ClInclude Include="GLFWIncludes.h" />
     <ClInclude Include="GLMIncludes.h" />
+    <ClInclude Include="GPUObject.h" />
     <ClInclude Include="ImGuiIncludes.h" />
     <ClInclude Include="InstanceWrapper.h" />
     <ClInclude Include="RapidJSONIncludes.h" />

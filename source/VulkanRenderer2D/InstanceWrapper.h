@@ -14,6 +14,9 @@ namespace D2D
 	public:
 		InstanceWrapper();
 
+		// Get a reference to the vulkan instance
+		const VkInstance& GetInstance() const { return m_Instance; }
+
 	private:
 		// Vulkan instance handle
 		VkInstance m_Instance{};

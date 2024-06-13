@@ -40,6 +40,9 @@
     <ClCompile Include="D2DEngine.cpp">
       <Filter>Engine Files</Filter>
     </ClCompile>
+    <ClCompile Include="GPUObject.cpp">
+      <Filter>Vulkan\Wrappers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Singleton.h">
@@ -77,6 +80,9 @@
     </ClInclude>
     <ClInclude Include="D2DEngine.h">
       <Filter>Engine Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GPUObject.h">
+      <Filter>Vulkan\Wrappers</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

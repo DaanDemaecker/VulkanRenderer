@@ -3,6 +3,7 @@
 // File includes
 #include "VulkanRenderer2D.h"
 #include "InstanceWrapper.h"
+#include "GPUObject.h"
 
 D2D::VulkanRenderer2D::VulkanRenderer2D()
 {
@@ -17,6 +18,8 @@ D2D::VulkanRenderer2D::~VulkanRenderer2D()
 void D2D::VulkanRenderer2D::InitVulkan()
 {
 	m_pInstanceWrapper = std::make_unique<InstanceWrapper>();
+
+	m_pGPUObject = std::make_unique<GPUObject>(m_pInstanceWrapper->GetInstance());
 }
 
 void D2D::VulkanRenderer2D::CleanupVulkan()

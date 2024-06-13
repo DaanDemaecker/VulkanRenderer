@@ -14,6 +14,7 @@ namespace D2D
 {
 	// Class forward declarations
 	class InstanceWrapper;
+	class GPUObject;
 
 	class VulkanRenderer2D final : public Singleton<VulkanRenderer2D>
 	{
@@ -24,6 +25,8 @@ namespace D2D
 
 	private:
 		std::unique_ptr<InstanceWrapper> m_pInstanceWrapper{};
+
+		std::unique_ptr<GPUObject> m_pGPUObject{};
 
 		void InitVulkan();
 
