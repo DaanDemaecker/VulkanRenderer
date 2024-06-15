@@ -40,10 +40,13 @@ namespace D3D
 		//     device: handle for the VkDevice
 		void Cleanup(VkDevice device);
 
-		// Render the imgui
+		// Set up the imgui frame
+		void StartRender();
+
+		// Render the imgui frame
 		// Parameters:
 		//     commandBuffer: the commandBuffer used for rendering
-		void Render(VkCommandBuffer commandBuffer);
+		void EndRender(VkCommandBuffer commandBuffer);
 
 	private:
 		// Descriptorpool needed for ImGUI

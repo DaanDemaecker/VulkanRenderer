@@ -84,6 +84,9 @@ namespace D3D
 
 		// Get the amound of samples per pixel
 		VkSampleCountFlagBits GetMsaaSamples() const;
+
+		// Temp
+		VkImageView GetDepthImage() const;
 	private:
 		// The image view manager that hold the color and depth image
 		std::unique_ptr<ImageViewManager> m_pImageViewManager{};

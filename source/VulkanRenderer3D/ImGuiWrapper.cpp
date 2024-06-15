@@ -48,7 +48,7 @@ void D3D::ImGuiWrapper::Cleanup(VkDevice device)
 	vkDestroyDescriptorPool(device, m_DescriptorPool, nullptr);
 }
 
-void D3D::ImGuiWrapper::Render(VkCommandBuffer commandBuffer)
+void D3D::ImGuiWrapper::StartRender()
 {
 	// Start ImGui frame
 	ImGui_ImplVulkan_NewFrame();
@@ -58,6 +58,11 @@ void D3D::ImGuiWrapper::Render(VkCommandBuffer commandBuffer)
 	// Show the demo window
 	ImGui::ShowDemoWindow();
 
+	
+}
+
+void D3D::ImGuiWrapper::EndRender(VkCommandBuffer commandBuffer)
+{
 	// Render frame
 	ImGui::Render();
 

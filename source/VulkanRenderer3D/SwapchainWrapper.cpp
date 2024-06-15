@@ -204,6 +204,11 @@ VkSampleCountFlagBits D3D::SwapchainWrapper::GetMsaaSamples() const
 	return m_pImageViewManager->GetMsaaSamples();
 }
 
+VkImageView D3D::SwapchainWrapper::GetDepthImage() const
+{
+	return m_pImageViewManager->GetDepthImageView();
+}
+
 
 VkExtent2D D3D::SwapchainWrapper::ChooseSwapExtent(const VkSurfaceCapabilitiesKHR& capabilities)
 {
