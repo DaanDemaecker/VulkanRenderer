@@ -37,6 +37,9 @@
     <Filter Include="DataTypes\DescriptorObjects">
       <UniqueIdentifier>{c78643c2-69de-45f2-8cf9-6283a5c1ae99}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Vulkan\Renderer">
+      <UniqueIdentifier>{1077e171-a646-4cbc-bcc5-21c929cf9a75}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Utils.cpp">
@@ -108,9 +111,6 @@
     <ClCompile Include="CommandpoolManager.cpp">
       <Filter>Vulkan\Managers</Filter>
     </ClCompile>
-    <ClCompile Include="VulkanRenderer3D.cpp">
-      <Filter>Vulkan</Filter>
-    </ClCompile>
     <ClCompile Include="RenderpassWrapper.cpp">
       <Filter>Vulkan\Wrappers</Filter>
     </ClCompile>
@@ -170,6 +170,12 @@
     </ClCompile>
     <ClCompile Include="BufferManager.cpp">
       <Filter>Vulkan\Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="VulkanRenderer3D.cpp">
+      <Filter>Vulkan\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="ShadowRenderer.cpp">
+      <Filter>Vulkan\Renderer</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -248,9 +254,6 @@
     <ClInclude Include="CommandpoolManager.h">
       <Filter>Vulkan\Managers</Filter>
     </ClInclude>
-    <ClInclude Include="VulkanRenderer3D.h">
-      <Filter>Vulkan</Filter>
-    </ClInclude>
     <ClInclude Include="RenderpassWrapper.h">
       <Filter>Vulkan\Wrappers</Filter>
     </ClInclude>
@@ -319,6 +322,12 @@
     </ClInclude>
     <ClInclude Include="BufferManager.h">
       <Filter>Vulkan\Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="VulkanRenderer3D.h">
+      <Filter>Vulkan\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="ShadowRenderer.h">
+      <Filter>Vulkan\Renderer</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

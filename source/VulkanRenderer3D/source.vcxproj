@@ -195,6 +195,7 @@
     <ClCompile Include="PipelineWrapper.cpp" />
     <ClCompile Include="RenderpassWrapper.cpp" />
     <ClCompile Include="ShaderModuleWrapper.cpp" />
+    <ClCompile Include="ShadowRenderer.cpp" />
     <ClCompile Include="SkyBox.cpp" />
     <ClCompile Include="STBIncludes.cpp" />
     <ClCompile Include="STBIncludes.h" />
@@ -244,6 +245,7 @@
     <ClInclude Include="RapidJSONIncludes.h" />
     <ClInclude Include="RenderpassWrapper.h" />
     <ClInclude Include="ShaderModuleWrapper.h" />
+    <ClInclude Include="ShadowRenderer.h" />
     <ClInclude Include="SkyBox.h" />
     <ClInclude Include="SurfaceWrapper.h" />
     <ClInclude Include="SwapchainWrapper.h" />
