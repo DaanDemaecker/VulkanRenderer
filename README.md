@@ -8,4 +8,4 @@ This renderer is alsointegrated into my self made engine, as my engine project g
 
 As vulkan is not easy to start with without help, i used this tutorial to get me started:  
 https://vulkan-tutorial.com
-
+Later I also bought and used the official Vulkan programming guide from OpenGL for a deeper understanding.
