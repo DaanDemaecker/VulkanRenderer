@@ -37,22 +37,5 @@ void D3D::ImageViewManager::CreateColorResources(GPUObject* pGPUObject, VkFormat
 
 void D3D::ImageViewManager::CreateDepthResources(GPUObject* pGPUObject, VkExtent2D swapchainExtent, D3D::ImageManager* pImageManager, VkCommandBuffer commandBuffer)
 {
-	// Get the depth formatµ
-	auto depthFormat = VulkanUtils::FindDepthFormat(pGPUObject->GetPhysicalDevice());
-
-	// Create the image for the depth
-	// Set tiling to optimal
-	// Set usage to depth stencil attachment bit
-	// Set properties to device local
-	pImageManager->CreateImage(pGPUObject, swapchainExtent.width, swapchainExtent.height, 1, m_MsaaSamples, depthFormat,
-		VK_IMAGE_TILING_OPTIMAL,
-		VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT,
-		VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT,
-		m_DepthImage);
-
-	// Create image view for the depth image
-	m_DepthImage.imageView = pImageManager->CreateImageView(pGPUObject->GetDevice(), m_DepthImage.image, depthFormat, VK_IMAGE_ASPECT_DEPTH_BIT, 1);
-
-	// Transition the depth image from undefined to depth stencil attachment optimal
-	pImageManager->TransitionImageLayout(m_DepthImage.image, commandBuffer, depthFormat, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL, 1);
+	VulkanUtils::CreateDepthImage(m_DepthImage, pGPUObject, m_MsaaSamples, swapchainExtent, pImageManager, commandBuffer);
 }

@@ -6,7 +6,6 @@
 
 D3D::TextureDescriptorObject::TextureDescriptorObject(Texture& texture)
 	:DescriptorObject(VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER)
-
 {
 	// Add the texture to the list of textures
 	m_Textures.push_back(texture);

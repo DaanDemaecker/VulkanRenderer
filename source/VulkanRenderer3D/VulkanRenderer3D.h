@@ -254,9 +254,6 @@ namespace D3D
         //     newLayout: the new layout of the image
         //     mipLevels: the amount of mipmaps in this image
         void TransitionImageLayout(VkImage image, VkFormat format, VkImageLayout oldLayout, VkImageLayout newLayout, uint32_t mipLevels);
-    
-    
-        void TestDepthMapImgui();
     };
 }
 

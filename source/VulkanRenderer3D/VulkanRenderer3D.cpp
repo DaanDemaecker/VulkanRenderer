@@ -444,8 +444,6 @@ void D3D::VulkanRenderer3D::RecordCommandBuffer(VkCommandBuffer& commandBuffer, 
 	// Render the ImGui
 	m_pImGuiWrapper->StartRender();
 
-	TestDepthMapImgui();
-
 	m_pImGuiWrapper->EndRender(commandBuffer);
 
 	// End the render pass
@@ -566,11 +564,6 @@ void D3D::VulkanRenderer3D::TransitionImageLayout(VkImage image, VkFormat format
 
 	// End the single time command buffer
 	EndSingleTimeCommands(commandBuffer);
-}
-
-void D3D::VulkanRenderer3D::TestDepthMapImgui()
-{
-
 }
 
 void D3D::VulkanRenderer3D::CreateBuffer(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VkBuffer& buffer, VkDeviceMemory& bufferMemory)

@@ -44,6 +44,7 @@ namespace D3D
 		//     pImageManager: pointer to the image manager
 		void CreateColorResources(GPUObject* pGPUObject, VkFormat format,
 			VkExtent2D swapchainExtent, D3D::ImageManager* pImageManager);
+
 		// Initialize the depth image for the swapchain
 		// Parameters:
 		//     pGPUObject: pointer to the GPU Object

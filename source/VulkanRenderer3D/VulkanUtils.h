@@ -11,6 +11,13 @@
 // Standard library includes
 #include <vector>
 
+// Class forward declarations
+namespace D3D
+{
+	class ImageManager;
+	class GPUObject;
+}
+
 namespace VulkanUtils
 {
 	// Get a memory type that satisfies the given properties
@@ -54,5 +61,16 @@ namespace VulkanUtils
 		//     physicalDevice: handle of the VkPhysicalDevice
 		//     surface: handle of the VkSurfaceKHR
 	D3D::SwapChainSupportDetails QuerySwapChainSupport(VkPhysicalDevice physicalDevice, VkSurfaceKHR surface);
+
+	// Create a depth image
+		// Parameters:
+		//     texture: reference to the texture that stores the depth image
+		//     pGPUObject: pointer to the GPU Object
+		//     samples: max amount of samples per pixel
+		//     swapchainExtent: the extent of the swapchain, for use of the image size
+		//     pImageManager: pointer to the image manager
+	    //     commandBuffer: a one time use commandbuffer used to create the image
+	void CreateDepthImage(D3D::Texture& texture, D3D::GPUObject* pGPUObject, VkSampleCountFlagBits samples, VkExtent2D swapchainExtent,
+		D3D::ImageManager* pImageManager, VkCommandBuffer commandBuffer);
 }
 #endif // !VulkanUtilsIncluded
