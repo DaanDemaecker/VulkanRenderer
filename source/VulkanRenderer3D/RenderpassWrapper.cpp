@@ -19,6 +19,37 @@ void D3D::RenderpassWrapper::cleanup(VkDevice device)
 	vkDestroyRenderPass(device, m_RenderPass, nullptr);
 }
 
+void D3D::RenderpassWrapper::BeginRenderPass(VkCommandBuffer commandBuffer, VkFramebuffer frameBuffer, VkExtent2D swapchainExtent)
+{
+	// Create renderpass begin info object
+	VkRenderPassBeginInfo renderPassInfo{};
+	// Set type to render pass begin info
+	renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
+	// Give handle of renderpass
+	renderPassInfo.renderPass = m_RenderPass;
+	// Give the current frame buffer
+	renderPassInfo.framebuffer = frameBuffer;
+	// Set offset of render area to 0, 0
+	renderPassInfo.renderArea.offset = { 0, 0 };
+	// Set extent of render area to the extent of the swapchain
+	renderPassInfo.renderArea.extent = swapchainExtent;
+
+	// Create an array for the clear values
+	std::array<VkClearValue, 2> clearValues{};
+	// Set color to a color of choice
+	clearValues[0].color = { {0.388f, 0.588f, 0.929f, 1.0f} };
+	// Set depth stencil to 1, 0
+	clearValues[1].depthStencil = { 1.0f, 0 };
+
+	// Give the size of the clearValues size as the count for clearvalues
+	renderPassInfo.clearValueCount = static_cast<uint32_t>(clearValues.size());
+	// Give pointer to the clear values data
+	renderPassInfo.pClearValues = clearValues.data();
+
+	// Begin the renderpass
+	vkCmdBeginRenderPass(commandBuffer, &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
+}
+
 void D3D::RenderpassWrapper::CreateRenderPass(VkDevice device, VkFormat swapchainImageFormat, VkFormat depthFormat, VkSampleCountFlagBits msaaSamples)
 {
 	// Create attachment description

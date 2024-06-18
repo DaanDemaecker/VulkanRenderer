@@ -137,6 +137,7 @@ namespace D3D
 		// Create the frame buffers
 		// Parameters:
 		//     device: handle of the VkDevice
+		//     renderpass: handle of the render pass
 		void CreateFramebuffers(VkDevice device, VkRenderPass renderpass);
 
 		// Get the format for the swapchain surface

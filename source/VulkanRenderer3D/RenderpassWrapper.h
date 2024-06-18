@@ -41,6 +41,8 @@ namespace D3D
 		// Get the handle of the renderpass
 		VkRenderPass GetRenderpass() const { return m_RenderPass; }
 
+		void BeginRenderPass(VkCommandBuffer commandBuffer, VkFramebuffer frameBuffer, VkExtent2D swapchainExtent);
+
 	private:
 
 		//Renderpass
