@@ -18,6 +18,7 @@
 #include "PipelineWrapper.h"
 #include "CommandpoolManager.h"
 #include "SurfaceWrapper.h"
+#include "Viewport.h"
 
 
 #include "Camera.h"
@@ -192,6 +193,8 @@ void D3D::VulkanRenderer3D::InitVulkan()
 
 	// Initialize the sync objects
 	m_pSyncObjectManager = std::make_unique<SyncObjectManager>(pGPUObject->GetDevice(), m_MaxFramesInFlight);
+
+	m_pViewport = std::make_unique<Viewport>();
 }
 
 void D3D::VulkanRenderer3D::InitImGui()
@@ -370,33 +373,7 @@ void D3D::VulkanRenderer3D::RecordCommandBuffer(VkCommandBuffer& commandBuffer, 
 
 	m_pRenderpassWrapper->BeginRenderPass(commandBuffer, m_pSwapchainWrapper->GetFrameBuffer(imageIndex), swapchainExtent);
 
-	// Create a viewport object
-	VkViewport viewport{};
-	// Set viewport x to 0
-	viewport.x = 0.0f;
-	// Set viewport y to 0
-	viewport.y = 0.0f;
-	// Set the viewport width to the width of the swapchain
-	viewport.width = static_cast<float>(swapchainExtent.width);
-	// Set the viewport width to the width of the swapchain
-	viewport.height = static_cast<float>(swapchainExtent.height);
-	// Set min depth to 0
-	viewport.minDepth = 0.0f;
-	// Set max depth to 1
-	viewport.maxDepth = 1.0f;
-
-	// Set the viewport
-	vkCmdSetViewport(commandBuffer, 0, 1, &viewport);
-
-	// Create scissor object
-	VkRect2D scissor{};
-	// Set offset to 0, 0
-	scissor.offset = { 0, 0 };
-	// Set scissor extent to swapchain extent
-	scissor.extent = swapchainExtent;
-
-	// Set the scissor
-	vkCmdSetScissor(commandBuffer, 0, 1, &scissor);
+	m_pViewport->SetViewport(commandBuffer, swapchainExtent);
 
 	// Update the buffer of the global light
 	m_pGlobalLight->UpdateBuffer(m_CurrentFrame);

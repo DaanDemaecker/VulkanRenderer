@@ -35,6 +35,7 @@ namespace D3D
     class Camera;
     class PipelineManager;
     class SurfaceWrapper;
+    class Viewport;
 
     // Inherit from singleton
     class VulkanRenderer3D final : public Singleton<VulkanRenderer3D>
@@ -168,6 +169,9 @@ namespace D3D
         void SetupDefaultPipeline();
 
     private:
+        // Viewport object
+        std::unique_ptr<Viewport> m_pViewport{};
+
         // Pointer to the skybox object
         std::unique_ptr<SkyBox> m_pSkyBox{};
 

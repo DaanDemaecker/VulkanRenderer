@@ -177,6 +177,9 @@
     <ClCompile Include="ShadowRenderer.cpp">
       <Filter>Vulkan\Renderer</Filter>
     </ClCompile>
+    <ClCompile Include="Viewport.cpp">
+      <Filter>Vulkan\Wrappers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Utils.h">
@@ -328,6 +331,9 @@
     </ClInclude>
     <ClInclude Include="ShadowRenderer.h">
       <Filter>Vulkan\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Viewport.h">
+      <Filter>Vulkan\Wrappers</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

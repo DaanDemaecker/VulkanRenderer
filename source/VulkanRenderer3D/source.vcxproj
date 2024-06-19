@@ -210,6 +210,7 @@
     <ClCompile Include="TimeManager.cpp" />
     <ClCompile Include="TinyObjLoaderIncludes.cpp" />
     <ClCompile Include="Utils.cpp" />
+    <ClCompile Include="Viewport.cpp" />
     <ClCompile Include="VulkanRenderer3D.cpp" />
     <ClCompile Include="VulkanUtils.cpp" />
     <ClCompile Include="Window.cpp" />
@@ -261,6 +262,7 @@
     <ClInclude Include="UboDescriptorObject.h" />
     <ClInclude Include="Utils.h" />
     <ClInclude Include="GLMIncludes.h" />
+    <ClInclude Include="Viewport.h" />
     <ClInclude Include="VulkanIncludes.h" />
     <ClInclude Include="VulkanRenderer3D.h" />
     <ClInclude Include="VulkanUtils.h" />
