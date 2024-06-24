@@ -25,9 +25,12 @@ Textures can be loaded from a variety of file types. Textures can be used in mat
 ### Camera movement
 A simple camera movement is implemented so that the user can see their objects from different angles.  
 
-
-
-
 ## Future goals
 ### Shadow mapping
 I am currently working on adding shadow mapping into the renderer.
+
+### Particles  
+In the future i would like to learn how Compute shaders work and how to use them to create particles in Vulkan.  
+
+### Instanced rendering
+Instanced rendering has always seemed like a very interesting concept to me and i would love to deepen my understanding of it and how to apply it in my renderer.  
