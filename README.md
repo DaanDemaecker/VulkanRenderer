@@ -34,3 +34,8 @@ In the future i would like to learn how Compute shaders work and how to use them
 
 ### Instanced rendering
 Instanced rendering has always seemed like a very interesting concept to me and i would love to deepen my understanding of it and how to apply it in my renderer.  
+
+
+## Libraries 
+# Window handling and input
+Windows handling and input are both handles by GLFW with the use of the Vulkan extension 
