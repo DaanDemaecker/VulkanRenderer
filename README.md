@@ -23,7 +23,10 @@ I wanted to create a renderer completely on myself (with the help of tutorials b
 Textures can be loaded from a variety of file types. Textures can be used in materials to be sent to shaders so the user can use it however they want. Currently diffuse, gloss, specular and normal maps are supported.  
 
 ### Camera movement
-A simple camera movement is implemented so that the user can see their objects from different angles.  
+A simple camera movement is implemented so that the user can see their objects from different angles. 
+
+### GUI
+ImGui has been implemented and can be used for debugging purposes or anything else the user wants to.  
 
 ## Future goals
 ### Shadow mapping
@@ -37,5 +40,12 @@ Instanced rendering has always seemed like a very interesting concept to me and 
 
 
 ## Libraries 
-# Window handling and input
-Windows handling and input are both handles by GLFW with the use of the Vulkan extension 
+### Window handling and input
+For window handling I chose GLFW, in class we always used OpenGl and SDK and i wanted to explore other options, the Vulkan Tutorial also adviced using GLFW.  
+
+### GUI
+In class we learned about Dear ImGui, but i feel we didn't explore it to it's full potential so i chose to explore it further on my own and implement it into my renderer.  
+
+### Math
+For math support, GLM i chose glm as it was the library i was most familiar with, i usually enjoy experimenting and learning new libraries but a math library didn't seem interesting enough to explore for me. GLM also seems to be the best in communicating with Vulkan.  
+
