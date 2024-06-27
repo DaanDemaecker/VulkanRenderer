@@ -49,3 +49,5 @@ In class we learned about Dear ImGui, but i feel we didn't explore it to it's fu
 ### Math
 For math support, GLM i chose glm as it was the library i was most familiar with, i usually enjoy experimenting and learning new libraries but a math library didn't seem interesting enough to explore for me. GLM also seems to be the best in communicating with Vulkan.  
 
+### Json file reading
+I had worked with Json files before in C# but never in C++, so I had to learn an look for a library that could fit my requirements and I ended up choosing RapidJSON.
