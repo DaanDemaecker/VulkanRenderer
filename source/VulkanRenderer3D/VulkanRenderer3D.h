@@ -63,7 +63,7 @@ namespace D3D
         //     commandBuffer: the commandbuffer that will handle rendering
         //     descriptorSet: pointer to the descriptorset connected to the model
         //     pipeline: the graphics pipeline wrapper used for rendering this model
-        void Render(Model* pModel, VkCommandBuffer& commandBuffer, const VkDescriptorSet* descriptorSet, const PipelineWrapper* pipeline);
+        //void Render(Model* pModel, VkCommandBuffer& commandBuffer, const VkDescriptorSet* descriptorSet, const PipelineWrapper* pipeline);
 
         // Add a new graphics pipeline
         // Parameters:

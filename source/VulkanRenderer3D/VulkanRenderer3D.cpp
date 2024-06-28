@@ -408,29 +408,29 @@ void D3D::VulkanRenderer3D::RecordCommandBuffer(VkCommandBuffer& commandBuffer, 
 	}
 }
 
-void D3D::VulkanRenderer3D::Render(Model* pModel, VkCommandBuffer& commandBuffer, const VkDescriptorSet* descriptorSet, const PipelineWrapper* pipeline)
-{
-	// Bind the correct pipeline
-	vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline->GetPipeline());
-
-	//vkCmdPushConstants(commandBuffer, pipeline.pipelineLayout, VK_SHADER_STAGE_FRAGMENT_BIT, 0, sizeof(LightObject), &m_GlobalLight);
-
-	// Create array for vertexbuffer and get correct vertex buffer
-	VkBuffer vertexBuffers[] = { pModel->GetVertexBuffer() };
-	// Set the offset to 0
-	VkDeviceSize offsets[] = { 0 };
-	// Bind the vertex buffer
-	vkCmdBindVertexBuffers(commandBuffer, 0, 1, vertexBuffers, offsets);
-
-	// Bind the index buffer
-	vkCmdBindIndexBuffer(commandBuffer, pModel->GetIndexBuffer(), 0, VK_INDEX_TYPE_UINT32);
-
-	// Bind the descriptor sets
-	vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline->GetPipelineLayout(), 0, 1, descriptorSet, 0, nullptr);
-
-	// Draw the current model
-	vkCmdDrawIndexed(commandBuffer, static_cast<uint32_t>(pModel->GetIndexAmount()), 1, 0, 0, 0);
-}
+//void D3D::VulkanRenderer3D::Render(Model* pModel, VkCommandBuffer& commandBuffer, const VkDescriptorSet* descriptorSet, const PipelineWrapper* pipeline)
+//{
+//	// Bind the correct pipeline
+//	vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline->GetPipeline());
+//
+//	//vkCmdPushConstants(commandBuffer, pipeline.pipelineLayout, VK_SHADER_STAGE_FRAGMENT_BIT, 0, sizeof(LightObject), &m_GlobalLight);
+//
+//	// Create array for vertexbuffer and get correct vertex buffer
+//	VkBuffer vertexBuffers[] = { pModel->GetVertexBuffer() };
+//	// Set the offset to 0
+//	VkDeviceSize offsets[] = { 0 };
+//	// Bind the vertex buffer
+//	vkCmdBindVertexBuffers(commandBuffer, 0, 1, vertexBuffers, offsets);
+//
+//	// Bind the index buffer
+//	vkCmdBindIndexBuffer(commandBuffer, pModel->GetIndexBuffer(), 0, VK_INDEX_TYPE_UINT32);
+//
+//	// Bind the descriptor sets
+//	vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline->GetPipelineLayout(), 0, 1, descriptorSet, 0, nullptr);
+//
+//	// Draw the current model
+//	vkCmdDrawIndexed(commandBuffer, static_cast<uint32_t>(pModel->GetIndexAmount()), 1, 0, 0, 0);
+//}
 
 VkDevice D3D::VulkanRenderer3D::GetDevice()
 {

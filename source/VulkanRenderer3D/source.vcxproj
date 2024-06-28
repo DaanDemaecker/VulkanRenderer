@@ -191,6 +191,7 @@
     <ClCompile Include="ImageViewManager.cpp" />
     <ClCompile Include="ImGuiWrapper.cpp" />
     <ClCompile Include="InstanceWrapper.cpp" />
+    <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="PipelineManager.cpp" />
     <ClCompile Include="PipelineWrapper.cpp" />
     <ClCompile Include="RenderpassWrapper.cpp" />
@@ -241,6 +242,7 @@
     <ClInclude Include="ImGuiIncludes.h" />
     <ClInclude Include="ImGuiWrapper.h" />
     <ClInclude Include="InstanceWrapper.h" />
+    <ClInclude Include="Mesh.h" />
     <ClInclude Include="PipelineManager.h" />
     <ClInclude Include="PipelineWrapper.h" />
     <ClInclude Include="RapidJSONIncludes.h" />

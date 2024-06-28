@@ -8,6 +8,7 @@
 #include "TimeManager.h"
 #include "DescriptorPoolWrapper.h"
 #include "PipelineWrapper.h"
+#include "Mesh.h"
 
 // Standard library includes
 #include <memory>
@@ -30,22 +31,15 @@ D3D::Model::~Model()
 }
 
 void D3D::Model::LoadModel(const std::string& textPath)
-{
-	auto& renderer{ VulkanRenderer3D::GetInstance() };
-
-	// Check if model is initialized, if it is, clean up first
+{// Check if model is initialized, if it is, clean up first
 	if (m_Initialized)
 	{
 		m_Initialized = false;
 		Cleanup();
 	}
 
-	// Load model into vertex and index vectors
-	Utils::LoadModel(textPath, m_Vertices, m_Indices);
-	// Create vertex buffer
-	renderer.CreateVertexBuffer(m_Vertices, m_VertexBuffer, m_VertexBufferMemory);
-	// Create index buffer
-	renderer.CreateIndexBuffer(m_Indices, m_IndexBuffer, m_IndexBufferMemory);
+	m_pMesh = std::make_unique<Mesh>(textPath);
+
 	// Create uniform buffer
 	CreateUniformBuffers();
 	// Create descriptorsets
@@ -88,14 +82,10 @@ void D3D::Model::Render()
 	// Get index of current frame
 	auto frame{ renderer.GetCurrentFrame() };
 
-	// Check if UBOs have changed, if so, update them
-	//if (m_UboChanged[frame])
-	//{
-		UpdateUniformBuffer(frame);
-	//}
+	UpdateUniformBuffer(frame);
 
-	// Render model
-	renderer.Render(this, renderer.GetCurrentCommandBuffer(), &m_DescriptorSets[frame], GetPipeline());
+	m_pMesh->Render(GetPipeline(), &m_DescriptorSets[frame]);
+
 }
 
 void D3D::Model::SetPosition(float x, float y, float z)
@@ -205,15 +195,7 @@ void D3D::Model::Cleanup()
 	// Wait until device is idle
 	vkDeviceWaitIdle(device);
 
-	// Destroy index buffer
-	vkDestroyBuffer(device, m_IndexBuffer, nullptr);
-	// Free index buffer memory
-	vkFreeMemory(device, m_IndexBufferMemory, nullptr);
-
-	// Destroy vertex buffer
-	vkDestroyBuffer(device, m_VertexBuffer, nullptr);
-	// Free vertex buffer
-	vkFreeMemory(device, m_VertexBufferMemory, nullptr);
+	m_pMesh = nullptr;
 }
 
 void D3D::Model::SetDirtyFlags()

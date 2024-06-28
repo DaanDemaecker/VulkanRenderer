@@ -19,6 +19,7 @@ namespace D3D
 	// Class forward declarations
 	class Material;
 	class PipelineWrapper;
+	class Mesh;
 
 	class Model final : public std::enable_shared_from_this<Model>
 	{
@@ -49,13 +50,6 @@ namespace D3D
 
 		// Render model
 		void Render();
-
-		// Get vertex buffer
-		const VkBuffer& GetVertexBuffer() const { return m_VertexBuffer; }
-		// Get index buffer
-		const VkBuffer& GetIndexBuffer() const { return m_IndexBuffer; }
-		// Get amound of indices
-		size_t GetIndexAmount() const { return m_Indices.size(); }
 
 		// Set position
 		// Parameters:
@@ -102,20 +96,8 @@ namespace D3D
 		// Vector of descriptorsets
 		std::vector<VkDescriptorSet> m_DescriptorSets{};
 
-		// Vector of vertices
-		std::vector<Vertex> m_Vertices{};
-		// Vector of indices
-		std::vector<uint32_t> m_Indices{};
-
-		// Vertex buffer
-		VkBuffer m_VertexBuffer{};
-		// Vertex buffer memory
-		VkDeviceMemory m_VertexBufferMemory{};
-
-		// Index buffer
-		VkBuffer m_IndexBuffer{};
-		// Index buffer memory
-		VkDeviceMemory m_IndexBufferMemory{};
+		//Mesh
+		std::unique_ptr<D3D::Mesh> m_pMesh{};
 
 		//Material
 		std::shared_ptr<Material> m_pMaterial{};

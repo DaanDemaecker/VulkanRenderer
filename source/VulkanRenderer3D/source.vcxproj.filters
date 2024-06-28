@@ -40,6 +40,9 @@
     <Filter Include="Vulkan\Renderer">
       <UniqueIdentifier>{1077e171-a646-4cbc-bcc5-21c929cf9a75}</UniqueIdentifier>
     </Filter>
+    <Filter Include="DataTypes\RenderClasses">
+      <UniqueIdentifier>{38715e58-506a-499c-9b48-37e9912a2162}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Utils.cpp">
@@ -47,9 +50,6 @@
     </ClCompile>
     <ClCompile Include="D3DEngine.cpp">
       <Filter>Engine</Filter>
-    </ClCompile>
-    <ClCompile Include="Model.cpp">
-      <Filter>DataTypes</Filter>
     </ClCompile>
     <ClCompile Include="TimeManager.cpp">
       <Filter>Engine</Filter>
@@ -138,9 +138,6 @@
     <ClCompile Include="CubeMapMaterial.cpp">
       <Filter>DataTypes\Materials</Filter>
     </ClCompile>
-    <ClCompile Include="SkyBox.cpp">
-      <Filter>DataTypes</Filter>
-    </ClCompile>
     <ClCompile Include="GPUObject.cpp">
       <Filter>Vulkan\Wrappers</Filter>
     </ClCompile>
@@ -180,6 +177,15 @@
     <ClCompile Include="Viewport.cpp">
       <Filter>Vulkan\Wrappers</Filter>
     </ClCompile>
+    <ClCompile Include="SkyBox.cpp">
+      <Filter>DataTypes\RenderClasses</Filter>
+    </ClCompile>
+    <ClCompile Include="Model.cpp">
+      <Filter>DataTypes\RenderClasses</Filter>
+    </ClCompile>
+    <ClCompile Include="Mesh.cpp">
+      <Filter>DataTypes\RenderClasses</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Utils.h">
@@ -190,9 +196,6 @@
     </ClInclude>
     <ClInclude Include="D3DEngine.h">
       <Filter>Engine</Filter>
-    </ClInclude>
-    <ClInclude Include="Model.h">
-      <Filter>DataTypes</Filter>
     </ClInclude>
     <ClInclude Include="Singleton.h">
       <Filter>Engine</Filter>
@@ -287,9 +290,6 @@
     <ClInclude Include="CubeMapMaterial.h">
       <Filter>DataTypes\Materials</Filter>
     </ClInclude>
-    <ClInclude Include="SkyBox.h">
-      <Filter>DataTypes</Filter>
-    </ClInclude>
     <ClInclude Include="GPUObject.h">
       <Filter>Vulkan\Wrappers</Filter>
     </ClInclude>
@@ -334,6 +334,15 @@
     </ClInclude>
     <ClInclude Include="Viewport.h">
       <Filter>Vulkan\Wrappers</Filter>
+    </ClInclude>
+    <ClInclude Include="SkyBox.h">
+      <Filter>DataTypes\RenderClasses</Filter>
+    </ClInclude>
+    <ClInclude Include="Model.h">
+      <Filter>DataTypes\RenderClasses</Filter>
+    </ClInclude>
+    <ClInclude Include="Mesh.h">
+      <Filter>DataTypes\RenderClasses</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
