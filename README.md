@@ -33,7 +33,10 @@ ImGui has been implemented and can be used for debugging purposes or anything el
 I am currently working on adding shadow mapping into the renderer.
 
 ### Particles  
-In the future i would like to learn how Compute shaders work and how to use them to create particles in Vulkan.  
+Particles are often an essential part of making a game look finished and giving the player feedback on his actions. They have always fascinated me and i have wondered for a long time how they work, so that's why i would love to get into implementing them myself and seeing how they work.  
+
+### Compute shaders  
+I have not read a lot about compute shaders, but what i do know about them makes them seem extremely powerful and useful so i would love to learn all about them.  
 
 ### Instanced rendering
 Instanced rendering has always seemed like a very interesting concept to me and i would love to deepen my understanding of it and how to apply it in my renderer.  
