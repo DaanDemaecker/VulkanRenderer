@@ -89,7 +89,7 @@ void D3D::VulkanRenderer3D::SetupLight()
 	// Create global light
 	m_pGlobalLight = std::make_unique<DirectionalLightObject>();
 	// Set direction of global light
-	m_pGlobalLight->SetDirection(glm::vec3{ -.577, -.577f, .577 });
+	m_pGlobalLight->SetDirection(glm::vec3{ -.577, -.577f, 0.f });
 	// Set color of global light
 	m_pGlobalLight->SetColor(glm::vec3{ 1.f, 1.f, 1.f });
 	// Set intensity of global light

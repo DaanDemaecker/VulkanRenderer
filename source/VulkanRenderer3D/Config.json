@@ -16,5 +16,7 @@
     "DefaultTextureName" : "../resources/DefaultResources/DefaultTexture.png",
     "DefaultPipelineName" : "Default",
     "DefaultVertName" : "../resources/DefaultResources/Default.Vert.spv",
-    "DefaultFragName" : "../resources/DefaultResources/Default.Frag.spv"
+    "DefaultFragName" : "../resources/DefaultResources/Default.Frag.spv",
+    "ShadowVertName" : "../resources/DefaultResources/Shadow.Vert.spv",
+    "ShadowFragName" : "../resources/DefaultResources/Shadow.Frag.spv"
 }
