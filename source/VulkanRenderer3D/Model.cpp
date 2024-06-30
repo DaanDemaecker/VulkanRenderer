@@ -84,7 +84,19 @@ void D3D::Model::Render()
 
 	UpdateUniformBuffer(frame);
 
-	m_pMesh->Render(GetPipeline(), &m_DescriptorSets[frame]);
+
+
+	// Get current commandbuffer
+	auto commandBuffer{ VulkanRenderer3D::GetInstance().GetCurrentCommandBuffer() };
+
+	// Bind pipeline
+	vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, GetPipeline()->GetPipeline());
+
+	// Bind descriptor sets
+	vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, GetPipeline()->GetPipelineLayout(), 0, 1, &m_DescriptorSets[frame], 0, nullptr);
+
+
+	m_pMesh->Render(commandBuffer);
 
 }
 

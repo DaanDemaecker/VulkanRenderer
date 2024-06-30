@@ -16,6 +16,10 @@ D3D::PipelineWrapper::PipelineWrapper(VkDevice device, VkRenderPass renderPass,
 	CreatePipeline(device, renderPass, sampleCount, filePaths, hasDepthStencil);
 }
 
+D3D::PipelineWrapper::~PipelineWrapper()
+{
+}
+
 void D3D::PipelineWrapper::Cleanup(VkDevice device)
 {
 	// Clean up the descriptor pool

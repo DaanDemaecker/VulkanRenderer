@@ -37,7 +37,7 @@ namespace D3D
 			std::initializer_list<const std::string>& filePaths, bool hasDepthStencil = true);
 
 		// Default destructor
-		~PipelineWrapper() = default;
+		~PipelineWrapper();
 
 		// Delete copy and move functions
 		PipelineWrapper(PipelineWrapper& other) = delete;

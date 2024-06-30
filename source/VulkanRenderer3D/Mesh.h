@@ -31,9 +31,8 @@ namespace D3D
 
 		// Render the model
 		// Parameters:
-		//     pPipeline: the pipeline to bind before drawing
-		//     descriptorSet: the descriptorset to bind before drawing
-		void Render(PipelineWrapper* pPipeline, VkDescriptorSet* descriptorSet);
+		//     -commandBuffer: the commandbuffer used in this renderpass
+		void Render(VkCommandBuffer commandBuffer);
 	private:
 		// Vector of vertices
 		std::vector<Vertex> m_Vertices{};
