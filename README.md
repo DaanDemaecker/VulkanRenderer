@@ -28,6 +28,9 @@ A simple camera movement is implemented so that the user can see their objects f
 ### GUI
 ImGui has been implemented and can be used for debugging purposes or anything else the user wants to.  
 
+### Skybox rendering
+The renderer can render a simple skybox when given 6 images to form a cubemap.  
+
 ## Future goals
 ### Shadow mapping
 I am currently working on adding shadow mapping into the renderer.
