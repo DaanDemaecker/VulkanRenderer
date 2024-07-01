@@ -52,6 +52,10 @@ namespace D3D
 
 		// Add the amount of each descriptor type
 		void AddDescriptorTypeCount(std::map<VkDescriptorType, int>& typeCount);
+
+		// Add push constants to pipeline layout create info
+		void AddPushConstants(std::vector<VkPushConstantRange>& pushConstants);
+
 	private:
 		// The binary code from the shader
 		std::vector<char> m_ShaderCode{};
