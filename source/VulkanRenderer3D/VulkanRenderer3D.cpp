@@ -19,7 +19,7 @@
 #include "CommandpoolManager.h"
 #include "SurfaceWrapper.h"
 #include "Viewport.h"
-
+#include "ShadowRenderer.h"
 
 #include "Camera.h"
 #include "DirectionalLightObject.h"
@@ -195,6 +195,8 @@ void D3D::VulkanRenderer3D::InitVulkan()
 	m_pSyncObjectManager = std::make_unique<SyncObjectManager>(pGPUObject->GetDevice(), m_MaxFramesInFlight);
 
 	m_pViewport = std::make_unique<Viewport>();
+
+	m_pShadowRenderer = std::make_unique<ShadowRenderer>(msaaSamples);
 }
 
 void D3D::VulkanRenderer3D::InitImGui()

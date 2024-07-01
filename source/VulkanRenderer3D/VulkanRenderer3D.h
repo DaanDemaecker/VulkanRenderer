@@ -36,6 +36,7 @@ namespace D3D
     class PipelineManager;
     class SurfaceWrapper;
     class Viewport;
+    class ShadowRenderer;
 
     // Inherit from singleton
     class VulkanRenderer3D final : public Singleton<VulkanRenderer3D>
@@ -169,6 +170,8 @@ namespace D3D
         void SetupDefaultPipeline();
 
     private:
+        std::unique_ptr<ShadowRenderer> m_pShadowRenderer{};
+
         // Viewport object
         std::unique_ptr<Viewport> m_pViewport{};
 
