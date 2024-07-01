@@ -54,7 +54,7 @@ void D3D::D3DEngine::Run(const std::function<void()>& load)
 
 	renderer.AddGraphicsPipeline("DiffNormSpec", { "../Resources/Shaders/DiffNormSpec.Vert.spv", "../Resources/Shaders/DiffNormSpec.Frag.spv" });
 
-	std::shared_ptr<D3D::TexturedMaterial> pGroundPlaneMaterial{ std::make_shared<D3D::TexturedMaterial>(std::initializer_list<const std::string>{"../resources/images/GroundPlane.png"}, "DiffuseUnshaded") };
+	std::shared_ptr<D3D::TexturedMaterial> pGroundPlaneMaterial{ std::make_shared<D3D::TexturedMaterial>(std::initializer_list<const std::string>{"../resources/images/GroundPlane.png"}, "Diffuse") };
 	
 	std::shared_ptr<D3D::TexturedMaterial> pVikingMaterial{ std::make_shared<D3D::TexturedMaterial>(std::initializer_list<const std::string>{"../resources/images/viking_room.png"}, "Diffuse") };
 	std::shared_ptr<D3D::TexturedMaterial> pVehicleMaterial{ std::make_shared<D3D::TexturedMaterial>(std::initializer_list<const std::string>{"../resources/images/vehicle_diffuse.png"}, "Diffuse") };
@@ -101,19 +101,19 @@ void D3D::D3DEngine::Run(const std::function<void()>& load)
 		pModels.push_back(std::move(pCurrModel));*/
 
 
-		//pCurrModel = std::make_unique<Model>();
-		//
-		//pCurrModel->LoadModel("../Resources/Models/vehicle.obj");
-		//pCurrModel->SetMaterial(pVehicle3Material);
-		////pModel->SetMaterial(pTestMaterial);
-		//pCurrModel->SetPosition(0.f, 5, 0.f);
-		//pCurrModel->SetRotation(0.f, glm::radians(75.0f), 0.f);
-		//pCurrModel->SetScale(0.25f, 0.25f, 0.25f);
-		//
-		//pModels.push_back(std::move(pCurrModel));
+		pCurrModel = std::make_unique<Model>();
+		
+		pCurrModel->LoadModel("../Resources/Models/vehicle.obj");
+		pCurrModel->SetMaterial(pVehicle3Material);
+		//pModel->SetMaterial(pTestMaterial);
+		pCurrModel->SetPosition(0.f, 5, 0.f);
+		pCurrModel->SetRotation(0.f, glm::radians(75.0f), 0.f);
+		pCurrModel->SetScale(0.25f, 0.25f, 0.25f);
+		
+		pModels.push_back(std::move(pCurrModel));
 
 
-		/*pCurrModel = std::make_unique<Model>();
+		pCurrModel = std::make_unique<Model>();
 
 		pCurrModel->LoadModel("../Resources/Models/fireFX.obj");
 		pCurrModel->SetMaterial(pFireMaterial);
@@ -121,7 +121,7 @@ void D3D::D3DEngine::Run(const std::function<void()>& load)
 		pCurrModel->SetRotation(0.f, glm::radians(75.0f), 0.f);
 		pCurrModel->SetScale(0.25f, 0.25f, 0.25f);
 
-		pModels.push_back(std::move(pCurrModel));*/
+		pModels.push_back(std::move(pCurrModel));
 
 
 

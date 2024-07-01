@@ -27,6 +27,12 @@ namespace Utils
 	//     - indices: The vector that will be used to store the indices
 	void LoadModel(const std::string& filename, std::vector<D3D::Vertex>& vertices, std::vector<uint32_t>& indices);
 
+	// Calculate the tangents for a model
+	// Parameters:
+	//     vertices: vector of all the vertices
+	//     indices: vector of all the indices
+	void SetupTangents(std::vector<D3D::Vertex>& vertices, std::vector<uint32_t>& indices);
+
 	// This function will read and return the extension of a given file name
 	// Parameters:
 	//     - filename: The name of the file

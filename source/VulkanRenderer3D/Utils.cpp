@@ -32,6 +32,7 @@ std::vector<char> Utils::readFile(const std::string& filename)
 	return buffer;
 }
 
+
 void Utils::LoadModel(const std::string& filename, std::vector<D3D::Vertex>& vertices, std::vector<uint32_t>& indices)
 {
 	// Clear the vectors in case they aren't empty
@@ -49,16 +50,16 @@ void Utils::LoadModel(const std::string& filename, std::vector<D3D::Vertex>& ver
 	// Read file, returned false, throw error
 	if (!tinyobj::LoadObj(&attrib, &shapes, &materials, &warn, &err, filename.c_str()))
 	{
-		throw std::runtime_error(warn + err);
+		throw std::runtime_error(filename + " is not a valid file path");
 	}
 
 	// Create map to store vertices
 	std::unordered_map<D3D::Vertex, uint32_t> uniqueVertices{};
 
-	// Loop trough every shape that was read from the file
+	// Loop through every shape that was read from the file
 	for (const auto& shape : shapes)
 	{
-		// Loop trough all indices in current shape
+		// Loop through all indices in current shape
 		for (const auto& index : shape.mesh.indices)
 		{
 			// Create empty vertex
@@ -66,36 +67,37 @@ void Utils::LoadModel(const std::string& filename, std::vector<D3D::Vertex>& ver
 
 			// Add position to vertex
 			vertex.pos = {
-				attrib.vertices[static_cast<uint64_t>(3) * index.vertex_index],
-				attrib.vertices[static_cast<uint64_t>(3) * index.vertex_index + static_cast<uint64_t>(1)],
-				attrib.vertices[static_cast<uint64_t>(3) * index.vertex_index + static_cast<uint64_t>(2)]
+				attrib.vertices[3 * index.vertex_index],
+				attrib.vertices[3 * index.vertex_index + 1],
+				attrib.vertices[3 * index.vertex_index + 2]
 			};
 
-			if (index.texcoord_index >= 0 && index.texcoord_index < static_cast<int>(attrib.texcoords.size() / 2))
+			if (index.texcoord_index >= 0 && static_cast<size_t>(index.texcoord_index * 2 + 1) < attrib.texcoords.size())
 			{
 				// Add UV coords to vertex
 				vertex.texCoord = {
-					attrib.texcoords[static_cast<uint64_t>(2) * index.texcoord_index],
-					1.0f - attrib.texcoords[static_cast<uint64_t>(2) * index.texcoord_index + 1]
+					attrib.texcoords[2 * index.texcoord_index],
+					1.0f - attrib.texcoords[2 * index.texcoord_index + 1]
 				};
 			}
 
-			if (index.normal_index >= 0 && index.normal_index < + static_cast<int>(attrib.texcoords.size() / 3))
+			if (index.normal_index >= 0 && static_cast<size_t>(index.normal_index * 3 + 2) < attrib.normals.size())
 			{
 				// Add normal to vertex
 				vertex.normal = {
-					attrib.normals[static_cast<uint64_t>(3) * index.normal_index],
-					attrib.normals[static_cast<uint64_t>(3) * index.normal_index + static_cast<uint64_t>(1)],
-					attrib.normals[static_cast<uint64_t>(3) * index.normal_index + static_cast<uint64_t>(2)]
+					attrib.normals[3 * index.normal_index],
+					attrib.normals[3 * index.normal_index + 1],
+					attrib.normals[3 * index.normal_index + 2]
 				};
+			}
+			else
+			{
+				// Default normal if not provided
+				vertex.normal = { 0.0f, 0.0f, 0.0f };
 			}
 
 			// Add color to vertex
-			vertex.color = {
-				attrib.colors[static_cast<uint64_t>(3) * index.vertex_index],
-				attrib.colors[static_cast<uint64_t>(3) * index.vertex_index + static_cast<uint64_t>(1)],
-				attrib.colors[static_cast<uint64_t>(3) * index.vertex_index + static_cast<uint64_t>(2)]
-			};
+			vertex.color = { 1.0f, 1.0f, 1.0f };
 
 			// If vertex isn't in uniqueVertices vector, add it
 			if (uniqueVertices.count(vertex) == 0)
@@ -109,15 +111,21 @@ void Utils::LoadModel(const std::string& filename, std::vector<D3D::Vertex>& ver
 		}
 	}
 
-	// After all vertices are added loop trought them to calculate the tangents
+	SetupTangents(vertices, indices);
+}
+
+void Utils::SetupTangents
+(std::vector<D3D::Vertex>& vertices, std::vector<uint32_t>& indices)
+{
+	// After all vertices are added loop through them to calculate the tangents
 	for (size_t i = 0; i < indices.size(); i += 3)
 	{
-		// Get the the indices of the current triangle
+		// Get the indices of the current triangle
 		uint32_t index0 = indices[i];
 		uint32_t index1 = indices[i + 1];
 		uint32_t index2 = indices[i + 2];
 
-		// Get the vertices asociated with this triangle
+		// Get the vertices associated with this triangle
 		D3D::Vertex& v0 = vertices[index0];
 		D3D::Vertex& v1 = vertices[index1];
 		D3D::Vertex& v2 = vertices[index2];
@@ -141,7 +149,14 @@ void Utils::LoadModel(const std::string& filename, std::vector<D3D::Vertex>& ver
 		v1.tangent += tangent;
 		v2.tangent += tangent;
 	}
+
+	// Normalize the tangents
+	for (auto& vertex : vertices)
+	{
+		vertex.tangent = glm::normalize(vertex.tangent);
+	}
 }
+
 
 std::string Utils::GetExtension(const std::string& filename)
 {
