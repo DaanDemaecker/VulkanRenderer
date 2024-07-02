@@ -137,8 +137,10 @@ void D3D::PipelineWrapper::CreatePipeline(VkDevice device, VkRenderPass renderPa
 
 	// Create pipeline layout info
 	VkPipelineLayoutCreateInfo pipelineLayoutInfo{};
+	// Create vector of pushconstant ranges and add them by looping trough the shader modules
+	std::vector<VkPushConstantRange> pushConstants{};
 	// Set pipeline layout info
-	SetPipelineLayoutCreateInfo(pipelineLayoutInfo, shaderModuleWrappers);
+	SetPipelineLayoutCreateInfo(pipelineLayoutInfo, shaderModuleWrappers, pushConstants);
 
 	// Create pipeline layout
 	if (vkCreatePipelineLayout(device, &pipelineLayoutInfo, nullptr, &m_PipelineLayout) != VK_SUCCESS)
@@ -360,7 +362,9 @@ void D3D::PipelineWrapper::SetColorblendStateCreateInfo(VkPipelineColorBlendStat
 	colorBlending.blendConstants[3] = 0.0f;
 }
 
-void D3D::PipelineWrapper::SetPipelineLayoutCreateInfo(VkPipelineLayoutCreateInfo& pipelineLayoutInfo, std::vector<std::unique_ptr<D3D::ShaderModuleWrapper>>& shaderModules)
+void D3D::PipelineWrapper::SetPipelineLayoutCreateInfo(VkPipelineLayoutCreateInfo& pipelineLayoutInfo,
+	std::vector<std::unique_ptr<D3D::ShaderModuleWrapper>>& shaderModules,
+	std::vector<VkPushConstantRange>& pushConstants)
 {
 	// Set type to pipeline layout create info
 	pipelineLayoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
@@ -369,8 +373,7 @@ void D3D::PipelineWrapper::SetPipelineLayoutCreateInfo(VkPipelineLayoutCreateInf
 	// Get the correct layout
 	pipelineLayoutInfo.pSetLayouts = &m_DescriptorSetLayout;
 
-	// Create vector of pushconstant ranges and add them by looping trough the shader modules
-	std::vector<VkPushConstantRange> pushConstants{};
+	
 	for (auto& module : shaderModules)
 	{
 		module->AddPushConstants(pushConstants);

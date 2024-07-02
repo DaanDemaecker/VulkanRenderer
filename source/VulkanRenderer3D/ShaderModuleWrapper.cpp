@@ -90,7 +90,7 @@ void D3D::ShaderModuleWrapper::AddPushConstants(std::vector<VkPushConstantRange>
 	if (pushConstantAmount == 0)
 		return;
 
-	for (uint32_t i{}; i < pushConstantAmount - 1; i++)
+	for (uint32_t i{}; i < pushConstantAmount; i++)
 	{
 		auto currentBlock{ m_ReflectShaderModule.push_constant_blocks[i] };
 

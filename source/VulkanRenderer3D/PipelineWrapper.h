@@ -132,7 +132,9 @@ namespace D3D
 		// Create pipeline layout create info
 		// Parameters:
 		//     pipelineLayoutInfo: a reference to the layout create info to avoid creating a new one in the function
-		void SetPipelineLayoutCreateInfo(VkPipelineLayoutCreateInfo& pipelineLayoutInfo, std::vector<std::unique_ptr<D3D::ShaderModuleWrapper>>& shaderModules);
+		void SetPipelineLayoutCreateInfo(VkPipelineLayoutCreateInfo& pipelineLayoutInfo,
+			std::vector<std::unique_ptr<D3D::ShaderModuleWrapper>>& shaderModules,
+			std::vector<VkPushConstantRange>& pushConstants);
 	};
 }
 
