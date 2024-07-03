@@ -82,7 +82,6 @@ void D3D::Camera::UpdateUniformBuffer(UniformBufferObject& buffer, VkExtent2D ex
 	case D3D::CameraType::Perspective:
 		// Set the projection matrix
 		buffer.proj = glm::perspective(m_FovAngle, extent.width / static_cast<float>(extent.height), 0.1f, 100.0f);
-		buffer.proj[1][1] *= -1;
 		break;
 	case D3D::CameraType::Ortographic:
 		buffer.proj = glm::ortho( m_OrthoBorders.x, m_OrthoBorders.y, m_OrthoBorders.z, m_OrthoBorders.w, 0.1f, 100.f);
@@ -91,7 +90,7 @@ void D3D::Camera::UpdateUniformBuffer(UniformBufferObject& buffer, VkExtent2D ex
 		break;
 	}
 
-	
+	buffer.proj[1][1] *= -1;
 }
 
 void D3D::Camera::UpdateMatrix()
@@ -148,8 +147,6 @@ glm::vec3 D3D::Camera::GetRight()
 
 	// Extract the rotated glm::vec3 from the glm::vec4
 	glm::vec3 finalRotatedVector = glm::vec3(rotatedVector);
-
-	finalRotatedVector.y *= -1;
 
 	return finalRotatedVector;
 }
