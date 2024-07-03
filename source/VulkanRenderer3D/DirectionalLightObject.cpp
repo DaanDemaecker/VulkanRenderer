@@ -117,8 +117,12 @@ glm::mat4& D3D::DirectionalLightObject::GetLightMatrix()
 		up = glm::vec3(1.0f, 0.0f, 0.0f); // Use a different up vector
 	}
 
+	glm::mat4 viewMatrix = glm::lookAt(lightPos, target, up);
+
+	glm::mat4 projectionMatrix = glm::ortho(m_OrthoBorders.x, m_OrthoBorders.y, m_OrthoBorders.z, m_OrthoBorders.w, 0.1f, 10000.f);
+
 	// Calculate the view matrix
-	m_LightTransform = glm::lookAt(lightPos, target, up);
+	m_LightTransform = projectionMatrix * viewMatrix;
 
 
 	return m_LightTransform;

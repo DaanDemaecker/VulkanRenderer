@@ -48,6 +48,8 @@ namespace D3D
 		// Update model
 		void Update();
 
+		void RenderShadow(VkCommandBuffer commandBuffer, VkPipelineLayout pipelineLayout);
+
 		// Render model
 		void Render();
 

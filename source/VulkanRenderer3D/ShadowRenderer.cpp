@@ -9,6 +9,7 @@
 #include "ImageManager.h"
 #include "DescriptorPoolWrapper.h"
 #include "DirectionalLightObject.h"
+#include "Model.h"
 
 D3D::ShadowRenderer::ShadowRenderer(GPUObject* pGPUObject, VkSampleCountFlagBits msaaSamples,
 	D3D::ImageManager* pImageManager, VkCommandBuffer commandBuffer)
@@ -135,7 +136,7 @@ void D3D::ShadowRenderer::CreatePipeline(VkDevice device)
 	m_pLightProjectionObject = std::make_unique<D3D::UboDescriptorObject<glm::mat4>>();
 }
 
-void D3D::ShadowRenderer::Render()
+void D3D::ShadowRenderer::Render(std::vector<std::unique_ptr<Model>>& pModels)
 {	
 	if (!m_DescriptorSetInitialized)
 	{
@@ -171,6 +172,10 @@ void D3D::ShadowRenderer::Render()
 	// Bind descriptor sets
 	vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, m_pShadowPipeline->GetPipelineLayout(), 0, 1, &m_DescriptorSets[frame], 0, nullptr);
 
+	for (auto& model : pModels)
+	{
+		model->RenderShadow(commandBuffer, m_pShadowPipeline->GetPipelineLayout());
+	}
 	
 	vkCmdEndRenderPass(commandBuffer);
 }

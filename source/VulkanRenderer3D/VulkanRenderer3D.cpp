@@ -379,11 +379,11 @@ void D3D::VulkanRenderer3D::RecordCommandBuffer(VkCommandBuffer& commandBuffer, 
 		throw std::runtime_error("failed to begin recording command buffer!");
 	}
 
-	m_pShadowRenderer->Render();
+	m_pViewport->SetViewport(commandBuffer, swapchainExtent);
+
+	m_pShadowRenderer->Render(pModels);
 
 	m_pRenderpassWrapper->BeginRenderPass(commandBuffer, m_pSwapchainWrapper->GetFrameBuffer(imageIndex), swapchainExtent);
-
-	m_pViewport->SetViewport(commandBuffer, swapchainExtent);
 
 	// Update the buffer of the global light
 	m_pGlobalLight->UpdateBuffer(m_CurrentFrame);

@@ -39,7 +39,7 @@ namespace D3D
 
 		void Cleanup(VkDevice device);
 
-		void Render();
+		void Render(std::vector<std::unique_ptr<Model>>& pModels);
 
 		void CreatePipeline(VkDevice device);
 

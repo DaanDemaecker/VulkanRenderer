@@ -74,6 +74,15 @@ void D3D::Model::Update()
 	}
 }
 
+void D3D::Model::RenderShadow(VkCommandBuffer commandBuffer, VkPipelineLayout pipelineLayout)
+{
+	auto frame{ VulkanRenderer3D::GetInstance().GetCurrentFrame() };
+
+	vkCmdPushConstants(commandBuffer, pipelineLayout, VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(glm::mat4), &m_Ubos[frame].model);
+
+	m_pMesh->Render(commandBuffer);
+}
+
 void D3D::Model::Render()
 {
 	// If model isn't initialize, return
