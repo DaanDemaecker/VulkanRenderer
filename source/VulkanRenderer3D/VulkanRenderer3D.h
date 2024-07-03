@@ -58,14 +58,6 @@ namespace D3D
         //     pModels: list of models that have to be rendered
         void Render(std::vector<std::unique_ptr<Model>>& pModels);
 
-        // Function that renders a single model
-        // Parameters:
-        //     pModel: pointer to the model that has to be rendered
-        //     commandBuffer: the commandbuffer that will handle rendering
-        //     descriptorSet: pointer to the descriptorset connected to the model
-        //     pipeline: the graphics pipeline wrapper used for rendering this model
-        //void Render(Model* pModel, VkCommandBuffer& commandBuffer, const VkDescriptorSet* descriptorSet, const PipelineWrapper* pipeline);
-
         // Add a new graphics pipeline
         // Parameters:
         //     pipelineName: the name of the new pipeline

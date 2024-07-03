@@ -98,6 +98,7 @@ void D3D::VulkanRenderer3D::SetupLight()
 
 void D3D::VulkanRenderer3D::SetupDefaultPipeline()
 {
+	m_pShadowRenderer->CreatePipeline(m_pGpuObject->GetDevice());
 	// Add the default pipeline
 	m_pPipelineManager->AddDefaultPipeline(m_pGpuObject->GetDevice(), m_pRenderpassWrapper->GetRenderpass(), m_pSwapchainWrapper->GetMsaaSamples());
 }
@@ -112,6 +113,9 @@ void D3D::VulkanRenderer3D::CleanupVulkan()
 {
 	// Get handle to logical device
 	auto device{ m_pGpuObject->GetDevice() };
+
+	m_pShadowRenderer->Cleanup(device);
+
 
 	// Clean up global light
 	m_pGlobalLight->Cleanup(device);
@@ -196,7 +200,9 @@ void D3D::VulkanRenderer3D::InitVulkan()
 
 	m_pViewport = std::make_unique<Viewport>();
 
-	m_pShadowRenderer = std::make_unique<ShadowRenderer>(msaaSamples);
+	commandBuffer = BeginSingleTimeCommands();
+	m_pShadowRenderer = std::make_unique<ShadowRenderer>(pGPUObject, msaaSamples, m_pImageManager.get(), commandBuffer);
+	EndSingleTimeCommands(commandBuffer);
 }
 
 void D3D::VulkanRenderer3D::InitImGui()
@@ -372,6 +378,8 @@ void D3D::VulkanRenderer3D::RecordCommandBuffer(VkCommandBuffer& commandBuffer, 
 		// If unsuccessful, throw runtime error
 		throw std::runtime_error("failed to begin recording command buffer!");
 	}
+
+	m_pShadowRenderer->Render();
 
 	m_pRenderpassWrapper->BeginRenderPass(commandBuffer, m_pSwapchainWrapper->GetFrameBuffer(imageIndex), swapchainExtent);
 
