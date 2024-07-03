@@ -50,6 +50,11 @@ namespace D3D
 		//     device: handle of the logical device
 		void Cleanup(VkDevice device);
 
+		// Bind the pipeline
+		// Parameters:
+		//     commandBuffer: the commandbuffer to be used
+		void BindPipeline(VkCommandBuffer commandBuffer);
+
 		// Get a the handle of the pipeline
 		VkPipeline GetPipeline() const { return m_Pipeline; }
 

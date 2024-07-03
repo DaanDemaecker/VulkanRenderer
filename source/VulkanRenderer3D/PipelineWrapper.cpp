@@ -32,6 +32,11 @@ void D3D::PipelineWrapper::Cleanup(VkDevice device)
 	vkDestroyDescriptorSetLayout(device, m_DescriptorSetLayout, nullptr);
 }
 
+void D3D::PipelineWrapper::BindPipeline(VkCommandBuffer commandBuffer)
+{
+	vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, m_Pipeline);
+}
+
 D3D::DescriptorPoolWrapper* D3D::PipelineWrapper::GetDescriptorPool()
 {
 	// Get descriptorpoolwrapper
