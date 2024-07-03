@@ -90,7 +90,10 @@ namespace D3D
         VkCommandBuffer& GetCurrentCommandBuffer();
 
         // Get the global light object
-        const DirectionalLightStruct& GetGlobalLight() const;
+        const DirectionalLightStruct& GetGlobalLightStruct() const;
+
+        // Get the global light object
+        DirectionalLightObject* GetGlobalLight() const;
 
         // Get a pointer to the DescriptorObject of the global light
         DescriptorObject* GetLightDescriptor();

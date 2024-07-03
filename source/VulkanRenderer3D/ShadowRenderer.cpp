@@ -8,6 +8,7 @@
 #include "GPUObject.h"
 #include "ImageManager.h"
 #include "DescriptorPoolWrapper.h"
+#include "DirectionalLightObject.h"
 
 D3D::ShadowRenderer::ShadowRenderer(GPUObject* pGPUObject, VkSampleCountFlagBits msaaSamples,
 	D3D::ImageManager* pImageManager, VkCommandBuffer commandBuffer)
@@ -145,6 +146,8 @@ void D3D::ShadowRenderer::Render()
 	auto& renderer{ VulkanRenderer3D::GetInstance() };
 	// Get index of current frame
 	auto frame{ renderer.GetCurrentFrame() };
+
+	m_pLightProjectionObject->UpdateUboBuffer(renderer.GetGlobalLight()->GetLightMatrix(), frame);
 
 	auto commandBuffer{renderer.GetCurrentCommandBuffer()};
 

@@ -115,7 +115,7 @@ namespace D3D
 
 		glm::vec4 GetOrtographicBorders() const { return m_OrthoBorders; }
 	private:
-		CameraType m_Type{ CameraType::Ortographic };
+		CameraType m_Type{ CameraType::Perspective };
 
 		const float m_Speed{ 5.f };
 		const float m_AngularSpeed{ 0.5f };

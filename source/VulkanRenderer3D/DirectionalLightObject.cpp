@@ -3,6 +3,7 @@
 // File includes
 #include "DirectionalLightObject.h"
 #include "VulkanRenderer3D.h"
+#include "Camera.h"
 
 D3D::DirectionalLightObject::DirectionalLightObject()
 {
@@ -97,4 +98,28 @@ void D3D::DirectionalLightObject::SetIntensity(float intensity)
 D3D::DescriptorObject* D3D::DirectionalLightObject::GetDescriptorObject()
 {
 	return static_cast<DescriptorObject*>(m_DescriptorObject.get());
+}
+
+glm::mat4& D3D::DirectionalLightObject::GetLightMatrix()
+{
+	auto cameraPos = VulkanRenderer3D::GetInstance().GetCamera()->GetPosition();
+
+	// Define a virtual light position far away in the opposite direction of the light relative to the camera position
+	glm::vec3 lightPos = cameraPos - m_BufferObject.direction * 1000.0f; // Move the light far away from the camera position
+
+	// Use the camera position as the target
+	glm::vec3 target = cameraPos;
+
+	// Define the up vector (can be arbitrary as long as it is not parallel to the light direction)
+	glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f);
+	if (glm::dot(up, m_BufferObject.direction) > 0.99f) // If up is almost parallel to the light direction
+	{
+		up = glm::vec3(1.0f, 0.0f, 0.0f); // Use a different up vector
+	}
+
+	// Calculate the view matrix
+	m_LightTransform = glm::lookAt(lightPos, target, up);
+
+
+	return m_LightTransform;
 }

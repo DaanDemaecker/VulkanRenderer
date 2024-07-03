@@ -75,7 +75,10 @@ namespace D3D
 		// Create the descriptorsets
 		void CreateDescriptorSets();
 
+		void SetRotate(bool rotate) { m_Rotate = rotate; }
 	private:
+		bool m_Rotate{true};
+
 		//Is model initialized
 		bool m_Initialized{ false };
 

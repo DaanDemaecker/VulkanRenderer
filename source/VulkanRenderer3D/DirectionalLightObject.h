@@ -71,6 +71,7 @@ namespace D3D
 		// Public getter to get the struct that holds the values
 		const DirectionalLightStruct& GetLight() const { return m_BufferObject; }
 
+		glm::mat4& GetLightMatrix();
 	private:
 		// Sttruct that holds the values of the light
 		DirectionalLightStruct m_BufferObject{};
@@ -80,6 +81,9 @@ namespace D3D
 		
 		std::unique_ptr<UboDescriptorObject<DirectionalLightStruct>> m_DescriptorObject{};
 		
+		glm::mat4 m_LightTransform{};
+
+		glm::vec4 m_OrthoBorders{ -25, 25, -25, 25 };
 
 		// Function for creating the buffers
 		void CreateLightBuffer();

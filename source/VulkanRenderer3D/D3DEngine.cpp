@@ -87,6 +87,7 @@ void D3D::D3DEngine::Run(const std::function<void()>& load)
 		pCurrModel->LoadModel("../Resources/Models/Plane.obj");
 		pCurrModel->SetMaterial(pGroundPlaneMaterial);
 
+		pCurrModel->SetRotate(false);
 
 		pModels.push_back(std::move(pCurrModel));
 

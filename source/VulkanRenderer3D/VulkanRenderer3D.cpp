@@ -472,10 +472,15 @@ VkCommandBuffer& D3D::VulkanRenderer3D::GetCurrentCommandBuffer()
 	return m_pCommandPoolManager->GetCommandBuffer(m_CurrentFrame);
 }
 
-const D3D::DirectionalLightStruct& D3D::VulkanRenderer3D::GetGlobalLight() const
+const D3D::DirectionalLightStruct& D3D::VulkanRenderer3D::GetGlobalLightStruct() const
 {
 	// Get a reference to the global light struct
 	return m_pGlobalLight->GetLight();
+}
+
+D3D::DirectionalLightObject* D3D::VulkanRenderer3D::GetGlobalLight() const
+{
+	return m_pGlobalLight.get();
 }
 
 D3D::DescriptorObject* D3D::VulkanRenderer3D::GetLightDescriptor()

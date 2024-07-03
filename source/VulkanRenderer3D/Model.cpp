@@ -61,14 +61,17 @@ void D3D::Model::SetMaterial(std::shared_ptr<Material> pMaterial)
 
 void D3D::Model::Update()
 {
-	// Initialize rotation speed
-	constexpr float rotSpeed{-glm::radians(15.f)};
+	if (m_Rotate)
+	{
+		// Initialize rotation speed
+		constexpr float rotSpeed{ -glm::radians(15.f) };
 
-	// Calculate amount of rotation
-	float rotAmount{rotSpeed * TimeManager::GetInstance().GetDeltaTime()};
+		// Calculate amount of rotation
+		float rotAmount{ rotSpeed * TimeManager::GetInstance().GetDeltaTime() };
 
-	// Set new rotation
-	SetRotation(m_Rotation.x, m_Rotation.y + rotAmount , m_Rotation.z);
+		// Set new rotation
+		SetRotation(m_Rotation.x, m_Rotation.y + rotAmount, m_Rotation.z);
+	}
 }
 
 void D3D::Model::Render()
