@@ -22,6 +22,9 @@ I wanted to create a renderer completely on myself (with the help of tutorials b
 ### Texture loading
 Textures can be loaded from a variety of file types. Textures can be used in materials to be sent to shaders so the user can use it however they want. Currently diffuse, gloss, specular and normal maps are supported.  
 
+### Global light
+Currently there is a single global directional light that is used for shading in any way the user wants to. The light has a direction, color and intensity that can be customized.  
+
 ### Camera movement
 A simple camera movement is implemented so that the user can see their objects from different angles. 
 
@@ -44,6 +47,12 @@ I have not read a lot about compute shaders, but what i do know about them makes
 ### Instanced rendering
 Instanced rendering has always seemed like a very interesting concept to me and i would love to deepen my understanding of it and how to apply it in my renderer.  
 
+### More light types
+There are many different types of light in graphics, i would like to implement as many of them as i can.  
+Currently the lights i would like to add are:  
+                    -Point light  
+                    -Spotlight  
+                    -Sky light  
 
 ## Libraries 
 ### Window handling and input
