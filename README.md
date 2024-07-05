@@ -47,6 +47,10 @@ I have not read a lot about compute shaders, but what i do know about them makes
 ### Instanced rendering
 Instanced rendering has always seemed like a very interesting concept to me and i would love to deepen my understanding of it and how to apply it in my renderer.  
 
+### More lights
+Currently my renderer only supports a single directional light, this is of course not ideal for any 3D application.  
+I would like to add support for multiple lights at the same time.
+
 ### More light types
 There are many different types of light in graphics, i would like to implement as many of them as i can.  
 Currently the lights i would like to add are:  
