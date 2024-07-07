@@ -13,7 +13,7 @@ This renderer is alsointegrated into my self made engine, as my engine project g
 
 ## Inital goals
 I wanted to deepen my understanding of graphics programming and in the long run build a small engine that i built myself from the ground up.  
-I wanted to create a renderer completely on myself (with the help of tutorials but no starting project) as a challenge to see how far i could get.  
+I wanted to create a renderer completely by myself (with the help of tutorials but no starting project) as a challenge to see how far i could get.  
 
 ## Curren capabilities
 ### Model loading
