@@ -57,8 +57,8 @@ void D3D::Camera::Update()
 		double deltaY = ypos - m_PrevYPos;
 
 
-		m_TotalPitch -= static_cast<float>(deltaY * deltaTime * m_AngularSpeed);
-		m_TotalYaw -= static_cast<float>(deltaX * deltaTime * m_AngularSpeed);
+		m_TotalPitch += static_cast<float>(deltaY * deltaTime * m_AngularSpeed);
+		m_TotalYaw += static_cast<float>(deltaX * deltaTime * m_AngularSpeed);
 
 		// Rotate the camera based on mouse movement
 		SetRotation(m_TotalPitch, m_TotalYaw, 0);
@@ -91,6 +91,9 @@ void D3D::Camera::UpdateUniformBuffer(UniformBufferObject& buffer, VkExtent2D ex
 	}
 
 	buffer.proj[1][1] *= -1;
+
+	buffer.proj[2][2] *= -1;
+	buffer.proj[2][3] *= -1;
 }
 
 void D3D::Camera::UpdateMatrix()
@@ -115,7 +118,7 @@ glm::vec3 D3D::Camera::GetForward()
 	glm::mat4 rotationMatrix = glm::mat4_cast(GetRotation());
 
 	// Apply the rotation to the vector using the rotation matrix
-	glm::vec4 rotatedVector = rotationMatrix * glm::vec4(0.f, 0.f, -1.f, 0.0f);
+	glm::vec4 rotatedVector = rotationMatrix * glm::vec4(0.f, 0.f, 1.f, 0.0f);
 
 	// Extract the rotated glm::vec3 from the glm::vec4
 	glm::vec3 finalRotatedVector = glm::vec3(rotatedVector);
