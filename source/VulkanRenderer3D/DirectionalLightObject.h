@@ -68,11 +68,16 @@ namespace D3D
 		// Public getter for the vulkan buffers needed for the shader
 		DescriptorObject* GetDescriptorObject();
 
+		// Public getter for the vulkan buffers needed for the shader
+		DescriptorObject* GetTransformDescriptorObject();
+
+
 		// Public getter to get the struct that holds the values
 		const DirectionalLightStruct& GetLight() const { return m_BufferObject; }
 
 		glm::mat4& GetLightMatrix();
 	private:
+		float m_ClippingDistance{ 100.f };
 		// Sttruct that holds the values of the light
 		DirectionalLightStruct m_BufferObject{};
 		
@@ -80,6 +85,7 @@ namespace D3D
 		std::vector<bool> m_LightChanged{};
 		
 		std::unique_ptr<UboDescriptorObject<DirectionalLightStruct>> m_DescriptorObject{};
+		std::unique_ptr<UboDescriptorObject<glm::mat4>> m_LightMatrixDescriptorObject{};
 		
 		glm::mat4 m_LightTransform{};
 
@@ -90,6 +96,8 @@ namespace D3D
 		
 		// Function to set all dirty flags
 		void SetDirtyFlags();
+
+		void CalculateLightTransform(int frame);
 	};
 }
 

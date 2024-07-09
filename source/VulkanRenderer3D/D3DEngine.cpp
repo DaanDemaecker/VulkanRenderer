@@ -11,6 +11,7 @@
 #include "ConfigManager.h"
 #include "TextureDescriptorObject.h"
 #include "Camera.h"
+#include "ShadowMaterial.h"
 
 // Standard library includes
 #include <chrono>
@@ -54,8 +55,12 @@ void D3D::D3DEngine::Run(const std::function<void()>& load)
 
 	renderer.AddGraphicsPipeline("DiffNormSpec", { "../Resources/Shaders/DiffNormSpec.Vert.spv", "../Resources/Shaders/DiffNormSpec.Frag.spv" });
 
+
+	renderer.AddGraphicsPipeline("DiffuseShadow", { "../Resources/Shaders/DiffuseShadow.Vert.spv", "../Resources/Shaders/DiffuseShadow.Frag.spv" });
+
 	std::shared_ptr<D3D::TexturedMaterial> pGroundPlaneMaterial{ std::make_shared<D3D::TexturedMaterial>(std::initializer_list<const std::string>{"../resources/images/GroundPlane.png"}, "Diffuse") };
-	
+	std::shared_ptr<D3D::ShadowMaterial> pGroundPlaneMaterial2{ std::make_shared<D3D::ShadowMaterial>(std::initializer_list<const std::string>{"../resources/images/GroundPlane.png"}, "DiffuseShadow") };
+
 	std::shared_ptr<D3D::TexturedMaterial> pVikingMaterial{ std::make_shared<D3D::TexturedMaterial>(std::initializer_list<const std::string>{"../resources/images/viking_room.png"}, "Diffuse") };
 	std::shared_ptr<D3D::TexturedMaterial> pVehicleMaterial{ std::make_shared<D3D::TexturedMaterial>(std::initializer_list<const std::string>{"../resources/images/vehicle_diffuse.png"}, "Diffuse") };
 	std::shared_ptr<D3D::TexturedMaterial> pFireMaterial{ std::make_shared<D3D::TexturedMaterial>(std::initializer_list<const std::string>{"../resources/images/fireFX_diffuse.png"}, "DiffuseUnshaded") };
@@ -69,6 +74,9 @@ void D3D::D3DEngine::Run(const std::function<void()>& load)
 		(std::initializer_list<const std::string>{"../resources/images/vehicle_diffuse.png", "../resources/images/vehicle_normal.png",
 		"../resources/images/vehicle_gloss.png", "../resources/images/vehicle_specular.png"},
 			"DiffNormSpec") };
+
+	std::shared_ptr<D3D::ShadowMaterial> pVehicleMaterial4{ std::make_shared<D3D::ShadowMaterial>(std::initializer_list<const std::string>{"../resources/images/vehicle_diffuse.png"}, "DiffuseShadow") };
+
 
 
 		std::vector<std::unique_ptr<Model>> pModels{};
@@ -85,7 +93,7 @@ void D3D::D3DEngine::Run(const std::function<void()>& load)
 		pCurrModel = std::make_unique<Model>();
 
 		pCurrModel->LoadModel("../Resources/Models/Plane.obj");
-		pCurrModel->SetMaterial(pGroundPlaneMaterial);
+		pCurrModel->SetMaterial(pGroundPlaneMaterial2);
 
 		pCurrModel->SetRotate(false);
 
@@ -105,7 +113,7 @@ void D3D::D3DEngine::Run(const std::function<void()>& load)
 		pCurrModel = std::make_unique<Model>();
 		
 		pCurrModel->LoadModel("../Resources/Models/vehicle.obj");
-		pCurrModel->SetMaterial(pVehicle3Material);
+		pCurrModel->SetMaterial(pVehicleMaterial4);
 		//pModel->SetMaterial(pTestMaterial);
 		pCurrModel->SetPosition(0.f, 5, 0.f);
 		pCurrModel->SetRotation(0.f, glm::radians(75.0f), 0.f);
@@ -117,6 +125,7 @@ void D3D::D3DEngine::Run(const std::function<void()>& load)
 		pCurrModel = std::make_unique<Model>();
 
 		pCurrModel->LoadModel("../Resources/Models/fireFX.obj");
+		pCurrModel->SetCastsShadow(false);
 		pCurrModel->SetMaterial(pFireMaterial);
 		pCurrModel->SetPosition(0.f, 5, 0.f);
 		pCurrModel->SetRotation(0.f, glm::radians(75.0f), 0.f);
@@ -158,8 +167,8 @@ void D3D::D3DEngine::Run(const std::function<void()>& load)
 
 	auto pCamera =	renderer.GetCamera();
 	pCamera->SetPosition(0, 5, -15);
-	auto rot{ glm::quat(glm::lookAt(pCamera->GetPosition(), glm::vec3{ 0, 0, 0 }, glm::vec3{ 0, 1, 0 }))};
-	pCamera->SetRotation(glm::eulerAngles(rot));
+	//auto rot{ glm::quat(glm::lookAt(pCamera->GetPosition(), glm::vec3{ 0, 0, 0 }, glm::vec3{ 0, 1, 0 }))};
+	//pCamera->SetRotation(glm::eulerAngles(rot));
 	
 
 	// Get the timemanager locally to prevent calling it every frame
@@ -199,7 +208,7 @@ void D3D::D3DEngine::Run(const std::function<void()>& load)
 		time.SetDeltaTime(deltaTime);
 
 		// Print FPS
-		std::cout << "FPS: " << time.GetFps() << std::endl;
+		//std::cout << "FPS: " << time.GetFps() << std::endl;
 
 		// Poll input for the window
 		glfwPollEvents();

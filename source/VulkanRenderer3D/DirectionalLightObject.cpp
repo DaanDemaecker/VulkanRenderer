@@ -4,6 +4,10 @@
 #include "DirectionalLightObject.h"
 #include "VulkanRenderer3D.h"
 #include "Camera.h"
+#include "Utils.h"
+
+// Standard library includes
+#include <iostream>
 
 D3D::DirectionalLightObject::DirectionalLightObject()
 {
@@ -26,6 +30,13 @@ void D3D::DirectionalLightObject::CreateLightBuffer()
 	SetDirtyFlags();
 
 	m_DescriptorObject = std::make_unique<UboDescriptorObject<DirectionalLightStruct>>();
+
+	m_LightMatrixDescriptorObject = std::make_unique<UboDescriptorObject<glm::mat4>>();
+
+	for (int i{}; i < frames; i++)
+	{
+		CalculateLightTransform(i);
+	}
 }
 
 void D3D::DirectionalLightObject::Cleanup(VkDevice /*device*/)
@@ -39,8 +50,46 @@ void D3D::DirectionalLightObject::SetDirtyFlags()
 	std::fill(m_LightChanged.begin(), m_LightChanged.end(), true);
 }
 
+void D3D::DirectionalLightObject::CalculateLightTransform(int frame)
+{
+	auto cameraPos = VulkanRenderer3D::GetInstance().GetCamera()->GetPosition();
+	//cameraPos = glm::vec3{};
+
+	// Define a virtual light position far away in the opposite direction of the light relative to the camera position
+	glm::vec3 lightPos = cameraPos - m_BufferObject.direction * (m_ClippingDistance * 0.5f); // Move the light far away from the camera position
+
+	// Create rotation matrix
+	glm::mat4 rotationMatrix = glm::mat4_cast(glm::conjugate(Utils::RotationFromDirection(m_BufferObject.direction)));
+
+	// Create translation matrix
+	glm::mat4 translationMatrix = glm::translate(glm::mat4(1.0f), -lightPos);
+
+	// Multiply matrices (apply rotation first, then translation)
+	glm::mat4 viewMatrix = rotationMatrix * translationMatrix;
+
+	// Create orthographic projection matrix
+	glm::mat4 projectionMatrix = glm::ortho(m_OrthoBorders.x, m_OrthoBorders.y, m_OrthoBorders.z, m_OrthoBorders.w, 0.1f, m_ClippingDistance);
+
+	// Adjust the projection matrix for Vulkan
+	// Negate the Y-axis to flip it for Vulkan's coordinate system
+	projectionMatrix[1][1] *= -1;
+	projectionMatrix[2][2] *= -1;
+	projectionMatrix[2][3] *= -1;
+
+	// Calculate the light transform matrix
+	m_LightTransform = projectionMatrix * viewMatrix;
+
+	// Update the UBO with the new light transform matrix
+	m_LightMatrixDescriptorObject->UpdateUboBuffer(m_LightTransform, frame);
+
+
+	//VulkanRenderer3D::GetInstance().GetCamera()->SetPosition(lightPos);
+	//VulkanRenderer3D::GetInstance().GetCamera()->SetDirection(m_BufferObject.direction);
+}
+
 void D3D::DirectionalLightObject::UpdateBuffer(int frame)
 {
+	CalculateLightTransform(frame);
 	// Check if dirty flag is set, if not, return
 	if (!m_LightChanged[frame])
 		return;
@@ -100,30 +149,12 @@ D3D::DescriptorObject* D3D::DirectionalLightObject::GetDescriptorObject()
 	return static_cast<DescriptorObject*>(m_DescriptorObject.get());
 }
 
+D3D::DescriptorObject* D3D::DirectionalLightObject::GetTransformDescriptorObject()
+{
+	return static_cast<DescriptorObject*>(m_LightMatrixDescriptorObject.get());
+}
+
 glm::mat4& D3D::DirectionalLightObject::GetLightMatrix()
 {
-	auto cameraPos = VulkanRenderer3D::GetInstance().GetCamera()->GetPosition();
-
-	// Define a virtual light position far away in the opposite direction of the light relative to the camera position
-	glm::vec3 lightPos = cameraPos - m_BufferObject.direction * 1000.0f; // Move the light far away from the camera position
-
-	// Use the camera position as the target
-	glm::vec3 target = cameraPos;
-
-	// Define the up vector (can be arbitrary as long as it is not parallel to the light direction)
-	glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f);
-	if (glm::dot(up, m_BufferObject.direction) > 0.99f) // If up is almost parallel to the light direction
-	{
-		up = glm::vec3(1.0f, 0.0f, 0.0f); // Use a different up vector
-	}
-
-	glm::mat4 viewMatrix = glm::lookAt(lightPos, target, up);
-
-	glm::mat4 projectionMatrix = glm::ortho(m_OrthoBorders.x, m_OrthoBorders.y, m_OrthoBorders.z, m_OrthoBorders.w, 0.1f, 10000.f);
-
-	// Calculate the view matrix
-	m_LightTransform = projectionMatrix * viewMatrix;
-
-
 	return m_LightTransform;
 }

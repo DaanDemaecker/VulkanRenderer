@@ -62,6 +62,11 @@ void D3D::TextureDescriptorObject::AddDescriptorWrite(VkDescriptorSet descriptor
 	}
 }
 
+D3D::Texture& D3D::TextureDescriptorObject::GetTexture(int index)
+{
+	{ return m_Textures[index]; }
+}
+
 void D3D::TextureDescriptorObject::SetupTextures(std::initializer_list<const std::string>& filePaths)
 {
 	// Resize textures to textureAmount
@@ -97,7 +102,7 @@ void D3D::TextureDescriptorObject::SetupImageInfos()
 	for (auto& texture : m_Textures)
 	{
 		// Set image layout to shader read optimal
-		m_ImageInfos[index].imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+		m_ImageInfos[index].imageLayout = texture.layout;
 		// Set correct image view
 		m_ImageInfos[index].imageView = texture.imageView;
 		// Set sampler

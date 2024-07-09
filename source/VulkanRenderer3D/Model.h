@@ -78,8 +78,10 @@ namespace D3D
 		void CreateDescriptorSets();
 
 		void SetRotate(bool rotate) { m_Rotate = rotate; }
+		void SetCastsShadow(bool shouldCast) { m_CastsShadow = shouldCast; }
 	private:
 		bool m_Rotate{true};
+		bool m_CastsShadow{ true };
 
 		//Is model initialized
 		bool m_Initialized{ false };

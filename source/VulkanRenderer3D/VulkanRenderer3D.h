@@ -37,6 +37,7 @@ namespace D3D
     class SurfaceWrapper;
     class Viewport;
     class ShadowRenderer;
+    class TextureDescriptorObject;
 
     // Inherit from singleton
     class VulkanRenderer3D final : public Singleton<VulkanRenderer3D>
@@ -94,9 +95,6 @@ namespace D3D
 
         // Get the global light object
         DirectionalLightObject* GetGlobalLight() const;
-
-        // Get a pointer to the DescriptorObject of the global light
-        DescriptorObject* GetLightDescriptor();
 
 
         // Create a buffer
@@ -163,6 +161,19 @@ namespace D3D
 
         // Initialize the default pipeline
         void SetupDefaultPipeline();
+
+        TextureDescriptorObject* GetShadowMapDescriptorObject();
+
+        // Transition an image from one layout to another
+        // Parameters:
+        //     image: the image that will be transitioned
+        //     format: the format the image is in
+        //     oldLayout: the current layout of the image
+        //     newLayout: the desired layout of the image
+        //     mipLevels: the amount of mipmaps in the image
+        //     layerCount: the amount of images stored in the single VkImage object, 1 by default
+        void TransitionImageLayout(VkImage image, VkFormat format,
+            VkImageLayout oldLayout, VkImageLayout newLayout, uint32_t mipLevels, uint32_t layerCount = 1);
 
     private:
         std::unique_ptr<ShadowRenderer> m_pShadowRenderer{};

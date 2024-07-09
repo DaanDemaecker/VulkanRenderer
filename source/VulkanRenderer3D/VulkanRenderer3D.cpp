@@ -89,7 +89,7 @@ void D3D::VulkanRenderer3D::SetupLight()
 	// Create global light
 	m_pGlobalLight = std::make_unique<DirectionalLightObject>();
 	// Set direction of global light
-	m_pGlobalLight->SetDirection(glm::vec3{ -.577, -.577f, 0.f });
+	m_pGlobalLight->SetDirection(glm::vec3{ 0.f, -1.f, 0.f });
 	// Set color of global light
 	m_pGlobalLight->SetColor(glm::vec3{ 1.f, 1.f, 1.f });
 	// Set intensity of global light
@@ -101,6 +101,18 @@ void D3D::VulkanRenderer3D::SetupDefaultPipeline()
 	m_pShadowRenderer->CreatePipeline(m_pGpuObject->GetDevice());
 	// Add the default pipeline
 	m_pPipelineManager->AddDefaultPipeline(m_pGpuObject->GetDevice(), m_pRenderpassWrapper->GetRenderpass(), m_pSwapchainWrapper->GetMsaaSamples());
+}
+
+D3D::TextureDescriptorObject* D3D::VulkanRenderer3D::GetShadowMapDescriptorObject()
+{
+	return m_pShadowRenderer->GetTextureDescriptorObject();
+}
+
+void D3D::VulkanRenderer3D::TransitionImageLayout(VkImage image, VkFormat format, VkImageLayout oldLayout, VkImageLayout newLayout, uint32_t mipLevels, uint32_t layerCount)
+{
+	auto commandBuffer{ m_pCommandPoolManager->BeginSingleTimeCommands(m_pGpuObject->GetDevice()) };
+	m_pImageManager->TransitionImageLayout(image, commandBuffer, format, oldLayout, newLayout, mipLevels, layerCount);
+	m_pCommandPoolManager->EndSingleTimeCommands(m_pGpuObject.get(), commandBuffer);
 }
 
 void D3D::VulkanRenderer3D::CleanupLight()
@@ -200,9 +212,7 @@ void D3D::VulkanRenderer3D::InitVulkan()
 
 	m_pViewport = std::make_unique<Viewport>();
 
-	commandBuffer = BeginSingleTimeCommands();
-	m_pShadowRenderer = std::make_unique<ShadowRenderer>(pGPUObject, msaaSamples, m_pImageManager.get(), commandBuffer);
-	EndSingleTimeCommands(commandBuffer);
+	m_pShadowRenderer = std::make_unique<ShadowRenderer>(pGPUObject, m_pSwapchainWrapper->GetExtent());
 }
 
 void D3D::VulkanRenderer3D::InitImGui()
@@ -381,7 +391,7 @@ void D3D::VulkanRenderer3D::RecordCommandBuffer(VkCommandBuffer& commandBuffer, 
 
 	m_pViewport->SetViewport(commandBuffer, swapchainExtent);
 
-	m_pShadowRenderer->Render(pModels);
+	m_pShadowRenderer->Render(pModels, swapchainExtent);
 
 	m_pRenderpassWrapper->BeginRenderPass(commandBuffer, m_pSwapchainWrapper->GetFrameBuffer(imageIndex), swapchainExtent);
 
@@ -482,13 +492,6 @@ D3D::DirectionalLightObject* D3D::VulkanRenderer3D::GetGlobalLight() const
 {
 	return m_pGlobalLight.get();
 }
-
-D3D::DescriptorObject* D3D::VulkanRenderer3D::GetLightDescriptor()
-{
-	// Return buffers of the global light object
-	return m_pGlobalLight->GetDescriptorObject();
-}
-
 
 void D3D::VulkanRenderer3D::RecreateSwapChain()
 {

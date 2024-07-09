@@ -70,7 +70,8 @@ namespace VulkanUtils
 		//     swapchainExtent: the extent of the swapchain, for use of the image size
 		//     pImageManager: pointer to the image manager
 	    //     commandBuffer: a one time use commandbuffer used to create the image
+		//     sambleBitSet: a bool that indicates if this depth image will be used for sampling
 	void CreateDepthImage(D3D::Texture& texture, D3D::GPUObject* pGPUObject, VkSampleCountFlagBits samples, VkExtent2D swapchainExtent,
-		D3D::ImageManager* pImageManager, VkCommandBuffer commandBuffer);
+		D3D::ImageManager* pImageManager, VkCommandBuffer commandBuffer, bool sampleBitSet = false);
 }
 #endif // !VulkanUtilsIncluded

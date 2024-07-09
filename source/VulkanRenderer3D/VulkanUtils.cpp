@@ -232,10 +232,17 @@ D3D::SwapChainSupportDetails VulkanUtils::QuerySwapChainSupport(VkPhysicalDevice
 }
 
 void VulkanUtils::CreateDepthImage(D3D::Texture& texture, D3D::GPUObject* pGPUObject, VkSampleCountFlagBits samples, VkExtent2D swapchainExtent, 
-	D3D::ImageManager* pImageManager, VkCommandBuffer commandBuffer)
+	D3D::ImageManager* pImageManager, VkCommandBuffer commandBuffer, bool sampleBitSet)
 {
 	// Get the depth formatµ
 	auto depthFormat = VulkanUtils::FindDepthFormat(pGPUObject->GetPhysicalDevice());
+
+	VkImageUsageFlagBits usageBits = VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT;
+
+	if (sampleBitSet)
+	{
+		usageBits = static_cast<VkImageUsageFlagBits>(usageBits | VK_IMAGE_USAGE_SAMPLED_BIT);
+	}
 
 	// Create the image for the depth
 	// Set tiling to optimal
@@ -243,7 +250,7 @@ void VulkanUtils::CreateDepthImage(D3D::Texture& texture, D3D::GPUObject* pGPUOb
 	// Set properties to device local
 	pImageManager->CreateImage(pGPUObject, swapchainExtent.width, swapchainExtent.height, 1, samples, depthFormat,
 		VK_IMAGE_TILING_OPTIMAL,
-		VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT,
+		usageBits,
 		VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT,
 		texture);
 

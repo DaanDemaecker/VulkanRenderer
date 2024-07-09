@@ -60,6 +60,8 @@ namespace D3D
 		VkDeviceMemory imageMemory{};
 		// VkImageView object
 		VkImageView imageView{};
+		// The layout of the image
+		VkImageLayout layout{ VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL };
 		// The amount of levels the mipmap will have
 		uint32_t mipLevels{};
 
@@ -68,10 +70,15 @@ namespace D3D
 		//     device: handle to VkDevice
 		virtual void Cleanup(VkDevice device)
 		{
-			// Destroy the image view
-			vkDestroyImageView(device, imageView, nullptr);
+			if (imageView != VK_NULL_HANDLE) {
+				vkDestroyImageView(device, imageView, nullptr);
+				imageView = VK_NULL_HANDLE;
+			}
 			// Destroy the image
-			vkDestroyImage(device, image, nullptr);
+			if (image != VK_NULL_HANDLE) {
+				vkDestroyImage(device, image, nullptr);
+				image = VK_NULL_HANDLE;
+			}
 			// Free the memory
 			vkFreeMemory(device, imageMemory, nullptr);
 		}

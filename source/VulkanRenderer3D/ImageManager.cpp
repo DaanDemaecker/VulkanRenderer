@@ -648,109 +648,87 @@ void D3D::ImageManager::CreateImage(GPUObject* pGPUObject, uint32_t width, uint3
 
 void D3D::ImageManager::TransitionImageLayout(VkImage image, VkCommandBuffer commandBuffer, VkFormat format, VkImageLayout oldLayout, VkImageLayout newLayout, uint32_t mipLevels, uint32_t layerCount)
 {
-	// Create memory barrier
 	VkImageMemoryBarrier barrier{};
-
-	// Set type to image memory barrier
 	barrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
-	// Set old layout to requested old layout
 	barrier.oldLayout = oldLayout;
-	// Set new layout to requested new layout
 	barrier.newLayout = newLayout;
-	// Set image to requested image
+	barrier.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+	barrier.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
 	barrier.image = image;
-
-	// Set subresource aspectmask to color
-	barrier.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
-	// Set subresource basemiplevel to 0
 	barrier.subresourceRange.baseMipLevel = 0;
-	// Set subresource levelcount to the amount of miplevels
 	barrier.subresourceRange.levelCount = mipLevels;
-	// Set subresource base array layer to 0
 	barrier.subresourceRange.baseArrayLayer = 0;
-	// Set subresource layercount to 1
 	barrier.subresourceRange.layerCount = layerCount;
 
-	// Create source stage flags object
-	VkPipelineStageFlags sourceStage{};
-	// Create destination stage flags object
-	VkPipelineStageFlags destinationStage{};
-
-	// If new layout is depth stencil attachment optimal
-	if (newLayout == VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL)
+	if (format == VK_FORMAT_D32_SFLOAT)
 	{
-		// Set subresource aspectmask to depth
 		barrier.subresourceRange.aspectMask = VK_IMAGE_ASPECT_DEPTH_BIT;
-		
-		// If the requested format has the stencil component
 		if (HasStencilComponent(format))
 		{
-			// Add aspect stencil to the aspectmask
 			barrier.subresourceRange.aspectMask |= VK_IMAGE_ASPECT_STENCIL_BIT;
 		}
 	}
 	else
 	{
-		// Set aspectmask to color
 		barrier.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
 	}
 
-	// If old layout is undifined and new layout is transfer destination optimal
+	VkPipelineStageFlags sourceStage;
+	VkPipelineStageFlags destinationStage;
+
 	if (oldLayout == VK_IMAGE_LAYOUT_UNDEFINED && newLayout == VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL)
 	{
-		// Set source mask to 0
 		barrier.srcAccessMask = 0;
-		// Set destination mask to transfer write
 		barrier.dstAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
 
-		// Set source stage to top of pipe
 		sourceStage = VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT;
-		// Set destination to transfer
 		destinationStage = VK_PIPELINE_STAGE_TRANSFER_BIT;
 	}
-	// If old layout is transfer destination optimal and new layout is shader read only optimal
 	else if (oldLayout == VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL && newLayout == VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL)
 	{
-		// Set source mask to transfer write
 		barrier.srcAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
-		// Set destination mask to shader read
 		barrier.dstAccessMask = VK_ACCESS_SHADER_READ_BIT;
 
-		// Set source stage to transfer
 		sourceStage = VK_PIPELINE_STAGE_TRANSFER_BIT;
-		// Set destination to fragment shader
 		destinationStage = VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT;
 	}
-	// If old layout is undifined and the new layout is depth stencil attachment
 	else if (oldLayout == VK_IMAGE_LAYOUT_UNDEFINED && newLayout == VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL)
 	{
-		// Set source mask to 0
 		barrier.srcAccessMask = 0;
-		// Set destination mask to depth stencil attachent read and depth stencil attachment write
 		barrier.dstAccessMask = VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_READ_BIT | VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT;
 
-		// Set source stage to top of pipe
 		sourceStage = VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT;
-		// Set destination stage to early fragment test
 		destinationStage = VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT;
 	}
-	else if (oldLayout == VK_IMAGE_LAYOUT_UNDEFINED && newLayout == VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL)
+	else if (oldLayout == VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL && newLayout == VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL)
 	{
-		barrier.srcAccessMask = 0;
+		barrier.srcAccessMask = VK_ACCESS_SHADER_READ_BIT;
+		barrier.dstAccessMask = VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_READ_BIT | VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT;
 
+		sourceStage = VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT;
+		destinationStage = VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT;
+	}
+	else if (oldLayout == VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL && newLayout == VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL)
+	{
+		barrier.srcAccessMask = VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_READ_BIT | VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT;
 		barrier.dstAccessMask = VK_ACCESS_SHADER_READ_BIT;
 
-		sourceStage = VK_PIPELINE_STAGE_TRANSFER_BIT;
+		sourceStage = VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT;
+		destinationStage = VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT;
+	}
+	else if (oldLayout == VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL && newLayout == VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL)
+	{
+		barrier.srcAccessMask = VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_READ_BIT;
+		barrier.dstAccessMask = VK_ACCESS_SHADER_READ_BIT;
 
+		sourceStage = VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT;
 		destinationStage = VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT;
 	}
 	else
 	{
-		// If nothing was done, throw invalid argument
 		throw std::invalid_argument("unsupported layout transition!");
 	}
 
-	// Set new barrier
 	vkCmdPipelineBarrier(
 		commandBuffer,
 		sourceStage, destinationStage,
@@ -760,6 +738,9 @@ void D3D::ImageManager::TransitionImageLayout(VkImage image, VkCommandBuffer com
 		1, &barrier
 	);
 }
+
+
+
 
 bool D3D::ImageManager::HasStencilComponent(VkFormat format)
 {

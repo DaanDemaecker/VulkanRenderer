@@ -1,6 +1,10 @@
 // TextureDescriptorObject.h
 // This class wil handle the updating of texture descriptor sets
 
+#ifndef TextureDescriptorObjectIncluded
+#define TextureDescriptorObjectIncluded
+
+
 // File includes
 #include "DescriptorObject.h"
 #include "Structs.h"
@@ -37,6 +41,9 @@ namespace D3D
         //     binding: the current binding in the shader files
         //     index: the current frame index of the renderer
         virtual void AddDescriptorWrite(VkDescriptorSet descriptorSet, std::vector<VkWriteDescriptorSet>& descriptorWrites, int& binding, int index) override;
+
+        Texture& GetTexture(int index = 0);
+
     private:
         // List of the textures
         std::vector<Texture> m_Textures{};
@@ -52,3 +59,5 @@ namespace D3D
         void SetupImageInfos();
     };
 }
+
+#endif // !TextureDescriptorObjectIncluded

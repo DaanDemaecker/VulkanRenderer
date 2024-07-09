@@ -8,6 +8,7 @@
 #include "STBIncludes.h"
 #include "PipelineWrapper.h"
 #include "DescriptorObject.h"
+#include "DirectionalLightObject.h"
 
 D3D::Material::Material(const std::string& pipelineName)
 {
@@ -45,7 +46,7 @@ void D3D::Material::UpdateDescriptorSets(std::vector<VkDescriptorSet>& descripto
 	}
 
 	// Add the descriptor of the global light object
-	descriptorObjectList.push_back(VulkanRenderer3D::GetInstance().GetLightDescriptor());
+	descriptorObjectList.push_back(VulkanRenderer3D::GetInstance().GetGlobalLight()->GetDescriptorObject());
 
 	// Update descriptorsets
 	descriptorPool->UpdateDescriptorSets(descriptorSets, descriptorObjectList);

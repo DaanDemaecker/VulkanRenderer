@@ -4,7 +4,7 @@
 // File includes
 #include "VulkanIncludes.h"
 #include "Structs.h"
-#include "UboDescriptorObject.h"
+#include "TextureDescriptorObject.h"
 
 // Standard library includes
 #include <memory>
@@ -14,6 +14,7 @@ namespace D3D
 	class GPUObject;
 	class ImageManager;
 	class PipelineWrapper;
+	class Model;
 
 	class ShadowRenderer final
 	{
@@ -21,8 +22,7 @@ namespace D3D
 		// Constructor
 		// Parameters:
 		//     msaaSamples: max amount of samples per pixel
-		ShadowRenderer(GPUObject* pGPUObject, VkSampleCountFlagBits msaaSamples,
-			D3D::ImageManager* pImageManager, VkCommandBuffer commandBuffer);
+		ShadowRenderer(GPUObject* pGPUObject, VkExtent2D swapchainExtent);
 
 		// Delete default constructor
 		ShadowRenderer() = delete;
@@ -39,9 +39,11 @@ namespace D3D
 
 		void Cleanup(VkDevice device);
 
-		void Render(std::vector<std::unique_ptr<Model>>& pModels);
+		void Render(std::vector<std::unique_ptr<Model>>& pModels, VkExtent2D swapchainExtent);
 
 		void CreatePipeline(VkDevice device);
+
+		TextureDescriptorObject* GetTextureDescriptorObject();
 
 	private:
 		// Max amount of samples per pixel, initialize as 1
@@ -49,16 +51,13 @@ namespace D3D
 
 		Texture m_ShadowTexture{};
 
+		std::unique_ptr<D3D::TextureDescriptorObject> m_pShadowTextureObject{};
+
 		VkFramebuffer m_ShadowFrameBuffer{};
 
 		VkRenderPass m_ShadowRenderpass{};
 
 		std::unique_ptr<PipelineWrapper> m_pShadowPipeline{};
-
-		uint32_t m_ShadowMapSize{ 1024 };
-
-		// Descriptor set variables
-		std::unique_ptr<UboDescriptorObject<glm::mat4>> m_pLightProjectionObject{};
 
 		// Vector of descriptorsets
 		std::vector<VkDescriptorSet> m_DescriptorSets{};
@@ -69,13 +68,13 @@ namespace D3D
 		// Parameters:
 		//     pGPUObject: pointer to the GPU Object
 		//     pImageManager: pointer to the image manager
-		void CreateDepthImage(GPUObject* pGPUObject, ImageManager* pImageManager, VkCommandBuffer commandBuffer);
+		void CreateDepthImage(GPUObject* pGPUObject, VkExtent2D swapchainExtent);
 
 
 		// Create the frame buffers
 		// Parameters:
 		//     device: handle of the VkDevice
-		void CreateFramebuffers(VkDevice device);
+		void CreateFramebuffers(VkDevice device, VkExtent2D swapchainExtent);
 
 		void CreateRenderPass(VkDevice device);
 

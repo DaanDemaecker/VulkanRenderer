@@ -5,6 +5,7 @@
 #include "Window.h"
 #include "TimeManager.h"
 #include "ImGuiIncludes.h"
+#include "Utils.h"
 
 
 void D3D::Camera::Update()
@@ -68,6 +69,13 @@ void D3D::Camera::Update()
 	m_PrevYPos = ypos;
 }
 
+void D3D::Camera::SetDirection(glm::vec3& direction)
+{
+	m_Rotation = Utils::RotationFromDirection(direction);
+
+	SetDirtyFlag();
+}
+
 void D3D::Camera::UpdateUniformBuffer(UniformBufferObject& buffer, VkExtent2D extent)
 {
 	// If the camera transform has changed, update matrix
@@ -91,7 +99,6 @@ void D3D::Camera::UpdateUniformBuffer(UniformBufferObject& buffer, VkExtent2D ex
 	}
 
 	buffer.proj[1][1] *= -1;
-
 	buffer.proj[2][2] *= -1;
 	buffer.proj[2][3] *= -1;
 }

@@ -60,7 +60,13 @@ namespace D3D
 		//     x: x-rotation
 		//     y: y-rotation
 		//     z: z-rotation
-		void SetRotation(float x, float y, float z) { SetRotation(glm::vec3{ x,y,z }); SetDirtyFlag(); }
+		void SetRotation(float x, float y, float z) { SetRotation(glm::vec3{ x,y,z });}
+
+		void SetDirection(glm::vec3& direction);
+
+		void SetDirection(glm::vec3&& direction) { SetDirection(direction); }
+
+		void SetDirection(float x, float y, float z) { SetDirection(glm::vec3{ x,y,z }); }
 
 		// Set scale
 		// Parameters:
