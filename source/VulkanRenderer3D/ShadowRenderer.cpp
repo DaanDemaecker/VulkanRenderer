@@ -10,6 +10,7 @@
 #include "DescriptorPoolWrapper.h"
 #include "DirectionalLightObject.h"
 #include "Model.h"
+#include "Viewport.h"
 
 D3D::ShadowRenderer::ShadowRenderer(GPUObject* pGPUObject, VkExtent2D swapchainExtent)
 {
@@ -25,6 +26,8 @@ D3D::ShadowRenderer::ShadowRenderer(GPUObject* pGPUObject, VkExtent2D swapchainE
 	m_ShadowTexture.layout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL;
 
 	CreateFramebuffers(device, swapchainExtent);
+
+	m_pViewport = std::make_unique<Viewport>();
 }
 
 void D3D::ShadowRenderer::Cleanup(VkDevice device)
@@ -38,7 +41,7 @@ void D3D::ShadowRenderer::Cleanup(VkDevice device)
 	vkDestroyFramebuffer(device, m_ShadowFrameBuffer, nullptr);
 }
 
-void D3D::ShadowRenderer::CreateDepthImage(GPUObject* pGPUObject, VkExtent2D swapchainExtent)
+void D3D::ShadowRenderer::CreateDepthImage(GPUObject* pGPUObject, VkExtent2D /*swapchainExtent*/)
 {
 	auto device{ pGPUObject->GetDevice() };
 
@@ -46,8 +49,8 @@ void D3D::ShadowRenderer::CreateDepthImage(GPUObject* pGPUObject, VkExtent2D swa
 	VkImageCreateInfo imageInfo = {};
 	imageInfo.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
 	imageInfo.imageType = VK_IMAGE_TYPE_2D;
-	imageInfo.extent.width = swapchainExtent.width;
-	imageInfo.extent.height = swapchainExtent.height;
+	imageInfo.extent.width = m_ShadowMapSize;
+	imageInfo.extent.height = m_ShadowMapSize;
 	imageInfo.extent.depth = 1;
 	imageInfo.mipLevels = 1;
 	imageInfo.arrayLayers = 1;
@@ -86,17 +89,15 @@ void D3D::ShadowRenderer::CreateDepthImage(GPUObject* pGPUObject, VkExtent2D swa
 	vkCreateImageView(device, &viewInfo, nullptr, &m_ShadowTexture.imageView);
 }
 
-void D3D::ShadowRenderer::CreateFramebuffers(VkDevice device, VkExtent2D swapchainExtent)
+void D3D::ShadowRenderer::CreateFramebuffers(VkDevice device, VkExtent2D /*swapchainExtent*/)
 {
 	VkFramebufferCreateInfo framebufferInfo = {};
 	framebufferInfo.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
 	framebufferInfo.renderPass = m_ShadowRenderpass; // Render pass created in the next step
 	framebufferInfo.attachmentCount = 1;
 	framebufferInfo.pAttachments = &m_ShadowTexture.imageView;
-	//framebufferInfo.width = swapchainExtent.width;
-	//framebufferInfo.height = swapchainExtent.height;
-	framebufferInfo.width = swapchainExtent.width;
-	framebufferInfo.height = swapchainExtent.height;
+	framebufferInfo.width = m_ShadowMapSize;
+	framebufferInfo.height = m_ShadowMapSize;
 	framebufferInfo.layers = 1;
 
 	vkCreateFramebuffer(device, &framebufferInfo, nullptr, &m_ShadowFrameBuffer);
@@ -184,6 +185,15 @@ void D3D::ShadowRenderer::UpdateDescriptorSets()
 	descriptorPool->UpdateDescriptorSets(m_DescriptorSets, descriptorObjectList);
 }
 
+void D3D::ShadowRenderer::RecreateFrameBuffer()
+{
+	auto device{ VulkanRenderer3D::GetInstance().GetDevice() };
+
+	vkDeviceWaitIdle(device);
+
+
+}
+
 void D3D::ShadowRenderer::CreatePipeline(VkDevice device)
 {
 
@@ -204,7 +214,7 @@ D3D::TextureDescriptorObject* D3D::ShadowRenderer::GetTextureDescriptorObject()
 	return m_pShadowTextureObject.get();
 }
 
-void D3D::ShadowRenderer::Render(std::vector<std::unique_ptr<Model>>& pModels, VkExtent2D swapchainExtent)
+void D3D::ShadowRenderer::Render(std::vector<std::unique_ptr<Model>>& pModels, VkExtent2D /*swapchainExtent*/)
 {
 	if (!m_DescriptorSetInitialized)
 	{
@@ -218,6 +228,10 @@ void D3D::ShadowRenderer::Render(std::vector<std::unique_ptr<Model>>& pModels, V
 
 	auto commandBuffer{ renderer.GetCurrentCommandBuffer() };
 
+	VkExtent2D extent{ m_ShadowMapSize, m_ShadowMapSize };
+
+	m_pViewport->SetViewport(commandBuffer, extent);
+
 	VkClearValue clearValue = {};
 	clearValue.depthStencil = { 1.0f, 0 };
 
@@ -226,7 +240,7 @@ void D3D::ShadowRenderer::Render(std::vector<std::unique_ptr<Model>>& pModels, V
 	renderPassInfo.renderPass = m_ShadowRenderpass;
 	renderPassInfo.framebuffer = m_ShadowFrameBuffer;
 	renderPassInfo.renderArea.offset = { 0, 0 };
-	renderPassInfo.renderArea.extent = swapchainExtent;
+	renderPassInfo.renderArea.extent = extent;
 	renderPassInfo.clearValueCount = 1;
 	renderPassInfo.pClearValues = &clearValue;
 

@@ -15,6 +15,7 @@ namespace D3D
 	class ImageManager;
 	class PipelineWrapper;
 	class Model;
+	class Viewport;
 
 	class ShadowRenderer final
 	{
@@ -59,6 +60,11 @@ namespace D3D
 
 		std::unique_ptr<PipelineWrapper> m_pShadowPipeline{};
 
+		uint16_t m_ShadowMapSize{1024};
+
+		// Viewport object
+		std::unique_ptr<Viewport> m_pViewport{};
+
 		// Vector of descriptorsets
 		std::vector<VkDescriptorSet> m_DescriptorSets{};
 
@@ -83,6 +89,8 @@ namespace D3D
 		void CreateDescriptorSets();
 
 		void UpdateDescriptorSets();
+
+		void RecreateFrameBuffer();
 	};
 }
 

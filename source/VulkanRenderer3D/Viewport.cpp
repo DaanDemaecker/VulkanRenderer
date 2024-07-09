@@ -15,19 +15,19 @@ D3D::Viewport::Viewport()
 	m_Scissor.offset = { 0, 0 };
 }
 
-void D3D::Viewport::SetViewport(VkCommandBuffer commandBuffer, VkExtent2D swapchainExtent)
+void D3D::Viewport::SetViewport(VkCommandBuffer commandBuffer, VkExtent2D extent)
 {
 	// Set the viewport width to the width of the swapchain
-	m_Viewport.width = static_cast<float>(swapchainExtent.width);
+	m_Viewport.width = static_cast<float>(extent.width);
 	// Set the viewport width to the width of the swapchain
-	m_Viewport.height = static_cast<float>(swapchainExtent.height);
+	m_Viewport.height = static_cast<float>(extent.height);
 
 	// Set the viewport
 	vkCmdSetViewport(commandBuffer, 0, 1, &m_Viewport);
 
 	
 	// Set scissor extent to swapchain extent
-	m_Scissor.extent = swapchainExtent;
+	m_Scissor.extent = extent;
 
 	// Set the scissor
 	vkCmdSetScissor(commandBuffer, 0, 1, &m_Scissor);

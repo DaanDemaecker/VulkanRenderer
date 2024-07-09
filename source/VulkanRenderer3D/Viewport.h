@@ -16,7 +16,7 @@ namespace D3D
 
 		~Viewport() = default;
 
-		void SetViewport(VkCommandBuffer commandBuffer, VkExtent2D swapchainExtent);
+		void SetViewport(VkCommandBuffer commandBuffer, VkExtent2D extent);
 
 	private:
 		VkViewport m_Viewport{};

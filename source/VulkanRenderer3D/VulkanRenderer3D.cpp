@@ -389,9 +389,10 @@ void D3D::VulkanRenderer3D::RecordCommandBuffer(VkCommandBuffer& commandBuffer, 
 		throw std::runtime_error("failed to begin recording command buffer!");
 	}
 
-	m_pViewport->SetViewport(commandBuffer, swapchainExtent);
 
 	m_pShadowRenderer->Render(pModels, swapchainExtent);
+
+	m_pViewport->SetViewport(commandBuffer, swapchainExtent);
 
 	m_pRenderpassWrapper->BeginRenderPass(commandBuffer, m_pSwapchainWrapper->GetFrameBuffer(imageIndex), swapchainExtent);
 
