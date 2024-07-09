@@ -34,10 +34,10 @@ ImGui has been implemented and can be used for debugging purposes or anything el
 ### Skybox rendering
 The renderer can render a simple skybox when given 6 images to form a cubemap.  
 
-## Future goals
 ### Shadow mapping
-I am currently working on adding shadow mapping into the renderer.
+The single directional light now casts shadows, objects can be toggled for shadowmapping when the user doesn't want an object to cast a shadow.  
 
+## Future goals
 ### Particles  
 Particles are often an essential part of making a game look finished and giving the player feedback on his actions. They have always fascinated me and i have wondered for a long time how they work, so that's why i would love to get into implementing them myself and seeing how they work.  
 
