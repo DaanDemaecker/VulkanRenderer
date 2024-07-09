@@ -165,3 +165,39 @@ std::string Utils::GetExtension(const std::string& filename)
 
 	return filename.substr(index + 1, filename.size());
 }
+
+glm::quat Utils::RotationFromDirection(const glm::vec3& direction)
+{
+	// Ensure the direction vector is normalized
+	glm::vec3 normalizedDirection = glm::normalize(direction);
+
+	// Define the default forward vector
+	glm::vec3 defaultForward = glm::vec3(0.0f, 0.0f, 1.0f);
+
+	// Calculate the dot product to find the angle
+	float dot = glm::dot(defaultForward, normalizedDirection);
+
+	// If the direction is the same as the default forward vector
+	if (glm::abs(dot - 1.0f) < glm::epsilon<float>()) {
+		return glm::quat(1.0f, 0.0f, 0.0f, 0.0f);
+	}
+	// If the direction is opposite to the default forward vector
+	else if (glm::abs(dot + 1.0f) < glm::epsilon<float>()) {
+		return glm::angleAxis(glm::pi<float>(), glm::vec3(0.0f, 1.0f, 0.0f));
+	}
+
+	// Calculate the rotation axis
+	glm::vec3 rotationAxis = glm::cross(defaultForward, normalizedDirection);
+	rotationAxis = glm::normalize(rotationAxis);
+
+	// Calculate the angle
+	float angle = glm::acos(dot);
+
+	// Create the quaternion from the angle and axis
+	return glm::angleAxis(angle, rotationAxis);
+}
+
+glm::quat Utils::RotationFromDirection(const glm::vec3&& direction)
+{
+	return RotationFromDirection(direction);
+}

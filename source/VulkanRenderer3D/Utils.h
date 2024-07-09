@@ -37,6 +37,10 @@ namespace Utils
 	// Parameters:
 	//     - filename: The name of the file
 	std::string GetExtension(const std::string& filename);
+
+	glm::quat RotationFromDirection(const glm::vec3& direction);
+
+	glm::quat RotationFromDirection(const glm::vec3&& direction);
 }
 
 #endif // !UtilsIncluded
