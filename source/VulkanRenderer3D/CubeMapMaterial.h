@@ -1,6 +1,9 @@
 // CubeMapMaterial.h
 // This class will serve as the material of the cube map and it will hold all the textures for the cubemap
 
+#ifndef CubeMapMaterialIncuded
+#define CubeMapMaterialIncluded
+
 // File includes
 #include "Material.h"
 
@@ -51,3 +54,4 @@ namespace D3D
 	};
 }
 
+#endif // !CubeMapMaterialIncuded

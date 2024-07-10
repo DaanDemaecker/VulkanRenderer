@@ -1,6 +1,9 @@
 // Camera.h
 // This class will serve as a camera object and store the values of location, rotation and scale of the camera
 
+#ifndef CameraIncluded
+#define CameraIncluded
+
 // File includes
 #include "GLMIncludes.h"
 #include "Structs.h"
@@ -159,3 +162,5 @@ namespace D3D
 		void UpdateMatrix();
 	};
 }
+
+#endif // !CameraIncluded

@@ -1,6 +1,9 @@
 // ConfigManager.h
 // This singleton will read, write and manage the config file
 
+#ifndef ConfigManagerIncluded
+#define ConfigManagerIncluded
+
 // File includes
 #include "Singleton.h"
 #include "RapidJSONIncludes.h"
@@ -71,3 +74,4 @@ namespace D3D
 	};
 }
 
+#endif // !ConfigManagerIncluded

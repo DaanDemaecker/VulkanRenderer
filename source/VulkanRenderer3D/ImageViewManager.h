@@ -1,6 +1,9 @@
 // ImageViewManager.h
 // This class will hold and manage the color- and depthImaveViews
 
+#ifndef ImageViewManagerIncluded
+#define ImageViewManagerIncluded
+
 //File includes
 #include "VulkanIncludes.h"
 #include "Structs.h"
@@ -70,3 +73,5 @@ namespace D3D
 		Texture m_DepthImage{};
 	};
 }
+
+#endif // !ImageViewManagerIncluded
