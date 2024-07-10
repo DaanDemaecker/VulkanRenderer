@@ -37,23 +37,14 @@
     <Filter Include="DataTypes\DescriptorObjects">
       <UniqueIdentifier>{c78643c2-69de-45f2-8cf9-6283a5c1ae99}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Vulkan\Renderer">
-      <UniqueIdentifier>{1077e171-a646-4cbc-bcc5-21c929cf9a75}</UniqueIdentifier>
-    </Filter>
     <Filter Include="DataTypes\RenderClasses">
       <UniqueIdentifier>{38715e58-506a-499c-9b48-37e9912a2162}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Vulkan\Renderers">
+      <UniqueIdentifier>{1077e171-a646-4cbc-bcc5-21c929cf9a75}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Utils.cpp">
-      <Filter>Utils</Filter>
-    </ClCompile>
-    <ClCompile Include="D3DEngine.cpp">
-      <Filter>Engine</Filter>
-    </ClCompile>
-    <ClCompile Include="TimeManager.cpp">
-      <Filter>Engine</Filter>
-    </ClCompile>
     <ClCompile Include="..\3rdParty\Imgui\backends\imgui_impl_glfw.cpp">
       <Filter>ImGui\Backends</Filter>
     </ClCompile>
@@ -75,137 +66,51 @@
     <ClCompile Include="..\3rdParty\Imgui\imgui_widgets.cpp">
       <Filter>ImGui</Filter>
     </ClCompile>
-    <ClCompile Include="TexturedMaterial.cpp">
-      <Filter>DataTypes\Materials</Filter>
-    </ClCompile>
-    <ClCompile Include="Material.cpp">
-      <Filter>DataTypes\Materials</Filter>
-    </ClCompile>
-    <ClCompile Include="GLFWIncludes.h">
-      <Filter>Includes</Filter>
-    </ClCompile>
-    <ClCompile Include="STBIncludes.h">
-      <Filter>Includes</Filter>
-    </ClCompile>
-    <ClCompile Include="STBIncludes.cpp">
-      <Filter>Includes</Filter>
-    </ClCompile>
-    <ClCompile Include="TinyObjLoaderIncludes.cpp">
-      <Filter>Includes</Filter>
-    </ClCompile>
-    <ClCompile Include="DescriptorPoolWrapper.cpp">
-      <Filter>Vulkan\Wrappers</Filter>
-    </ClCompile>
-    <ClCompile Include="ImGuiWrapper.cpp">
-      <Filter>Vulkan\Wrappers</Filter>
-    </ClCompile>
-    <ClCompile Include="PipelineManager.cpp">
-      <Filter>Vulkan\Managers</Filter>
-    </ClCompile>
-    <ClCompile Include="InstanceWrapper.cpp">
-      <Filter>Vulkan\Wrappers</Filter>
-    </ClCompile>
-    <ClCompile Include="ImageManager.cpp">
-      <Filter>Vulkan\Managers</Filter>
-    </ClCompile>
-    <ClCompile Include="CommandpoolManager.cpp">
-      <Filter>Vulkan\Managers</Filter>
-    </ClCompile>
-    <ClCompile Include="RenderpassWrapper.cpp">
-      <Filter>Vulkan\Wrappers</Filter>
-    </ClCompile>
-    <ClCompile Include="SwapchainWrapper.cpp">
-      <Filter>Vulkan\Wrappers</Filter>
-    </ClCompile>
-    <ClCompile Include="ImageViewManager.cpp">
-      <Filter>Vulkan\Managers</Filter>
-    </ClCompile>
-    <ClCompile Include="SyncObjectManager.cpp">
-      <Filter>Vulkan\Managers</Filter>
-    </ClCompile>
-    <ClCompile Include="DirectionalLightObject.cpp">
-      <Filter>DataTypes</Filter>
-    </ClCompile>
-    <ClCompile Include="VulkanUtils.cpp">
-      <Filter>Vulkan</Filter>
-    </ClCompile>
-    <ClCompile Include="Window.cpp">
-      <Filter>Engine</Filter>
-    </ClCompile>
-    <ClCompile Include="Camera.cpp">
-      <Filter>DataTypes</Filter>
-    </ClCompile>
-    <ClCompile Include="CubeMapMaterial.cpp">
-      <Filter>DataTypes\Materials</Filter>
-    </ClCompile>
-    <ClCompile Include="GPUObject.cpp">
-      <Filter>Vulkan\Wrappers</Filter>
-    </ClCompile>
     <ClCompile Include="..\3rdParty\SpirV-reflect\spirv_reflect.c">
       <Filter>spirV-reflect</Filter>
     </ClCompile>
     <ClCompile Include="..\3rdParty\SpirV-reflect\spirv_reflect.cpp">
       <Filter>spirV-reflect</Filter>
     </ClCompile>
-    <ClCompile Include="ShaderModuleWrapper.cpp">
-      <Filter>Vulkan\Wrappers</Filter>
-    </ClCompile>
-    <ClCompile Include="PipelineWrapper.cpp">
-      <Filter>Vulkan\Wrappers</Filter>
-    </ClCompile>
-    <ClCompile Include="main.cpp">
-      <Filter>Engine</Filter>
-    </ClCompile>
-    <ClCompile Include="TextureDescriptorObject.cpp">
-      <Filter>DataTypes\DescriptorObjects</Filter>
-    </ClCompile>
-    <ClCompile Include="ConfigManager.cpp">
-      <Filter>Engine</Filter>
-    </ClCompile>
-    <ClCompile Include="SurfaceWrapper.cpp">
-      <Filter>Vulkan\Wrappers</Filter>
-    </ClCompile>
-    <ClCompile Include="BufferManager.cpp">
-      <Filter>Vulkan\Managers</Filter>
-    </ClCompile>
-    <ClCompile Include="VulkanRenderer3D.cpp">
-      <Filter>Vulkan\Renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="ShadowRenderer.cpp">
-      <Filter>Vulkan\Renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="Viewport.cpp">
-      <Filter>Vulkan\Wrappers</Filter>
-    </ClCompile>
-    <ClCompile Include="SkyBox.cpp">
-      <Filter>DataTypes\RenderClasses</Filter>
-    </ClCompile>
-    <ClCompile Include="Model.cpp">
-      <Filter>DataTypes\RenderClasses</Filter>
-    </ClCompile>
-    <ClCompile Include="Mesh.cpp">
-      <Filter>DataTypes\RenderClasses</Filter>
-    </ClCompile>
-    <ClCompile Include="ShadowMaterial.cpp">
-      <Filter>DataTypes\Materials</Filter>
-    </ClCompile>
+    <ClCompile Include="DataTypes\DescriptorObjects\TextureDescriptorObject.cpp" />
+    <ClCompile Include="DataTypes\Materials\CubeMapMaterial.cpp" />
+    <ClCompile Include="DataTypes\Materials\Material.cpp" />
+    <ClCompile Include="DataTypes\Materials\ShadowMaterial.cpp" />
+    <ClCompile Include="DataTypes\Materials\TexturedMaterial.cpp" />
+    <ClCompile Include="DataTypes\RenderClasses\Mesh.cpp" />
+    <ClCompile Include="DataTypes\RenderClasses\Model.cpp" />
+    <ClCompile Include="DataTypes\RenderClasses\SkyBox.cpp" />
+    <ClCompile Include="DataTypes\Camera.cpp" />
+    <ClCompile Include="DataTypes\DirectionalLightObject.cpp" />
+    <ClCompile Include="Engine\ConfigManager.cpp" />
+    <ClCompile Include="Engine\D3DEngine.cpp" />
+    <ClCompile Include="Engine\main.cpp" />
+    <ClCompile Include="Engine\TimeManager.cpp" />
+    <ClCompile Include="Engine\Window.cpp" />
+    <ClCompile Include="Includes\STBIncludes.cpp" />
+    <ClCompile Include="Includes\TinyObjLoaderIncludes.cpp" />
+    <ClCompile Include="Utils\Utils.cpp" />
+    <ClCompile Include="Vulkan\Managers\BufferManager.cpp" />
+    <ClCompile Include="Vulkan\Managers\CommandpoolManager.cpp" />
+    <ClCompile Include="Vulkan\Managers\ImageManager.cpp" />
+    <ClCompile Include="Vulkan\Managers\ImageViewManager.cpp" />
+    <ClCompile Include="Vulkan\Managers\PipelineManager.cpp" />
+    <ClCompile Include="Vulkan\Managers\SyncObjectManager.cpp" />
+    <ClCompile Include="Vulkan\Renderers\ShadowRenderer.cpp" />
+    <ClCompile Include="Vulkan\Renderers\VulkanRenderer3D.cpp" />
+    <ClCompile Include="Vulkan\Wrappers\DescriptorPoolWrapper.cpp" />
+    <ClCompile Include="Vulkan\Wrappers\GPUObject.cpp" />
+    <ClCompile Include="Vulkan\Wrappers\ImGuiWrapper.cpp" />
+    <ClCompile Include="Vulkan\Wrappers\InstanceWrapper.cpp" />
+    <ClCompile Include="Vulkan\Wrappers\PipelineWrapper.cpp" />
+    <ClCompile Include="Vulkan\Wrappers\RenderpassWrapper.cpp" />
+    <ClCompile Include="Vulkan\Wrappers\ShaderModuleWrapper.cpp" />
+    <ClCompile Include="Vulkan\Wrappers\SurfaceWrapper.cpp" />
+    <ClCompile Include="Vulkan\Wrappers\SwapchainWrapper.cpp" />
+    <ClCompile Include="Vulkan\Wrappers\Viewport.cpp" />
+    <ClCompile Include="Vulkan\VulkanUtils.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Utils.h">
-      <Filter>Utils</Filter>
-    </ClInclude>
-    <ClInclude Include="Structs.h">
-      <Filter>DataTypes</Filter>
-    </ClInclude>
-    <ClInclude Include="D3DEngine.h">
-      <Filter>Engine</Filter>
-    </ClInclude>
-    <ClInclude Include="Singleton.h">
-      <Filter>Engine</Filter>
-    </ClInclude>
-    <ClInclude Include="TimeManager.h">
-      <Filter>Engine</Filter>
-    </ClInclude>
     <ClInclude Include="..\3rdParty\Imgui\backends\imgui_impl_glfw.h">
       <Filter>ImGui\Backends</Filter>
     </ClInclude>
@@ -230,125 +135,56 @@
     <ClInclude Include="..\3rdParty\Imgui\imstb_truetype.h">
       <Filter>ImGui</Filter>
     </ClInclude>
-    <ClInclude Include="TexturedMaterial.h">
-      <Filter>DataTypes\Materials</Filter>
-    </ClInclude>
-    <ClInclude Include="Material.h">
-      <Filter>DataTypes\Materials</Filter>
-    </ClInclude>
-    <ClInclude Include="GLMIncludes.h">
-      <Filter>Includes</Filter>
-    </ClInclude>
-    <ClInclude Include="TinyObjLoaderIncludes.h">
-      <Filter>Includes</Filter>
-    </ClInclude>
-    <ClInclude Include="ImGuiIncludes.h">
-      <Filter>Includes</Filter>
-    </ClInclude>
-    <ClInclude Include="DescriptorPoolWrapper.h">
-      <Filter>Vulkan\Wrappers</Filter>
-    </ClInclude>
-    <ClInclude Include="ImGuiWrapper.h">
-      <Filter>Vulkan\Wrappers</Filter>
-    </ClInclude>
-    <ClInclude Include="PipelineManager.h">
-      <Filter>Vulkan\Managers</Filter>
-    </ClInclude>
-    <ClInclude Include="InstanceWrapper.h">
-      <Filter>Vulkan\Wrappers</Filter>
-    </ClInclude>
-    <ClInclude Include="ImageManager.h">
-      <Filter>Vulkan\Managers</Filter>
-    </ClInclude>
-    <ClInclude Include="CommandpoolManager.h">
-      <Filter>Vulkan\Managers</Filter>
-    </ClInclude>
-    <ClInclude Include="RenderpassWrapper.h">
-      <Filter>Vulkan\Wrappers</Filter>
-    </ClInclude>
-    <ClInclude Include="SwapchainWrapper.h">
-      <Filter>Vulkan\Wrappers</Filter>
-    </ClInclude>
-    <ClInclude Include="ImageViewManager.h">
-      <Filter>Vulkan\Managers</Filter>
-    </ClInclude>
-    <ClInclude Include="SyncObjectManager.h">
-      <Filter>Vulkan\Managers</Filter>
-    </ClInclude>
-    <ClInclude Include="DirectionalLightObject.h">
-      <Filter>DataTypes</Filter>
-    </ClInclude>
-    <ClInclude Include="VulkanIncludes.h">
-      <Filter>Includes</Filter>
-    </ClInclude>
-    <ClInclude Include="VulkanUtils.h">
-      <Filter>Vulkan</Filter>
-    </ClInclude>
-    <ClInclude Include="Window.h">
-      <Filter>Engine</Filter>
-    </ClInclude>
-    <ClInclude Include="Camera.h">
-      <Filter>DataTypes</Filter>
-    </ClInclude>
-    <ClInclude Include="CubeMapMaterial.h">
-      <Filter>DataTypes\Materials</Filter>
-    </ClInclude>
-    <ClInclude Include="GPUObject.h">
-      <Filter>Vulkan\Wrappers</Filter>
-    </ClInclude>
-    <ClInclude Include="RapidJSONIncludes.h">
-      <Filter>Includes</Filter>
-    </ClInclude>
     <ClInclude Include="..\3rdParty\SpirV-reflect\spirv_reflect.h">
       <Filter>spirV-reflect</Filter>
     </ClInclude>
     <ClInclude Include="..\3rdParty\SpirV-reflect\include\spirv\unified1\spirv.h">
       <Filter>spirV-reflect</Filter>
     </ClInclude>
-    <ClInclude Include="ShaderModuleWrapper.h">
-      <Filter>Vulkan\Wrappers</Filter>
-    </ClInclude>
-    <ClInclude Include="PipelineWrapper.h">
-      <Filter>Vulkan\Wrappers</Filter>
-    </ClInclude>
-    <ClInclude Include="DescriptorObject.h">
-      <Filter>DataTypes\DescriptorObjects</Filter>
-    </ClInclude>
-    <ClInclude Include="UboDescriptorObject.h">
-      <Filter>DataTypes\DescriptorObjects</Filter>
-    </ClInclude>
-    <ClInclude Include="TextureDescriptorObject.h">
-      <Filter>DataTypes\DescriptorObjects</Filter>
-    </ClInclude>
-    <ClInclude Include="ConfigManager.h">
-      <Filter>Engine</Filter>
-    </ClInclude>
-    <ClInclude Include="SurfaceWrapper.h">
-      <Filter>Vulkan\Wrappers</Filter>
-    </ClInclude>
-    <ClInclude Include="BufferManager.h">
-      <Filter>Vulkan\Managers</Filter>
-    </ClInclude>
-    <ClInclude Include="VulkanRenderer3D.h">
-      <Filter>Vulkan\Renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="ShadowRenderer.h">
-      <Filter>Vulkan\Renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="Viewport.h">
-      <Filter>Vulkan\Wrappers</Filter>
-    </ClInclude>
-    <ClInclude Include="SkyBox.h">
-      <Filter>DataTypes\RenderClasses</Filter>
-    </ClInclude>
-    <ClInclude Include="Model.h">
-      <Filter>DataTypes\RenderClasses</Filter>
-    </ClInclude>
-    <ClInclude Include="Mesh.h">
-      <Filter>DataTypes\RenderClasses</Filter>
-    </ClInclude>
-    <ClInclude Include="ShadowMaterial.h">
-      <Filter>DataTypes\Materials</Filter>
-    </ClInclude>
+    <ClInclude Include="Vulkan\VulkanUtils.h" />
+    <ClInclude Include="DataTypes\DescriptorObjects\DescriptorObject.h" />
+    <ClInclude Include="DataTypes\DescriptorObjects\TextureDescriptorObject.h" />
+    <ClInclude Include="DataTypes\DescriptorObjects\UboDescriptorObject.h" />
+    <ClInclude Include="DataTypes\Materials\CubeMapMaterial.h" />
+    <ClInclude Include="DataTypes\Materials\Material.h" />
+    <ClInclude Include="DataTypes\Materials\ShadowMaterial.h" />
+    <ClInclude Include="DataTypes\Materials\TexturedMaterial.h" />
+    <ClInclude Include="DataTypes\RenderClasses\Mesh.h" />
+    <ClInclude Include="DataTypes\RenderClasses\Model.h" />
+    <ClInclude Include="DataTypes\RenderClasses\SkyBox.h" />
+    <ClInclude Include="DataTypes\Camera.h" />
+    <ClInclude Include="DataTypes\DirectionalLightObject.h" />
+    <ClInclude Include="DataTypes\Structs.h" />
+    <ClInclude Include="Engine\ConfigManager.h" />
+    <ClInclude Include="Engine\D3DEngine.h" />
+    <ClInclude Include="Engine\Singleton.h" />
+    <ClInclude Include="Engine\TimeManager.h" />
+    <ClInclude Include="Engine\Window.h" />
+    <ClInclude Include="Includes\GLFWIncludes.h" />
+    <ClInclude Include="Includes\GLMIncludes.h" />
+    <ClInclude Include="Includes\ImGuiIncludes.h" />
+    <ClInclude Include="Includes\RapidJSONIncludes.h" />
+    <ClInclude Include="Includes\STBIncludes.h" />
+    <ClInclude Include="Includes\TinyObjLoaderIncludes.h" />
+    <ClInclude Include="Includes\VulkanIncludes.h" />
+    <ClInclude Include="Utils\Utils.h" />
+    <ClInclude Include="Vulkan\Managers\BufferManager.h" />
+    <ClInclude Include="Vulkan\Managers\CommandpoolManager.h" />
+    <ClInclude Include="Vulkan\Managers\ImageManager.h" />
+    <ClInclude Include="Vulkan\Managers\ImageViewManager.h" />
+    <ClInclude Include="Vulkan\Managers\PipelineManager.h" />
+    <ClInclude Include="Vulkan\Managers\SyncObjectManager.h" />
+    <ClInclude Include="Vulkan\Renderers\ShadowRenderer.h" />
+    <ClInclude Include="Vulkan\Renderers\VulkanRenderer3D.h" />
+    <ClInclude Include="Vulkan\Wrappers\DescriptorPoolWrapper.h" />
+    <ClInclude Include="Vulkan\Wrappers\GPUObject.h" />
+    <ClInclude Include="Vulkan\Wrappers\ImGuiWrapper.h" />
+    <ClInclude Include="Vulkan\Wrappers\InstanceWrapper.h" />
+    <ClInclude Include="Vulkan\Wrappers\PipelineWrapper.h" />
+    <ClInclude Include="Vulkan\Wrappers\RenderpassWrapper.h" />
+    <ClInclude Include="Vulkan\Wrappers\ShaderModuleWrapper.h" />
+    <ClInclude Include="Vulkan\Wrappers\SurfaceWrapper.h" />
+    <ClInclude Include="Vulkan\Wrappers\SwapchainWrapper.h" />
+    <ClInclude Include="Vulkan\Wrappers\Viewport.h" />
   </ItemGroup>
 </Project>
