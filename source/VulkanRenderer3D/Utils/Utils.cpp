@@ -45,10 +45,10 @@ void Utils::LoadModel(const std::string& filename, std::vector<D3D::Vertex>& ver
 	std::vector<tinyobj::material_t> materials{};
 
 	// Create objects for error throwing
-	std::string warn, err;
+	std::string err;
 
 	// Read file, returned false, throw error
-	if (!tinyobj::LoadObj(&attrib, &shapes, &materials, &warn, &err, filename.c_str()))
+	if (!tinyobj::LoadObj(&attrib, &shapes, &materials, &err, filename.c_str()))
 	{
 		throw std::runtime_error(filename + " is not a valid file path");
 	}

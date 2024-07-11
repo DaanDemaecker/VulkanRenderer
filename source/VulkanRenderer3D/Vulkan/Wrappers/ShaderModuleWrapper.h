@@ -6,7 +6,7 @@
 
 // File includes
 #include "../../includes/VulkanIncludes.h"
-#include "spirv_reflect.h"
+#include "../SpirVReflect/spirv_reflect.h"
 
 // Standard library includes
 #include <string>

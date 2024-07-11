@@ -60,21 +60,21 @@ D3D::VulkanRenderer3D::~VulkanRenderer3D()
 void D3D::VulkanRenderer3D::SetupSkybox()
 {
 	// Set the vertex shader name
-	const std::string vertShaderName{ "../Resources/Shaders/Skybox.Vert.spv" };
+	const std::string vertShaderName{ "Resources/Shaders/Skybox.Vert.spv" };
 	// Set the fragment shader name
-	const std::string fragShaderName{ "../Resources/Shaders/Skybox.Frag.spv" };
+	const std::string fragShaderName{ "Resources/Shaders/Skybox.Frag.spv" };
 
 	// Create the graphics pipeline for the skybox
 	AddGraphicsPipeline("Skybox", { vertShaderName, fragShaderName }, false);
 
 	// Create the skybox
 	m_pSkyBox = std::make_unique<SkyBox>(
-		std::initializer_list<const std::string>{"../resources/images/CubeMap/Sky_Right.png",
-												"../resources/images/CubeMap/Sky_Left.png",
-												"../resources/images/CubeMap/Sky_Up.png", 
-												"../resources/images/CubeMap/Sky_Down.png", 
-												"../resources/images/CubeMap/Sky_Front.png", 
-												"../resources/images/CubeMap/Sky_Back.png"});
+		std::initializer_list<const std::string>{"resources/images/CubeMap/Sky_Right.png",
+												"resources/images/CubeMap/Sky_Left.png",
+												"resources/images/CubeMap/Sky_Up.png", 
+												"resources/images/CubeMap/Sky_Down.png", 
+												"resources/images/CubeMap/Sky_Front.png", 
+												"resources/images/CubeMap/Sky_Back.png"});
 
 }
 

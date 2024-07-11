@@ -7,7 +7,8 @@
 #pragma warning(disable : 26819)
 #pragma warning(disable : 6262)
 
-#include <stb_image.h>
+#include <stb/stb_image.h>
+
 #pragma warning(pop)
 
 

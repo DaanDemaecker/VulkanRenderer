@@ -8,7 +8,7 @@
 #include <array>
 #include <stdexcept>
 
-D3D::ImGuiWrapper::ImGuiWrapper(ImGui_ImplVulkan_InitInfo init_info, VkRenderPass renderPass, VkCommandBuffer commandBuffer, VkDevice device, uint32_t maxFrames)
+D3D::ImGuiWrapper::ImGuiWrapper(ImGui_ImplVulkan_InitInfo init_info, VkRenderPass renderPass, VkCommandBuffer /*commandBuffer*/, VkDevice device, uint32_t maxFrames)
 {	
 	// Initialize the descriptorPool
 	InitDescriptorPool(device, maxFrames);
@@ -25,11 +25,13 @@ D3D::ImGuiWrapper::ImGuiWrapper(ImGui_ImplVulkan_InitInfo init_info, VkRenderPas
 	// Set the descriptorpool of the init_info
 	init_info.DescriptorPool = m_DescriptorPool;
 
+	init_info.RenderPass = renderPass;
+
 	// Init ImGui with init info and the renderpass
-	ImGui_ImplVulkan_Init(&init_info, renderPass);
+	ImGui_ImplVulkan_Init(&init_info);
 
 	// Create the fonts and textures with the commandbuffer
-	ImGui_ImplVulkan_CreateFontsTexture(commandBuffer);
+	ImGui_ImplVulkan_CreateFontsTexture();
 }
 
 void D3D::ImGuiWrapper::Cleanup(VkDevice device)

@@ -18,24 +18,7 @@ source/.vs
 [Bb]in/
 [Oo]bj/
 *.exe
-
-source/VulkanRenderer3D/[Dd]ebug/
-source/VulkanRenderer3D/[Dd]ebugPublic/
-source/VulkanRenderer3D/[Rr]elease/
-source/VulkanRenderer3D/[Rr]eleases/
-source/VulkanRenderer3D/x64/
-source/VulkanRenderer3D/build/
-source/VulkanRenderer3D/bld/
-source/VulkanRenderer3D/.vs
-
-source/VulkanRenderer2D/[Dd]ebug/
-source/VulkanRenderer2D/[Dd]ebugPublic/
-source/VulkanRenderer2D/[Rr]elease/
-source/VulkanRenderer2D/[Rr]eleases/
-source/VulkanRenderer2D/x64/
-source/VulkanRenderer2D/build/
-source/VulkanRenderer2D/bld/
-source/VulkanRenderer2D/.vs
+source/out/
 
 source/3rdParty/Vulkan/Win32/shaderc_combined.lib
 source/3rdParty/Vulkan/Win32/shaderc_combinedd.lib

@@ -2,8 +2,8 @@
 
 // File includes
 #include "VulkanRenderer2D.h"
-#include "InstanceWrapper.h"
-#include "GPUObject.h"
+#include "Wrappers/InstanceWrapper.h"
+#include "Wrappers/GPUObject.h"
 
 D2D::VulkanRenderer2D::VulkanRenderer2D()
 {

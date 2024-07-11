@@ -1,15 +1,15 @@
-cmake_minimum_required(VERSION 3.2 FATAL_ERROR)
-cmake_policy(VERSION 3.2)
+include(FetchContent)
 
-set(GLM_VERSION "0.9.9")
-project(glm VERSION ${GLM_VERSION} LANGUAGES CXX)
-enable_testing()
+FetchContent_Declare(
+	glm
+	GIT_REPOSITORY	https://github.com/g-truc/glm.git
+	GIT_TAG 	bf71a834948186f4097caa076cd2663c69a10e1e #refs/tags/1.0.1
+	GIT_SHALLOW true
+)
 
-add_subdirectory(glm)
-add_library(glm::glm ALIAS glm)
+FetchContent_MakeAvailable(glm)
 
-if(${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_CURRENT_SOURCE_DIR})
 
-add_subdirectory(test)
+target_link_libraries(VulkanRenderer3D PRIVATE glm::glm)
 
-endif(${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_CURRENT_SOURCE_DIR})
+target_link_libraries(VulkanRenderer2D PRIVATE glm::glm)
