@@ -3,7 +3,7 @@
 
 // File includes
 #include "Singleton.h"
-#include "RapidJSONIncludes.h"
+#include "../Includes/RapidJSONIncludes.h"
 
 // Standard library includes
 #include <iostream>

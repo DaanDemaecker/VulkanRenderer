@@ -2,7 +2,7 @@
 #define GPUObjectIncluded
 
 // File includes
-#include "VulkanIncludes.h"
+#include "../../Includes/VulkanIncludes.h"
 
 // Standard library includes
 #include <vector>

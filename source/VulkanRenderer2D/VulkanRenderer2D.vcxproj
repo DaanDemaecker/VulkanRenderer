@@ -18,6 +18,31 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Engine Files\ConfigManager.h" />
+    <ClInclude Include="Engine Files\D2DEngine.h" />
+    <ClInclude Include="Engine Files\Singleton.h" />
+    <ClInclude Include="Engine Files\Window.h" />
+    <ClInclude Include="Includes\GLFWIncludes.h" />
+    <ClInclude Include="Includes\GLMIncludes.h" />
+    <ClInclude Include="Includes\ImGuiIncludes.h" />
+    <ClInclude Include="Includes\RapidJSONIncludes.h" />
+    <ClInclude Include="Includes\STBIncludes.h" />
+    <ClInclude Include="Includes\VulkanIncludes.h" />
+    <ClInclude Include="Vulkan\VulkanRenderer2D.h" />
+    <ClInclude Include="Vulkan\Wrappers\GPUObject.h" />
+    <ClInclude Include="Vulkan\Wrappers\InstanceWrapper.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Engine Files\ConfigManager.cpp" />
+    <ClCompile Include="Engine Files\D2DEngine.cpp" />
+    <ClCompile Include="Engine Files\main.cpp" />
+    <ClCompile Include="Engine Files\Window.cpp" />
+    <ClCompile Include="Includes\STBIncludes.cpp" />
+    <ClCompile Include="Vulkan\VulkanRenderer2D.cpp" />
+    <ClCompile Include="Vulkan\Wrappers\GPUObject.cpp" />
+    <ClCompile Include="Vulkan\Wrappers\InstanceWrapper.cpp" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
@@ -167,31 +192,6 @@
       <AdditionalOptions>/NODEFAULTLIB:MSVCRT %(AdditionalOptions)</AdditionalOptions>
     </Link>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ClCompile Include="ConfigManager.cpp" />
-    <ClCompile Include="D2DEngine.cpp" />
-    <ClCompile Include="GPUObject.cpp" />
-    <ClCompile Include="InstanceWrapper.cpp" />
-    <ClCompile Include="main.cpp" />
-    <ClCompile Include="STBIncludes.cpp" />
-    <ClCompile Include="VulkanRenderer2D.cpp" />
-    <ClCompile Include="Window.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="ConfigManager.h" />
-    <ClInclude Include="D2DEngine.h" />
-    <ClInclude Include="GLFWIncludes.h" />
-    <ClInclude Include="GLMIncludes.h" />
-    <ClInclude Include="GPUObject.h" />
-    <ClInclude Include="ImGuiIncludes.h" />
-    <ClInclude Include="InstanceWrapper.h" />
-    <ClInclude Include="RapidJSONIncludes.h" />
-    <ClInclude Include="Singleton.h" />
-    <ClInclude Include="STBIncludes.h" />
-    <ClInclude Include="VulkanIncludes.h" />
-    <ClInclude Include="VulkanRenderer2D.h" />
-    <ClInclude Include="Window.h" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

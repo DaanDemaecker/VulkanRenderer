@@ -6,7 +6,7 @@
 
 // File includes
 #include "Singleton.h"
-#include "GLFWIncludes.h"
+#include "../Includes/GLFWIncludes.h"
 
 namespace D2D
 {

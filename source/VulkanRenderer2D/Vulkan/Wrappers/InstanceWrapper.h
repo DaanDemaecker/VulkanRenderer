@@ -5,7 +5,7 @@
 #define InstanceWrapperIncluded
 
 // File includes
-#include "VulkanIncludes.h"
+#include "../../Includes/VulkanIncludes.h"
 
 namespace D2D
 {
