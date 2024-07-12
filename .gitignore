@@ -7,22 +7,22 @@
 *.sln.docstates
 
 # Build results
-source/[Dd]ebug/
-source/[Dd]ebugPublic/
-source/[Rr]elease/
-source/[Rr]eleases/
-source/x64/
-source/build/
-source/bld/
-source/.vs
+VulkanRenderer/[Dd]ebug/
+VulkanRenderer/[Dd]ebugPublic/
+VulkanRenderer/[Rr]elease/
+VulkanRenderer/[Rr]eleases/
+VulkanRenderer/x64/
+VulkanRenderer/build/
+VulkanRenderer/bld/
+VulkanRenderer/.vs
 [Bb]in/
 [Oo]bj/
 *.exe
-source/out/
+VulkanRenderer/out/
 
-source/3rdParty/Vulkan/Win32/shaderc_combined.lib
-source/3rdParty/Vulkan/Win32/shaderc_combinedd.lib
-source/3rdParty/Vulkan/x64/shaderc_combined.lib
-source/3rdParty/Vulkan/x64/shaderc_combinedd.lib
+VulkanRenderer/3rdParty/Vulkan/Win32/shaderc_combined.lib
+VulkanRenderer/3rdParty/Vulkan/Win32/shaderc_combinedd.lib
+VulkanRenderer/3rdParty/Vulkan/x64/shaderc_combined.lib
+VulkanRenderer/3rdParty/Vulkan/x64/shaderc_combinedd.lib
 
 *d.lib
