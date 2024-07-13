@@ -8,7 +8,8 @@ https://vulkan-tutorial.com.
 Later I also bought and used the official Vulkan programming guide from OpenGL for a deeper understanding.
 
 ## Motivation
-While studying Game Development at Digital Arts and Entertainment in Kortrijk, Belgium, we made a DirectX renderer in our Graphics Programming class, this made me look into more APIs for rendering and landed on Vulkan to make my own Renderer with.  
+While studying Game Development at Digital Arts and Entertainment in Kortrijk, Belgium, I followed a Graphics Programming class. In this class we made a self made software rasterizer and a DirectX radterizer. These were later combined and can be found on my github.  
+This made me look into more APIs for rendering and i landed on Vulkan to make my own Renderer with.  
 This renderer is alsointegrated into my self made engine, as my engine project grew, this project became more of a testing ground for vulkan.  
 
 ## Inital goals
