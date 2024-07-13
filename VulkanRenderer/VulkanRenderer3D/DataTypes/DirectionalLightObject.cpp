@@ -1,10 +1,10 @@
 //DirectionalLightObject.cpp
 
 // File includes
-#include "../DataTypes/DirectionalLightObject.h"
-#include "../Vulkan/Renderers/VulkanRenderer3D.h"
-#include "../DataTypes/Camera.h"
-#include "../Utils/Utils.h"
+#include "DirectionalLightObject.h"
+#include "Vulkan/Renderers/VulkanRenderer3D.h"
+#include "Camera.h"
+#include "Utils/Utils.h"
 
 // Standard library includes
 #include <iostream>

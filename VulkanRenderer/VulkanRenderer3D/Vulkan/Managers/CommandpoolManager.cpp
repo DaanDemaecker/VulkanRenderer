@@ -2,8 +2,8 @@
 
 // File includes
 #include "CommandpoolManager.h"
-#include "../VulkanUtils.h"
-#include "../Wrappers/GPUObject.h"
+#include "Vulkan/VulkanUtils.h"
+#include "Vulkan/Wrappers/GPUObject.h"
 
 // Standard library includes
 #include <stdexcept>

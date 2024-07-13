@@ -2,9 +2,9 @@
 
 // File includes
 #include "InstanceWrapper.h"  
-#include "../../Includes/GLFWIncludes.h"
-#include "../VulkanUtils.h"
-#include "../../Engine/ConfigManager.h"
+#include "Includes/GLFWIncludes.h"
+#include "Vulkan/VulkanUtils.h"
+#include "Engine/ConfigManager.h"
 
 // Standard library includes
 #include <stdexcept>

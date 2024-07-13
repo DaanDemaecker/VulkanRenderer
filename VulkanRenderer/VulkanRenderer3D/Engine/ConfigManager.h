@@ -6,7 +6,7 @@
 
 // File includes
 #include "Singleton.h"
-#include "../Includes/RapidJSONIncludes.h"
+#include "Includes/RapidJSONIncludes.h"
 
 // Standard library includes
 #include <string>

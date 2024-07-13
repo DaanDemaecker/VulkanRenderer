@@ -2,11 +2,11 @@
 
 // File includes
 #include "SkyBox.h"
-#include "../../Utils/Utils.h"
-#include "../../Vulkan/Renderers/VulkanRenderer3D.h"
+#include "Utils/Utils.h"
+#include "Vulkan/Renderers/VulkanRenderer3D.h"
 #include "Model.h"
-#include "../../DataTypes/Materials/CubeMapMaterial.h"
-#include "../../DataTypes/DescriptorObjects/TextureDescriptorObject.h"
+#include "DataTypes/Materials/CubeMapMaterial.h"
+#include "DataTypes/DescriptorObjects/TextureDescriptorObject.h"
 
 // Standard library includes
 

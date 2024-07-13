@@ -3,8 +3,8 @@
 // File includes
 #include "ImageViewManager.h"
 #include "ImageManager.h"
-#include "../VulkanUtils.h"
-#include "../Wrappers/GPUObject.h"
+#include "Vulkan/VulkanUtils.h"
+#include "Vulkan/Wrappers/GPUObject.h"
 
 
 D3D::ImageViewManager::ImageViewManager(VkSampleCountFlagBits msaaSamples)

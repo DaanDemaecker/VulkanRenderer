@@ -2,16 +2,16 @@
 
 // File includes
 #include "D3DEngine.h"
-#include "../Vulkan/Renderers/VulkanRenderer3D.h"
+#include "Vulkan/Renderers/VulkanRenderer3D.h"
 #include "TimeManager.h"
-#include "../DataTypes/RenderClasses/Model.h"
-#include "../DataTypes/Materials/Material.h"
-#include "../DataTypes/Materials/TexturedMaterial.h"
+#include "DataTypes/RenderClasses/Model.h"
+#include "DataTypes/Materials/Material.h"
+#include "DataTypes/Materials/TexturedMaterial.h"
 #include "Window.h"
 #include "ConfigManager.h"
-#include "../DataTypes/DescriptorObjects/TextureDescriptorObject.h"
-#include "../DataTypes/Camera.h"
-#include "../DataTypes/Materials/ShadowMaterial.h"
+#include "DataTypes/DescriptorObjects/TextureDescriptorObject.h"
+#include "DataTypes/Camera.h"
+#include "DataTypes/Materials/ShadowMaterial.h"
 
 // Standard library includes
 #include <chrono>

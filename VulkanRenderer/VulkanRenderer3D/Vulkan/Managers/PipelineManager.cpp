@@ -2,9 +2,9 @@
 
 // File includes
 #include "PipelineManager.h"
-#include "../../Engine/ConfigManager.h"
-#include "../Wrappers/PipelineWrapper.h"
-#include "../Wrappers/DescriptorPoolWrapper.h"
+#include "Engine/ConfigManager.h"
+#include "Vulkan/Wrappers/PipelineWrapper.h"
+#include "Vulkan/Wrappers/DescriptorPoolWrapper.h"
 
 D3D::PipelineManager::PipelineManager()
 {

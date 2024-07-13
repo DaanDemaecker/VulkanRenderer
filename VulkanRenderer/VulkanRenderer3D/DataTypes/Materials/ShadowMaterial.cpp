@@ -2,12 +2,12 @@
 
 // File includes
 #include "ShadowMaterial.h"
-#include "../../Vulkan/Renderers/VulkanRenderer3D.h"
-#include "../../Utils/Utils.h"
-#include "../../Vulkan/Wrappers/DescriptorPoolWrapper.h"
-#include "../../Includes/STBIncludes.h"
-#include "../../DataTypes/DescriptorObjects/TextureDescriptorObject.h"
-#include "../../DataTypes/DirectionalLightObject.h"
+#include "Vulkan/Renderers/VulkanRenderer3D.h"
+#include "Utils/Utils.h"
+#include "Vulkan/Wrappers/DescriptorPoolWrapper.h"
+#include "Includes/STBIncludes.h"
+#include "DataTypes/DescriptorObjects/TextureDescriptorObject.h"
+#include "DataTypes/DirectionalLightObject.h"
 
 D3D::ShadowMaterial::ShadowMaterial(std::initializer_list<const std::string>&& filePaths, const std::string& pipelineName)
 	:Material(pipelineName)

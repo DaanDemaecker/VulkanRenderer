@@ -5,8 +5,8 @@
 #define StructsIncluded
 
 // File includes
-#include "../Includes/VulkanIncludes.h"
-#include "../Includes/GLMIncludes.h"
+#include "Includes/VulkanIncludes.h"
+#include "Includes/GLMIncludes.h"
 
 // Standard library includes
 #include <optional>

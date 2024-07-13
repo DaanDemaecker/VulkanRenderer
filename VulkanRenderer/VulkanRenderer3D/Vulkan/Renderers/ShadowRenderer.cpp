@@ -2,14 +2,14 @@
 
 // File includes
 #include "ShadowRenderer.h"
-#include "../VulkanUtils.h"
-#include "../Wrappers/PipelineWrapper.h"
-#include "../../Engine/ConfigManager.h"
-#include "../Wrappers/GPUObject.h"
-#include "../Wrappers/DescriptorPoolWrapper.h"
-#include "../../DataTypes/DirectionalLightObject.h"
-#include "../../DataTypes/RenderClasses/Model.h"
-#include "../Wrappers/Viewport.h"
+#include "Vulkan/VulkanUtils.h"
+#include "Vulkan/Wrappers/PipelineWrapper.h"
+#include "Engine/ConfigManager.h"
+#include "Vulkan/Wrappers/GPUObject.h"
+#include "Vulkan/Wrappers/DescriptorPoolWrapper.h"
+#include "DataTypes/DirectionalLightObject.h"
+#include "DataTypes/RenderClasses/Model.h"
+#include "Vulkan/Wrappers/Viewport.h"
 
 D3D::ShadowRenderer::ShadowRenderer(GPUObject* pGPUObject, VkExtent2D swapchainExtent)
 {

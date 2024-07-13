@@ -5,8 +5,8 @@
 #define ImageViewManagerIncluded
 
 //File includes
-#include "../../Includes/VulkanIncludes.h"
-#include "../../DataTypes/Structs.h"
+#include "Includes/VulkanIncludes.h"
+#include "DataTypes/Structs.h"
 
 namespace D3D
 {

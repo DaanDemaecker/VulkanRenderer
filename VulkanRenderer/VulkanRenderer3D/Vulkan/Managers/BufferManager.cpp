@@ -2,8 +2,8 @@
 
 // File includes
 #include "BufferManager.h"
-#include "../Wrappers/GPUObject.h"
-#include "../VulkanUtils.h"
+#include "Vulkan/Wrappers/GPUObject.h"
+#include "Vulkan/VulkanUtils.h"
 #include "CommandpoolManager.h"
 #include "CommandpoolManager.h"
 

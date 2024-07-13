@@ -2,7 +2,7 @@
 
 // File includes
 #include "ShaderModuleWrapper.h"
-#include "../../Utils/Utils.h"
+#include "Utils/Utils.h"
 
 // Standard library includes
 #include <stdexcept>

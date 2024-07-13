@@ -2,9 +2,9 @@
 
 // File includes
 #include "DescriptorPoolWrapper.h"
-#include "../Renderers/VulkanRenderer3D.h"
-#include "../../DataTypes/RenderClasses/Model.h" 
-#include "../../DataTypes/DescriptorObjects/DescriptorObject.h"
+#include "Vulkan/Renderers/VulkanRenderer3D.h"
+#include "DataTypes/RenderClasses/Model.h" 
+#include "DataTypes/DescriptorObjects/DescriptorObject.h"
 #include "ShaderModuleWrapper.h"
 
 

@@ -6,7 +6,7 @@
 #define MaterialIncluded
 
 // File includes
-#include "../Structs.h"
+#include "DataTypes/Structs.h"
 
 // Standard library includes
 #include <iostream>

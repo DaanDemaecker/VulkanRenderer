@@ -2,9 +2,9 @@
 
 // File includes
 #include "CubeMapMaterial.h"
-#include "../../Vulkan/Renderers/VulkanRenderer3D.h"
-#include "../../Vulkan/Wrappers/DescriptorPoolWrapper.h"
-#include "../DescriptorObjects/TextureDescriptorObject.h"
+#include "Vulkan/Renderers/VulkanRenderer3D.h"
+#include "Vulkan/Wrappers/DescriptorPoolWrapper.h"
+#include "DataTypes/DescriptorObjects/TextureDescriptorObject.h"
 
 // Standard library includes
 #include <stdexcept>

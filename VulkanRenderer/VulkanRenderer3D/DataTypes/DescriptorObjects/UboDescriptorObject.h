@@ -6,7 +6,7 @@
 
 // File includes
 #include "DescriptorObject.h"
-#include "../../Vulkan/Renderers/VulkanRenderer3D.h"
+#include "Vulkan/Renderers/VulkanRenderer3D.h"
 
 namespace D3D
 {

@@ -5,8 +5,8 @@
 #define ImGuiWrapperIncluded
 
 // File includes
-#include "../../Includes/VulkanIncludes.h"
-#include "../../Includes/ImGuiIncludes.h"
+#include "Includes/VulkanIncludes.h"
+#include "Includes/ImGuiIncludes.h"
 
 namespace D3D
 {

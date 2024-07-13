@@ -7,7 +7,7 @@
 
 // File includes
 #include "DescriptorObject.h"
-#include "../Structs.h"
+#include "DataTypes/Structs.h"
 
 // Standard includes
 #include <initializer_list>

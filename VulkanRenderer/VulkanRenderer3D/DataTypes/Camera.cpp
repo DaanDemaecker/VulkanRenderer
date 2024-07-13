@@ -2,10 +2,10 @@
 
 // File includes
 #include "Camera.h"
-#include "../Engine/Window.h"
-#include "../Engine/TimeManager.h"
-#include "../Includes/ImGuiIncludes.h"
-#include "../Utils/Utils.h"
+#include "Engine/Window.h"
+#include "Engine/TimeManager.h"
+#include "Includes/ImGuiIncludes.h"
+#include "Utils/Utils.h"
 
 
 void D3D::Camera::Update()

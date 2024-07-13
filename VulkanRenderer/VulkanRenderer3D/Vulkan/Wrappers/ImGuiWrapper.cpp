@@ -2,7 +2,7 @@
 
 // File includes
 #include "ImGuiWrapper.h"
-#include "../../Engine/Window.h"
+#include "Engine/Window.h"
 
 // Standard library includes
 #include <array>

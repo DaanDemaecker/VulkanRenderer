@@ -5,7 +5,7 @@
 #define SurfaceWrapperIncluded
 
 // File includes
-#include "../../Includes/VulkanIncludes.h"
+#include "Includes/VulkanIncludes.h"
 
 namespace D3D
 {

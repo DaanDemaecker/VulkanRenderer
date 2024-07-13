@@ -5,7 +5,7 @@
 #define CameraIncluded
 
 // File includes
-#include "../Includes/GLMIncludes.h"
+#include "Includes/GLMIncludes.h"
 #include "Structs.h"
 
 namespace D3D

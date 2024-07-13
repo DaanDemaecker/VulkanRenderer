@@ -2,7 +2,7 @@
 
 //File includes
 #include "TextureDescriptorObject.h"
-#include "../../Vulkan/Renderers/VulkanRenderer3D.h"
+#include "Vulkan/Renderers/VulkanRenderer3D.h"
 
 D3D::TextureDescriptorObject::TextureDescriptorObject(Texture& texture)
 	:DescriptorObject(VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER)

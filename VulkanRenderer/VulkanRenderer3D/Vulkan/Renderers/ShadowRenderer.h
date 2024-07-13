@@ -2,9 +2,9 @@
 #define ShadowRendererIncluded
 
 // File includes
-#include "../../Includes/VulkanIncludes.h"
-#include "../../DataTypes/Structs.h"
-#include "../../DataTypes/DescriptorObjects/TextureDescriptorObject.h"
+#include "Includes/VulkanIncludes.h"
+#include "DataTypes/Structs.h"
+#include "DataTypes/DescriptorObjects/TextureDescriptorObject.h"
 
 // Standard library includes
 #include <memory>

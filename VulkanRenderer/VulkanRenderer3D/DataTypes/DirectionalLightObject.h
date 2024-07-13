@@ -5,10 +5,10 @@
 #define DirectionalLightObjectIncluded
 
 // File includes
-#include "../Includes/GLFWIncludes.h"
-#include "../Includes/GLMIncludes.h"
-#include "../DataTypes/Structs.h"
-#include "../DataTypes/DescriptorObjects/UboDescriptorObject.h"
+#include "Includes/GLFWIncludes.h"
+#include "Includes/GLMIncludes.h"
+#include "Structs.h"
+#include "DescriptorObjects/UboDescriptorObject.h"
 
 namespace D3D
 {

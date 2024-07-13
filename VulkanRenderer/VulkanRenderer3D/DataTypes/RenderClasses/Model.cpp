@@ -2,12 +2,12 @@
 
 // File includes
 #include "Model.h"
-#include "../../Vulkan/Renderers/VulkanRenderer3D.h"
-#include "../../Utils/Utils.h"
-#include "../Materials/Material.h"
-#include "../../Engine/TimeManager.h"
-#include "../../Vulkan/Wrappers/DescriptorPoolWrapper.h"
-#include "../../Vulkan/Wrappers/PipelineWrapper.h"
+#include "Vulkan/Renderers/VulkanRenderer3D.h"
+#include "Utils/Utils.h"
+#include "DataTypes/Materials/Material.h"
+#include "Engine/TimeManager.h"
+#include "Vulkan/Wrappers/DescriptorPoolWrapper.h"
+#include "Vulkan/Wrappers/PipelineWrapper.h"
 #include "Mesh.h"
 
 // Standard library includes

@@ -2,11 +2,11 @@
 
 // File includes
 #include "ImageManager.h"
-#include "../../Includes/STBIncludes.h"
-#include "../VulkanUtils.h"
-#include "../Wrappers/GPUObject.h"
+#include "Includes/STBIncludes.h"
+#include "Vulkan/VulkanUtils.h"
+#include "Vulkan/Wrappers/GPUObject.h"
 #include "BufferManager.h"
-#include "../../Engine/ConfigManager.h"
+#include "Engine/ConfigManager.h"
 #include "CommandpoolManager.h"
 
 // Standard library includes

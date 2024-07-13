@@ -3,10 +3,10 @@
 // File includes
 #include "SwapchainWrapper.h"
 #include "GPUObject.h"
-#include "../Managers/ImageViewManager.h"
-#include "../../Engine/Window.h"
-#include "../Managers/ImageManager.h"
-#include "../VulkanUtils.h"
+#include "Vulkan/Managers/ImageViewManager.h"
+#include "Engine/Window.h"
+#include "Vulkan/Managers/ImageManager.h"
+#include "Vulkan/VulkanUtils.h"
 
 // Standard library includes
 #include <stdexcept>

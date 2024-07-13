@@ -2,12 +2,12 @@
 
 // File includes
 #include "TexturedMaterial.h"
-#include "../../Vulkan/Renderers/VulkanRenderer3D.h"
-#include "../../Utils/Utils.h"
-#include "../../Vulkan/Wrappers/DescriptorPoolWrapper.h"
-#include "../../Includes/STBIncludes.h"
-#include "../../DataTypes/DescriptorObjects/TextureDescriptorObject.h"
-#include "../../DataTypes/DirectionalLightObject.h"
+#include "Vulkan/Renderers/VulkanRenderer3D.h"
+#include "Utils/Utils.h"
+#include "Vulkan/Wrappers/DescriptorPoolWrapper.h"
+#include "Includes/STBIncludes.h"
+#include "DataTypes/DescriptorObjects/TextureDescriptorObject.h"
+#include "DataTypes/DirectionalLightObject.h"
 
 D3D::TexturedMaterial::TexturedMaterial(std::initializer_list<const std::string>&& filePaths, const std::string& pipelineName)
 	:Material(pipelineName)

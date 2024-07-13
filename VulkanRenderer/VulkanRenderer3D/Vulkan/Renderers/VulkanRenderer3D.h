@@ -5,8 +5,9 @@
 #define VulkanRendererIncluded
 
 // File includes
-#include "../../Engine/Singleton.h"
-#include "../../DataTypes/Structs.h"
+#include "Includes/VulkanIncludes.h"
+#include "Engine/Singleton.h"
+#include "DataTypes/Structs.h"
 
 // Standard library includes
 #include <memory>

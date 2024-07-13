@@ -6,7 +6,7 @@
 #define UtilsIncluded
 
 // File includes
-#include "../DataTypes/Structs.h"
+#include "DataTypes/Structs.h"
 
 // Standard library includes
 #include <vector>

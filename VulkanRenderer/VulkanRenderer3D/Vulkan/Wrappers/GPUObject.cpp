@@ -2,7 +2,7 @@
 
 // File includes
 #include "GPUObject.h"
-#include "../VulkanUtils.h"
+#include "Vulkan/VulkanUtils.h"
 #include "InstanceWrapper.h"
 
 // Standard library includes

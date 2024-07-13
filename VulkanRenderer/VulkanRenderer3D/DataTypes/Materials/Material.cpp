@@ -2,13 +2,13 @@
 
 // File includes
 #include "Material.h"
-#include "../../Vulkan/Renderers/VulkanRenderer3D.h"
-#include "../../Utils/Utils.h"
-#include "../../Vulkan/Wrappers/DescriptorPoolWrapper.h"
-#include "../../Includes/STBIncludes.h"
-#include "../../Vulkan/Wrappers/PipelineWrapper.h"
-#include "../../DataTypes/DescriptorObjects/DescriptorObject.h"
-#include "../../DataTypes/DirectionalLightObject.h"
+#include "Vulkan/Renderers/VulkanRenderer3D.h"
+#include "Utils/Utils.h"
+#include "Vulkan/Wrappers/DescriptorPoolWrapper.h"
+#include "Includes/STBIncludes.h"
+#include "Vulkan/Wrappers/PipelineWrapper.h"
+#include "DataTypes/DescriptorObjects/DescriptorObject.h"
+#include "DataTypes/DirectionalLightObject.h"
 
 D3D::Material::Material(const std::string& pipelineName)
 {

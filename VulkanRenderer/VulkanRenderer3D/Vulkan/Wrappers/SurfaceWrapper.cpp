@@ -1,5 +1,5 @@
 #include "SurfaceWrapper.h"
-#include "../../Engine/Window.h"
+#include "Engine/Window.h"
 
 #include <stdexcept>
 

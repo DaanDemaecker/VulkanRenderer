@@ -5,10 +5,10 @@
 #define ModelIncluded
 
 // File includes
-#include "../../Includes/GLFWIncludes.h"
-#include "../../Includes/GLMIncludes.h"
-#include "../../DataTypes/Structs.h"
-#include "../../DataTypes/DescriptorObjects/UboDescriptorObject.h"
+#include "Includes/GLFWIncludes.h"
+#include "Includes/GLMIncludes.h"
+#include "DataTypes/Structs.h"
+#include "DataTypes/DescriptorObjects/UboDescriptorObject.h"
 
 // Standard library includes
 #include <memory>

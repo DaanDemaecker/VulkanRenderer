@@ -5,8 +5,8 @@
 #define ShaderModuleWrapperIncluded
 
 // File includes
-#include "../../includes/VulkanIncludes.h"
-#include "../SpirVReflect/spirv_reflect.h"
+#include "Includes/VulkanIncludes.h"
+#include "Vulkan/SpirVReflect/spirv_reflect.h"
 
 // Standard library includes
 #include <string>
