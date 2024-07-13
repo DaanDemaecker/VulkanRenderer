@@ -1,3 +1,9 @@
+# Set project
+project(VulkanRenderer2D)
+
+# Include directories
+include_directories(${PROJECT_SOURCE_DIR})
+
 # Create the executable
 add_executable(VulkanRenderer2D
     "Engine Files/ConfigManager.cpp"

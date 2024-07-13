@@ -1,3 +1,9 @@
+# Set project
+project(VulkanRenderer3D)
+
+# Include directories
+include_directories(${PROJECT_SOURCE_DIR})
+
 # Create the executable
 add_executable(VulkanRenderer3D
 	"DataTypes/DescriptorObjects/TextureDescriptorObject.cpp"
@@ -37,8 +43,7 @@ add_executable(VulkanRenderer3D
 	"Vulkan/Wrappers/SurfaceWrapper.cpp"
 	"Vulkan/Wrappers/SwapchainWrapper.cpp"
 	"Vulkan/Wrappers/Viewport.cpp"
-	"Vulkan/VulkanUtils.cpp"
-)
+	"Vulkan/VulkanUtils.cpp")
 
 add_custom_target(configFile3D ALL)
 add_custom_command(

@@ -241,13 +241,11 @@ void D3D::VulkanRenderer3D::InitImGui()
 	init_info.CheckVkResultFn = [](VkResult /*err*/) { /* error handling */ };
 	// Give the max amount of samples per mixel
 	init_info.MSAASamples = m_pSwapchainWrapper->GetMsaaSamples();
+	// Set renderpass
+	init_info.RenderPass = m_pRenderpassWrapper->GetRenderpass();
 
-	// Create a single time command buffer
-	auto commandBuffer{ BeginSingleTimeCommands() };
 	// Initialize ImGui
-	m_pImGuiWrapper = std::make_unique<D3D::ImGuiWrapper>(init_info, m_pRenderpassWrapper->GetRenderpass(), commandBuffer, m_pGpuObject->GetDevice(), m_MaxFramesInFlight);
-	// End the single time command buffer
-	EndSingleTimeCommands(commandBuffer);
+	m_pImGuiWrapper = std::make_unique<D3D::ImGuiWrapper>(init_info, m_pGpuObject->GetDevice(), m_MaxFramesInFlight);
 }
 
 void D3D::VulkanRenderer3D::AddGraphicsPipeline(const std::string& pipelineName, std::initializer_list<const std::string>&& filePaths, bool hasDepthStencil)
