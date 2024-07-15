@@ -1,9 +1,6 @@
 # Set project
 project(VulkanRenderer2D)
 
-# Include directories
-include_directories(${PROJECT_SOURCE_DIR})
-
 # Create the executable
 add_executable(VulkanRenderer2D
     "Engine Files/ConfigManager.cpp"
@@ -16,13 +13,17 @@ add_executable(VulkanRenderer2D
     "Vulkan/VulkanRenderer2D.cpp"
 )
 
+# Include directories specific to this target
+target_include_directories(VulkanRenderer2D PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
+
+# Add custom target to copy config file
 add_custom_target(configFile2D ALL)
 add_custom_command(
-	TARGET configFile2D POST_BUILD
-	COMMAND ${CMAKE_COMMAND}
-	-E copy
-	${CMAKE_CURRENT_SOURCE_DIR}/Config.json
-	$<TARGET_FILE_DIR:VulkanRenderer2D>
+    TARGET configFile2D POST_BUILD
+    COMMAND ${CMAKE_COMMAND}
+    -E copy
+    ${CMAKE_CURRENT_SOURCE_DIR}/Config.json
+    $<TARGET_FILE_DIR:VulkanRenderer2D>
 )
 
 # Copy resources after Shaders

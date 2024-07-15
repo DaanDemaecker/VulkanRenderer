@@ -2,13 +2,14 @@
 
 // File includes
 #include "VulkanRenderer3D.h"
+#include "Vulkan/Managers/DispatchableManager.h"
+
 #include "Vulkan/Wrappers/GPUObject.h"
 #include "Vulkan/Managers/PipelineManager.h"
 #include "Vulkan/Wrappers/RenderpassWrapper.h"
 #include "Vulkan/Wrappers/SwapchainWrapper.h"
 #include "Vulkan/Managers/ImageManager.h"
 #include "Vulkan/Managers/SyncObjectManager.h"
-#include "Vulkan/Wrappers/InstanceWrapper.h"
 #include "Vulkan/Wrappers/ImGuiWrapper.h"
 #include "Vulkan/VulkanUtils.h"
 #include "Engine/Window.h"
@@ -154,7 +155,7 @@ void D3D::VulkanRenderer3D::CleanupVulkan()
 	m_pGpuObject->CleanUp();
 
 	// Destroy the surface
-	m_pSurfaceWrapper->Cleanup(m_pInstanceWrapper->GetInstance());
+	m_pSurfaceWrapper->Cleanup(m_pDispatchableManager->GetInstance());
 }
 
 void D3D::VulkanRenderer3D::CleanupImGui()
@@ -169,15 +170,15 @@ void D3D::VulkanRenderer3D::InitVulkan()
 	m_pBufferManager = std::make_unique<BufferManager>();
 
 	// Initialize the vulkan instance
-	m_pInstanceWrapper = std::make_unique<InstanceWrapper>();
+	m_pDispatchableManager = std::make_unique<DispatchableManager>();
 
 	// Initialize the surface
-	m_pSurfaceWrapper = std::make_unique<SurfaceWrapper>(m_pInstanceWrapper->GetInstance());
+	m_pSurfaceWrapper = std::make_unique<SurfaceWrapper>(m_pDispatchableManager->GetInstance());
 
 	auto surface{ m_pSurfaceWrapper->GetSurface() };
 
 	// Initialize the gpu object
-	m_pGpuObject = std::make_unique<GPUObject>(m_pInstanceWrapper.get(), surface);
+	m_pGpuObject = std::make_unique<GPUObject>(m_pDispatchableManager->GetInstanceWrapper(), surface);
 
 	// Get pointer to gpu object
 	GPUObject* pGPUObject{ m_pGpuObject.get() };
@@ -220,7 +221,7 @@ void D3D::VulkanRenderer3D::InitImGui()
 	// Create ImGui vulkan init info
 	ImGui_ImplVulkan_InitInfo init_info = {};
 	// Give the vulkan instance
-	init_info.Instance = m_pInstanceWrapper->GetInstance();
+	init_info.Instance = m_pDispatchableManager->GetInstance();
 	// Give the physical device
 	init_info.PhysicalDevice = m_pGpuObject->GetPhysicalDevice();
 	// Give the logical device

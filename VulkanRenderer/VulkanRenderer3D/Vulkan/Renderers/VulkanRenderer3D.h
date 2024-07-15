@@ -20,9 +20,9 @@ namespace D3D
 {
     // Class forward declarations
     class Model;
+    class DispatchableManager;
     class GPUObject;
     class ImGuiWrapper;
-    class InstanceWrapper;
     class ImageManager;
     class CommandpoolManager;
     class RenderpassWrapper;
@@ -177,6 +177,11 @@ namespace D3D
             VkImageLayout oldLayout, VkImageLayout newLayout, uint32_t mipLevels, uint32_t layerCount = 1);
 
     private:
+
+
+        // Pointer to the instance wrapper
+        std::unique_ptr<DispatchableManager> m_pDispatchableManager{};
+
         std::unique_ptr<ShadowRenderer> m_pShadowRenderer{};
 
         // Viewport object
@@ -205,9 +210,6 @@ namespace D3D
 
         // Pointer to thep pipeline manager
         std::unique_ptr<PipelineManager> m_pPipelineManager{};
-
-        // Pointer to the instance wrapper
-        std::unique_ptr<InstanceWrapper> m_pInstanceWrapper{};
 
         // Pointer to the image manager
         std::unique_ptr<ImageManager> m_pImageManager{};

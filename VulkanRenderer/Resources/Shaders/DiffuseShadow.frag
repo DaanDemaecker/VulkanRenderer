@@ -21,7 +21,7 @@ float GetObservedArea(vec3 normal);
 
 float CalculateShadowAmount();
 
-float shadowConstant = 0.8f;
+float shadowConstant = 0.2f;
 float tolerance = 0.0005f;
 
 void main()
