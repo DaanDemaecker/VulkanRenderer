@@ -15,6 +15,7 @@ namespace D3D
 	// Class forward declarations
 	class InstanceWrapper;
 	class SurfaceWrapper;
+	class GPUObject;
 
 	class DispatchableManager
 	{
@@ -37,11 +38,21 @@ namespace D3D
 
 		VkSurfaceKHR GetSurface() const;
 
+		VkDevice GetDevice() const;
+		VkPhysicalDevice GetPhysicalDevice() const;
+		GPUObject* GetGpuObject() const;
+
+		void WaitIdle();
+
 	private:
 		// Instance wrapper
 		std::unique_ptr<InstanceWrapper> m_pInstanceWrapper{};
+
+		// Sufrace wrapper
 		std::unique_ptr<SurfaceWrapper> m_pSurfaceWrapper{};
 
+		// GPU object
+		std::unique_ptr<GPUObject> m_pGPUObject{};
 	};
 }
 

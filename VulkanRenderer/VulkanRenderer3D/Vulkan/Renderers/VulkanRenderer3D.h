@@ -21,7 +21,6 @@ namespace D3D
     // Class forward declarations
     class Model;
     class DispatchableManager;
-    class GPUObject;
     class ImGuiWrapper;
     class ImageManager;
     class CommandpoolManager;
@@ -188,9 +187,6 @@ namespace D3D
 
         // Pointer to the skybox object
         std::unique_ptr<SkyBox> m_pSkyBox{};
-
-        // Pointer to the gpu wrapper object
-        std::unique_ptr<GPUObject> m_pGpuObject{};
 
         // The maximum amount of frames in flight
         const uint32_t m_MaxFramesInFlight{ 2 };

@@ -27,17 +27,14 @@ namespace D3D
 		// Delete the default constructor
 		GPUObject() = delete;
 
-		// Default destructor
-		~GPUObject() = default;
+		// Destructor
+		~GPUObject();
 
 		// Delete copy and move functions
 		GPUObject(GPUObject& other) = delete;
 		GPUObject(GPUObject&& other) = delete;
 		GPUObject& operator=(GPUObject& other) = delete;
 		GPUObject& operator=(GPUObject&& other) = delete;
-
-		// Clean up the devices
-		void CleanUp();
 		
 		// Wait untile the device is idle
 		void WaitIdle();

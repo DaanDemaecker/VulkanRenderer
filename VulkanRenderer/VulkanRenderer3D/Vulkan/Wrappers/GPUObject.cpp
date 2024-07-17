@@ -19,9 +19,7 @@ D3D::GPUObject::GPUObject(InstanceWrapper* pInstanceWrapper, VkSurfaceKHR surfac
 	CreateLogicalDevice(pInstanceWrapper, surface);
 }
 
-
-
-void D3D::GPUObject::CleanUp()
+D3D::GPUObject::~GPUObject()
 {
 	// Destroy the logical device
 	vkDestroyDevice(m_Device, nullptr);

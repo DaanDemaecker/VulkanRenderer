@@ -3,8 +3,8 @@
 // File includes
 #include "VulkanRenderer3D.h"
 #include "Vulkan/Managers/DispatchableManager.h"
-
 #include "Vulkan/Wrappers/GPUObject.h"
+
 #include "Vulkan/Managers/PipelineManager.h"
 #include "Vulkan/Wrappers/RenderpassWrapper.h"
 #include "Vulkan/Wrappers/SwapchainWrapper.h"
@@ -49,7 +49,7 @@ D3D::VulkanRenderer3D::VulkanRenderer3D()
 D3D::VulkanRenderer3D::~VulkanRenderer3D()
 {
 	// Waint until the logical device isn't doing anything
-	m_pGpuObject->WaitIdle();
+	m_pDispatchableManager->WaitIdle();
 
 	// Clean up ImGui
 	CleanupImGui();
@@ -99,9 +99,9 @@ void D3D::VulkanRenderer3D::SetupLight()
 
 void D3D::VulkanRenderer3D::SetupDefaultPipeline()
 {
-	m_pShadowRenderer->CreatePipeline(m_pGpuObject->GetDevice());
+	m_pShadowRenderer->CreatePipeline(m_pDispatchableManager->GetDevice());
 	// Add the default pipeline
-	m_pPipelineManager->AddDefaultPipeline(m_pGpuObject->GetDevice(), m_pRenderpassWrapper->GetRenderpass(), m_pSwapchainWrapper->GetMsaaSamples());
+	m_pPipelineManager->AddDefaultPipeline(m_pDispatchableManager->GetDevice(), m_pRenderpassWrapper->GetRenderpass(), m_pSwapchainWrapper->GetMsaaSamples());
 }
 
 D3D::TextureDescriptorObject* D3D::VulkanRenderer3D::GetShadowMapDescriptorObject()
@@ -111,9 +111,9 @@ D3D::TextureDescriptorObject* D3D::VulkanRenderer3D::GetShadowMapDescriptorObjec
 
 void D3D::VulkanRenderer3D::TransitionImageLayout(VkImage image, VkFormat format, VkImageLayout oldLayout, VkImageLayout newLayout, uint32_t mipLevels, uint32_t layerCount)
 {
-	auto commandBuffer{ m_pCommandPoolManager->BeginSingleTimeCommands(m_pGpuObject->GetDevice()) };
+	auto commandBuffer{ m_pCommandPoolManager->BeginSingleTimeCommands(m_pDispatchableManager->GetDevice()) };
 	m_pImageManager->TransitionImageLayout(image, commandBuffer, format, oldLayout, newLayout, mipLevels, layerCount);
-	m_pCommandPoolManager->EndSingleTimeCommands(m_pGpuObject.get(), commandBuffer);
+	m_pCommandPoolManager->EndSingleTimeCommands(m_pDispatchableManager->GetGpuObject(), commandBuffer);
 }
 
 void D3D::VulkanRenderer3D::CleanupLight()
@@ -125,7 +125,7 @@ void D3D::VulkanRenderer3D::CleanupLight()
 void D3D::VulkanRenderer3D::CleanupVulkan()
 {
 	// Get handle to logical device
-	auto device{ m_pGpuObject->GetDevice() };
+	auto device{ m_pDispatchableManager->GetDevice() };
 
 	m_pShadowRenderer->Cleanup(device);
 
@@ -150,15 +150,12 @@ void D3D::VulkanRenderer3D::CleanupVulkan()
 
 	// Clean up commandpools
 	m_pCommandPoolManager->Cleanup(device);
-
-	// Clean up GPUObject
-	m_pGpuObject->CleanUp();
 }
 
 void D3D::VulkanRenderer3D::CleanupImGui()
 {
 	// Clean up ImGui
-	m_pImGuiWrapper->Cleanup(m_pGpuObject->GetDevice());
+	m_pImGuiWrapper->Cleanup(m_pDispatchableManager->GetDevice());
 }
 
 void D3D::VulkanRenderer3D::InitVulkan()
@@ -171,11 +168,8 @@ void D3D::VulkanRenderer3D::InitVulkan()
 
 	auto surface{ m_pDispatchableManager->GetSurface() };
 
-	// Initialize the gpu object
-	m_pGpuObject = std::make_unique<GPUObject>(m_pDispatchableManager->GetInstanceWrapper(), surface);
-
 	// Get pointer to gpu object
-	GPUObject* pGPUObject{ m_pGpuObject.get() };
+	GPUObject* pGPUObject{ m_pDispatchableManager->GetGpuObject()};
 
 	// Initialize command pool manager
 	m_pCommandPoolManager = std::make_unique<CommandpoolManager>(pGPUObject, surface, m_MaxFramesInFlight);
@@ -184,7 +178,7 @@ void D3D::VulkanRenderer3D::InitVulkan()
 	m_pImageManager = std::make_unique<ImageManager>(pGPUObject, m_pBufferManager.get(), m_pCommandPoolManager.get());
 
 	// Get the max amount of samples per pixel
-	auto msaaSamples = VulkanUtils::GetMaxUsableSampleCount(m_pGpuObject->GetPhysicalDevice());
+	auto msaaSamples = VulkanUtils::GetMaxUsableSampleCount(pGPUObject->GetPhysicalDevice());
 
 	// Initialize the swapchain
 	m_pSwapchainWrapper = std::make_unique<SwapchainWrapper>(pGPUObject, surface,	m_pImageManager.get(), msaaSamples);
@@ -212,18 +206,22 @@ void D3D::VulkanRenderer3D::InitVulkan()
 
 void D3D::VulkanRenderer3D::InitImGui()
 {
+
+	// Get pointer to gpu object
+	GPUObject* pGPUObject{ m_pDispatchableManager->GetGpuObject() };
+
 	// Create ImGui vulkan init info
 	ImGui_ImplVulkan_InitInfo init_info = {};
 	// Give the vulkan instance
 	init_info.Instance = m_pDispatchableManager->GetInstance();
 	// Give the physical device
-	init_info.PhysicalDevice = m_pGpuObject->GetPhysicalDevice();
+	init_info.PhysicalDevice = pGPUObject->GetPhysicalDevice();
 	// Give the logical device
-	init_info.Device = m_pGpuObject->GetDevice();
+	init_info.Device = pGPUObject->GetDevice();
 	// Give the index of the graphics queue family
-	init_info.QueueFamily = m_pGpuObject->GetQueueObject().graphicsQueueIndex;
+	init_info.QueueFamily = pGPUObject->GetQueueObject().graphicsQueueIndex;
 	// Give the graphics queue
-	init_info.Queue = m_pGpuObject->GetQueueObject().graphicsQueue;
+	init_info.Queue = pGPUObject->GetQueueObject().graphicsQueue;
 	// Set pipeline cache to null handle
 	init_info.PipelineCache = VK_NULL_HANDLE;
 	// Set Allocator to null handle
@@ -240,25 +238,25 @@ void D3D::VulkanRenderer3D::InitImGui()
 	init_info.RenderPass = m_pRenderpassWrapper->GetRenderpass();
 
 	// Initialize ImGui
-	m_pImGuiWrapper = std::make_unique<D3D::ImGuiWrapper>(init_info, m_pGpuObject->GetDevice(), m_MaxFramesInFlight);
+	m_pImGuiWrapper = std::make_unique<D3D::ImGuiWrapper>(init_info, pGPUObject->GetDevice(), m_MaxFramesInFlight);
 }
 
 void D3D::VulkanRenderer3D::AddGraphicsPipeline(const std::string& pipelineName, std::initializer_list<const std::string>&& filePaths, bool hasDepthStencil)
 {
 	// Add a graphics pipeline trough the pipeline manager
-	m_pPipelineManager->AddGraphicsPipeline(m_pGpuObject->GetDevice(), m_pRenderpassWrapper->GetRenderpass(),
+	m_pPipelineManager->AddGraphicsPipeline(m_pDispatchableManager->GetDevice(), m_pRenderpassWrapper->GetRenderpass(),
 		m_pSwapchainWrapper->GetMsaaSamples(), pipelineName, filePaths, hasDepthStencil);
 }
 
 void D3D::VulkanRenderer3D::Render(std::vector<std::unique_ptr<Model>>& pModels)
 {
 	// Wait for the in flight fence of the current frame
-	vkWaitForFences(m_pGpuObject->GetDevice(), 1, &m_pSyncObjectManager->GetInFlightFence(m_CurrentFrame), VK_TRUE, UINT64_MAX);
+	vkWaitForFences(m_pDispatchableManager->GetDevice(), 1, &m_pSyncObjectManager->GetInFlightFence(m_CurrentFrame), VK_TRUE, UINT64_MAX);
 
 	// Create image index uint
 	uint32_t imageIndex{};
 	// Get the index of the next image
-	VkResult result = vkAcquireNextImageKHR(m_pGpuObject->GetDevice(), m_pSwapchainWrapper->GetSwapchain(), UINT64_MAX, m_pSyncObjectManager->GetImageAvailableSemaphore(m_CurrentFrame), VK_NULL_HANDLE, &imageIndex);
+	VkResult result = vkAcquireNextImageKHR(m_pDispatchableManager->GetDevice(), m_pSwapchainWrapper->GetSwapchain(), UINT64_MAX, m_pSyncObjectManager->GetImageAvailableSemaphore(m_CurrentFrame), VK_NULL_HANDLE, &imageIndex);
 
 	// Check if window is out of date
 	if (result == VK_ERROR_OUT_OF_DATE_KHR)
@@ -274,7 +272,7 @@ void D3D::VulkanRenderer3D::Render(std::vector<std::unique_ptr<Model>>& pModels)
 	}
 
 	// Reset the in flight fences
-	vkResetFences(m_pGpuObject->GetDevice(), 1, &m_pSyncObjectManager->GetInFlightFence(m_CurrentFrame));
+	vkResetFences(m_pDispatchableManager->GetDevice(), 1, &m_pSyncObjectManager->GetInFlightFence(m_CurrentFrame));
 
 	// Get the current command buffer
 	auto commandBuffer{GetCurrentCommandBuffer()};
@@ -313,7 +311,7 @@ void D3D::VulkanRenderer3D::Render(std::vector<std::unique_ptr<Model>>& pModels)
 	submitInfo.pSignalSemaphores = signalSemaphores;
 
 	// Submit the command buffers
-	if (vkQueueSubmit(m_pGpuObject->GetQueueObject().graphicsQueue, 1, &submitInfo, m_pSyncObjectManager->GetInFlightFence(m_CurrentFrame)) != VK_SUCCESS)
+	if (vkQueueSubmit(m_pDispatchableManager->GetGpuObject()->GetQueueObject().graphicsQueue, 1, &submitInfo, m_pSyncObjectManager->GetInFlightFence(m_CurrentFrame)) != VK_SUCCESS)
 	{
 		// If unsuccessful, throw runtime error
 		throw std::runtime_error("failed to submit draw command buffer!");
@@ -340,7 +338,7 @@ void D3D::VulkanRenderer3D::Render(std::vector<std::unique_ptr<Model>>& pModels)
 	presentInfo.pResults = nullptr;
 
 	// Present the swapchain
-	result = vkQueuePresentKHR(m_pGpuObject->GetQueueObject().presentQueue, &presentInfo);
+	result = vkQueuePresentKHR(m_pDispatchableManager->GetGpuObject()->GetQueueObject().presentQueue, &presentInfo);
 
 	// Check if window was resized and is out of date
 	if (result == VK_ERROR_OUT_OF_DATE_KHR || result == VK_SUBOPTIMAL_KHR || Window::GetInstance().GetWindowStruct().FrameBufferResized)
@@ -449,7 +447,7 @@ void D3D::VulkanRenderer3D::RecordCommandBuffer(VkCommandBuffer& commandBuffer, 
 VkDevice D3D::VulkanRenderer3D::GetDevice()
 {
 	// Return the logical device
-	return m_pGpuObject->GetDevice();
+	return m_pDispatchableManager->GetDevice();
 }
 
 VkImageView& D3D::VulkanRenderer3D::GetDefaultImageView()
@@ -503,13 +501,13 @@ void D3D::VulkanRenderer3D::RecreateSwapChain()
 	}
 
 	// Wait until the device is idle
-	vkDeviceWaitIdle(m_pGpuObject->GetDevice());
+	m_pDispatchableManager->WaitIdle();
 	
 	// Create a single time command
 	auto commandBuffer{ BeginSingleTimeCommands() };
 
 	// Recreate the swapchain
-	m_pSwapchainWrapper->RecreateSwapChain(m_pGpuObject.get(),m_pDispatchableManager->GetSurface(), m_pImageManager.get(),
+	m_pSwapchainWrapper->RecreateSwapChain(m_pDispatchableManager->GetGpuObject(), m_pDispatchableManager->GetSurface(), m_pImageManager.get(),
 		commandBuffer, m_pRenderpassWrapper->GetRenderpass());
 
 	// End single time command
@@ -532,25 +530,25 @@ void D3D::VulkanRenderer3D::TransitionImageLayout(VkImage image, VkFormat format
 void D3D::VulkanRenderer3D::CreateBuffer(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VkBuffer& buffer, VkDeviceMemory& bufferMemory)
 {
 	// Create the buffer trough vulkan utils
-	m_pBufferManager->CreateBuffer(m_pGpuObject.get(), size, usage, properties, buffer, bufferMemory);
+	m_pBufferManager->CreateBuffer(m_pDispatchableManager->GetGpuObject(), size, usage, properties, buffer, bufferMemory);
 }
 
 void D3D::VulkanRenderer3D::CopyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size)
 {
 	// Copy a buffer trough the bufferManager
-	m_pBufferManager->CopyBuffer(m_pGpuObject.get(), m_pCommandPoolManager.get(), srcBuffer, dstBuffer, size);
+	m_pBufferManager->CopyBuffer(m_pDispatchableManager->GetGpuObject(), m_pCommandPoolManager.get(), srcBuffer, dstBuffer, size);
 }
 
 void D3D::VulkanRenderer3D::CreateVertexBuffer(std::vector<D3D::Vertex>& vertices, VkBuffer& vertexBuffer, VkDeviceMemory& vertexBufferMemory)
 {
 	// Create a vertex buffer trough the buffer manager
-	m_pBufferManager->CreateVertexBuffer(m_pGpuObject.get(), m_pCommandPoolManager.get(), vertices, vertexBuffer, vertexBufferMemory);
+	m_pBufferManager->CreateVertexBuffer(m_pDispatchableManager->GetGpuObject(), m_pCommandPoolManager.get(), vertices, vertexBuffer, vertexBufferMemory);
 }
 
 void D3D::VulkanRenderer3D::CreateIndexBuffer(std::vector<uint32_t>& indices, VkBuffer& indexBuffer, VkDeviceMemory& indexBufferMemory)
 {
 	// Create an index buffer trough the buffer manager
-	m_pBufferManager->CreateIndexBuffer(m_pGpuObject.get(), m_pCommandPoolManager.get(), indices, indexBuffer, indexBufferMemory);
+	m_pBufferManager->CreateIndexBuffer(m_pDispatchableManager->GetGpuObject(), m_pCommandPoolManager.get(), indices, indexBuffer, indexBufferMemory);
 }
 
 void D3D::VulkanRenderer3D::UpdateUniformBuffer(UniformBufferObject& buffer)
@@ -562,25 +560,25 @@ void D3D::VulkanRenderer3D::UpdateUniformBuffer(UniformBufferObject& buffer)
 void D3D::VulkanRenderer3D::CreateTexture(Texture& texture, const std::string& textureName)
 {
 	// Create the image trough the image manager
-	m_pImageManager->CreateTextureImage(m_pGpuObject.get(), m_pBufferManager.get(), texture, textureName, m_pCommandPoolManager.get());
+	m_pImageManager->CreateTextureImage(m_pDispatchableManager->GetGpuObject(), m_pBufferManager.get(), texture, textureName, m_pCommandPoolManager.get());
 	// Create the image view
-	texture.imageView = m_pImageManager->CreateImageView(m_pGpuObject->GetDevice(), texture.image, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_ASPECT_COLOR_BIT, texture.mipLevels);
+	texture.imageView = m_pImageManager->CreateImageView(m_pDispatchableManager->GetDevice(), texture.image, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_ASPECT_COLOR_BIT, texture.mipLevels);
 }
 
 void D3D::VulkanRenderer3D::CreateCubeTexture(Texture& cubeTexture, const std::initializer_list<const std::string>& textureNames)
 {
 	// Create a cube texture trough image manager
-	m_pImageManager->CreateCubeTexture(m_pGpuObject.get(), m_pBufferManager.get(), cubeTexture, textureNames, m_pCommandPoolManager.get());
+	m_pImageManager->CreateCubeTexture(m_pDispatchableManager->GetGpuObject(), m_pBufferManager.get(), cubeTexture, textureNames, m_pCommandPoolManager.get());
 }
 
 VkCommandBuffer D3D::VulkanRenderer3D::BeginSingleTimeCommands()
 {
 	// Create a single time command buffer trough the command pool manager and return it
-	return m_pCommandPoolManager->BeginSingleTimeCommands(m_pGpuObject->GetDevice());
+	return m_pCommandPoolManager->BeginSingleTimeCommands(m_pDispatchableManager->GetDevice());
 }
 
 void D3D::VulkanRenderer3D::EndSingleTimeCommands(VkCommandBuffer commandBuffer)
 {
 	// End the single time command buffer trough the commandpool manager
-	m_pCommandPoolManager->EndSingleTimeCommands(m_pGpuObject.get(), commandBuffer);
+	m_pCommandPoolManager->EndSingleTimeCommands(m_pDispatchableManager->GetGpuObject(), commandBuffer);
 }
