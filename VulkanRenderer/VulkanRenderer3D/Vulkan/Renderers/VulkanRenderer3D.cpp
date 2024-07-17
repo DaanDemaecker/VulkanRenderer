@@ -153,9 +153,6 @@ void D3D::VulkanRenderer3D::CleanupVulkan()
 
 	// Clean up GPUObject
 	m_pGpuObject->CleanUp();
-
-	// Destroy the surface
-	m_pSurfaceWrapper->Cleanup(m_pDispatchableManager->GetInstance());
 }
 
 void D3D::VulkanRenderer3D::CleanupImGui()
@@ -172,10 +169,7 @@ void D3D::VulkanRenderer3D::InitVulkan()
 	// Initialize the vulkan instance
 	m_pDispatchableManager = std::make_unique<DispatchableManager>();
 
-	// Initialize the surface
-	m_pSurfaceWrapper = std::make_unique<SurfaceWrapper>(m_pDispatchableManager->GetInstance());
-
-	auto surface{ m_pSurfaceWrapper->GetSurface() };
+	auto surface{ m_pDispatchableManager->GetSurface() };
 
 	// Initialize the gpu object
 	m_pGpuObject = std::make_unique<GPUObject>(m_pDispatchableManager->GetInstanceWrapper(), surface);
@@ -515,7 +509,7 @@ void D3D::VulkanRenderer3D::RecreateSwapChain()
 	auto commandBuffer{ BeginSingleTimeCommands() };
 
 	// Recreate the swapchain
-	m_pSwapchainWrapper->RecreateSwapChain(m_pGpuObject.get(), m_pSurfaceWrapper->GetSurface(), m_pImageManager.get(),
+	m_pSwapchainWrapper->RecreateSwapChain(m_pGpuObject.get(),m_pDispatchableManager->GetSurface(), m_pImageManager.get(),
 		commandBuffer, m_pRenderpassWrapper->GetRenderpass());
 
 	// End single time command

@@ -14,6 +14,7 @@ namespace D3D
 {
 	// Class forward declarations
 	class InstanceWrapper;
+	class SurfaceWrapper;
 
 	class DispatchableManager
 	{
@@ -34,9 +35,12 @@ namespace D3D
 		VkInstance GetInstance() const;
 		InstanceWrapper* GetInstanceWrapper() const;
 
+		VkSurfaceKHR GetSurface() const;
+
 	private:
 		// Instance wrapper
 		std::unique_ptr<InstanceWrapper> m_pInstanceWrapper{};
+		std::unique_ptr<SurfaceWrapper> m_pSurfaceWrapper{};
 
 	};
 }

@@ -35,7 +35,6 @@ namespace D3D
     class DescriptorObject;
     class Camera;
     class PipelineManager;
-    class SurfaceWrapper;
     class Viewport;
     class ShadowRenderer;
     class TextureDescriptorObject;
@@ -198,9 +197,6 @@ namespace D3D
 
         // The current frame
         uint32_t m_CurrentFrame = 0;
-
-        // Pointer to the surface wrapper
-        std::unique_ptr<SurfaceWrapper> m_pSurfaceWrapper{};
 
         // Pointer to the buffer manager
         std::unique_ptr<BufferManager> m_pBufferManager{};
