@@ -1,8 +1,8 @@
 // InstanceWrapper.h
 // This class will serve as a wrapper for the VkInstance object
 
-#ifndef InstanceWrapperDefined
-#define InstanceWrapperDefined
+#ifndef InstanceWrapperIncluded
+#define InstanceWrapperIncluded
 
 // File includes
 #include "Includes/VulkanIncludes.h"
@@ -113,4 +113,4 @@ namespace D3D
 	};
 
 }
-#endif // !InstanceWrapperDefined
+#endif // !InstanceWrapperIncluded
