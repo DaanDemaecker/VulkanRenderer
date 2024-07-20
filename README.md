@@ -72,3 +72,6 @@ For math support, GLM i chose glm as it was the library i was most familiar with
 
 ### Json file reading
 I had worked with Json files before in C# but never in C++, so I had to learn an look for a library that could fit my requirements and I ended up choosing RapidJSON.
+
+### Image loading
+Image loading is done with the STB library, as suggested by the Vulkan tutorial.  
