@@ -13,6 +13,8 @@
 #include "DataTypes/Camera.h"
 #include "DataTypes/Materials/ShadowMaterial.h"
 
+#include "Vulkan/Vulkan3D.h"
+
 // Standard library includes
 #include <chrono>
 #include <thread>
@@ -21,6 +23,8 @@ D3D::D3DEngine::D3DEngine()
 {
 	// Create the window with the given width and height
 	D3D::Window::GetInstance();
+	
+	D3D::Vulkan3D::GetInstance().Init();
 
 	auto& renderer{ VulkanRenderer3D::GetInstance() };
 
@@ -31,7 +35,7 @@ D3D::D3DEngine::D3DEngine()
 
 D3D::D3DEngine::~D3DEngine()
 {
-	
+	D3D::Vulkan3D::GetInstance().Terminate();	
 }
 
 // This function will run the gameloop for the duration of the app

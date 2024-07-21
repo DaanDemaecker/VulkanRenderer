@@ -42,6 +42,7 @@ add_executable(VulkanRenderer3D
     "Vulkan/Wrappers/Viewport.cpp"
     "Vulkan/VulkanUtils.cpp"
     "Vulkan/Managers/DispatchableManager.cpp"
+    "Vulkan/Vulkan3D.cpp"
 )
 
 # Include directories specific to this target
