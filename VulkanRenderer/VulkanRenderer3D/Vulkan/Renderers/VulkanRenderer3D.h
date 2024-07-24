@@ -20,7 +20,6 @@ namespace D3D
 {
     // Class forward declarations
     class Model;
-    class DispatchableManager;
     class ImGuiWrapper;
     class ImageManager;
     class CommandpoolManager;
@@ -175,11 +174,6 @@ namespace D3D
             VkImageLayout oldLayout, VkImageLayout newLayout, uint32_t mipLevels, uint32_t layerCount = 1);
 
     private:
-
-
-        // Pointer to the instance wrapper
-        std::unique_ptr<DispatchableManager> m_pDispatchableManager{};
-
         std::unique_ptr<ShadowRenderer> m_pShadowRenderer{};
 
         // Viewport object

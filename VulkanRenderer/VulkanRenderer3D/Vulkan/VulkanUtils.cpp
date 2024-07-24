@@ -4,16 +4,17 @@
 #include "VulkanUtils.h"
 #include "Wrappers/GPUObject.h"
 #include "Managers/ImageManager.h"
+#include "Vulkan/Vulkan3D.h"
 
 // Standard library includes
 #include <stdexcept>
 
-uint32_t VulkanUtils::FindMemoryType(VkPhysicalDevice physicalDevice, uint32_t typeFilter, VkMemoryPropertyFlags properties)
+uint32_t VulkanUtils::FindMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties)
 {
 	// Create physical device memory properties object
 	VkPhysicalDeviceMemoryProperties memProperties;
 	// Get the memory properties
-	vkGetPhysicalDeviceMemoryProperties(physicalDevice, &memProperties);
+	vkGetPhysicalDeviceMemoryProperties(D3D::Vulkan3D::GetInstance().GetPhysicalDevice(), &memProperties);
 
 	// Loop trough the amount of memory types
 	for (uint32_t i = 0; i < memProperties.memoryTypeCount; ++i)
@@ -30,11 +31,11 @@ uint32_t VulkanUtils::FindMemoryType(VkPhysicalDevice physicalDevice, uint32_t t
 	throw std::runtime_error("failed to find suitable memory type!");
 }
 
-VkFormat VulkanUtils::FindDepthFormat(VkPhysicalDevice physicalDevice)
+VkFormat VulkanUtils::FindDepthFormat()
 {
 	// Find a supported format for the depth resources
 	// Requested property flag is Depth stencil attachment
-	return VulkanUtils::FindSupportedFormat(physicalDevice,
+	return VulkanUtils::FindSupportedFormat(D3D::Vulkan3D::GetInstance().GetPhysicalDevice(),
 		{ VK_FORMAT_D32_SFLOAT, VK_FORMAT_D32_SFLOAT_S8_UINT, VK_FORMAT_D24_UNORM_S8_UINT },
 		VK_IMAGE_TILING_OPTIMAL,
 		VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT
@@ -235,7 +236,7 @@ void VulkanUtils::CreateDepthImage(D3D::Texture& texture, D3D::GPUObject* pGPUOb
 	D3D::ImageManager* pImageManager, VkCommandBuffer commandBuffer, bool sampleBitSet)
 {
 	// Get the depth formatµ
-	auto depthFormat = VulkanUtils::FindDepthFormat(pGPUObject->GetPhysicalDevice());
+	auto depthFormat = VulkanUtils::FindDepthFormat();
 
 	VkImageUsageFlagBits usageBits = VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT;
 

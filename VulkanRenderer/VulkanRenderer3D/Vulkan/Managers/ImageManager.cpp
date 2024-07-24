@@ -193,7 +193,7 @@ void D3D::ImageManager::CreateCubeTexture(GPUObject* pGPUObject, D3D::BufferMana
 	// Set allocation size to the size found in memory requirements
 	allocateInfo.allocationSize = memoryRequirements.size;
 	// Find the correct memory type
-	allocateInfo.memoryTypeIndex = VulkanUtils::FindMemoryType(pGPUObject->GetPhysicalDevice(), memoryRequirements.memoryTypeBits, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
+	allocateInfo.memoryTypeIndex = VulkanUtils::FindMemoryType(memoryRequirements.memoryTypeBits, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
 
 	// Allocate the memory
 	if (vkAllocateMemory(device, &allocateInfo, nullptr, &cubeTexture.imageMemory) != VK_SUCCESS)
@@ -632,7 +632,7 @@ void D3D::ImageManager::CreateImage(GPUObject* pGPUObject, uint32_t width, uint3
 	// Set allocation size to memory requirements size
 	allocInfo.allocationSize = memRequirements.size;
 	// Set find memory type and set it as the type index
-	allocInfo.memoryTypeIndex = VulkanUtils::FindMemoryType(pGPUObject->GetPhysicalDevice(), memRequirements.memoryTypeBits, properties);
+	allocInfo.memoryTypeIndex = VulkanUtils::FindMemoryType(memRequirements.memoryTypeBits, properties);
 
 	// Allocate the memory
 	if (vkAllocateMemory(device, &allocInfo, nullptr, &texture.imageMemory) != VK_SUCCESS)

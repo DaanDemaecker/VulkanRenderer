@@ -22,15 +22,12 @@ namespace VulkanUtils
 {
 	// Get a memory type that satisfies the given properties
 	// Parameters:
-	//     physicalDevice: handle of the VkPhysicalDevice
 	//     typeFilter: specifies the bit field of the requested memory type
 	//     properties: the requested properties for the memory type
-	uint32_t FindMemoryType(VkPhysicalDevice physicalDevice, uint32_t typeFilter, VkMemoryPropertyFlags properties);
+	uint32_t FindMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties);
 
 	// Get the format for the depth resources
-	// Parameters:
-	//     physicalDevice: handle of the VkPhysicalDevice
-	VkFormat FindDepthFormat(VkPhysicalDevice physicalDevice);
+	VkFormat FindDepthFormat();
 
 	// Get the maximum amount of samples per pixel
 	// Parameters:

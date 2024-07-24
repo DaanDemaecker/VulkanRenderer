@@ -2,6 +2,7 @@
 
 // File includes
 #include "ShadowRenderer.h"
+#include "Vulkan/Vulkan3D.h"
 #include "Vulkan/VulkanUtils.h"
 #include "Vulkan/Wrappers/PipelineWrapper.h"
 #include "Engine/ConfigManager.h"
@@ -18,7 +19,7 @@ D3D::ShadowRenderer::ShadowRenderer(GPUObject* pGPUObject, VkExtent2D swapchainE
 
 	auto device = pGPUObject->GetDevice();
 
-	CreateDepthImage(pGPUObject, swapchainExtent);
+	CreateDepthImage();
 
 	CreateRenderPass(device);
 
@@ -27,6 +28,11 @@ D3D::ShadowRenderer::ShadowRenderer(GPUObject* pGPUObject, VkExtent2D swapchainE
 	CreateFramebuffers(device, swapchainExtent);
 
 	m_pViewport = std::make_unique<Viewport>();
+}
+
+D3D::ShadowRenderer::~ShadowRenderer()
+{
+	Cleanup(Vulkan3D::GetInstance().GetDevice());
 }
 
 void D3D::ShadowRenderer::Cleanup(VkDevice device)
@@ -40,9 +46,10 @@ void D3D::ShadowRenderer::Cleanup(VkDevice device)
 	vkDestroyFramebuffer(device, m_ShadowFrameBuffer, nullptr);
 }
 
-void D3D::ShadowRenderer::CreateDepthImage(GPUObject* pGPUObject, VkExtent2D /*swapchainExtent*/)
+void D3D::ShadowRenderer::CreateDepthImage()
 {
-	auto device{ pGPUObject->GetDevice() };
+	auto device{ Vulkan3D::GetInstance().GetDevice()};
+	auto physicalDevice{ Vulkan3D::GetInstance().GetPhysicalDevice() };
 
 	// Create VkImage
 	VkImageCreateInfo imageInfo = {};
@@ -53,7 +60,7 @@ void D3D::ShadowRenderer::CreateDepthImage(GPUObject* pGPUObject, VkExtent2D /*s
 	imageInfo.extent.depth = 1;
 	imageInfo.mipLevels = 1;
 	imageInfo.arrayLayers = 1;
-	imageInfo.format = VulkanUtils::FindDepthFormat(pGPUObject->GetPhysicalDevice());
+	imageInfo.format = VulkanUtils::FindDepthFormat();
 	imageInfo.tiling = VK_IMAGE_TILING_OPTIMAL;
 	imageInfo.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
 	imageInfo.usage = VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT | VK_IMAGE_USAGE_SAMPLED_BIT;
@@ -68,7 +75,7 @@ void D3D::ShadowRenderer::CreateDepthImage(GPUObject* pGPUObject, VkExtent2D /*s
 	VkMemoryAllocateInfo allocInfo = {};
 	allocInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
 	allocInfo.allocationSize = memRequirements.size;
-	allocInfo.memoryTypeIndex = VulkanUtils::FindMemoryType(pGPUObject->GetPhysicalDevice(), memRequirements.memoryTypeBits, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
+	allocInfo.memoryTypeIndex = VulkanUtils::FindMemoryType(memRequirements.memoryTypeBits, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
 
 	vkAllocateMemory(device, &allocInfo, nullptr, &m_ShadowTexture.imageMemory);
 	vkBindImageMemory(device, m_ShadowTexture.image, m_ShadowTexture.imageMemory, 0);
@@ -78,7 +85,7 @@ void D3D::ShadowRenderer::CreateDepthImage(GPUObject* pGPUObject, VkExtent2D /*s
 	viewInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
 	viewInfo.image = m_ShadowTexture.image;
 	viewInfo.viewType = VK_IMAGE_VIEW_TYPE_2D;
-	viewInfo.format = VulkanUtils::FindDepthFormat(pGPUObject->GetPhysicalDevice());
+	viewInfo.format = VulkanUtils::FindDepthFormat();
 	viewInfo.subresourceRange.aspectMask = VK_IMAGE_ASPECT_DEPTH_BIT;
 	viewInfo.subresourceRange.baseMipLevel = 0;
 	viewInfo.subresourceRange.levelCount = 1;

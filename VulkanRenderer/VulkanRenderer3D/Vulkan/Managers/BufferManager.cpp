@@ -46,7 +46,7 @@ void D3D::BufferManager::CreateBuffer(D3D::GPUObject* pGPUObject, VkDeviceSize s
 	// Set size to memory requirements size
 	allocInfo.allocationSize = memRequirements.size;
 	// Find a memory type that satisfies the requested properties
-	allocInfo.memoryTypeIndex = VulkanUtils::FindMemoryType(pGPUObject->GetPhysicalDevice(), memRequirements.memoryTypeBits, properties);
+	allocInfo.memoryTypeIndex = VulkanUtils::FindMemoryType(memRequirements.memoryTypeBits, properties);
 
 	// Allocate the memory
 	if (vkAllocateMemory(device, &allocInfo, nullptr, &bufferMemory) != VK_SUCCESS)

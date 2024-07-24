@@ -28,8 +28,8 @@ namespace D3D
 		// Delete default constructor
 		ShadowRenderer() = delete;
 
-		// Dafault destructor
-		~ShadowRenderer() = default;
+		// Destructor
+		~ShadowRenderer();
 
 		// Delete move and copy functions
 		ShadowRenderer(ShadowRenderer& other) = delete;
@@ -71,10 +71,7 @@ namespace D3D
 		bool m_DescriptorSetInitialized{ false };
 
 		// Initialize the depth image for the swapchain
-		// Parameters:
-		//     pGPUObject: pointer to the GPU Object
-		//     pImageManager: pointer to the image manager
-		void CreateDepthImage(GPUObject* pGPUObject, VkExtent2D swapchainExtent);
+		void CreateDepthImage();
 
 
 		// Create the frame buffers

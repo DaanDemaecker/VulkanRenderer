@@ -132,7 +132,7 @@ void D3D::VulkanRenderer3D::CleanupVulkan()
 	// Get handle to logical device
 	auto device{ Vulkan3D::GetInstance().GetDevice()};
 
-	m_pShadowRenderer->Cleanup(device);
+	//m_pShadowRenderer->Cleanup(device);
 
 
 	// Clean up global light
@@ -186,7 +186,7 @@ void D3D::VulkanRenderer3D::InitVulkan()
 	m_pSwapchainWrapper = std::make_unique<SwapchainWrapper>(pGPUObject, surface,	m_pImageManager.get(), msaaSamples);
 
 	// Initialize the renderpass
-	m_pRenderpassWrapper = std::make_unique<RenderpassWrapper>(pGPUObject->GetDevice(), m_pSwapchainWrapper->GetFormat(), VulkanUtils::FindDepthFormat(pGPUObject->GetPhysicalDevice()), msaaSamples);
+	m_pRenderpassWrapper = std::make_unique<RenderpassWrapper>(pGPUObject->GetDevice(), m_pSwapchainWrapper->GetFormat(), VulkanUtils::FindDepthFormat(), msaaSamples);
 
 	// Create a single time command buffer
 	auto commandBuffer{ BeginSingleTimeCommands()};
