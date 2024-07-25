@@ -4,7 +4,7 @@
     "WindowHeight" : 600,
     "FullScreen" : false,
     "Maximized" : true,
-    "Monitor" : 0,
+    "Monitor" : 1,
     "ApplicationName": "VulkanRenderer3D",
     "ApplicationVersionMajor" : 1,
     "ApplicationVersionMinor" : 0,
@@ -18,5 +18,6 @@
     "DefaultVertName" : "resources/DefaultResources/Default.Vert.spv",
     "DefaultFragName" : "resources/DefaultResources/Default.Frag.spv",
     "ShadowVertName" : "resources/DefaultResources/Shadow.Vert.spv",
-    "ShadowFragName" : "resources/DefaultResources/Shadow.Frag.spv"
+    "ShadowFragName": "resources/DefaultResources/Shadow.Frag.spv",
+    "ShadowMapSize" :  2048
 }

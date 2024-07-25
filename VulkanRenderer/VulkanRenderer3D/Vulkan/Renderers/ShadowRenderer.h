@@ -21,12 +21,7 @@ namespace D3D
 	{
 	public:
 		// Constructor
-		// Parameters:
-		//     msaaSamples: max amount of samples per pixel
-		ShadowRenderer(GPUObject* pGPUObject, VkExtent2D swapchainExtent);
-
-		// Delete default constructor
-		ShadowRenderer() = delete;
+		ShadowRenderer();
 
 		// Destructor
 		~ShadowRenderer();
@@ -38,9 +33,7 @@ namespace D3D
 		ShadowRenderer& operator=(ShadowRenderer& other) = delete;
 		ShadowRenderer& operator=(ShadowRenderer&& other) = delete;
 
-		void Cleanup(VkDevice device);
-
-		void Render(std::vector<std::unique_ptr<Model>>& pModels, VkExtent2D swapchainExtent);
+		void Render(std::vector<std::unique_ptr<Model>>& pModels);
 
 		void CreatePipeline(VkDevice device);
 
@@ -60,7 +53,7 @@ namespace D3D
 
 		std::unique_ptr<PipelineWrapper> m_pShadowPipeline{};
 
-		uint16_t m_ShadowMapSize{2048};
+		const uint16_t m_ShadowMapSize;
 
 		// Viewport object
 		std::unique_ptr<Viewport> m_pViewport{};
@@ -77,7 +70,7 @@ namespace D3D
 		// Create the frame buffers
 		// Parameters:
 		//     device: handle of the VkDevice
-		void CreateFramebuffers(VkDevice device, VkExtent2D swapchainExtent);
+		void CreateFramebuffers(VkDevice device);
 
 		void CreateRenderPass(VkDevice device);
 
@@ -88,6 +81,9 @@ namespace D3D
 		void UpdateDescriptorSets();
 
 		void RecreateFrameBuffer();
+
+
+		void Cleanup(VkDevice device);
 	};
 }
 

@@ -203,7 +203,7 @@ void D3D::VulkanRenderer3D::InitVulkan()
 
 	m_pViewport = std::make_unique<Viewport>();
 
-	m_pShadowRenderer = std::make_unique<ShadowRenderer>(pGPUObject, m_pSwapchainWrapper->GetExtent());
+	m_pShadowRenderer = std::make_unique<ShadowRenderer>();
 }
 
 void D3D::VulkanRenderer3D::InitImGui()
@@ -382,7 +382,7 @@ void D3D::VulkanRenderer3D::RecordCommandBuffer(VkCommandBuffer& commandBuffer, 
 	}
 
 
-	m_pShadowRenderer->Render(pModels, swapchainExtent);
+	m_pShadowRenderer->Render(pModels);
 
 	m_pViewport->SetViewport(commandBuffer, swapchainExtent);
 

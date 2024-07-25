@@ -12,12 +12,13 @@
 #include "DataTypes/RenderClasses/Model.h"
 #include "Vulkan/Wrappers/Viewport.h"
 
-D3D::ShadowRenderer::ShadowRenderer(GPUObject* pGPUObject, VkExtent2D swapchainExtent)
+D3D::ShadowRenderer::ShadowRenderer()
+	:m_ShadowMapSize{static_cast<uint16_t>(ConfigManager::GetInstance().GetInt("ShadowMapSize"))}
 {
 	// Set amount of samples
 	m_MsaaSamples = VK_SAMPLE_COUNT_1_BIT;
 
-	auto device = pGPUObject->GetDevice();
+	auto device = Vulkan3D::GetInstance().GetDevice();
 
 	CreateDepthImage();
 
@@ -25,7 +26,7 @@ D3D::ShadowRenderer::ShadowRenderer(GPUObject* pGPUObject, VkExtent2D swapchainE
 
 	m_ShadowTexture.layout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL;
 
-	CreateFramebuffers(device, swapchainExtent);
+	CreateFramebuffers(device);
 
 	m_pViewport = std::make_unique<Viewport>();
 }
@@ -95,7 +96,7 @@ void D3D::ShadowRenderer::CreateDepthImage()
 	vkCreateImageView(device, &viewInfo, nullptr, &m_ShadowTexture.imageView);
 }
 
-void D3D::ShadowRenderer::CreateFramebuffers(VkDevice device, VkExtent2D /*swapchainExtent*/)
+void D3D::ShadowRenderer::CreateFramebuffers(VkDevice device)
 {
 	VkFramebufferCreateInfo framebufferInfo = {};
 	framebufferInfo.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
@@ -220,7 +221,7 @@ D3D::TextureDescriptorObject* D3D::ShadowRenderer::GetTextureDescriptorObject()
 	return m_pShadowTextureObject.get();
 }
 
-void D3D::ShadowRenderer::Render(std::vector<std::unique_ptr<Model>>& pModels, VkExtent2D /*swapchainExtent*/)
+void D3D::ShadowRenderer::Render(std::vector<std::unique_ptr<Model>>& pModels)
 {
 	if (!m_DescriptorSetInitialized)
 	{
