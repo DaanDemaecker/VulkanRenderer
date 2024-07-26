@@ -8,6 +8,11 @@
 #include "Utils/Utils.h"
 
 
+D3D::Camera::Camera()
+{
+	SetRotation(m_TotalPitch, m_TotalYaw, 0);
+}
+
 void D3D::Camera::Update()
 {
 	glm::vec3 direction{};
@@ -159,4 +164,9 @@ glm::vec3 D3D::Camera::GetRight()
 	glm::vec3 finalRotatedVector = glm::vec3(rotatedVector);
 
 	return finalRotatedVector;
+}
+
+void D3D::Camera::SetRotation(glm::vec3&& rotation)
+{
+	SetRotation(rotation);
 }

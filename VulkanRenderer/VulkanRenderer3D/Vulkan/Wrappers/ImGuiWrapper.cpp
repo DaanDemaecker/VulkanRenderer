@@ -97,6 +97,8 @@ void D3D::ImGuiWrapper::InitDescriptorPool(VkDevice device, uint32_t maxFrames)
 	poolInfo.pPoolSizes = poolSizes.data();
 	// Set max sets to max amount of frames
 	poolInfo.maxSets = static_cast<uint32_t>(maxFrames);
+	// Set flags
+	poolInfo.flags = VK_DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT;
 
 	// Create descriptorpool, if failed throw runtime error
 	if (vkCreateDescriptorPool(device, &poolInfo, nullptr, &m_DescriptorPool) != VK_SUCCESS) {

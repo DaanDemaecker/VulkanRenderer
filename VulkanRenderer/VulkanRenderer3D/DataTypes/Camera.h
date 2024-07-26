@@ -20,7 +20,7 @@ namespace D3D
 	{
 	public:
 		// Default constructor
-		Camera() = default;
+		Camera();
 
 		// Defualt destructor
 		~Camera() = default;
@@ -57,7 +57,7 @@ namespace D3D
 		// Set rotation
 		// Parameters:
 		//     rotation: new rotation
-		void SetRotation(glm::vec3&& rotation) {SetRotation(rotation);}
+		void SetRotation(glm::vec3&& rotation);
 		// Set rotation
 		// Parameters:
 		//     x: x-rotation
@@ -129,8 +129,8 @@ namespace D3D
 		const float m_Speed{ 5.f };
 		const float m_AngularSpeed{ 0.5f };
 
-		float m_TotalPitch{};
-		float m_TotalYaw{};
+		float m_TotalPitch{0};
+		float m_TotalYaw{0};
 
 		double m_PrevXPos{};
 		double m_PrevYPos{};
@@ -146,8 +146,8 @@ namespace D3D
 		// Vector 3 for the position
 		glm::vec3 m_Position{0, 0, 0};
 
-		// Vector 3 for the rotation
-		glm::quat m_Rotation{ glm::identity<glm::quat>() };
+		// Quaternion for the rotation
+		glm::quat m_Rotation{};
 
 		// Vector 3 for the scale
 		glm::vec3 m_Scale{1, 1, 1};
