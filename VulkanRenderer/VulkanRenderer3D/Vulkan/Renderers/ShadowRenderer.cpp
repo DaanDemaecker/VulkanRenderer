@@ -28,7 +28,7 @@ D3D::ShadowRenderer::ShadowRenderer()
 
 	CreateFramebuffers(device);
 
-	m_pViewport = std::make_unique<Viewport>();
+	m_pViewport = std::make_unique<Viewport>(VkExtent2D{ m_ShadowMapSize, m_ShadowMapSize });
 }
 
 D3D::ShadowRenderer::~ShadowRenderer()
@@ -237,7 +237,7 @@ void D3D::ShadowRenderer::Render(std::vector<std::unique_ptr<Model>>& pModels)
 
 	VkExtent2D extent{ m_ShadowMapSize, m_ShadowMapSize };
 
-	m_pViewport->SetViewport(commandBuffer, extent);
+	m_pViewport->SetViewport(commandBuffer);
 
 	VkClearValue clearValue = {};
 	clearValue.depthStencil = { 1.0f, 0 };

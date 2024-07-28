@@ -201,7 +201,7 @@ void D3D::VulkanRenderer3D::InitVulkan()
 	// Initialize the sync objects
 	m_pSyncObjectManager = std::make_unique<SyncObjectManager>(pGPUObject->GetDevice(), m_MaxFramesInFlight);
 
-	m_pViewport = std::make_unique<Viewport>();
+	m_pViewport = std::make_unique<Viewport>(m_pSwapchainWrapper->GetExtent());
 
 	m_pShadowRenderer = std::make_unique<ShadowRenderer>();
 }
@@ -346,6 +346,9 @@ void D3D::VulkanRenderer3D::Render(std::vector<std::unique_ptr<Model>>& pModels)
 	{
 		// If necesarry, resize swapchain
 		RecreateSwapChain();
+
+		m_pViewport->SetViewportAndScissor(m_pSwapchainWrapper->GetExtent());
+
 		// Reset FrameBufferResized flag
 		Window::GetInstance().SetFrameBufferResized(false);
 	}
@@ -384,7 +387,7 @@ void D3D::VulkanRenderer3D::RecordCommandBuffer(VkCommandBuffer& commandBuffer, 
 
 	m_pShadowRenderer->Render(pModels);
 
-	m_pViewport->SetViewport(commandBuffer, swapchainExtent);
+	m_pViewport->SetViewport(commandBuffer);
 
 	m_pRenderpassWrapper->BeginRenderPass(commandBuffer, m_pSwapchainWrapper->GetFrameBuffer(imageIndex), swapchainExtent);
 
