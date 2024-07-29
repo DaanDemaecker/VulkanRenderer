@@ -52,6 +52,11 @@ namespace D3D
 		VkSurfaceKHR GetSurface() const;
 
 		VulkanRenderer3D& GetRenderer();
+
+		// Function that will render all the given models
+		// Parameters:
+		//     pModels: list of models that have to be rendered
+		void Render(std::vector<std::unique_ptr<Model>>& pModels);
 	
 	private:
 		// Private  default constructor accessable for singleton class

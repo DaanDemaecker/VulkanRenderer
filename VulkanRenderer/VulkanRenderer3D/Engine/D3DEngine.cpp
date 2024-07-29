@@ -221,7 +221,7 @@ void D3D::D3DEngine::Run(const std::function<void()>& load)
 		
 
 		// Render all models
-		renderer.Render(pModels);
+		Vulkan3D::GetInstance().Render(pModels);
 
 		// Check if aplication should quit
 		shouldQuit = glfwWindowShouldClose(window.GetWindowStruct().pWindow);

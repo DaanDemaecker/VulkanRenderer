@@ -18,6 +18,7 @@
 namespace D3D
 {
     // Class forward declarations
+    class Vulkan3D;
     class Model;
     class ImGuiWrapper;
     class ImageManager;
@@ -39,6 +40,8 @@ namespace D3D
     // Inherit from singleton
     class VulkanRenderer3D final
     {
+    friend class D3D::Vulkan3D;
+
     public:
         // Constructor
         VulkanRenderer3D();
@@ -50,11 +53,6 @@ namespace D3D
         VulkanRenderer3D(VulkanRenderer3D&& other) = delete;
         VulkanRenderer3D& operator=(VulkanRenderer3D& other) = delete;
         VulkanRenderer3D& operator=(VulkanRenderer3D&& other) = delete;
-
-        // Function that will render all the given models
-        // Parameters:
-        //     pModels: list of models that have to be rendered
-        void Render(std::vector<std::unique_ptr<Model>>& pModels);
 
         // Add a new graphics pipeline
         // Parameters:
@@ -228,6 +226,11 @@ namespace D3D
 
         // Initialize ImGui
         void InitImGui();
+
+        // Function that will render all the given models
+        // Parameters:
+        //     pModels: list of models that have to be rendered
+        void Render(std::vector<std::unique_ptr<Model>>& pModels);
 
         // Recreate the swapchain
         void RecreateSwapChain();

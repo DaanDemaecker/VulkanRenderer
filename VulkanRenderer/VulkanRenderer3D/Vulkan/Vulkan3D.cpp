@@ -57,3 +57,8 @@ D3D::VulkanRenderer3D& D3D::Vulkan3D::GetRenderer()
 {
 	return *m_pRenderer.get();
 }
+
+void D3D::Vulkan3D::Render(std::vector<std::unique_ptr<Model>>& pModels)
+{
+	m_pRenderer->Render(pModels);
+}
