@@ -6,6 +6,7 @@
 // File includes
 #include "Engine/Singleton.h"
 #include "Includes/VulkanIncludes.h"
+#include "Vulkan/Renderers/VulkanRenderer3D.h"
 
 // Standard library includes
 #include <memory>
@@ -49,6 +50,8 @@ namespace D3D
 
 		// Get surface
 		VkSurfaceKHR GetSurface() const;
+
+		VulkanRenderer3D& GetRenderer();
 	
 	private:
 		// Private  default constructor accessable for singleton class
@@ -57,6 +60,8 @@ namespace D3D
 
 		// Dispatchable manager
 		std::unique_ptr<D3D::DispatchableManager> m_pDispatchableManager{};
+
+		std::unique_ptr<D3D::VulkanRenderer3D> m_pRenderer{};
 	};
 
 }

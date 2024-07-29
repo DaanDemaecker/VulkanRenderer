@@ -2,7 +2,7 @@
 
 // File includes
 #include "ShadowMaterial.h"
-#include "Vulkan/Renderers/VulkanRenderer3D.h"
+#include "Vulkan/Vulkan3D.h"
 #include "Utils/Utils.h"
 #include "Vulkan/Wrappers/DescriptorPoolWrapper.h"
 #include "Includes/STBIncludes.h"
@@ -42,19 +42,20 @@ void D3D::ShadowMaterial::UpdateDescriptorSets(std::vector<VkDescriptorSet>& des
 		descriptorObjectList.push_back(descriptorObject);
 	}
 
+	auto& renderer{ Vulkan3D::GetInstance().GetRenderer() };
 
 
 	// Add the descriptor object of the global light
-	descriptorObjectList.push_back(VulkanRenderer3D::GetInstance().GetGlobalLight()->GetTransformDescriptorObject());
+	descriptorObjectList.push_back(renderer.GetGlobalLight()->GetTransformDescriptorObject());
 
 	// Add the descriptor object of the global light
-	descriptorObjectList.push_back(VulkanRenderer3D::GetInstance().GetGlobalLight()->GetDescriptorObject());
+	descriptorObjectList.push_back(renderer.GetGlobalLight()->GetDescriptorObject());
 
 	// Add the descriptor object holding the textures
 	descriptorObjectList.push_back(m_pDescriptorObject.get());
 
 	// Add the descriptor object of the global light
-	descriptorObjectList.push_back(VulkanRenderer3D::GetInstance().GetShadowMapDescriptorObject());
+	descriptorObjectList.push_back(renderer.GetShadowMapDescriptorObject());
 
 	// Update descriptorsets
 	descriptorPool->UpdateDescriptorSets(descriptorSets, descriptorObjectList);
@@ -63,5 +64,5 @@ void D3D::ShadowMaterial::UpdateDescriptorSets(std::vector<VkDescriptorSet>& des
 void D3D::ShadowMaterial::CreateTextureSampler()
 {
 	// Get sampler
-	m_TextureSampler = VulkanRenderer3D::GetInstance().GetSampler();
+	m_TextureSampler = Vulkan3D::GetInstance().GetRenderer().GetSampler();
 }

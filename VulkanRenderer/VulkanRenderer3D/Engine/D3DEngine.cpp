@@ -25,12 +25,6 @@ D3D::D3DEngine::D3DEngine()
 	D3D::Window::GetInstance();
 	
 	D3D::Vulkan3D::GetInstance().Init();
-
-	auto& renderer{ VulkanRenderer3D::GetInstance() };
-
-	renderer.SetupDefaultPipeline();
-	renderer.SetupLight();
-	renderer.SetupSkybox();
 }
 
 D3D::D3DEngine::~D3DEngine()
@@ -44,7 +38,7 @@ void D3D::D3DEngine::Run(const std::function<void()>& load)
 	// Run the load function
 	load();
 
-	auto& renderer{ VulkanRenderer3D::GetInstance() };
+	auto& renderer{ Vulkan3D::GetInstance().GetRenderer()};
 	auto& window{ Window::GetInstance() };
 
 	renderer.AddGraphicsPipeline("Diffuse", { "Resources/Shaders/Diffuse.Vert.spv", "Resources/Shaders/Diffuse.Frag.spv" });

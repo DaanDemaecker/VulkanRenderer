@@ -2,7 +2,7 @@
 
 // File includes
 #include "Mesh.h"
-#include "Vulkan/Renderers/VulkanRenderer3D.h"
+#include "Vulkan/Vulkan3D.h"
 #include "Vulkan/Wrappers/PipelineWrapper.h"
 #include "Utils/Utils.h"
 
@@ -12,7 +12,7 @@ D3D::Mesh::Mesh(const std::string& filePath)
 	Utils::LoadModel(filePath, m_Vertices, m_Indices);
 
 	// Get reference to the renderer
-	auto& renderer{ VulkanRenderer3D::GetInstance() };
+	auto& renderer{ Vulkan3D::GetInstance().GetRenderer()};
 
 	// Create vertex and index buffer
 	renderer.CreateVertexBuffer(m_Vertices, m_VertexBuffer, m_VertexBufferMemory);
@@ -42,10 +42,8 @@ void D3D::Mesh::Render(VkCommandBuffer commandBuffer)
 
 void D3D::Mesh::Cleanup()
 {
-	// Get reference to renderer
-	auto& renderer = D3D::VulkanRenderer3D::GetInstance();
-	// Get reference to device
-	auto device = renderer.GetDevice();
+	// Get handle of device
+	auto device = D3D::Vulkan3D::GetInstance().GetDevice();
 
 	// Wait until device is idle
 	vkDeviceWaitIdle(device);

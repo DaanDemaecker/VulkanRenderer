@@ -16,12 +16,16 @@ D3D::Vulkan3D::~Vulkan3D()
 
 void D3D::Vulkan3D::Init()
 {
+	m_pRenderer = std::make_unique<D3D::VulkanRenderer3D>();
 
+	m_pRenderer->SetupDefaultPipeline();
+	m_pRenderer->SetupLight();
+	m_pRenderer->SetupSkybox();
 }
 
 void D3D::Vulkan3D::Terminate()
 {
-
+	m_pRenderer = nullptr;
 }
 
 VkInstance D3D::Vulkan3D::GetVulkanInstance() const
@@ -47,4 +51,9 @@ D3D::GPUObject* D3D::Vulkan3D::GetGPUObject() const
 VkSurfaceKHR D3D::Vulkan3D::GetSurface() const
 {
 	return m_pDispatchableManager->GetSurface();
+}
+
+D3D::VulkanRenderer3D& D3D::Vulkan3D::GetRenderer()
+{
+	return *m_pRenderer.get();
 }

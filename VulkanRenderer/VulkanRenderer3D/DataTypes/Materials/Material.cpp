@@ -13,7 +13,7 @@
 D3D::Material::Material(const std::string& pipelineName)
 {
 	// Get the requested pipeline from the renderer
-	m_Pipeline = VulkanRenderer3D::GetInstance().GetPipeline(pipelineName);
+	m_Pipeline = Vulkan3D::GetInstance().GetRenderer().GetPipeline(pipelineName);
 }
 
 D3D::PipelineWrapper* D3D::Material::GetPipeline()
@@ -46,7 +46,7 @@ void D3D::Material::UpdateDescriptorSets(std::vector<VkDescriptorSet>& descripto
 	}
 
 	// Add the descriptor of the global light object
-	descriptorObjectList.push_back(VulkanRenderer3D::GetInstance().GetGlobalLight()->GetDescriptorObject());
+	descriptorObjectList.push_back(Vulkan3D::GetInstance().GetRenderer().GetGlobalLight()->GetDescriptorObject());
 
 	// Update descriptorsets
 	descriptorPool->UpdateDescriptorSets(descriptorSets, descriptorObjectList);

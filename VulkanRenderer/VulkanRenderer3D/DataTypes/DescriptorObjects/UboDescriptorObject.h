@@ -6,7 +6,7 @@
 
 // File includes
 #include "DescriptorObject.h"
-#include "Vulkan/Renderers/VulkanRenderer3D.h"
+#include "Vulkan/Vulkan3D.h"
 
 namespace D3D
 {
@@ -73,7 +73,7 @@ namespace D3D
 		if (m_Initialized)
 		{
 			// Clean up
-			Cleanup(D3D::VulkanRenderer3D::GetInstance().GetDevice());
+			Cleanup(D3D::Vulkan3D::GetInstance().GetDevice());
 		}
 	}
 
@@ -114,7 +114,7 @@ namespace D3D
 	inline void UboDescriptorObject<T>::SetupBuffers()
 	{
 		// Get reference to renderer
-		auto& renderer = VulkanRenderer3D::GetInstance();
+		auto& renderer = Vulkan3D::GetInstance().GetRenderer();
 		// Get amount of frames
 		auto frames = renderer.GetMaxFrames();
 

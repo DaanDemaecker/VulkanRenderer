@@ -2,7 +2,7 @@
 
 // File includes
 #include "Model.h"
-#include "Vulkan/Renderers/VulkanRenderer3D.h"
+#include "Vulkan/Vulkan3D.h"
 #include "Utils/Utils.h"
 #include "DataTypes/Materials/Material.h"
 #include "Engine/TimeManager.h"
@@ -79,7 +79,7 @@ void D3D::Model::RenderShadow(VkCommandBuffer commandBuffer, VkPipelineLayout pi
 	if (!m_CastsShadow)
 		return;
 
-	auto frame{ VulkanRenderer3D::GetInstance().GetCurrentFrame() };
+	auto frame{ Vulkan3D::GetInstance().GetRenderer().GetCurrentFrame()};
 
 	vkCmdPushConstants(commandBuffer, pipelineLayout, VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(glm::mat4), &m_Ubos[frame].model);
 
@@ -93,7 +93,7 @@ void D3D::Model::Render()
 		return;
 
 	// Get reference to renderer
-	auto& renderer{ VulkanRenderer3D::GetInstance() };
+	auto& renderer{ Vulkan3D::GetInstance().GetRenderer()};
 	// Get index of current frame
 	auto frame{ renderer.GetCurrentFrame() };
 
@@ -102,7 +102,7 @@ void D3D::Model::Render()
 
 
 	// Get current commandbuffer
-	auto commandBuffer{ VulkanRenderer3D::GetInstance().GetCurrentCommandBuffer() };
+	auto commandBuffer{ renderer.GetCurrentCommandBuffer() };
 
 	// Bind pipeline
 	GetPipeline()->BindPipeline(commandBuffer);
@@ -142,7 +142,7 @@ void D3D::Model::SetScale(float x, float y, float z)
 void D3D::Model::CreateUniformBuffers()
 {
 	// Get reference to renderer
-	auto& renderer = VulkanRenderer3D::GetInstance();
+	auto& renderer = Vulkan3D::GetInstance().GetRenderer();
 	// Get amount of frames
 	auto frames = renderer.GetMaxFrames();
 
@@ -196,7 +196,7 @@ void D3D::Model::UpdateUniformBuffer(uint32_t frame)
 
 	// Update ubo
 	// Send to renderer to update camera matrix
-	VulkanRenderer3D::GetInstance().UpdateUniformBuffer(m_Ubos[frame]);
+	Vulkan3D::GetInstance().GetRenderer().UpdateUniformBuffer(m_Ubos[frame]);
 
 	m_pUboDescriptorObject->UpdateUboBuffer(m_Ubos[frame], frame);
 }
@@ -209,15 +209,13 @@ D3D::PipelineWrapper* D3D::Model::GetPipeline()
 		return m_pMaterial->GetPipeline();
 	}
 
-	return VulkanRenderer3D::GetInstance().GetPipeline();
+	return Vulkan3D::GetInstance().GetRenderer().GetPipeline();
 }
 
 void D3D::Model::Cleanup()
 {
-	// Get reference to renderer
-	auto& renderer = D3D::VulkanRenderer3D::GetInstance();
 	// Get reference to device
-	auto device = renderer.GetDevice();
+	auto device = D3D::Vulkan3D::GetInstance().GetDevice();
 
 	// Wait until device is idle
 	vkDeviceWaitIdle(device);

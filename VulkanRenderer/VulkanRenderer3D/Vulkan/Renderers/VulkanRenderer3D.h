@@ -6,7 +6,6 @@
 
 // File includes
 #include "Includes/VulkanIncludes.h"
-#include "Engine/Singleton.h"
 #include "DataTypes/Structs.h"
 
 // Standard library includes
@@ -38,7 +37,7 @@ namespace D3D
     class TextureDescriptorObject;
 
     // Inherit from singleton
-    class VulkanRenderer3D final : public Singleton<VulkanRenderer3D>
+    class VulkanRenderer3D final
     {
     public:
         // Constructor
