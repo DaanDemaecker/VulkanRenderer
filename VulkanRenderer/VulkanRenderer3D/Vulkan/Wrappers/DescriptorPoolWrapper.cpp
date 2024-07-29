@@ -2,7 +2,7 @@
 
 // File includes
 #include "DescriptorPoolWrapper.h"
-#include "Vulkan/Renderers/VulkanRenderer3D.h"
+#include "Vulkan/Vulkan3D.h"
 #include "DataTypes/RenderClasses/Model.h" 
 #include "DataTypes/DescriptorObjects/DescriptorObject.h"
 #include "ShaderModuleWrapper.h"
@@ -52,7 +52,7 @@ void D3D::DescriptorPoolWrapper::CreateDescriptorSets(VkDescriptorSetLayout layo
 	}
 
 	// Get a reference to the renderer for later use
-	auto& renderer{ VulkanRenderer3D::GetInstance() };
+	auto& renderer{ Vulkan3D::GetInstance().GetRenderer()};
 
 	// Get the amount of frames in flight
 	auto maxFrames = renderer.GetMaxFrames();
@@ -101,14 +101,14 @@ void D3D::DescriptorPoolWrapper::UpdateDescriptorSets(std::vector<VkDescriptorSe
 
 
 		// Update descriptorsets
-		vkUpdateDescriptorSets(VulkanRenderer3D::GetInstance().GetDevice(), static_cast<uint32_t>(descriptorWrites.size()), descriptorWrites.data(), 0, nullptr);
+		vkUpdateDescriptorSets(Vulkan3D::GetInstance().GetDevice(), static_cast<uint32_t>(descriptorWrites.size()), descriptorWrites.data(), 0, nullptr);
 	}
 }
 
 void D3D::DescriptorPoolWrapper::ResizeDescriptorPool()
 {
 	// Destroy current descriptorpool
-	vkDestroyDescriptorPool(VulkanRenderer3D::GetInstance().GetDevice(), m_DescriptorPool, nullptr);
+	vkDestroyDescriptorPool(Vulkan3D::GetInstance().GetDevice(), m_DescriptorPool, nullptr);
 
 	// Multiply max amount of descriptorsets by increaseFactor
 	m_MaxDescriptorSets *= m_IncreaseFactor;
@@ -137,7 +137,7 @@ void D3D::DescriptorPoolWrapper::ReadDescriptorTypeCount(std::vector<std::unique
 void D3D::DescriptorPoolWrapper::InitDescriptorPool()
 {
 	// Get a reference to the renderer
-	auto& renderer{ VulkanRenderer3D::GetInstance() };
+	auto& renderer{ Vulkan3D::GetInstance().GetRenderer()};
 
 	// Get the amount of frames in flight
 	auto frames{ renderer.GetMaxFrames() };

@@ -2,7 +2,7 @@
 
 // File includes
 #include "TexturedMaterial.h"
-#include "Vulkan/Renderers/VulkanRenderer3D.h"
+#include "Vulkan/Vulkan3D.h"
 #include "Utils/Utils.h"
 #include "Vulkan/Wrappers/DescriptorPoolWrapper.h"
 #include "Includes/STBIncludes.h"
@@ -43,7 +43,7 @@ void D3D::TexturedMaterial::UpdateDescriptorSets(std::vector<VkDescriptorSet>& d
 	}
 
 	// Add the descriptor object of the global light
-	descriptorObjectList.push_back(VulkanRenderer3D::GetInstance().GetGlobalLight()->GetDescriptorObject());
+	descriptorObjectList.push_back(Vulkan3D::GetInstance().GetRenderer().GetGlobalLight()->GetDescriptorObject());
 
 	// Add the descriptor object holding the textures
 	descriptorObjectList.push_back(m_pDescriptorObject.get());
@@ -55,5 +55,5 @@ void D3D::TexturedMaterial::UpdateDescriptorSets(std::vector<VkDescriptorSet>& d
 void D3D::TexturedMaterial::CreateTextureSampler()
 {
 	// Get sampler
-	m_TextureSampler = VulkanRenderer3D::GetInstance().GetSampler();
+	m_TextureSampler = Vulkan3D::GetInstance().GetRenderer().GetSampler();
 }

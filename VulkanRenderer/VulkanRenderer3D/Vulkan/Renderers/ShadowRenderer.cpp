@@ -186,7 +186,7 @@ void D3D::ShadowRenderer::UpdateDescriptorSets()
 	auto descriptorPool = m_pShadowPipeline->GetDescriptorPool();
 
 	// Create list of descriptor objects and add the objects of the model to it
-	std::vector<DescriptorObject*> descriptorObjectList{ VulkanRenderer3D::GetInstance().GetGlobalLight()->GetTransformDescriptorObject() };
+	std::vector<DescriptorObject*> descriptorObjectList{ Vulkan3D::GetInstance().GetRenderer().GetGlobalLight()->GetTransformDescriptorObject()};
 
 	// Update descriptorsets
 	descriptorPool->UpdateDescriptorSets(m_DescriptorSets, descriptorObjectList);
@@ -194,7 +194,7 @@ void D3D::ShadowRenderer::UpdateDescriptorSets()
 
 void D3D::ShadowRenderer::RecreateFrameBuffer()
 {
-	auto device{ VulkanRenderer3D::GetInstance().GetDevice() };
+	auto device{ Vulkan3D::GetInstance().GetDevice() };
 
 	vkDeviceWaitIdle(device);
 
@@ -229,7 +229,7 @@ void D3D::ShadowRenderer::Render(std::vector<std::unique_ptr<Model>>& pModels)
 	}
 
 	// Get reference to renderer
-	auto& renderer{ VulkanRenderer3D::GetInstance() };
+	auto& renderer{ Vulkan3D::GetInstance().GetRenderer()};
 	// Get index of current frame
 	auto frame{ renderer.GetCurrentFrame() };
 

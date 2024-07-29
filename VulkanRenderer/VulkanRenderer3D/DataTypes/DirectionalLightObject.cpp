@@ -2,7 +2,7 @@
 
 // File includes
 #include "DirectionalLightObject.h"
-#include "Vulkan/Renderers/VulkanRenderer3D.h"
+#include "Vulkan/Vulkan3D.h"
 #include "Camera.h"
 #include "Utils/Utils.h"
 
@@ -17,7 +17,7 @@ D3D::DirectionalLightObject::DirectionalLightObject()
 
 void D3D::DirectionalLightObject::CreateLightBuffer()
 {
-	auto& renderer{ VulkanRenderer3D::GetInstance() };
+	auto& renderer{ Vulkan3D::GetInstance().GetRenderer()};
 
 	// Get the amount of frames in flight
 	auto frames = renderer.GetMaxFrames();
@@ -52,7 +52,7 @@ void D3D::DirectionalLightObject::SetDirtyFlags()
 
 void D3D::DirectionalLightObject::CalculateLightTransform(int frame)
 {
-	auto cameraPos = VulkanRenderer3D::GetInstance().GetCamera()->GetPosition();
+	auto cameraPos = Vulkan3D::GetInstance().GetRenderer().GetCamera()->GetPosition();
 	//cameraPos = glm::vec3{};
 
 	// Define a virtual light position far away in the opposite direction of the light relative to the camera position
