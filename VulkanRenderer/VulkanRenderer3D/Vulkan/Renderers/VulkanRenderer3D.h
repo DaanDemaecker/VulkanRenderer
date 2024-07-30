@@ -62,9 +62,6 @@ namespace D3D
         void AddGraphicsPipeline(const std::string& pipelineName, std::initializer_list<const std::string>&& filePaths,
             bool hasDepthStencil = true);
 
-        // Get the handle to the vkDevice
-        VkDevice GetDevice();
-
         //Get the default image view
         VkImageView& GetDefaultImageView();
 

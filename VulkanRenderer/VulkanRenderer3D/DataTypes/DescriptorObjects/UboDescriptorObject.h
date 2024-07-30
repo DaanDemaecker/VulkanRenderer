@@ -136,7 +136,7 @@ namespace D3D
 				m_UboBuffers[i], m_UbosMemory[i]);
 
 			// Map memory from uboMemory to ubosmapped
-			vkMapMemory(renderer.GetDevice(), m_UbosMemory[i], 0, bufferSize, 0, &m_UbosMapped[i]);
+			vkMapMemory(Vulkan3D::GetInstance().GetDevice(), m_UbosMemory[i], 0, bufferSize, 0, &m_UbosMapped[i]);
 		}
 	}
 

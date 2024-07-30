@@ -73,7 +73,7 @@ void D3D::DescriptorPoolWrapper::CreateDescriptorSets(VkDescriptorSetLayout layo
 	descriptorSets.resize(maxFrames);
 
 	// Allocate descriptorsets, if not succeeded, throw runtime error
-	if (vkAllocateDescriptorSets(renderer.GetDevice(), &allocInfo, descriptorSets.data()) != VK_SUCCESS)
+	if (vkAllocateDescriptorSets(Vulkan3D::GetInstance().GetDevice(), &allocInfo, descriptorSets.data()) != VK_SUCCESS)
 	{
 		throw std::runtime_error("failed to allocate descriptor sets!");
 	}
@@ -170,7 +170,7 @@ void D3D::DescriptorPoolWrapper::InitDescriptorPool()
 	poolInfo.maxSets = static_cast<uint32_t>(frames * m_MaxDescriptorSets);
 
 	// Created descriptorpool, if not successful, throw runtime error
-	if (vkCreateDescriptorPool(renderer.GetDevice(), &poolInfo, nullptr, &m_DescriptorPool) != VK_SUCCESS) {
+	if (vkCreateDescriptorPool(Vulkan3D::GetInstance().GetDevice(), &poolInfo, nullptr, &m_DescriptorPool) != VK_SUCCESS) {
 		throw std::runtime_error("failed to create descriptor pool!");
 	}
 }

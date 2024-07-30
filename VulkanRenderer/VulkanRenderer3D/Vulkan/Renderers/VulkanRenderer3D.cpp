@@ -421,12 +421,6 @@ void D3D::VulkanRenderer3D::RecordCommandBuffer(VkCommandBuffer& commandBuffer, 
 	}
 }
 
-VkDevice D3D::VulkanRenderer3D::GetDevice()
-{
-	// Return the logical device
-	return D3D::Vulkan3D::GetInstance().GetDevice();
-}
-
 VkImageView& D3D::VulkanRenderer3D::GetDefaultImageView()
 {
 	// Return the default image view trough the image manager
