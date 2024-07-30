@@ -79,7 +79,7 @@ void D3D::Model::RenderShadow(VkCommandBuffer commandBuffer, VkPipelineLayout pi
 	if (!m_CastsShadow)
 		return;
 
-	auto frame{ Vulkan3D::GetInstance().GetRenderer().GetCurrentFrame()};
+	auto frame{ Vulkan3D::GetCurrentFrame()};
 
 	vkCmdPushConstants(commandBuffer, pipelineLayout, VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(glm::mat4), &m_Ubos[frame].model);
 
@@ -95,7 +95,7 @@ void D3D::Model::Render()
 	// Get reference to renderer
 	auto& renderer{ Vulkan3D::GetInstance().GetRenderer()};
 	// Get index of current frame
-	auto frame{ renderer.GetCurrentFrame() };
+	auto frame{ Vulkan3D::GetCurrentFrame() };
 
 	UpdateUniformBuffer(frame);
 
@@ -141,10 +141,8 @@ void D3D::Model::SetScale(float x, float y, float z)
 
 void D3D::Model::CreateUniformBuffers()
 {
-	// Get reference to renderer
-	auto& renderer = Vulkan3D::GetInstance().GetRenderer();
 	// Get amount of frames
-	auto frames = renderer.GetMaxFrames();
+	auto frames = Vulkan3D::GetMaxFrames();
 
 	// Resize ubos to amount of frames
 	m_Ubos.resize(frames);

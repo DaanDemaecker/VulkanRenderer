@@ -116,7 +116,7 @@ namespace D3D
 		// Get reference to renderer
 		auto& renderer = Vulkan3D::GetInstance().GetRenderer();
 		// Get amount of frames
-		auto frames = renderer.GetMaxFrames();
+		auto frames = Vulkan3D::GetMaxFrames();
 
 		// Get size of Uniform Buffer Object
 		VkDeviceSize bufferSize = sizeof(T);

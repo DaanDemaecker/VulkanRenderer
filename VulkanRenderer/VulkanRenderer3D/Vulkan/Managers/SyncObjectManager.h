@@ -21,8 +21,7 @@ namespace D3D
 		// Constructor
 		// Parameters:
 		//     device: handle of the VkDevice
-		//     maxFrames: the maximum amount of frames in flight
-		SyncObjectManager(VkDevice device, uint32_t maxFrames);
+		SyncObjectManager(VkDevice device);
 
 		// Default destructor
 		~SyncObjectManager() = default;
@@ -65,8 +64,7 @@ namespace D3D
 		// Initialize the sync objects
 		// Paramters:
 		//     device: handle of the VkDevice
-		//     maxFrames: the max amount of frames in fligh
-		void CreateSyncObjects(VkDevice device, uint32_t maxFrames);
+		void CreateSyncObjects(VkDevice device);
 	};
 }
 #endif // !SyncObjectManagerIncluded

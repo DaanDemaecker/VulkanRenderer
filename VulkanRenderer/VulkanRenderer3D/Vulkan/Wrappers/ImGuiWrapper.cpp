@@ -3,15 +3,16 @@
 // File includes
 #include "ImGuiWrapper.h"
 #include "Engine/Window.h"
+#include "Vulkan/Vulkan3D.h"
 
 // Standard library includes
 #include <array>
 #include <stdexcept>
 
-D3D::ImGuiWrapper::ImGuiWrapper(ImGui_ImplVulkan_InitInfo init_info, VkDevice device, uint32_t maxFrames)
+D3D::ImGuiWrapper::ImGuiWrapper(ImGui_ImplVulkan_InitInfo init_info, VkDevice device)
 {	
 	// Initialize the descriptorPool
-	InitDescriptorPool(device, maxFrames);
+	InitDescriptorPool(device);
 
 	// Check ImGui version
 	IMGUI_CHECKVERSION();
@@ -72,8 +73,9 @@ void D3D::ImGuiWrapper::EndRender(VkCommandBuffer commandBuffer)
 	ImGui_ImplVulkan_RenderDrawData(draw_data, commandBuffer);
 }
 
-void D3D::ImGuiWrapper::InitDescriptorPool(VkDevice device, uint32_t maxFrames)
+void D3D::ImGuiWrapper::InitDescriptorPool(VkDevice device)
 {
+	auto maxFrames{ Vulkan3D::GetMaxFrames() };
 	// Create poolsizes array
 	std::array<VkDescriptorPoolSize, 2> poolSizes{};
 

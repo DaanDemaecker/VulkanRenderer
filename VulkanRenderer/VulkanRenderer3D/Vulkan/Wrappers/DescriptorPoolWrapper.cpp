@@ -55,7 +55,7 @@ void D3D::DescriptorPoolWrapper::CreateDescriptorSets(VkDescriptorSetLayout layo
 	auto& renderer{ Vulkan3D::GetInstance().GetRenderer()};
 
 	// Get the amount of frames in flight
-	auto maxFrames = renderer.GetMaxFrames();
+	auto maxFrames = Vulkan3D::GetMaxFrames();
 
 	// Create the allocation info for the descriptorsets
 	VkDescriptorSetAllocateInfo allocInfo{};
@@ -140,7 +140,7 @@ void D3D::DescriptorPoolWrapper::InitDescriptorPool()
 	auto& renderer{ Vulkan3D::GetInstance().GetRenderer()};
 
 	// Get the amount of frames in flight
-	auto frames{ renderer.GetMaxFrames() };
+	auto frames{ Vulkan3D::GetMaxFrames() };
 
 	// Create a vector of pool sizes
 	std::vector<VkDescriptorPoolSize> poolSizes{};

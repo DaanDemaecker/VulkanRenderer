@@ -30,6 +30,9 @@ namespace D3D
 		Vulkan3D& operator=(Vulkan3D& other) = delete;
 		Vulkan3D& operator=(Vulkan3D && other) = delete;
 
+		static uint32_t GetMaxFrames() { return m_sMaxFramesInFlight; }
+		static uint32_t GetCurrentFrame() { return m_sCurrentFrame; }
+
 		// Initialize the renderer, must be called at start of program
 		void Init();
 
@@ -62,6 +65,12 @@ namespace D3D
 		// Private  default constructor accessable for singleton class
 		friend class Singleton<Vulkan3D>;
 		Vulkan3D();
+
+		// The maximum amount of frames in flight
+		static uint32_t m_sMaxFramesInFlight;
+
+		// The current frame
+		static uint32_t m_sCurrentFrame;
 
 		// Dispatchable manager
 		std::unique_ptr<D3D::DispatchableManager> m_pDispatchableManager{};

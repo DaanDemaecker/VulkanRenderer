@@ -3,9 +3,16 @@
 // File includes
 #include "Vulkan3D.h"
 #include "Vulkan/Managers/DispatchableManager.h"
+#include "Engine/ConfigManager.h"
+
+uint32_t D3D::Vulkan3D::m_sMaxFramesInFlight = 1;
+
+uint32_t D3D::Vulkan3D::m_sCurrentFrame = 0;
 
 D3D::Vulkan3D::Vulkan3D()
 {
+	m_sMaxFramesInFlight = ConfigManager::GetInstance().GetInt("MaxFramesInFlight");
+
 	m_pDispatchableManager = std::make_unique<D3D::DispatchableManager>();
 }
 
@@ -61,4 +68,9 @@ D3D::VulkanRenderer3D& D3D::Vulkan3D::GetRenderer()
 void D3D::Vulkan3D::Render(std::vector<std::unique_ptr<Model>>& pModels)
 {
 	m_pRenderer->Render(pModels);
+
+	// Go to the next frame
+	++m_sCurrentFrame %= m_sMaxFramesInFlight
+		
+		;
 }

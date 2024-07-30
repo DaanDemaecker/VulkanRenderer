@@ -231,7 +231,7 @@ void D3D::ShadowRenderer::Render(std::vector<std::unique_ptr<Model>>& pModels)
 	// Get reference to renderer
 	auto& renderer{ Vulkan3D::GetInstance().GetRenderer()};
 	// Get index of current frame
-	auto frame{ renderer.GetCurrentFrame() };
+	auto frame{ Vulkan3D::GetCurrentFrame() };
 
 	auto commandBuffer{ renderer.GetCurrentCommandBuffer() };
 

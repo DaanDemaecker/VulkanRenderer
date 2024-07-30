@@ -4,16 +4,17 @@
 #include "CommandpoolManager.h"
 #include "Vulkan/VulkanUtils.h"
 #include "Vulkan/Wrappers/GPUObject.h"
+#include "Vulkan/Vulkan3D.h"
 
 // Standard library includes
 #include <stdexcept>
 
-D3D::CommandpoolManager::CommandpoolManager(GPUObject* pGPUObject, VkSurfaceKHR surface, uint32_t frames)
+D3D::CommandpoolManager::CommandpoolManager(GPUObject* pGPUObject, VkSurfaceKHR surface)
 {
 	// Initialize the commandpool
 	CreateCommandPool(pGPUObject, surface);
 	// Initialize the commandbuffers
-	CreateCommandBuffers(pGPUObject->GetDevice(), frames);
+	CreateCommandBuffers(pGPUObject->GetDevice());
 }
 
 void D3D::CommandpoolManager::Cleanup(VkDevice device)
@@ -44,8 +45,9 @@ void D3D::CommandpoolManager::CreateCommandPool(GPUObject* pGPUObject, VkSurface
 	}
 }
 
-void D3D::CommandpoolManager::CreateCommandBuffers(VkDevice device, uint32_t frames)
+void D3D::CommandpoolManager::CreateCommandBuffers(VkDevice device)
 {
+	auto frames = Vulkan3D::GetMaxFrames();
 	// Resize the commandbuffer vector to the amount of frames
 	m_CommandBuffers.resize(frames);
 

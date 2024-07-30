@@ -174,7 +174,7 @@ void D3D::VulkanRenderer3D::InitVulkan()
 	GPUObject* pGPUObject{ Vulkan3D::GetInstance().GetGPUObject()};
 
 	// Initialize command pool manager
-	m_pCommandPoolManager = std::make_unique<CommandpoolManager>(pGPUObject, surface, m_MaxFramesInFlight);
+	m_pCommandPoolManager = std::make_unique<CommandpoolManager>(pGPUObject, surface);
 
 	// Initialize the image manager
 	m_pImageManager = std::make_unique<ImageManager>(pGPUObject, m_pBufferManager.get(), m_pCommandPoolManager.get());
@@ -199,7 +199,7 @@ void D3D::VulkanRenderer3D::InitVulkan()
 	m_pPipelineManager = std::make_unique<PipelineManager>();
 
 	// Initialize the sync objects
-	m_pSyncObjectManager = std::make_unique<SyncObjectManager>(pGPUObject->GetDevice(), m_MaxFramesInFlight);
+	m_pSyncObjectManager = std::make_unique<SyncObjectManager>(pGPUObject->GetDevice());
 
 	m_pViewport = std::make_unique<Viewport>(m_pSwapchainWrapper->GetExtent());
 
@@ -230,7 +230,7 @@ void D3D::VulkanRenderer3D::InitImGui()
 	// Set min image count to the minimum image count of the swapchain
 	init_info.MinImageCount = m_pSwapchainWrapper->GetMinImageCount();
 	// Set the image count to the max amount of frames in flight
-	init_info.ImageCount = m_MaxFramesInFlight;
+	init_info.ImageCount = Vulkan3D::GetMaxFrames();
 	// Give functoin for error handling
 	init_info.CheckVkResultFn = [](VkResult /*err*/) { /* error handling */ };
 	// Give the max amount of samples per mixel
@@ -239,7 +239,7 @@ void D3D::VulkanRenderer3D::InitImGui()
 	init_info.RenderPass = m_pRenderpassWrapper->GetRenderpass();
 
 	// Initialize ImGui
-	m_pImGuiWrapper = std::make_unique<D3D::ImGuiWrapper>(init_info, pGPUObject->GetDevice(), m_MaxFramesInFlight);
+	m_pImGuiWrapper = std::make_unique<D3D::ImGuiWrapper>(init_info, pGPUObject->GetDevice());
 }
 
 void D3D::VulkanRenderer3D::AddGraphicsPipeline(const std::string& pipelineName, std::initializer_list<const std::string>&& filePaths, bool hasDepthStencil)
@@ -252,12 +252,12 @@ void D3D::VulkanRenderer3D::AddGraphicsPipeline(const std::string& pipelineName,
 void D3D::VulkanRenderer3D::Render(std::vector<std::unique_ptr<Model>>& pModels)
 {
 	// Wait for the in flight fence of the current frame
-	vkWaitForFences(D3D::Vulkan3D::GetInstance().GetDevice(), 1, &m_pSyncObjectManager->GetInFlightFence(m_CurrentFrame), VK_TRUE, UINT64_MAX);
+	vkWaitForFences(D3D::Vulkan3D::GetInstance().GetDevice(), 1, &m_pSyncObjectManager->GetInFlightFence(Vulkan3D::GetCurrentFrame()), VK_TRUE, UINT64_MAX);
 
 	// Create image index uint
 	uint32_t imageIndex{};
 	// Get the index of the next image
-	VkResult result = vkAcquireNextImageKHR(D3D::Vulkan3D::GetInstance().GetDevice(), m_pSwapchainWrapper->GetSwapchain(), UINT64_MAX, m_pSyncObjectManager->GetImageAvailableSemaphore(m_CurrentFrame), VK_NULL_HANDLE, &imageIndex);
+	VkResult result = vkAcquireNextImageKHR(D3D::Vulkan3D::GetInstance().GetDevice(), m_pSwapchainWrapper->GetSwapchain(), UINT64_MAX, m_pSyncObjectManager->GetImageAvailableSemaphore(Vulkan3D::GetCurrentFrame()), VK_NULL_HANDLE, &imageIndex);
 
 	// Check if window is out of date
 	if (result == VK_ERROR_OUT_OF_DATE_KHR)
@@ -273,7 +273,7 @@ void D3D::VulkanRenderer3D::Render(std::vector<std::unique_ptr<Model>>& pModels)
 	}
 
 	// Reset the in flight fences
-	vkResetFences(D3D::Vulkan3D::GetInstance().GetDevice(), 1, &m_pSyncObjectManager->GetInFlightFence(m_CurrentFrame));
+	vkResetFences(D3D::Vulkan3D::GetInstance().GetDevice(), 1, &m_pSyncObjectManager->GetInFlightFence(Vulkan3D::GetCurrentFrame()));
 
 	// Get the current command buffer
 	auto commandBuffer{GetCurrentCommandBuffer()};
@@ -290,7 +290,7 @@ void D3D::VulkanRenderer3D::Render(std::vector<std::unique_ptr<Model>>& pModels)
 	submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
 
 	// Create array for image availabel semaphores
-	VkSemaphore waitSemaphores[] = { m_pSyncObjectManager->GetImageAvailableSemaphore(m_CurrentFrame)};
+	VkSemaphore waitSemaphores[] = { m_pSyncObjectManager->GetImageAvailableSemaphore(Vulkan3D::GetCurrentFrame())};
 	// Create array for the pipeline stage flags and set it to color attachment output
 	VkPipelineStageFlags waitStages[] = { VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT };
 	// Set semaphore count to 1
@@ -305,14 +305,14 @@ void D3D::VulkanRenderer3D::Render(std::vector<std::unique_ptr<Model>>& pModels)
 	submitInfo.pCommandBuffers = &commandBuffer;
 
 	// Create array for render finished semaphores
-	VkSemaphore signalSemaphores[] = { m_pSyncObjectManager->GetRenderFinishedSemaphore(m_CurrentFrame) };
+	VkSemaphore signalSemaphores[] = { m_pSyncObjectManager->GetRenderFinishedSemaphore(Vulkan3D::GetCurrentFrame()) };
 	// Set signal semaphore count to 1
 	submitInfo.signalSemaphoreCount = 1;
 	// Give array of signal semaphores
 	submitInfo.pSignalSemaphores = signalSemaphores;
 
 	// Submit the command buffers
-	if (vkQueueSubmit(D3D::Vulkan3D::GetInstance().GetGPUObject()->GetQueueObject().graphicsQueue, 1, &submitInfo, m_pSyncObjectManager->GetInFlightFence(m_CurrentFrame)) != VK_SUCCESS)
+	if (vkQueueSubmit(D3D::Vulkan3D::GetInstance().GetGPUObject()->GetQueueObject().graphicsQueue, 1, &submitInfo, m_pSyncObjectManager->GetInFlightFence(Vulkan3D::GetCurrentFrame())) != VK_SUCCESS)
 	{
 		// If unsuccessful, throw runtime error
 		throw std::runtime_error("failed to submit draw command buffer!");
@@ -358,9 +358,6 @@ void D3D::VulkanRenderer3D::Render(std::vector<std::unique_ptr<Model>>& pModels)
 		// If unsuccessful, throw runtime error
 		throw std::runtime_error("failed to present swap chain image!");
 	}
-
-	// Go to the next frame
-	++m_CurrentFrame %= m_MaxFramesInFlight;
 }
 
 void D3D::VulkanRenderer3D::RecordCommandBuffer(VkCommandBuffer& commandBuffer, uint32_t imageIndex, std::vector<std::unique_ptr<Model>>& pModels)
@@ -392,7 +389,7 @@ void D3D::VulkanRenderer3D::RecordCommandBuffer(VkCommandBuffer& commandBuffer, 
 	m_pRenderpassWrapper->BeginRenderPass(commandBuffer, m_pSwapchainWrapper->GetFrameBuffer(imageIndex), swapchainExtent);
 
 	// Update the buffer of the global light
-	m_pGlobalLight->UpdateBuffer(m_CurrentFrame);
+	m_pGlobalLight->UpdateBuffer(Vulkan3D::GetCurrentFrame());
 
 
 	if (m_pCamera->GetCameraType() == CameraType::Perspective)
@@ -451,7 +448,7 @@ D3D::PipelineWrapper* D3D::VulkanRenderer3D::GetPipeline(const std::string& name
 VkCommandBuffer& D3D::VulkanRenderer3D::GetCurrentCommandBuffer()
 {
 	// Return the requested command buffer trough the commandpool manager
-	return m_pCommandPoolManager->GetCommandBuffer(m_CurrentFrame);
+	return m_pCommandPoolManager->GetCommandBuffer(Vulkan3D::GetCurrentFrame());
 }
 
 const D3D::DirectionalLightStruct& D3D::VulkanRenderer3D::GetGlobalLightStruct() const

@@ -26,8 +26,7 @@ namespace D3D
 		// Parameters:
 		//     pGPUObject: pointer to the object that holds the physical and logical devices
 		//     surface: handle of the VkSurfaceKHR
-		//     frames: the max amount of frames in flight
-		CommandpoolManager(GPUObject* pGPUObject, VkSurfaceKHR surface, uint32_t frames);
+		CommandpoolManager(GPUObject* pGPUObject, VkSurfaceKHR surface);
 
 		// Default destructor
 		~CommandpoolManager() = default;
@@ -75,8 +74,7 @@ namespace D3D
 		// Initialize the commandbuffers
 		// Parameters:
 		//     device: handle of the VkDevice
-		//     frames: max amount of frames in flight
-		void CreateCommandBuffers(VkDevice device, uint32_t frames);
+		void CreateCommandBuffers(VkDevice device);
 	};
 }
 

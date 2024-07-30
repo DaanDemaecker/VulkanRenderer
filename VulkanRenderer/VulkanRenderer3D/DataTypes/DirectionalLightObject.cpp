@@ -17,10 +17,8 @@ D3D::DirectionalLightObject::DirectionalLightObject()
 
 void D3D::DirectionalLightObject::CreateLightBuffer()
 {
-	auto& renderer{ Vulkan3D::GetInstance().GetRenderer()};
-
 	// Get the amount of frames in flight
-	auto frames = renderer.GetMaxFrames();
+	int frames = static_cast<int>(Vulkan3D::GetMaxFrames());
 
 	// Resize dirty flags to amount of frames
 	m_LightChanged.resize(frames);

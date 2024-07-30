@@ -19,8 +19,7 @@ namespace D3D
 		//     renderpass: the handle to the renderpass that will be used
 		//     commandbuffer: a single time command buffer needed for initialization
 		//     device: the handle for the VkDevice
-		//     maxFrames: the max frames in flight
-		ImGuiWrapper(ImGui_ImplVulkan_InitInfo init_info, VkDevice device, uint32_t maxFrames);
+		ImGuiWrapper(ImGui_ImplVulkan_InitInfo init_info, VkDevice device);
 
 		// Default destructor
 		~ImGuiWrapper() = default;
@@ -54,8 +53,7 @@ namespace D3D
 		// Initialization of descriptorpool
 		// Parameters:
 		//     device: handle for the VkDevice
-		//     maxFrames: the amount of frames in flight
-		void InitDescriptorPool(VkDevice device, uint32_t maxFrames);
+		void InitDescriptorPool(VkDevice device);
 
 	};
 }

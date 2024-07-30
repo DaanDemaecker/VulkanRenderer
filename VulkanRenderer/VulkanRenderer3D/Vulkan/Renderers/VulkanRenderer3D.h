@@ -62,12 +62,6 @@ namespace D3D
         void AddGraphicsPipeline(const std::string& pipelineName, std::initializer_list<const std::string>&& filePaths,
             bool hasDepthStencil = true);
 
-        // Get the maximum amount of frames in flight
-        size_t GetMaxFrames() const { return m_MaxFramesInFlight; }
-
-        // Get the current frame in flight
-        uint32_t GetCurrentFrame() const { return  m_CurrentFrame; }
-
         // Get the handle to the vkDevice
         VkDevice GetDevice();
 
@@ -178,12 +172,6 @@ namespace D3D
 
         // Pointer to the skybox object
         std::unique_ptr<SkyBox> m_pSkyBox{};
-
-        // The maximum amount of frames in flight
-        const uint32_t m_MaxFramesInFlight{ 2 };
-
-        // The current frame
-        uint32_t m_CurrentFrame = 0;
 
         // Pointer to the buffer manager
         std::unique_ptr<BufferManager> m_pBufferManager{};

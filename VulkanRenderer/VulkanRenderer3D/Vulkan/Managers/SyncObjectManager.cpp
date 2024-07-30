@@ -2,14 +2,15 @@
 
 // File includes
 #include "SyncObjectManager.h"
+#include "Vulkan/Vulkan3D.h"
 
 // Standard library includes
 #include <stdexcept>
 
-D3D::SyncObjectManager::SyncObjectManager(VkDevice device, uint32_t maxFrames)
+D3D::SyncObjectManager::SyncObjectManager(VkDevice device)
 {
 	// Initialize the sync objects
-	CreateSyncObjects(device, maxFrames);
+	CreateSyncObjects(device);
 }
 
 void D3D::SyncObjectManager::Cleanup(VkDevice device)
@@ -26,8 +27,10 @@ void D3D::SyncObjectManager::Cleanup(VkDevice device)
 	}
 }
 
-void D3D::SyncObjectManager::CreateSyncObjects(VkDevice device, uint32_t maxFrames)
+void D3D::SyncObjectManager::CreateSyncObjects(VkDevice device)
 {
+	auto maxFrames{ Vulkan3D::GetMaxFrames() };
+
 	// Resize image available semaphore to the amound of frames
 	m_ImageAvailableSemaphores.resize(maxFrames);
 	// Resize render finished semaphore to the amount of frames
