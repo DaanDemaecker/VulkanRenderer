@@ -15,6 +15,11 @@ D3D::DirectionalLightObject::DirectionalLightObject()
 	CreateLightBuffer();
 }
 
+D3D::DirectionalLightObject::~DirectionalLightObject()
+{
+	Cleanup(Vulkan3D::GetInstance().GetDevice());
+}
+
 void D3D::DirectionalLightObject::CreateLightBuffer()
 {
 	// Get the amount of frames in flight

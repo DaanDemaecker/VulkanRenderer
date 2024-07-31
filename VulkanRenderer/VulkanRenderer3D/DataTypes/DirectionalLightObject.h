@@ -21,19 +21,14 @@ namespace D3D
 		// Default constructor
 		DirectionalLightObject();
 		
-		// Default destructor
-		~DirectionalLightObject() = default;
+		// Destructor
+		~DirectionalLightObject();
 
 		// Delete copy and move functions
 		DirectionalLightObject(DirectionalLightObject& other) = delete;
 		DirectionalLightObject(DirectionalLightObject&& other) = delete;
 		DirectionalLightObject& operator=(DirectionalLightObject& other) = delete;
 		DirectionalLightObject& operator=(DirectionalLightObject&& other) = delete;
-		
-		// Function for cleaning up allocated memory
-		// Parameters:
-		//     device: handle of the VkDevice object
-		void Cleanup(VkDevice device);
 		
 		// Function for updating the vulkan buffers
 		// Parameters:
@@ -98,6 +93,11 @@ namespace D3D
 		void SetDirtyFlags();
 
 		void CalculateLightTransform(int frame);
+
+		// Function for cleaning up allocated memory
+		// Parameters:
+		//     device: handle of the VkDevice object
+		void Cleanup(VkDevice device);
 	};
 }
 
