@@ -21,8 +21,8 @@ namespace D3D
 		//     device: the handle for the VkDevice
 		ImGuiWrapper(ImGui_ImplVulkan_InitInfo init_info, VkDevice device);
 
-		// Default destructor
-		~ImGuiWrapper() = default;
+		// Destructor
+		~ImGuiWrapper();
 
 		// Delete default constructor
 		ImGuiWrapper() = delete;
@@ -33,10 +33,6 @@ namespace D3D
 		ImGuiWrapper& operator=(ImGuiWrapper& other) = delete;
 		ImGuiWrapper& operator=(ImGuiWrapper&& other) = delete;
 
-		// Cleanup
-		// Parameters:
-		//     device: handle for the VkDevice
-		void Cleanup(VkDevice device);
 
 		// Set up the imgui frame
 		void StartRender();
@@ -55,6 +51,10 @@ namespace D3D
 		//     device: handle for the VkDevice
 		void InitDescriptorPool(VkDevice device);
 
+		// Cleanup
+		// Parameters:
+		//     device: handle for the VkDevice
+		void Cleanup(VkDevice device);
 	};
 }
 #endif // !ImGuiWrapperIncluded

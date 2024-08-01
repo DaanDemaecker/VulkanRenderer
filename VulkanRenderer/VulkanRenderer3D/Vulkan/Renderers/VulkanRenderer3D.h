@@ -203,9 +203,6 @@ namespace D3D
         // Clean up all vulkan objects
         void CleanupVulkan();
 
-        // Clean up ImGui
-        void CleanupImGui();
-
         // Initialize vulkan objects
         void InitVulkan();
 

@@ -52,10 +52,7 @@ D3D::VulkanRenderer3D::VulkanRenderer3D()
 D3D::VulkanRenderer3D::~VulkanRenderer3D()
 {
 	// Waint until the logical device isn't doing anything
-	vkDeviceWaitIdle(Vulkan3D::GetInstance().GetDevice());	
-
-	// Clean up ImGui
-	CleanupImGui();
+	vkDeviceWaitIdle(Vulkan3D::GetInstance().GetDevice());
 
 	// Clean up vulkan objects
 	CleanupVulkan();
@@ -149,12 +146,6 @@ void D3D::VulkanRenderer3D::CleanupVulkan()
 
 	// Clean up commandpools
 	m_pCommandPoolManager->Cleanup(device);
-}
-
-void D3D::VulkanRenderer3D::CleanupImGui()
-{
-	// Clean up ImGui
-	m_pImGuiWrapper->Cleanup(Vulkan3D::GetInstance().GetDevice());
 }
 
 void D3D::VulkanRenderer3D::InitVulkan()
