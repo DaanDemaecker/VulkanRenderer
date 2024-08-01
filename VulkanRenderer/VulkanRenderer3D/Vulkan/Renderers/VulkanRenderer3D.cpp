@@ -4,6 +4,7 @@
 #include "VulkanRenderer3D.h"
 
 #include "Vulkan/Vulkan3D.h"
+#include "Engine/ConfigManager.h"
 
 #include "Vulkan/Managers/DispatchableManager.h"
 #include "Vulkan/Wrappers/GPUObject.h"
@@ -60,13 +61,10 @@ D3D::VulkanRenderer3D::~VulkanRenderer3D()
 
 void D3D::VulkanRenderer3D::SetupSkybox()
 {
-	// Set the vertex shader name
-	const std::string vertShaderName{ "Resources/Shaders/Skybox.Vert.spv" };
-	// Set the fragment shader name
-	const std::string fragShaderName{ "Resources/Shaders/Skybox.Frag.spv" };
-
+	// Get config manager
+	auto& configManager{ ConfigManager::GetInstance() };
 	// Create the graphics pipeline for the skybox
-	AddGraphicsPipeline("Skybox", { vertShaderName, fragShaderName }, false);
+	AddGraphicsPipeline("Skybox", { configManager.GetString("SkyboxVert"), configManager.GetString("SkyboxFrag")}, false);
 
 	// Create the skybox
 	m_pSkyBox = std::make_unique<SkyBox>(
