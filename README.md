@@ -7,6 +7,8 @@ As Vulkan is not easy to start with without help, I used this tutorial to get st
 https://vulkan-tutorial.com.  
 Later I also bought and used the official Vulkan programming guide from OpenGL for a deeper understanding.
 
+<img src="Content/VulkanRenderer3D.gif" alt="drawing"/>
+
 ## Motivation
 While studying Game Development at Digital Arts and Entertainment in Kortrijk, Belgium, I followed a Graphics Programming class. In this class, we made a self-made software rasterizer and a DirectX rasterizer. These were later combined and can be found on my GitHub.  
 This made me look into more APIs for rendering and I landed on Vulkan to make my own Renderer.  
@@ -23,6 +25,13 @@ I wanted to create a renderer completely by myself (with the help of tutorials b
 
 - ***Texture loading***  
 Textures can be loaded from a variety of file types. Textures can be used in materials to be sent to shaders so the user can use it however they want. Currently diffuse, gloss, specular, and normal maps are supported.  
+
+- ***Pipeline loading***
+  The user can create a pipeline with their own shaders, shaders i have created include support for:
+    - Diffuse map
+    - Normal map
+    - Gloss map
+    - Specular map
 
 - ***Global light***  
 Currently, there is a single global directional light that is used for shading in any way the user wants to. The light has a direction, color, and intensity that can be customized.  
@@ -55,10 +64,10 @@ I would like to add support for multiple lights at the same time.
 
 - ***More light types***  
 There are many different types of light in graphics, I would like to implement as many of them as I can.  
-Currently, the lights I would like to add are:  
-                    - Point light  
-                    - Spotlight  
-                    - Skylight  
+Currently, the lights I would like to add are:
+  - Point light  
+  - Spotlight
+  - Skylight  
 
 ## Libraries 
 - ***Window handling and input***  
