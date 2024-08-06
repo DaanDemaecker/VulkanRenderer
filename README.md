@@ -10,8 +10,8 @@ Later I also bought and used the official Vulkan programming guide from OpenGL f
 <img src="Content/VulkanRenderer3D.gif" alt="drawing"/>
 
 ## Motivation
-While studying Game Development at Digital Arts and Entertainment in Kortrijk, Belgium, I followed a Graphics Programming class. In this class, we made a self-made software rasterizer and a DirectX rasterizer. These were later combined and can be found on my GitHub.  
-This made me look into more APIs for rendering and I landed on Vulkan to make my own Renderer.  
+While studying Game Development at Digital Arts and Entertainment in Kortrijk, Belgium, I followed a Graphics Programming class. We made a self-made software rasterizer and a DirectX rasterizer in this class. These were later combined and can be found on my GitHub.  
+This made me look into more rendering APIs and I landed on Vulkan to make my own Renderer.  
 This renderer is also integrated into my self-made engine, as my engine project grew, this project became more of a testing ground for Vulkan.  
 
 ## Initial goals
@@ -27,7 +27,7 @@ I wanted to create a renderer completely by myself (with the help of tutorials b
 Textures can be loaded from a variety of file types. Textures can be used in materials to be sent to shaders so the user can use it however they want. Currently diffuse, gloss, specular, and normal maps are supported.  
 
 - ***Pipeline loading***
-  The user can create a pipeline with their own shaders, shaders i have created include support for:
+  The user can create a pipeline with their own shaders, shaders I have created include support for:
     - Diffuse map
     - Normal map
     - Gloss map
