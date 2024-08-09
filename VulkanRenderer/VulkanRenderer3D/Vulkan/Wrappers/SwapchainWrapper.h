@@ -50,10 +50,6 @@ namespace D3D
 		void SetupImageViews(GPUObject* pGPUObject, D3D::ImageManager* pImageManager,
 			VkCommandBuffer commandBuffer, VkRenderPass renderPass);
 
-		// Clean up allocated objects
-		// Parameters:
-		//     device: handle of the VkDevice
-		void Cleanup(VkDevice device);
 
 		// Delete and recreate the swapchain
 		// Parameters:
@@ -154,6 +150,11 @@ namespace D3D
 		// Parameters:
 		//     availablePresentModes: list of candidate presentmodes for the swapchain
 		VkPresentModeKHR ChooseSwapPresentMode(const std::vector<VkPresentModeKHR>& availablePresentModes);
+		
+		// Clean up allocated objects
+		// Parameters:
+		//     device: handle of the VkDevice
+		void Cleanup(VkDevice device);
 	};
 
 }

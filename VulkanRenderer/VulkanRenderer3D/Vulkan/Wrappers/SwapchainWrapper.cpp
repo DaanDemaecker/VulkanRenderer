@@ -1,6 +1,7 @@
 // SwapchainWrapper.cpp
 
 // File includes
+#include "Vulkan/Vulkan3D.h"
 #include "SwapchainWrapper.h"
 #include "GPUObject.h"
 #include "Vulkan/Managers/ImageViewManager.h"
@@ -26,6 +27,7 @@ D3D::SwapchainWrapper::SwapchainWrapper(GPUObject* pGPUObject, VkSurfaceKHR surf
 
 D3D::SwapchainWrapper::~SwapchainWrapper()
 {
+	Cleanup(Vulkan3D::GetInstance().GetDevice());
 }
 
 void D3D::SwapchainWrapper::SetupImageViews(GPUObject* pGPUObject, D3D::ImageManager* pImageManager,

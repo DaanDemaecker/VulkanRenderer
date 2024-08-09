@@ -127,9 +127,6 @@ void D3D::VulkanRenderer3D::CleanupVulkan()
 	// Get handle to logical device
 	auto device{ Vulkan3D::GetInstance().GetDevice()};
 
-	// Clean up swapchain
-	m_pSwapchainWrapper->Cleanup(device);
-
 	// Clean up image manager
 	m_pImageManager->Cleanup(device);
 
