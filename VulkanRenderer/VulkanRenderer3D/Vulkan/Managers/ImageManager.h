@@ -33,18 +33,13 @@ namespace D3D
 		ImageManager() = delete;
 
 		// Default destructor
-		~ImageManager() = default;
+		~ImageManager();
 
 		// Delete move and copy functions
 		ImageManager(ImageManager& other) = delete;
 		ImageManager(ImageManager&& other) = delete;
 		ImageManager& operator=(ImageManager& other) = delete;
 		ImageManager& operator=(ImageManager&& other) = delete;
-
-		// Function for deleting alocated objects
-		// Parameters:
-		//     device: handle of the VkDevice
-		void Cleanup(VkDevice device);
 
 		// Get the default image view
 		VkImageView& GetDefaultImageView() { return m_DefaultTexture.imageView; }
@@ -161,6 +156,11 @@ namespace D3D
 		//     pBufferManager: a pointer to the buffer manager
 		//     pCommandPoolManager: a pointer to the commandpool manager
 		void CreateDefaultResources(GPUObject* pGPUObject, D3D::BufferManager* pBufferManager, CommandpoolManager* pCommandPoolManager);
+
+		// Function for deleting alocated objects
+		// Parameters:
+		//     device: handle of the VkDevice
+		void Cleanup(VkDevice device);
 	};
 }
 #endif // !ImageManagerIncluded

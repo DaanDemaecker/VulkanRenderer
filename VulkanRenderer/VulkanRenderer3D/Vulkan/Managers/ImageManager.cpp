@@ -1,6 +1,7 @@
 // ImageManager.cpp
 
 // File includes
+#include "Vulkan/Vulkan3D.h"
 #include "ImageManager.h"
 #include "Includes/STBIncludes.h"
 #include "Vulkan/VulkanUtils.h"
@@ -18,6 +19,11 @@ D3D::ImageManager::ImageManager(GPUObject* pGPUObject, D3D::BufferManager* pBuff
 {
 	// Initialize the default textures
 	CreateDefaultResources(pGPUObject, pBufferManager, pCommandPoolManager);
+}
+
+D3D::ImageManager::~ImageManager()
+{
+	Cleanup(Vulkan3D::GetInstance().GetDevice());
 }
 
 void D3D::ImageManager::CreateDefaultResources(GPUObject* pGPUObject, D3D::BufferManager* pBufferManager,CommandpoolManager* pCommandPoolManager)
