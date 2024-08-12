@@ -54,9 +54,6 @@ D3D::VulkanRenderer3D::~VulkanRenderer3D()
 {
 	// Waint until the logical device isn't doing anything
 	vkDeviceWaitIdle(Vulkan3D::GetInstance().GetDevice());
-
-	// Clean up vulkan objects
-	CleanupVulkan();
 }
 
 void D3D::VulkanRenderer3D::SetupSkybox()
@@ -107,15 +104,6 @@ void D3D::VulkanRenderer3D::TransitionImageLayout(VkImage image, VkFormat format
 	auto commandBuffer{ m_pCommandPoolManager->BeginSingleTimeCommands(Vulkan3D::GetInstance().GetDevice()) };
 	m_pImageManager->TransitionImageLayout(image, commandBuffer, format, oldLayout, newLayout, mipLevels, layerCount);
 	m_pCommandPoolManager->EndSingleTimeCommands(Vulkan3D::GetInstance().GetGPUObject(), commandBuffer);
-}
-
-void D3D::VulkanRenderer3D::CleanupVulkan()
-{
-	// Get handle to logical device
-	auto device{ Vulkan3D::GetInstance().GetDevice()};
-
-	// Clean up commandpools
-	m_pCommandPoolManager->Cleanup(device);
 }
 
 void D3D::VulkanRenderer3D::InitVulkan()

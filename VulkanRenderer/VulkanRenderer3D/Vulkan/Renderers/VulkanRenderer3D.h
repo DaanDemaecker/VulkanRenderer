@@ -194,9 +194,6 @@ namespace D3D
         // Pointer to the camera
         std::unique_ptr<Camera> m_pCamera{};
 
-        // Clean up all vulkan objects
-        void CleanupVulkan();
-
         // Initialize vulkan objects
         void InitVulkan();
 

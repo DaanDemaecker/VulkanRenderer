@@ -28,19 +28,14 @@ namespace D3D
 		//     surface: handle of the VkSurfaceKHR
 		CommandpoolManager(GPUObject* pGPUObject, VkSurfaceKHR surface);
 
-		// Default destructor
-		~CommandpoolManager() = default;
+		// Destructor
+		~CommandpoolManager();
 
 		// Delete the move and copy functions
 		CommandpoolManager(CommandpoolManager& other) = delete;
 		CommandpoolManager(CommandpoolManager&& other) = delete;
 		CommandpoolManager& operator=(CommandpoolManager& other) = delete;
 		CommandpoolManager& operator=(CommandpoolManager&& other) = delete;
-
-		// Cleanup function
-		// Parameters:
-		//     device: handle of the VkDevice
-		void Cleanup(VkDevice device);
 
 		// Get the current used command buffer
 		// Parameters:
@@ -75,6 +70,11 @@ namespace D3D
 		// Parameters:
 		//     device: handle of the VkDevice
 		void CreateCommandBuffers(VkDevice device);
+
+		// Cleanup function
+		// Parameters:
+		//     device: handle of the VkDevice
+		void Cleanup(VkDevice device);
 	};
 }
 

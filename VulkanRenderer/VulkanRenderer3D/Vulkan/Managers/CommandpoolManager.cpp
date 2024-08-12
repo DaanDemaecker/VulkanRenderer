@@ -17,6 +17,11 @@ D3D::CommandpoolManager::CommandpoolManager(GPUObject* pGPUObject, VkSurfaceKHR 
 	CreateCommandBuffers(pGPUObject->GetDevice());
 }
 
+D3D::CommandpoolManager::~CommandpoolManager()
+{
+	Cleanup(Vulkan3D::GetInstance().GetDevice());
+}
+
 void D3D::CommandpoolManager::Cleanup(VkDevice device)
 {
 	// Destroy the commandpool
