@@ -13,6 +13,12 @@ D3D::SyncObjectManager::SyncObjectManager(VkDevice device)
 	CreateSyncObjects(device);
 }
 
+D3D::SyncObjectManager::~SyncObjectManager()
+{
+	// Clean up allocated objects
+	Cleanup(Vulkan3D::GetInstance().GetDevice());
+}
+
 void D3D::SyncObjectManager::Cleanup(VkDevice device)
 {
 	// Loop trough the amount of fences and semaphores

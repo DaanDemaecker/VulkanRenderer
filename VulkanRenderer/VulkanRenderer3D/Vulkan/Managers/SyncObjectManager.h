@@ -24,16 +24,13 @@ namespace D3D
 		SyncObjectManager(VkDevice device);
 
 		// Default destructor
-		~SyncObjectManager() = default;
+		~SyncObjectManager();
 
 		// Delete copy and move functions
 		SyncObjectManager(SyncObjectManager& other) = delete;
 		SyncObjectManager(SyncObjectManager&& other) = delete;
 		SyncObjectManager& operator=(SyncObjectManager& other) = delete;
 		SyncObjectManager& operator=(SyncObjectManager&& other) = delete;
-
-		// Clean up allocated objects
-		void Cleanup(VkDevice device);
 
 		// Get the requested image available semaphore
 		// Parameters:
@@ -65,6 +62,9 @@ namespace D3D
 		// Paramters:
 		//     device: handle of the VkDevice
 		void CreateSyncObjects(VkDevice device);
+
+		// Clean up allocated objects
+		void Cleanup(VkDevice device);
 	};
 }
 #endif // !SyncObjectManagerIncluded

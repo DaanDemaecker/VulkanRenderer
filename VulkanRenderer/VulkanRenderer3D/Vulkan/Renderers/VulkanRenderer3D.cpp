@@ -114,9 +114,6 @@ void D3D::VulkanRenderer3D::CleanupVulkan()
 	// Get handle to logical device
 	auto device{ Vulkan3D::GetInstance().GetDevice()};
 
-	// Clean up sync objects
-	m_pSyncObjectManager->Cleanup(device);
-
 	// Clean up commandpools
 	m_pCommandPoolManager->Cleanup(device);
 }
