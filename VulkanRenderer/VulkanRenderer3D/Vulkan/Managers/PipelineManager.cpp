@@ -3,6 +3,7 @@
 // File includes
 #include "PipelineManager.h"
 #include "Engine/ConfigManager.h"
+#include "Vulkan/Vulkan3D.h"
 #include "Vulkan/Wrappers/PipelineWrapper.h"
 #include "Vulkan/Wrappers/DescriptorPoolWrapper.h"
 
@@ -12,6 +13,7 @@ D3D::PipelineManager::PipelineManager()
 
 D3D::PipelineManager::~PipelineManager()
 {
+	Cleanup(Vulkan3D::GetInstance().GetDevice());
 }
 
 void D3D::PipelineManager::Cleanup(VkDevice device)

@@ -69,10 +69,6 @@ namespace D3D
 		//     name: the name of the requested pipeline
 		PipelineWrapper* GetPipeline(const std::string& name);
 
-		// Clean up everything
-		// Parameters:
-		//     device: handle of the VkDevice
-		void Cleanup(VkDevice device);
 
 	private:
 		// A map of all the graphics pipelines
@@ -81,6 +77,12 @@ namespace D3D
 
 		// The name of the default pipeline
 		std::string m_DefaultPipelineName{};
+		
+		
+		// Clean up everything
+		// Parameters:
+		//     device: handle of the VkDevice
+		void Cleanup(VkDevice device);
 	};
 }
 
