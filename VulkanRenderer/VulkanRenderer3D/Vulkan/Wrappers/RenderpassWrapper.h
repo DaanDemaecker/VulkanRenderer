@@ -24,19 +24,14 @@ namespace D3D
 		// Delete default constructor
 		RenderpassWrapper() = delete;
 
-		// Default destructor
-		~RenderpassWrapper() = default;
+		// Destructor
+		~RenderpassWrapper();
 
 		// Delete copy and move functions
 		RenderpassWrapper(RenderpassWrapper& other) = delete;
 		RenderpassWrapper(RenderpassWrapper&& other) = delete;
 		RenderpassWrapper& operator=(RenderpassWrapper& other) = delete;
 		RenderpassWrapper& operator=(RenderpassWrapper&& other) = delete;
-	
-		// Clean up allocated objects
-		// Parameters:
-		//     device: handle of the VkDevice
-		void cleanup(VkDevice device);
 
 		// Get the handle of the renderpass
 		VkRenderPass GetRenderpass() const { return m_RenderPass; }
@@ -60,6 +55,10 @@ namespace D3D
 		void CreateRenderPass(VkDevice device, VkFormat swapchainImageFormat, VkFormat depthFormat,
 			VkSampleCountFlagBits msaaSamples);
 
+		// Clean up allocated objects
+		// Parameters:
+		//     device: handle of the VkDevice
+		void Cleanup(VkDevice device);
 	};
 }
 

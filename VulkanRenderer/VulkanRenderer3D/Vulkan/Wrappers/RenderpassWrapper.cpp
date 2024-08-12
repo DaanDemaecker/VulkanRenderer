@@ -2,6 +2,7 @@
 
 // File includes
 #include "RenderpassWrapper.h"
+#include "Vulkan/Vulkan3D.h"
 
 // Standard library includes
 #include <array>
@@ -13,7 +14,12 @@ D3D::RenderpassWrapper::RenderpassWrapper(VkDevice device, VkFormat swapchainIma
 	CreateRenderPass(device, swapchainImageFormat, depthFormat, msaaSamples);
 }
 
-void D3D::RenderpassWrapper::cleanup(VkDevice device)
+D3D::RenderpassWrapper::~RenderpassWrapper()
+{
+	Cleanup(Vulkan3D::GetInstance().GetDevice());
+}
+
+void D3D::RenderpassWrapper::Cleanup(VkDevice device)
 {
 	// Destroy the renderpass
 	vkDestroyRenderPass(device, m_RenderPass, nullptr);

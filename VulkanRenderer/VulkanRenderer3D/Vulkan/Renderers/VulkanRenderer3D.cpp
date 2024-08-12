@@ -74,7 +74,6 @@ void D3D::VulkanRenderer3D::SetupSkybox()
 												"resources/images/CubeMap/Sky_Down.png", 
 												"resources/images/CubeMap/Sky_Front.png", 
 												"resources/images/CubeMap/Sky_Back.png"});
-
 }
 
 void D3D::VulkanRenderer3D::SetupLight()
@@ -114,9 +113,6 @@ void D3D::VulkanRenderer3D::CleanupVulkan()
 {
 	// Get handle to logical device
 	auto device{ Vulkan3D::GetInstance().GetDevice()};
-
-	// Clean up renderpass
-	m_pRenderpassWrapper->cleanup(device);
 
 	// Clean up sync objects
 	m_pSyncObjectManager->Cleanup(device);

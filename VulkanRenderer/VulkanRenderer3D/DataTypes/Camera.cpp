@@ -62,13 +62,14 @@ void D3D::Camera::Update()
 		double deltaX = xpos - m_PrevXPos;
 		double deltaY = ypos - m_PrevYPos;
 
-
 		m_TotalPitch += static_cast<float>(deltaY * deltaTime * m_AngularSpeed);
 		m_TotalYaw += static_cast<float>(deltaX * deltaTime * m_AngularSpeed);
 
 		// Rotate the camera based on mouse movement
 		SetRotation(m_TotalPitch, m_TotalYaw, 0);
 	}
+
+	SetRotation(m_TotalPitch, m_TotalYaw, 0);
 
 	m_PrevXPos = xpos;
 	m_PrevYPos = ypos;

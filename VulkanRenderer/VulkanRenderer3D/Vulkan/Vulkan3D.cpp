@@ -70,7 +70,5 @@ void D3D::Vulkan3D::Render(std::vector<std::unique_ptr<Model>>& pModels)
 	m_pRenderer->Render(pModels);
 
 	// Go to the next frame
-	++m_sCurrentFrame %= m_sMaxFramesInFlight
-		
-		;
+	++m_sCurrentFrame %= m_sMaxFramesInFlight;
 }
