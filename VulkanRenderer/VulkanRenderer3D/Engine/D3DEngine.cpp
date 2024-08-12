@@ -246,7 +246,4 @@ void D3D::D3DEngine::Run(const std::function<void()>& load)
 			//std::this_thread::sleep_until(frameEnd);
 		}
 	}
-
-	renderer.CleanupSkybox();
-	renderer.CleanupLight();
 }

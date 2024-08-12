@@ -136,14 +136,8 @@ namespace D3D
         // Set up the skybox
         void SetupSkybox();
 
-        // Clean up skybox
-        void CleanupSkybox();
-
         // Set up the global light
         void SetupLight();
-
-        // Clean up the global light
-        void CleanupLight();
 
         // Initialize the default pipeline
         void SetupDefaultPipeline();

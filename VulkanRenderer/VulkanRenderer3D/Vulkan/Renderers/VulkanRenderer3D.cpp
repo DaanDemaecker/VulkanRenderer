@@ -77,12 +77,6 @@ void D3D::VulkanRenderer3D::SetupSkybox()
 
 }
 
-void D3D::VulkanRenderer3D::CleanupSkybox()
-{
-	// Set the skybox to nullptr, the unique pointer will destroy it
-	m_pSkyBox = nullptr;
-}
-
 void D3D::VulkanRenderer3D::SetupLight()
 {
 	// Create global light
@@ -114,12 +108,6 @@ void D3D::VulkanRenderer3D::TransitionImageLayout(VkImage image, VkFormat format
 	auto commandBuffer{ m_pCommandPoolManager->BeginSingleTimeCommands(Vulkan3D::GetInstance().GetDevice()) };
 	m_pImageManager->TransitionImageLayout(image, commandBuffer, format, oldLayout, newLayout, mipLevels, layerCount);
 	m_pCommandPoolManager->EndSingleTimeCommands(Vulkan3D::GetInstance().GetGPUObject(), commandBuffer);
-}
-
-void D3D::VulkanRenderer3D::CleanupLight()
-{
-	// Set the global light to nullptr, the unique pointer will take care of the destruction
-	m_pGlobalLight = nullptr;
 }
 
 void D3D::VulkanRenderer3D::CleanupVulkan()
