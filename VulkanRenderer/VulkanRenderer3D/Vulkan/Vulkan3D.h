@@ -15,7 +15,8 @@ namespace D3D
 {
 	// Class forward declarations
 	class DispatchableManager;
-
+	class ModelManager;
+	class Model;
 	class GPUObject;
 
 	class Vulkan3D final : public Singleton<Vulkan3D>
@@ -56,10 +57,11 @@ namespace D3D
 
 		VulkanRenderer3D& GetRenderer();
 
-		// Function that will render all the given models
-		// Parameters:
-		//     pModels: list of models that have to be rendered
-		void Render(std::vector<std::unique_ptr<Model>>& pModels);
+		// Main render function
+		void Render();
+
+		// Get model manager
+		ModelManager* GetModelManager();
 	
 	private:
 		// Private  default constructor accessable for singleton class
@@ -76,6 +78,8 @@ namespace D3D
 		std::unique_ptr<D3D::DispatchableManager> m_pDispatchableManager{};
 
 		std::unique_ptr<D3D::VulkanRenderer3D> m_pRenderer{};
+
+		std::unique_ptr<D3D::ModelManager> m_pModelManager{};
 	};
 
 }

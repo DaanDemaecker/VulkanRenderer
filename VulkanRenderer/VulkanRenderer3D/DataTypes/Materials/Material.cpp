@@ -16,6 +16,10 @@ D3D::Material::Material(const std::string& pipelineName)
 	m_Pipeline = Vulkan3D::GetInstance().GetRenderer().GetPipeline(pipelineName);
 }
 
+D3D::Material::~Material()
+{
+}
+
 D3D::PipelineWrapper* D3D::Material::GetPipeline()
 {
 	// Return the pipeline

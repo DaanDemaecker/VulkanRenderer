@@ -1,7 +1,9 @@
 // D3DEngine.cpp
 
-// File includes
+// Header include
 #include "D3DEngine.h"
+
+// File includes
 #include "Vulkan/Renderers/VulkanRenderer3D.h"
 #include "TimeManager.h"
 #include "DataTypes/RenderClasses/Model.h"
@@ -12,8 +14,8 @@
 #include "DataTypes/DescriptorObjects/TextureDescriptorObject.h"
 #include "DataTypes/Camera.h"
 #include "DataTypes/Materials/ShadowMaterial.h"
-
 #include "Vulkan/Vulkan3D.h"
+#include "Vulkan/Managers/ModelManager.h"
 
 // Standard library includes
 #include <chrono>
@@ -38,99 +40,8 @@ void D3D::D3DEngine::Run(const std::function<void()>& load)
 	// Run the load function
 	load();
 
-	auto& renderer{ Vulkan3D::GetInstance().GetRenderer()};
+	auto& renderer{ Vulkan3D::GetInstance().GetRenderer() };
 	auto& window{ Window::GetInstance() };
-
-	renderer.AddGraphicsPipeline("Diffuse", { "Resources/Shaders/Diffuse.Vert.spv", "Resources/Shaders/Diffuse.Frag.spv" });
-	renderer.AddGraphicsPipeline("NormalMap", { "Resources/Shaders/NormalMap.Vert.spv", "Resources/Shaders/NormalMap.Frag.spv" });
-	renderer.AddGraphicsPipeline("DiffNorm", { "Resources/Shaders/DiffNorm.Vert.spv", "Resources/Shaders/DiffNorm.Frag.spv" });
-	
-	renderer.AddGraphicsPipeline("Test", { "Resources/Shaders/Test.Vert.spv", "Resources/Shaders/Test.Frag.spv" });
-	
-	renderer.AddGraphicsPipeline("DiffuseUnshaded", { "Resources/Shaders/DiffuseUnshaded.Vert.spv", "Resources/Shaders/DiffuseUnshaded.Frag.spv" });
-
-	renderer.AddGraphicsPipeline("Specular", { "Resources/Shaders/Specular.Vert.spv", "Resources/Shaders/Specular.Frag.spv" });
-
-	renderer.AddGraphicsPipeline("DiffNormSpec", { "Resources/Shaders/DiffNormSpec.Vert.spv", "Resources/Shaders/DiffNormSpec.Frag.spv" });
-
-
-	renderer.AddGraphicsPipeline("DiffuseShadow", { "Resources/Shaders/DiffuseShadow.Vert.spv", "Resources/Shaders/DiffuseShadow.Frag.spv" });
-
-	std::shared_ptr<D3D::TexturedMaterial> pGroundPlaneMaterial{ std::make_shared<D3D::TexturedMaterial>(std::initializer_list<const std::string>{"resources/images/GroundPlane.png"}, "Diffuse") };
-	std::shared_ptr<D3D::ShadowMaterial> pGroundPlaneMaterial2{ std::make_shared<D3D::ShadowMaterial>(std::initializer_list<const std::string>{"resources/images/GroundPlane.png"}, "DiffuseShadow") };
-
-	std::shared_ptr<D3D::TexturedMaterial> pVikingMaterial{ std::make_shared<D3D::TexturedMaterial>(std::initializer_list<const std::string>{"resources/images/viking_room.png"}, "Diffuse") };
-	std::shared_ptr<D3D::TexturedMaterial> pVehicleMaterial{ std::make_shared<D3D::TexturedMaterial>(std::initializer_list<const std::string>{"resources/images/vehicle_diffuse.png"}, "Diffuse") };
-	std::shared_ptr<D3D::TexturedMaterial> pFireMaterial{ std::make_shared<D3D::TexturedMaterial>(std::initializer_list<const std::string>{"resources/images/fireFX_diffuse.png"}, "DiffuseUnshaded") };
-
-	std::shared_ptr<D3D::Material> pVehicle2Material{ std::make_shared<D3D::TexturedMaterial>
-		(std::initializer_list<const std::string>{"resources/images/vehicle_diffuse.png", "resources/images/vehicle_normal.png"}, "DiffNorm") };
-
-	std::shared_ptr<D3D::TexturedMaterial> pTestMaterial{std::make_shared<D3D::TexturedMaterial>(std::initializer_list<const std::string>{"resources/images/TestRed.png","resources/images/TestBlue.png"}, "Test")};
-	
-	std::shared_ptr<D3D::TexturedMaterial> pVehicle3Material{ std::make_shared<D3D::TexturedMaterial>
-		(std::initializer_list<const std::string>{"resources/images/vehicle_diffuse.png", "resources/images/vehicle_normal.png",
-		"resources/images/vehicle_gloss.png", "resources/images/vehicle_specular.png"},
-			"DiffNormSpec") };
-
-	std::shared_ptr<D3D::ShadowMaterial> pVehicleMaterial4{ std::make_shared<D3D::ShadowMaterial>(std::initializer_list<const std::string>{"resources/images/vehicle_diffuse.png"}, "DiffuseShadow") };
-
-
-
-		std::vector<std::unique_ptr<Model>> pModels{};
-
-		/*pModels.push_back(std::make_unique<Model>());
-		pModels[0]->LoadModel("../Resources/Models/viking_room.obj");
-		pModels[0]->SetMaterial(pVikingMaterial);
-		pModels[0]->SetPosition(1.f, -0.2f, 5.f);
-		pModels[0]->SetRotation(glm::radians(-90.0f), glm::radians(45.0f), 0.f);
-		pModels[0]->SetScale(0.75f, 0.75f, 0.75f);*/
-
-		std::unique_ptr<Model> pCurrModel{};
-
-		pCurrModel = std::make_unique<Model>();
-
-		pCurrModel->LoadModel("Resources/Models/Plane.obj");
-		pCurrModel->SetMaterial(pGroundPlaneMaterial2);
-
-		pCurrModel->SetRotate(false);
-
-		pModels.push_back(std::move(pCurrModel));
-
-		/*pCurrModel = std::make_unique<Model>();
-
-		pCurrModel->LoadModel("../Resources/Models/vehicle.obj");
-		pCurrModel->SetMaterial(pVehicle2Material);
-		pCurrModel->SetPosition(1.f, 0, 5.f);
-		pCurrModel->SetRotation(0.f, glm::radians(75.0f), 0.f);
-		pCurrModel->SetScale(0.05f, 0.05f, 0.05f);
-
-		pModels.push_back(std::move(pCurrModel));*/
-
-
-		pCurrModel = std::make_unique<Model>();
-		
-		pCurrModel->LoadModel("Resources/Models/vehicle.obj");
-		pCurrModel->SetMaterial(pVehicleMaterial4);
-		//pModel->SetMaterial(pTestMaterial);
-		pCurrModel->SetPosition(0.f, 5, 0.f);
-		pCurrModel->SetRotation(0.f, glm::radians(75.0f), 0.f);
-		pCurrModel->SetScale(0.25f, 0.25f, 0.25f);
-		
-		pModels.push_back(std::move(pCurrModel));
-
-
-		pCurrModel = std::make_unique<Model>();
-
-		pCurrModel->LoadModel("Resources/Models/fireFX.obj");
-		pCurrModel->SetCastsShadow(false);
-		pCurrModel->SetMaterial(pFireMaterial);
-		pCurrModel->SetPosition(0.f, 5, 0.f);
-		pCurrModel->SetRotation(0.f, glm::radians(75.0f), 0.f);
-		pCurrModel->SetScale(0.25f, 0.25f, 0.25f);
-
-		pModels.push_back(std::move(pCurrModel));
-
 
 	auto pCamera =	renderer.GetCamera();
 	pCamera->SetPosition(0, 5, -15);
@@ -180,17 +91,13 @@ void D3D::D3DEngine::Run(const std::function<void()>& load)
 		// Poll input for the window
 		glfwPollEvents();
 
-		// Update all models
-		for (auto& pModel : pModels)
-		{
-			pModel->Update();
-		}
-
 		renderer.GetCamera()->Update();
 		
+		Vulkan3D::GetInstance().GetModelManager()->Update();
+
 
 		// Render all models
-		Vulkan3D::GetInstance().Render(pModels);
+		Vulkan3D::GetInstance().Render();
 
 		// Check if aplication should quit
 		shouldQuit = glfwWindowShouldClose(window.GetWindowStruct().pWindow);

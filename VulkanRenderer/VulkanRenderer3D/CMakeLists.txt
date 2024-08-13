@@ -43,7 +43,8 @@ add_executable(VulkanRenderer3D
     "Vulkan/VulkanUtils.cpp"
     "Vulkan/Managers/DispatchableManager.cpp"
     "Vulkan/Vulkan3D.cpp"
-)
+    "Vulkan/Managers/ModelManager.cpp" "DataTypes/DescriptorObjects/DescriptorObject.cpp")
+
 
 # Include directories specific to this target
 target_include_directories(VulkanRenderer3D PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})

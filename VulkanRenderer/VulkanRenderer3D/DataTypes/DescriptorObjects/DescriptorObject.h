@@ -29,7 +29,7 @@ namespace D3D
 		DescriptorObject() = delete;
 
 		// Default destructor
-		virtual ~DescriptorObject() = default;
+		virtual ~DescriptorObject();
 
 		// Delete all copy and move functions
 		DescriptorObject(DescriptorObject& other) = delete;

@@ -4,6 +4,7 @@
 #include "Vulkan3D.h"
 #include "Vulkan/Managers/DispatchableManager.h"
 #include "Engine/ConfigManager.h"
+#include "Managers/ModelManager.h"
 
 uint32_t D3D::Vulkan3D::m_sMaxFramesInFlight = 1;
 
@@ -28,11 +29,14 @@ void D3D::Vulkan3D::Init()
 	m_pRenderer->SetupDefaultPipeline();
 	m_pRenderer->SetupLight();
 	m_pRenderer->SetupSkybox();
+
+	m_pModelManager = std::make_unique<D3D::ModelManager>();
 }
 
 void D3D::Vulkan3D::Terminate()
 {
 	m_pRenderer = nullptr;
+	m_pModelManager = nullptr;
 }
 
 VkInstance D3D::Vulkan3D::GetVulkanInstance() const
@@ -65,10 +69,15 @@ D3D::VulkanRenderer3D& D3D::Vulkan3D::GetRenderer()
 	return *m_pRenderer.get();
 }
 
-void D3D::Vulkan3D::Render(std::vector<std::unique_ptr<Model>>& pModels)
+void D3D::Vulkan3D::Render()
 {
-	m_pRenderer->Render(pModels);
+	m_pRenderer->Render(m_pModelManager->GetModels());
 
 	// Go to the next frame
 	++m_sCurrentFrame %= m_sMaxFramesInFlight;
+}
+
+D3D::ModelManager* D3D::Vulkan3D::GetModelManager()
+{
+	return m_pModelManager.get();
 }

@@ -19,6 +19,10 @@ D3D::TexturedMaterial::TexturedMaterial(std::initializer_list<const std::string>
 	CreateTextureSampler();
 }
 
+D3D::TexturedMaterial::~TexturedMaterial()
+{
+}
+
 void D3D::TexturedMaterial::CreateDescriptorSets(Model* pModel, std::vector<VkDescriptorSet>& descriptorSets)
 {
 	// Get descriptorpool associated with this material

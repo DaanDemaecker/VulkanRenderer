@@ -26,7 +26,7 @@ namespace D3D
 		ShadowMaterial(std::initializer_list<const std::string>&& filePaths, const std::string& pipelineName = "Default");
 
 		// Destructor
-		virtual ~ShadowMaterial() = default;
+		virtual ~ShadowMaterial();
 
 		// Create the descriptorsets
 		// Parameters:

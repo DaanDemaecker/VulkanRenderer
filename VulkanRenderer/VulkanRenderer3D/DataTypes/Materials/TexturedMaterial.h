@@ -26,7 +26,7 @@ namespace D3D
 		TexturedMaterial(std::initializer_list<const std::string>&& filePaths, const std::string& pipelineName = "Default");
 		
 		// Destructor
-		virtual ~TexturedMaterial() = default;
+		virtual ~TexturedMaterial();
 
 		// Create the descriptorsets
 		// Parameters:

@@ -27,7 +27,7 @@ namespace D3D
 		//     pipelineName: the name of the graphicspipeline this material will use, standard set to "Default"
 		Material(const std::string& pipelineName = "Default");
 		// Default constructor
-		virtual ~Material() = default;
+		virtual ~Material();
 
 		// Delete copy and move functions
 		Material(Material& other) = delete;

@@ -19,6 +19,10 @@ D3D::ShadowMaterial::ShadowMaterial(std::initializer_list<const std::string>&& f
 	CreateTextureSampler();
 }
 
+D3D::ShadowMaterial::~ShadowMaterial()
+{
+}
+
 void D3D::ShadowMaterial::CreateDescriptorSets(Model* pModel, std::vector<VkDescriptorSet>& descriptorSets)
 {
 	// Get descriptorpool associated with this material
