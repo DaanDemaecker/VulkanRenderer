@@ -132,37 +132,6 @@ void D3D::D3DEngine::Run(const std::function<void()>& load)
 		pModels.push_back(std::move(pCurrModel));
 
 
-
-		//pCurrModel = std::make_unique<Model>();
-
-		//pCurrModel->LoadModel("../Resources/Models/Desk_unwrap.obj");
-		//pCurrModel->SetMaterial(pVehicleMaterial);
-		////pModel->SetMaterial(pTestMaterial);
-		//pCurrModel->SetPosition(0.f, 0, 3.f);
-		//pCurrModel->SetRotation(0.f, glm::radians(75.0f), 0.f);
-		////pCurrModel->SetScale(0.25f, 0.25f, 0.25f);
-
-		//pModels.push_back(std::move(pCurrModel));
-
-
-	/*for (int i{}; i < 20; ++i)
-	{
-		std::unique_ptr<Model> pModel{std::make_unique<Model>()};
-		pModel->LoadModel("../Resources/Models/vehicle.obj");
-		pModel->SetMaterial(pVehicleMaterial);
-
-		pModels.push_back(std::move(pModel));
-	}*/
-
-	/*{
-		std::unique_ptr<Model> pModel{ std::make_unique<D3D::Model>() };
-		pModel->LoadModel("../Resources/Models/Cube.obj");
-		pModel->SetMaterial(pVikingMaterial);
-		pModel->SetPosition(0, 0, 5.f);
-		pModel->SetScale(1000, 1000, 1000);
-		pModels.push_back(std::move(pModel));
-	}*/
-
 	auto pCamera =	renderer.GetCamera();
 	pCamera->SetPosition(0, 5, -15);
 	//auto rot{ glm::quat(glm::lookAt(pCamera->GetPosition(), glm::vec3{ 0, 0, 0 }, glm::vec3{ 0, 1, 0 }))};

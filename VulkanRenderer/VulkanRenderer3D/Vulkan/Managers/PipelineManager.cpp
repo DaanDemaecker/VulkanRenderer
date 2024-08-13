@@ -18,12 +18,7 @@ D3D::PipelineManager::~PipelineManager()
 
 void D3D::PipelineManager::Cleanup(VkDevice device)
 {
-	// Loop trough all the pipelines
-	for (auto& pipeline : m_GraphicPipelines)
-	{
-		// Call cleanup function
-		pipeline.second->Cleanup(device);
-	}
+	
 }
 
 void D3D::PipelineManager::AddDefaultPipeline(VkDevice device, VkRenderPass renderPass, VkSampleCountFlagBits sampleCount)
@@ -51,7 +46,7 @@ void D3D::PipelineManager::AddGraphicsPipeline(VkDevice device, VkRenderPass ren
 	// Check if pipeline already exists, if it does, delete it
 	if (m_GraphicPipelines.contains(pipelineName))
 	{
-		m_GraphicPipelines[pipelineName]->Cleanup(device);
+		m_GraphicPipelines[pipelineName] = nullptr;
 	}
 
 	// Create a new pipeline in the correct spot in the map

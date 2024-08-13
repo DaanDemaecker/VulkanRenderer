@@ -36,7 +36,7 @@ namespace D3D
 		PipelineWrapper(VkDevice device, VkRenderPass renderPass, VkSampleCountFlagBits sampleCount,
 			std::initializer_list<const std::string>& filePaths, bool hasDepthStencil = true);
 
-		// Default destructor
+		// Destructor
 		~PipelineWrapper();
 
 		// Delete copy and move functions
@@ -44,11 +44,6 @@ namespace D3D
 		PipelineWrapper(PipelineWrapper&& other) = delete;
 		PipelineWrapper& operator=(PipelineWrapper& other) = delete;
 		PipelineWrapper& operator=(PipelineWrapper&& other) = delete;
-
-		// Clean up all allocated objects
-		// Parameters:
-		//     device: handle of the logical device
-		void Cleanup(VkDevice device);
 
 		// Bind the pipeline
 		// Parameters:
@@ -77,6 +72,11 @@ namespace D3D
 
 		// Pointer to the descriptor pool wrapper
 		std::unique_ptr<DescriptorPoolWrapper> m_pDescriptorPool{};
+
+		// Clean up all allocated objects
+		// Parameters:
+		//     device: handle of the logical device
+		void Cleanup(VkDevice device);
 
 		// Create the graphics pipeline
 		// Parameters:

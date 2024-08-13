@@ -2,6 +2,7 @@
 
 // File includes
 #include "PipelineWrapper.h"
+#include "Vulkan/Vulkan3D.h"
 #include "ShaderModuleWrapper.h"
 #include "DescriptorPoolWrapper.h"
 
@@ -18,6 +19,7 @@ D3D::PipelineWrapper::PipelineWrapper(VkDevice device, VkRenderPass renderPass,
 
 D3D::PipelineWrapper::~PipelineWrapper()
 {
+	Cleanup(Vulkan3D::GetInstance().GetDevice());
 }
 
 void D3D::PipelineWrapper::Cleanup(VkDevice device)

@@ -47,6 +47,11 @@ void D3D::Camera::Update()
 
 	direction *= m_Speed * deltaTime;
 
+	if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
+	{
+		direction *= 2;
+	}
+
 
 	// Translate the object based on the rotated movement direction
 	SetPosition(GetPosition() + direction);
@@ -68,8 +73,6 @@ void D3D::Camera::Update()
 		// Rotate the camera based on mouse movement
 		SetRotation(m_TotalPitch, m_TotalYaw, 0);
 	}
-
-	SetRotation(m_TotalPitch, m_TotalYaw, 0);
 
 	m_PrevXPos = xpos;
 	m_PrevYPos = ypos;

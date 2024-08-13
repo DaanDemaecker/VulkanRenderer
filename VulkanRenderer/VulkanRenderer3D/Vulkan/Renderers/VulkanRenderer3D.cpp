@@ -40,9 +40,6 @@ D3D::VulkanRenderer3D::VulkanRenderer3D()
 	// Create camera
 	m_pCamera = std::make_unique<Camera>();
 
-	// Set initial rotation
-	m_pCamera->SetRotation(glm::vec3(0.0f, glm::radians(180.f), 0.0f));
-
 	// Initialize vulkan objects
 	InitVulkan();
 

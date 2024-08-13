@@ -40,8 +40,6 @@ void D3D::ShadowRenderer::Cleanup(VkDevice device)
 {
 	m_pShadowTextureObject = nullptr;
 
-	m_pShadowPipeline->Cleanup(device);
-
 	vkDestroyRenderPass(device, m_ShadowRenderpass, nullptr);
 
 	vkDestroyFramebuffer(device, m_ShadowFrameBuffer, nullptr);
