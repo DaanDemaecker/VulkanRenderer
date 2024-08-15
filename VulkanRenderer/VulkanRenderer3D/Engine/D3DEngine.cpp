@@ -113,13 +113,6 @@ void D3D::D3DEngine::Run(const std::function<void()>& load)
 
 			// Make the thread sleep for the right amount of time
 			std::this_thread::sleep_for(sleepTime);
-
-
-			// Calculate the moment the thread should wake up and continue
-			//const auto frameEnd{frameStart + desiredFrameDuration };
-			
-			// Make the thread sleep until the desired time
-			//std::this_thread::sleep_until(frameEnd);
 		}
 	}
 }

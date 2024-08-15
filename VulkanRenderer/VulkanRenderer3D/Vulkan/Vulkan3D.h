@@ -77,8 +77,10 @@ namespace D3D
 		// Dispatchable manager
 		std::unique_ptr<D3D::DispatchableManager> m_pDispatchableManager{};
 
+		// Renderer
 		std::unique_ptr<D3D::VulkanRenderer3D> m_pRenderer{};
 
+		// Model Manager
 		std::unique_ptr<D3D::ModelManager> m_pModelManager{};
 	};
 

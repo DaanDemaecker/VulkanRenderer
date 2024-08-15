@@ -43,7 +43,7 @@ add_executable(VulkanRenderer3D
     "Vulkan/VulkanUtils.cpp"
     "Vulkan/Managers/DispatchableManager.cpp"
     "Vulkan/Vulkan3D.cpp"
-    "Vulkan/Managers/ModelManager.cpp" "DataTypes/DescriptorObjects/DescriptorObject.cpp")
+    "Vulkan/Managers/ModelManager.cpp" "DataTypes/DescriptorObjects/DescriptorObject.cpp" "Vulkan/Managers/CameraManager.cpp")
 
 
 # Include directories specific to this target
