@@ -113,11 +113,6 @@ namespace D3D
         //     indexBufferMemory: handle of the index buffer memory
         void CreateIndexBuffer(std::vector<uint32_t>& indices, VkBuffer& indexBuffer, VkDeviceMemory& indexBufferMemory);
 
-        // Update uniform buffer with camera and projection transform
-        // Parameters:
-        //     buffer: reference to the uniform buffer object that needs updating
-        void UpdateUniformBuffer(UniformBufferObject& buffer);
-
         // Create a texture
         // Parameters:
         //     texture: reference to the texture object that will hold the texture
@@ -129,9 +124,6 @@ namespace D3D
         //     cubeTexture: reference to the texture object
         //     textureNames: a list of the file paths for the cube faces in order: right,left,up,down,front,back
         void CreateCubeTexture(Texture& cubeTexture, const std::initializer_list<std::string const>& textureNames);
-
-        // Pointer for the camera
-        Camera* GetCamera() { return m_pCamera.get(); }
 
         // Set up the skybox
         void SetupSkybox();
@@ -155,6 +147,7 @@ namespace D3D
         void TransitionImageLayout(VkImage image, VkFormat format,
             VkImageLayout oldLayout, VkImageLayout newLayout, uint32_t mipLevels, uint32_t layerCount = 1);
 
+        VkExtent2D GetSwapchainExtent() const;
     private:
         std::unique_ptr<ShadowRenderer> m_pShadowRenderer{};
 
@@ -190,9 +183,6 @@ namespace D3D
 
         // Pointer to the global light object
         std::unique_ptr<DirectionalLightObject> m_pGlobalLight{};
-
-        // Pointer to the camera
-        std::unique_ptr<Camera> m_pCamera{};
 
         // Initialize vulkan objects
         void InitVulkan();

@@ -40,10 +40,11 @@ void D3D::D3DEngine::Run(const std::function<void()>& load)
 	// Run the load function
 	load();
 
-	auto& renderer{ Vulkan3D::GetInstance().GetRenderer() };
+	auto& vulkan{ Vulkan3D::GetInstance() };
+	auto& renderer{ vulkan.GetRenderer() };
 	auto& window{ Window::GetInstance() };
 
-	auto pCamera =	renderer.GetCamera();
+	auto pCamera = vulkan.GetCurrentCamera();
 	pCamera->SetPosition(0, 5, -15);
 	//auto rot{ glm::quat(glm::lookAt(pCamera->GetPosition(), glm::vec3{ 0, 0, 0 }, glm::vec3{ 0, 1, 0 }))};
 	//pCamera->SetRotation(glm::eulerAngles(rot));
@@ -91,7 +92,7 @@ void D3D::D3DEngine::Run(const std::function<void()>& load)
 		// Poll input for the window
 		glfwPollEvents();
 
-		renderer.GetCamera()->Update();
+		pCamera->Update();
 		
 		Vulkan3D::GetInstance().GetModelManager()->Update();
 

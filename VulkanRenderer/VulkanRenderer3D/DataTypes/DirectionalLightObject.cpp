@@ -55,7 +55,7 @@ void D3D::DirectionalLightObject::SetDirtyFlags()
 
 void D3D::DirectionalLightObject::CalculateLightTransform(int frame)
 {
-	auto cameraPos = Vulkan3D::GetInstance().GetRenderer().GetCamera()->GetPosition();
+	auto cameraPos = Vulkan3D::GetInstance().GetCurrentCamera()->GetPosition();
 	//cameraPos = glm::vec3{};
 
 	// Define a virtual light position far away in the opposite direction of the light relative to the camera position

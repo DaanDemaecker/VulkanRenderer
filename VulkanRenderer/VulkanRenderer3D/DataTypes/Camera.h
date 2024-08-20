@@ -22,8 +22,8 @@ namespace D3D
 		// Default constructor
 		Camera();
 
-		// Defualt destructor
-		~Camera() = default;
+		// Destructor
+		~Camera();
 		
 		// Delete copy and move functions
 		Camera(Camera& other) = delete;
@@ -106,8 +106,7 @@ namespace D3D
 		// Update uniform buffer with camera transform
 		// Parameters:
 		//     buffer: reference to the uniform buffer object that needs updating
-		//     extent: the extent of the swapchain
-		void UpdateUniformBuffer(UniformBufferObject& buffer, VkExtent2D extent);
+		void UpdateUniformBuffer(UniformBufferObject& buffer);
 
 		glm::vec3 GetForward();
 

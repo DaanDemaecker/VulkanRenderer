@@ -26,7 +26,6 @@
 #include "Vulkan/Wrappers/Viewport.h"
 #include "ShadowRenderer.h"
 
-#include "DataTypes/Camera.h"
 #include "DataTypes/DirectionalLightObject.h"
 #include "DataTypes/RenderClasses/SkyBox.h"
 
@@ -37,9 +36,6 @@
 
 D3D::VulkanRenderer3D::VulkanRenderer3D()
 {
-	// Create camera
-	m_pCamera = std::make_unique<Camera>();
-
 	// Initialize vulkan objects
 	InitVulkan();
 
@@ -101,6 +97,11 @@ void D3D::VulkanRenderer3D::TransitionImageLayout(VkImage image, VkFormat format
 	auto commandBuffer{ m_pCommandPoolManager->BeginSingleTimeCommands(Vulkan3D::GetInstance().GetDevice()) };
 	m_pImageManager->TransitionImageLayout(image, commandBuffer, format, oldLayout, newLayout, mipLevels, layerCount);
 	m_pCommandPoolManager->EndSingleTimeCommands(Vulkan3D::GetInstance().GetGPUObject(), commandBuffer);
+}
+
+VkExtent2D D3D::VulkanRenderer3D::GetSwapchainExtent() const
+{
+	return m_pSwapchainWrapper->GetExtent();
 }
 
 void D3D::VulkanRenderer3D::InitVulkan()
@@ -332,7 +333,7 @@ void D3D::VulkanRenderer3D::RecordCommandBuffer(VkCommandBuffer& commandBuffer, 
 	m_pGlobalLight->UpdateBuffer(Vulkan3D::GetCurrentFrame());
 
 
-	if (m_pCamera->GetCameraType() == CameraType::Perspective)
+	if (Vulkan3D::GetInstance().GetCurrentCamera()->GetCameraType() == CameraType::Perspective)
 	{
 		// Render the skybox
 		m_pSkyBox->Render();
@@ -460,12 +461,6 @@ void D3D::VulkanRenderer3D::CreateIndexBuffer(std::vector<uint32_t>& indices, Vk
 {
 	// Create an index buffer trough the buffer manager
 	m_pBufferManager->CreateIndexBuffer(D3D::Vulkan3D::GetInstance().GetGPUObject(), m_pCommandPoolManager.get(), indices, indexBuffer, indexBufferMemory);
-}
-
-void D3D::VulkanRenderer3D::UpdateUniformBuffer(UniformBufferObject& buffer)
-{
-	// Update the buffer with the camera transformation
-	m_pCamera->UpdateUniformBuffer(buffer, m_pSwapchainWrapper->GetExtent());
 }
 
 void D3D::VulkanRenderer3D::CreateTexture(Texture& texture, const std::string& textureName)

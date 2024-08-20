@@ -2,9 +2,13 @@
 
 // File includes
 #include "Vulkan3D.h"
+
 #include "Vulkan/Managers/DispatchableManager.h"
+#include "Vulkan/Managers/ModelManager.h"
+#include "Vulkan/Managers/CameraManager.h"
+
 #include "Engine/ConfigManager.h"
-#include "Managers/ModelManager.h"
+
 
 uint32_t D3D::Vulkan3D::m_sMaxFramesInFlight = 1;
 
@@ -24,6 +28,8 @@ D3D::Vulkan3D::~Vulkan3D()
 
 void D3D::Vulkan3D::Init()
 {
+	m_pCameraManager = std::make_unique<D3D::CameraManager>();
+
 	m_pRenderer = std::make_unique<D3D::VulkanRenderer3D>();
 
 	m_pRenderer->SetupDefaultPipeline();
@@ -31,6 +37,7 @@ void D3D::Vulkan3D::Init()
 	m_pRenderer->SetupSkybox();
 
 	m_pModelManager = std::make_unique<D3D::ModelManager>();
+
 }
 
 void D3D::Vulkan3D::Terminate()
@@ -80,4 +87,14 @@ void D3D::Vulkan3D::Render()
 D3D::ModelManager* D3D::Vulkan3D::GetModelManager()
 {
 	return m_pModelManager.get();
+}
+
+void D3D::Vulkan3D::SetCamera(std::unique_ptr<Camera> pNewCamera)
+{
+	m_pCameraManager->SetCamera(std::move(pNewCamera));
+}
+
+D3D::Camera* D3D::Vulkan3D::GetCurrentCamera()
+{
+	return m_pCameraManager->GetCamera();
 }

@@ -7,6 +7,7 @@
 #include "Engine/Singleton.h"
 #include "Includes/VulkanIncludes.h"
 #include "Vulkan/Renderers/VulkanRenderer3D.h"
+#include "DataTypes/Camera.h"
 
 // Standard library includes
 #include <memory>
@@ -18,6 +19,7 @@ namespace D3D
 	class ModelManager;
 	class Model;
 	class GPUObject;
+	class CameraManager;
 
 	class Vulkan3D final : public Singleton<Vulkan3D>
 	{
@@ -63,6 +65,10 @@ namespace D3D
 		// Get model manager
 		ModelManager* GetModelManager();
 	
+		void SetCamera(std::unique_ptr<Camera> pNewCamera);
+
+		Camera* GetCurrentCamera();
+
 	private:
 		// Private  default constructor accessable for singleton class
 		friend class Singleton<Vulkan3D>;
@@ -82,6 +88,9 @@ namespace D3D
 
 		// Model Manager
 		std::unique_ptr<D3D::ModelManager> m_pModelManager{};
+
+		// Camera Manager
+		std::unique_ptr<D3D::CameraManager> m_pCameraManager{};
 	};
 
 }

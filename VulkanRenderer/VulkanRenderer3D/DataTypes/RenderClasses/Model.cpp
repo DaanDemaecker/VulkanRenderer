@@ -194,7 +194,7 @@ void D3D::Model::UpdateUniformBuffer(uint32_t frame)
 
 	// Update ubo
 	// Send to renderer to update camera matrix
-	Vulkan3D::GetInstance().GetRenderer().UpdateUniformBuffer(m_Ubos[frame]);
+	Vulkan3D::GetInstance().GetCurrentCamera()->UpdateUniformBuffer(m_Ubos[frame]);
 
 	m_pUboDescriptorObject->UpdateUboBuffer(m_Ubos[frame], frame);
 }

@@ -6,11 +6,15 @@
 #include "Engine/TimeManager.h"
 #include "Includes/ImGuiIncludes.h"
 #include "Utils/Utils.h"
-
+#include "Vulkan/Vulkan3D.h"
 
 D3D::Camera::Camera()
 {
 	SetRotation(m_TotalPitch, m_TotalYaw, 0);
+}
+
+D3D::Camera::~Camera()
+{
 }
 
 void D3D::Camera::Update()
@@ -85,8 +89,9 @@ void D3D::Camera::SetDirection(glm::vec3& direction)
 	SetDirtyFlag();
 }
 
-void D3D::Camera::UpdateUniformBuffer(UniformBufferObject& buffer, VkExtent2D extent)
+void D3D::Camera::UpdateUniformBuffer(UniformBufferObject& buffer)
 {
+	VkExtent2D extent{Vulkan3D::GetInstance().GetRenderer().GetSwapchainExtent()};
 	// If the camera transform has changed, update matrix
 	if (m_HasChanged)
 		UpdateMatrix();
