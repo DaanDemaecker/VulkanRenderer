@@ -25,6 +25,10 @@ D3D::SkyBox::SkyBox(std::initializer_list<const std::string>&& filePaths)
 	m_pModel->SetMaterial(pMaterial);
 }
 
+D3D::SkyBox::~SkyBox()
+{
+}
+
 void D3D::SkyBox::Render()
 {
 	// Render the model

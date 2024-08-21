@@ -32,3 +32,16 @@ D3D::Camera* D3D::CameraManager::GetCamera()
 
 	return m_pDefaultCamera.get();
 }
+
+void D3D::CameraManager::SetSkybox(std::unique_ptr<SkyBox> pSkybox)
+{
+	m_pSkyBox = std::move(pSkybox);
+}
+
+void D3D::CameraManager::RenderSkybox()
+{
+	if (m_pSkyBox != nullptr && GetCamera()->GetCameraType() == CameraType::Perspective)
+	{
+		m_pSkyBox->Render();
+	}
+}

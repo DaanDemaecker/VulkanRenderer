@@ -24,6 +24,7 @@
 #include "Vulkan/Managers/CommandpoolManager.h"
 #include "Vulkan/Wrappers/SurfaceWrapper.h"
 #include "Vulkan/Wrappers/Viewport.h"
+#include "Vulkan/Managers/CameraManager.h"
 #include "ShadowRenderer.h"
 
 #include "DataTypes/DirectionalLightObject.h"
@@ -55,15 +56,6 @@ void D3D::VulkanRenderer3D::SetupSkybox()
 	auto& configManager{ ConfigManager::GetInstance() };
 	// Create the graphics pipeline for the skybox
 	AddGraphicsPipeline("Skybox", { configManager.GetString("SkyboxVert"), configManager.GetString("SkyboxFrag")}, false);
-
-	// Create the skybox
-	m_pSkyBox = std::make_unique<SkyBox>(
-		std::initializer_list<const std::string>{"resources/images/CubeMap/Sky_Right.png",
-												"resources/images/CubeMap/Sky_Left.png",
-												"resources/images/CubeMap/Sky_Up.png", 
-												"resources/images/CubeMap/Sky_Down.png", 
-												"resources/images/CubeMap/Sky_Front.png", 
-												"resources/images/CubeMap/Sky_Back.png"});
 }
 
 void D3D::VulkanRenderer3D::SetupLight()
@@ -333,11 +325,7 @@ void D3D::VulkanRenderer3D::RecordCommandBuffer(VkCommandBuffer& commandBuffer, 
 	m_pGlobalLight->UpdateBuffer(Vulkan3D::GetCurrentFrame());
 
 
-	if (Vulkan3D::GetInstance().GetCurrentCamera()->GetCameraType() == CameraType::Perspective)
-	{
-		// Render the skybox
-		m_pSkyBox->Render();
-	}
+	Vulkan3D::GetInstance().GetCameraManager()->RenderSkybox();
 
 	// Loop trough the amount of models
 	for (size_t i = 0; i < pModels.size(); ++i)

@@ -6,6 +6,7 @@
 #include "DataTypes/Materials/ShadowMaterial.h"
 #include "DataTypes/RenderClasses/Model.h"
 #include "Vulkan/Managers/ModelManager.h"
+#include "Vulkan/Managers/CameraManager.h"
 
 
 void SetupPipelines()
@@ -93,6 +94,14 @@ void load()
 	pCurrModel->SetScale(0.25f, 0.25f, 0.25f);
 
 	pModelManager->AddModel(std::move(pCurrModel));
+
+	D3D::Vulkan3D::GetInstance().GetCameraManager()->SetSkybox(std::make_unique<D3D::SkyBox>(
+		std::initializer_list<const std::string>{"resources/images/CubeMap/Sky_Right.png",
+		"resources/images/CubeMap/Sky_Left.png",
+		"resources/images/CubeMap/Sky_Up.png",
+		"resources/images/CubeMap/Sky_Down.png",
+		"resources/images/CubeMap/Sky_Front.png",
+		"resources/images/CubeMap/Sky_Back.png"}));
 }
 
 int main()

@@ -27,8 +27,8 @@ namespace D3D
 		//                Right, left, up, down, front, back...
 		SkyBox(std::initializer_list<const std::string>&& filePaths);
 		
-		// Default destructor
-		~SkyBox() = default;
+		// Destructor
+		~SkyBox();
 
 		// Delete copy and move functions
 		SkyBox(SkyBox& other) = delete;

@@ -69,6 +69,7 @@ namespace D3D
 
 		Camera* GetCurrentCamera();
 
+		CameraManager* GetCameraManager();
 	private:
 		// Private  default constructor accessable for singleton class
 		friend class Singleton<Vulkan3D>;

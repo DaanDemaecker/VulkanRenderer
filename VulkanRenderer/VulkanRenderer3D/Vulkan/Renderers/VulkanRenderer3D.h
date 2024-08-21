@@ -154,9 +154,6 @@ namespace D3D
         // Viewport object
         std::unique_ptr<Viewport> m_pViewport{};
 
-        // Pointer to the skybox object
-        std::unique_ptr<SkyBox> m_pSkyBox{};
-
         // Pointer to the buffer manager
         std::unique_ptr<BufferManager> m_pBufferManager{};
 

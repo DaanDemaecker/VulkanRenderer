@@ -98,3 +98,8 @@ D3D::Camera* D3D::Vulkan3D::GetCurrentCamera()
 {
 	return m_pCameraManager->GetCamera();
 }
+
+D3D::CameraManager* D3D::Vulkan3D::GetCameraManager()
+{
+	return m_pCameraManager.get();
+}
