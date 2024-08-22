@@ -1,7 +1,8 @@
 // DispatchableManager.cpp
 
-// File includes
 #include "DispatchableManager.h"
+
+// File includes
 #include "Vulkan/Wrappers/InstanceWrapper.h"
 #include "Vulkan/Wrappers/SurfaceWrapper.h"
 #include "Vulkan/Wrappers/GPUObject.h"

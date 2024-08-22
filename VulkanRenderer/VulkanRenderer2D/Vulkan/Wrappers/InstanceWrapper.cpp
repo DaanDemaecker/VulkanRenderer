@@ -2,7 +2,7 @@
 
 // File includes
 #include "InstanceWrapper.h"
-#include "../../Engine Files/ConfigManager.h"
+#include "Engine/ConfigManager.h"
 
 // Standard library includes
 #include <stdexcept>
