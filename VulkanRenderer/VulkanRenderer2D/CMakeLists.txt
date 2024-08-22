@@ -3,15 +3,15 @@ project(VulkanRenderer2D)
 
 # Create the executable
 add_executable(VulkanRenderer2D
-    "Engine Files/ConfigManager.cpp"
-    "Engine Files/D2DEngine.cpp"
-    "Engine Files/main.cpp"
-    "Engine Files/Window.cpp"
+    "Engine/ConfigManager.cpp"
+    "Engine/D2DEngine.cpp"
+    "Engine/main.cpp"
+    "Engine/Window.cpp"
     "Includes/STBIncludes.cpp"
     "Vulkan/Wrappers/GPUObject.cpp"
     "Vulkan/Wrappers/InstanceWrapper.cpp"
-    "Vulkan/VulkanRenderer2D.cpp"
-)
+    "Vulkan/DispatchableManager.cpp"
+ "Vulkan/Vulkan2D.cpp")
 
 # Include directories specific to this target
 target_include_directories(VulkanRenderer2D PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})

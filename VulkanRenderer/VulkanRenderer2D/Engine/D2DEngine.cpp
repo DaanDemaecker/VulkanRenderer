@@ -1,11 +1,12 @@
 #include "D2DEngine.h"
 #include "Window.h"
-#include "../Vulkan/VulkanRenderer2D.h"
+#include "Vulkan/Vulkan2D.h"
 
 D2D::D2DEngine::D2DEngine()
 {
 	D2D::Window::GetInstance();
-	D2D::VulkanRenderer2D::GetInstance();
+
+	D2D::Vulkan2D::GetInstance().Init();
 }
 
 D2D::D2DEngine::~D2DEngine()
@@ -22,7 +23,8 @@ void D2D::D2DEngine::Run()
 
 	// As long as the app shouldn't quit, the gameloop will run
 	while (!shouldQuit)
-	{// Check if aplication should quit
+	{
+		// Check if aplication should quit
 		shouldQuit = glfwWindowShouldClose(window.GetWindowStruct().pWindow);
 	}
 }
