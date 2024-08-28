@@ -1,9 +1,13 @@
 // VulkanUtils.cpp
 
-// File includes
+// Header include
 #include "VulkanUtils.h"
+
+// File includes
 #include "Wrappers/GPUObject.h"
+
 #include "Managers/ImageManager.h"
+
 #include "Vulkan/Vulkan3D.h"
 
 // Standard library includes

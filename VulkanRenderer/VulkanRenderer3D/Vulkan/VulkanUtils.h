@@ -6,6 +6,7 @@
 
 // File includes
 #include "Includes/VulkanIncludes.h"
+
 #include "DataTypes/Structs.h"
 
 // Standard library includes

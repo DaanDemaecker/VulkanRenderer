@@ -4,9 +4,12 @@
 #define Vulkan3DIncluded
 
 // File includes
-#include "Engine/Singleton.h"
 #include "Includes/VulkanIncludes.h"
+
+#include "Engine/Singleton.h"
+
 #include "Vulkan/Renderers/VulkanRenderer3D.h"
+
 #include "DataTypes/Camera.h"
 
 // Standard library includes

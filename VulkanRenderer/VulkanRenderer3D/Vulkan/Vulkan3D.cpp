@@ -1,8 +1,9 @@
 // Vulkan3D.cpp
 
-// File includes
+// Header include
 #include "Vulkan3D.h"
 
+// File includes
 #include "Vulkan/Managers/DispatchableManager.h"
 #include "Vulkan/Managers/ModelManager.h"
 #include "Vulkan/Managers/CameraManager.h"
