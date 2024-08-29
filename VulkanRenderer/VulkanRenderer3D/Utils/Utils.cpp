@@ -1,7 +1,9 @@
 // Utils.cpp
 
-// File includes
+// Header include
 #include "Utils.h"
+
+// File includes
 #include "Includes/TinyObjLoaderIncludes.h"
 
 std::vector<char> Utils::readFile(const std::string& filename)
