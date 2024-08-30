@@ -1,9 +1,13 @@
 //DirectionalLightObject.cpp
 
-// File includes
+// Header include
 #include "DirectionalLightObject.h"
+
+// File includes
 #include "Vulkan/Vulkan3D.h"
+
 #include "Camera.h"
+
 #include "Utils/Utils.h"
 
 // Standard library includes
