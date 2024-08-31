@@ -1,11 +1,16 @@
 // Camera.cpp
 
-// File includes
+// Header include
 #include "Camera.h"
+
+// File includes
+#include "Includes/ImGuiIncludes.h"
+
+#include "Utils/Utils.h"
+
 #include "Engine/Window.h"
 #include "Engine/TimeManager.h"
-#include "Includes/ImGuiIncludes.h"
-#include "Utils/Utils.h"
+
 #include "Vulkan/Vulkan3D.h"
 
 D3D::Camera::Camera()

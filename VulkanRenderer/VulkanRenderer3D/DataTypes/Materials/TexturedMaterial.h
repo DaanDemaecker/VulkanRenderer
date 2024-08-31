@@ -5,7 +5,7 @@
 #ifndef TexturedMaterialIncluded
 #define TexturedMaterialIncluded
 
-// File includes
+// Parent class include
 #include "Material.h"
 
 // Standard library includes

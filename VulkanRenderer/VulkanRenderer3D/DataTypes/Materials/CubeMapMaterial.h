@@ -4,7 +4,7 @@
 #ifndef CubeMapMaterialIncuded
 #define CubeMapMaterialIncluded
 
-// File includes
+// Parent class include
 #include "Material.h"
 
 namespace D3D

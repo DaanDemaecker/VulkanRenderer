@@ -5,7 +5,7 @@
 #ifndef ShadowMaterialIncluded
 #define ShadowMaterialIncluded
 
-// File includes
+// Parent class include
 #include "Material.h"
 
 // Standard library includes

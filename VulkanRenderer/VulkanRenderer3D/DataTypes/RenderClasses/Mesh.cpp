@@ -1,9 +1,12 @@
 // Mesh.cpp
 
-// File includes
+// Header include
 #include "Mesh.h"
+
+// File includes
 #include "Vulkan/Vulkan3D.h"
 #include "Vulkan/Wrappers/PipelineWrapper.h"
+
 #include "Utils/Utils.h"
 
 D3D::Mesh::Mesh(const std::string& filePath)

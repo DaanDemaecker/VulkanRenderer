@@ -1,11 +1,16 @@
 // ShadowMaterial.cpp
 
-// File includes
+// Header include
 #include "ShadowMaterial.h"
-#include "Vulkan/Vulkan3D.h"
-#include "Utils/Utils.h"
-#include "Vulkan/Wrappers/DescriptorPoolWrapper.h"
+
+// File includes
 #include "Includes/STBIncludes.h"
+
+#include "Utils/Utils.h"
+
+#include "Vulkan/Vulkan3D.h"
+#include "Vulkan/Wrappers/DescriptorPoolWrapper.h"
+
 #include "DataTypes/DescriptorObjects/TextureDescriptorObject.h"
 #include "DataTypes/DirectionalLightObject.h"
 

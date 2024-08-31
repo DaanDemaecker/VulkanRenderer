@@ -4,8 +4,10 @@
 #ifndef DescriptorObjectIncluded
 #define DescriptorObjectIncluded
 
-// File includes
+// Parent class include
 #include "DescriptorObject.h"
+
+// File includes
 #include "Vulkan/Vulkan3D.h"
 
 namespace D3D

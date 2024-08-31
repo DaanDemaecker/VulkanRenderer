@@ -1,14 +1,20 @@
 // Model.cpp
 
-// File includes
+// Header include
 #include "Model.h"
-#include "Vulkan/Vulkan3D.h"
-#include "Utils/Utils.h"
-#include "DataTypes/Materials/Material.h"
+
+// File includes
 #include "Engine/TimeManager.h"
+
+#include "Utils/Utils.h"
+
+#include "DataTypes/Materials/Material.h"
+
+#include "Mesh.h"
+
+#include "Vulkan/Vulkan3D.h"
 #include "Vulkan/Wrappers/DescriptorPoolWrapper.h"
 #include "Vulkan/Wrappers/PipelineWrapper.h"
-#include "Mesh.h"
 
 // Standard library includes
 #include <memory>

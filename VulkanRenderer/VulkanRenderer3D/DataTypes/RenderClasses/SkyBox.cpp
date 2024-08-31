@@ -1,10 +1,15 @@
 // SkyBox.cpp
 
-// File includes
+// Header include
 #include "SkyBox.h"
+
+// File includes
 #include "Utils/Utils.h"
+
 #include "Vulkan/Renderers/VulkanRenderer3D.h"
+
 #include "Model.h"
+
 #include "DataTypes/Materials/CubeMapMaterial.h"
 #include "DataTypes/DescriptorObjects/TextureDescriptorObject.h"
 

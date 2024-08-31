@@ -1,12 +1,17 @@
 // Material.cpp
 
-// File includes
+// Header file include
 #include "Material.h"
-#include "Vulkan/Renderers/VulkanRenderer3D.h"
-#include "Utils/Utils.h"
-#include "Vulkan/Wrappers/DescriptorPoolWrapper.h"
+
+// File includes
 #include "Includes/STBIncludes.h"
+
+#include "Utils/Utils.h"
+
+#include "Vulkan/Renderers/VulkanRenderer3D.h"
+#include "Vulkan/Wrappers/DescriptorPoolWrapper.h"
 #include "Vulkan/Wrappers/PipelineWrapper.h"
+
 #include "DataTypes/DescriptorObjects/DescriptorObject.h"
 #include "DataTypes/DirectionalLightObject.h"
 

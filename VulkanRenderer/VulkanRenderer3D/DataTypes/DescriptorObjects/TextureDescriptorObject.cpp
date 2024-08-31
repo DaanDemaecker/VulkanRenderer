@@ -1,7 +1,9 @@
 // TextureDescriptorObject.cpp
 
-//File includes
+// Header include
 #include "TextureDescriptorObject.h"
+
+//File includes
 #include "Vulkan/Vulkan3D.h"
 
 D3D::TextureDescriptorObject::TextureDescriptorObject(Texture& texture)

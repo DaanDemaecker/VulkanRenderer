@@ -5,11 +5,13 @@
 #define TextureDescriptorObjectIncluded
 
 
-// File includes
+// Parent file include
 #include "DescriptorObject.h"
+
+// File includes
 #include "DataTypes/Structs.h"
 
-// Standard includes
+// Standard library includes
 #include <initializer_list>
 #include <string>
 

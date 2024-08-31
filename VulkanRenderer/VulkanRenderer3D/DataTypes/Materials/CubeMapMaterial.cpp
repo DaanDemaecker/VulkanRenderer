@@ -1,9 +1,12 @@
 // CubeMapMaterial.cpp
 
-// File includes
+// Header include
 #include "CubeMapMaterial.h"
+
+// File includes
 #include "Vulkan/Vulkan3D.h"
 #include "Vulkan/Wrappers/DescriptorPoolWrapper.h"
+
 #include "DataTypes/DescriptorObjects/TextureDescriptorObject.h"
 
 // Standard library includes
