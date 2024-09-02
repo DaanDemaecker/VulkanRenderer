@@ -1,10 +1,14 @@
 // File includes
 #include "D3DEngine.h"
+
 #include "Vulkan/Vulkan3D.h"
+
 #include "Engine/Window.h"
+
 #include "DataTypes/Materials/TexturedMaterial.h"
 #include "DataTypes/Materials/ShadowMaterial.h"
 #include "DataTypes/RenderClasses/Model.h"
+
 #include "Vulkan/Managers/ModelManager.h"
 #include "Vulkan/Managers/CameraManager.h"
 

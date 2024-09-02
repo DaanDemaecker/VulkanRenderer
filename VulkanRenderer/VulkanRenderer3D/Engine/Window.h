@@ -4,8 +4,10 @@
 #ifndef WindowIncluded
 #define WindowIncluded
 
-// File includes
+// Parent class include
 #include "Singleton.h"
+
+// File includes
 #include "Includes/GLFWIncludes.h"
 
 namespace D3D

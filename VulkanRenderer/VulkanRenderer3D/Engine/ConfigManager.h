@@ -4,8 +4,10 @@
 #ifndef ConfigManagerIncluded
 #define ConfigManagerIncluded
 
-// File includes
+// Parent class include
 #include "Singleton.h"
+
+// File includes
 #include "Includes/RapidJSONIncludes.h"
 
 // Standard library includes

@@ -1,6 +1,6 @@
 // ConfigManager.cpp
 
-// File includes
+// Header include
 #include "ConfigManager.h"
 
 // Standard library includes

@@ -4,7 +4,7 @@
 #ifndef TimeManagerIncluded
 #define TimeManagerIncluded
 
-// File includes
+// Parent class include
 #include "Singleton.h"
 
 namespace D3D

@@ -4,16 +4,11 @@
 #include "D3DEngine.h"
 
 // File includes
-#include "Vulkan/Renderers/VulkanRenderer3D.h"
 #include "TimeManager.h"
-#include "DataTypes/RenderClasses/Model.h"
-#include "DataTypes/Materials/Material.h"
-#include "DataTypes/Materials/TexturedMaterial.h"
-#include "Window.h"
 #include "ConfigManager.h"
-#include "DataTypes/DescriptorObjects/TextureDescriptorObject.h"
-#include "DataTypes/Camera.h"
-#include "DataTypes/Materials/ShadowMaterial.h"
+
+#include "Window.h"
+
 #include "Vulkan/Vulkan3D.h"
 #include "Vulkan/Managers/ModelManager.h"
 
