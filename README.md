@@ -46,7 +46,13 @@ ImGui has been implemented and can be used for debugging purposes or anything el
 The renderer can render a simple skybox when given 6 images to form a cube map.  
 
 - ***Shadow mapping***  
-The single, directional light now casts shadows, objects can be toggled for shadow mapping when the user doesn't want an object to cast a shadow.  
+The single, directional light casts shadows, objects can be toggled for shadow mapping when the user doesn't want an object to cast a shadow.  
+
+- ***Camera types***  
+The camera can easily be toggled between different types, current supported types:
+    - Perspective
+    - Orthographic 
+
 
 ## Future goals
 - ***Particles***    
