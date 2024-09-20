@@ -77,7 +77,7 @@ Currently, the lights I would like to add are:
 
 ## Libraries 
 - ***Window handling and input***  
-For window handling I chose GLFW, in class we always used OpenGl and SDK and I wanted to explore other options, the Vulkan Tutorial also advised using GLFW.  
+For window handling I chose GLFW, in class we always used OpenGl and SDL and I wanted to explore other options, the Vulkan Tutorial also advised using GLFW.  
 
 - ***GUI***  
 In class, we learned about Dear ImGui, but I feel we didn't explore it to its full potential so I chose to explore it further on my own and implement it into my renderer.  
