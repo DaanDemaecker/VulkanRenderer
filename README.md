@@ -90,3 +90,6 @@ I had worked with JSON files before in C# but never in C++, so I had to learn an
 
 - ***Image loading***   
 Image loading is done with the STB library, as suggested by the Vulkan tutorial.  
+
+- ***.obj loading**
+As suggested by the Vulkan tutorial, .obj files are loaded in by using the TinyObjLoader library.
