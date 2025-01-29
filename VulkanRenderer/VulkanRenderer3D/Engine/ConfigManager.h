@@ -14,7 +14,7 @@
 #include <string>
 
 
-namespace D3D
+namespace DDM3
 {
 	class ConfigManager : public Singleton<ConfigManager>
 	{

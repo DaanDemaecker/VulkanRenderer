@@ -12,7 +12,7 @@
 #include "DataTypes/RenderClasses/Model.h"
 #include "Vulkan/Wrappers/Viewport.h"
 
-D3D::ShadowRenderer::ShadowRenderer()
+DDM3::ShadowRenderer::ShadowRenderer()
 	:m_ShadowMapSize{static_cast<uint16_t>(ConfigManager::GetInstance().GetInt("ShadowMapSize"))}
 {
 	// Set amount of samples
@@ -31,12 +31,12 @@ D3D::ShadowRenderer::ShadowRenderer()
 	m_pViewport = std::make_unique<Viewport>(VkExtent2D{ m_ShadowMapSize, m_ShadowMapSize });
 }
 
-D3D::ShadowRenderer::~ShadowRenderer()
+DDM3::ShadowRenderer::~ShadowRenderer()
 {
 	Cleanup(Vulkan3D::GetInstance().GetDevice());
 }
 
-void D3D::ShadowRenderer::Cleanup(VkDevice device)
+void DDM3::ShadowRenderer::Cleanup(VkDevice device)
 {
 	m_pShadowTextureObject = nullptr;
 
@@ -45,7 +45,7 @@ void D3D::ShadowRenderer::Cleanup(VkDevice device)
 	vkDestroyFramebuffer(device, m_ShadowFrameBuffer, nullptr);
 }
 
-void D3D::ShadowRenderer::CreateDepthImage()
+void DDM3::ShadowRenderer::CreateDepthImage()
 {
 	auto device{ Vulkan3D::GetInstance().GetDevice()};
 	auto physicalDevice{ Vulkan3D::GetInstance().GetPhysicalDevice() };
@@ -94,7 +94,7 @@ void D3D::ShadowRenderer::CreateDepthImage()
 	vkCreateImageView(device, &viewInfo, nullptr, &m_ShadowTexture.imageView);
 }
 
-void D3D::ShadowRenderer::CreateFramebuffers(VkDevice device)
+void DDM3::ShadowRenderer::CreateFramebuffers(VkDevice device)
 {
 	VkFramebufferCreateInfo framebufferInfo = {};
 	framebufferInfo.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
@@ -108,7 +108,7 @@ void D3D::ShadowRenderer::CreateFramebuffers(VkDevice device)
 	vkCreateFramebuffer(device, &framebufferInfo, nullptr, &m_ShadowFrameBuffer);
 }
 
-void D3D::ShadowRenderer::CreateRenderPass(VkDevice device)
+void DDM3::ShadowRenderer::CreateRenderPass(VkDevice device)
 {
 	VkAttachmentDescription attachmentDescription = {};
 	attachmentDescription.format = VK_FORMAT_D32_SFLOAT;
@@ -161,7 +161,7 @@ void D3D::ShadowRenderer::CreateRenderPass(VkDevice device)
 	vkCreateRenderPass(device, &renderPassInfo, nullptr, &m_ShadowRenderpass);
 }
 
-void D3D::ShadowRenderer::SetupDescriptorSets()
+void DDM3::ShadowRenderer::SetupDescriptorSets()
 {
 	CreateDescriptorSets();
 
@@ -170,7 +170,7 @@ void D3D::ShadowRenderer::SetupDescriptorSets()
 	m_DescriptorSetInitialized = true;
 }
 
-void D3D::ShadowRenderer::CreateDescriptorSets()
+void DDM3::ShadowRenderer::CreateDescriptorSets()
 {
 	// Get pointer to the descriptorpool wrapper
 	auto descriptorPool = m_pShadowPipeline->GetDescriptorPool();
@@ -178,7 +178,7 @@ void D3D::ShadowRenderer::CreateDescriptorSets()
 	descriptorPool->CreateDescriptorSets(m_pShadowPipeline->GetDescriptorSetLayout(), m_DescriptorSets);
 }
 
-void D3D::ShadowRenderer::UpdateDescriptorSets()
+void DDM3::ShadowRenderer::UpdateDescriptorSets()
 {
 	// Get pointer to the descriptorpool wrapper
 	auto descriptorPool = m_pShadowPipeline->GetDescriptorPool();
@@ -190,7 +190,7 @@ void D3D::ShadowRenderer::UpdateDescriptorSets()
 	descriptorPool->UpdateDescriptorSets(m_DescriptorSets, descriptorObjectList);
 }
 
-void D3D::ShadowRenderer::RecreateFrameBuffer()
+void DDM3::ShadowRenderer::RecreateFrameBuffer()
 {
 	auto device{ Vulkan3D::GetInstance().GetDevice() };
 
@@ -199,7 +199,7 @@ void D3D::ShadowRenderer::RecreateFrameBuffer()
 
 }
 
-void D3D::ShadowRenderer::CreatePipeline(VkDevice device)
+void DDM3::ShadowRenderer::CreatePipeline(VkDevice device)
 {
 
 	auto& configManager{ ConfigManager::GetInstance() };
@@ -207,19 +207,19 @@ void D3D::ShadowRenderer::CreatePipeline(VkDevice device)
 	std::initializer_list<const std::string> filePaths{ configManager.GetString("ShadowVertName"),
 		configManager.GetString("ShadowFragName") };
 
-	m_pShadowPipeline = std::make_unique<D3D::PipelineWrapper>
+	m_pShadowPipeline = std::make_unique<DDM3::PipelineWrapper>
 		(device, m_ShadowRenderpass, m_MsaaSamples, filePaths);
 
 
 	m_pShadowTextureObject = std::make_unique<TextureDescriptorObject>(m_ShadowTexture);
 }
 
-D3D::TextureDescriptorObject* D3D::ShadowRenderer::GetTextureDescriptorObject()
+DDM3::TextureDescriptorObject* DDM3::ShadowRenderer::GetTextureDescriptorObject()
 {
 	return m_pShadowTextureObject.get();
 }
 
-void D3D::ShadowRenderer::Render(std::vector<std::unique_ptr<Model>>& pModels)
+void DDM3::ShadowRenderer::Render(std::vector<std::unique_ptr<Model>>& pModels)
 {
 	if (!m_DescriptorSetInitialized)
 	{

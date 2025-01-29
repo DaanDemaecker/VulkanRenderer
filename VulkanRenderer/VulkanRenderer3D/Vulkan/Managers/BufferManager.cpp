@@ -10,7 +10,7 @@
 // Standard library includes
 #include <stdexcept>
 
-void D3D::BufferManager::CreateBuffer(D3D::GPUObject* pGPUObject, VkDeviceSize size,
+void DDM3::BufferManager::CreateBuffer(DDM3::GPUObject* pGPUObject, VkDeviceSize size,
 	VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VkBuffer& buffer, VkDeviceMemory& bufferMemory)
 {
 	// Get device
@@ -59,7 +59,7 @@ void D3D::BufferManager::CreateBuffer(D3D::GPUObject* pGPUObject, VkDeviceSize s
 	vkBindBufferMemory(device, buffer, bufferMemory, 0);
 }
 
-void D3D::BufferManager::CopyBuffer(D3D::GPUObject* pGPUObject, D3D::CommandpoolManager* pCommandPoolManager, VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size)
+void DDM3::BufferManager::CopyBuffer(DDM3::GPUObject* pGPUObject, DDM3::CommandpoolManager* pCommandPoolManager, VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size)
 {
 	// Begin a single time command buffer
 	VkCommandBuffer commandBuffer = pCommandPoolManager->BeginSingleTimeCommands(pGPUObject->GetDevice());
@@ -76,12 +76,12 @@ void D3D::BufferManager::CopyBuffer(D3D::GPUObject* pGPUObject, D3D::Commandpool
 	pCommandPoolManager->EndSingleTimeCommands(pGPUObject, commandBuffer);
 }
 
-void D3D::BufferManager::CreateVertexBuffer(D3D::GPUObject* pGPUObject, D3D::CommandpoolManager* pCommandPoolManager, std::vector<D3D::Vertex>& vertices, VkBuffer& vertexBuffer, VkDeviceMemory& vertexBufferMemory)
+void DDM3::BufferManager::CreateVertexBuffer(DDM3::GPUObject* pGPUObject, DDM3::CommandpoolManager* pCommandPoolManager, std::vector<DDM3::Vertex>& vertices, VkBuffer& vertexBuffer, VkDeviceMemory& vertexBufferMemory)
 {
 	auto device{ pGPUObject->GetDevice() };
 
 	// Calculate buffer size for vertices
-	VkDeviceSize bufferSize = sizeof(D3D::Vertex) * vertices.size();
+	VkDeviceSize bufferSize = sizeof(DDM3::Vertex) * vertices.size();
 
 	// Create staging buffer
 	VkBuffer stagingBuffer;
@@ -114,7 +114,7 @@ void D3D::BufferManager::CreateVertexBuffer(D3D::GPUObject* pGPUObject, D3D::Com
 
 }
 
-void D3D::BufferManager::CreateIndexBuffer(D3D::GPUObject* pGPUObject, D3D::CommandpoolManager* pCommandPoolManager, std::vector<uint32_t>& indices, VkBuffer& indexBuffer, VkDeviceMemory& indexBufferMemory)
+void DDM3::BufferManager::CreateIndexBuffer(DDM3::GPUObject* pGPUObject, DDM3::CommandpoolManager* pCommandPoolManager, std::vector<uint32_t>& indices, VkBuffer& indexBuffer, VkDeviceMemory& indexBufferMemory)
 {
 	auto device{ pGPUObject->GetDevice() };
 

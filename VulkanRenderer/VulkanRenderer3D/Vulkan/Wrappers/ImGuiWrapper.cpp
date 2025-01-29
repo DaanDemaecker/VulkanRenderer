@@ -9,7 +9,7 @@
 #include <array>
 #include <stdexcept>
 
-D3D::ImGuiWrapper::ImGuiWrapper(ImGui_ImplVulkan_InitInfo init_info, VkDevice device)
+DDM3::ImGuiWrapper::ImGuiWrapper(ImGui_ImplVulkan_InitInfo init_info, VkDevice device)
 {	
 	// Initialize the descriptorPool
 	InitDescriptorPool(device);
@@ -33,12 +33,12 @@ D3D::ImGuiWrapper::ImGuiWrapper(ImGui_ImplVulkan_InitInfo init_info, VkDevice de
 	ImGui_ImplVulkan_CreateFontsTexture();
 }
 
-D3D::ImGuiWrapper::~ImGuiWrapper()
+DDM3::ImGuiWrapper::~ImGuiWrapper()
 {
 	Cleanup(Vulkan3D::GetInstance().GetDevice());
 }
 
-void D3D::ImGuiWrapper::Cleanup(VkDevice device)
+void DDM3::ImGuiWrapper::Cleanup(VkDevice device)
 {
 	// Shut down vulkan implementation
 	ImGui_ImplVulkan_Shutdown();
@@ -53,7 +53,7 @@ void D3D::ImGuiWrapper::Cleanup(VkDevice device)
 	vkDestroyDescriptorPool(device, m_DescriptorPool, nullptr);
 }
 
-void D3D::ImGuiWrapper::StartRender()
+void DDM3::ImGuiWrapper::StartRender()
 {
 	// Start ImGui frame
 	ImGui_ImplVulkan_NewFrame();
@@ -66,7 +66,7 @@ void D3D::ImGuiWrapper::StartRender()
 	
 }
 
-void D3D::ImGuiWrapper::EndRender(VkCommandBuffer commandBuffer)
+void DDM3::ImGuiWrapper::EndRender(VkCommandBuffer commandBuffer)
 {
 	// Render frame
 	ImGui::Render();
@@ -78,7 +78,7 @@ void D3D::ImGuiWrapper::EndRender(VkCommandBuffer commandBuffer)
 	ImGui_ImplVulkan_RenderDrawData(draw_data, commandBuffer);
 }
 
-void D3D::ImGuiWrapper::InitDescriptorPool(VkDevice device)
+void DDM3::ImGuiWrapper::InitDescriptorPool(VkDevice device)
 {
 	auto maxFrames{ Vulkan3D::GetMaxFrames() };
 	// Create poolsizes array

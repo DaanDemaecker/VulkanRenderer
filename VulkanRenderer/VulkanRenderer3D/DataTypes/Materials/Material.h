@@ -11,7 +11,7 @@
 // Standard library includes
 #include <iostream>
 
-namespace D3D
+namespace DDM3
 {
 	// Class forward declarations
 	class DescriptorPoolWrapper;

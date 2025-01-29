@@ -3,7 +3,7 @@
 // File includes
 #include "Viewport.h"
 
-D3D::Viewport::Viewport()
+DDM3::Viewport::Viewport()
 {
 	// Set viewport x to 0
 	m_Viewport.x = 0.0f;
@@ -18,18 +18,18 @@ D3D::Viewport::Viewport()
 	m_Scissor.offset = { 0, 0 };
 }
 
-D3D::Viewport::Viewport(VkExtent2D viewportSize)
+DDM3::Viewport::Viewport(VkExtent2D viewportSize)
 {
 	SetViewportAndScissor(viewportSize);
 }
 
-void D3D::Viewport::SetViewportSize(VkExtent2D viewportSize)
+void DDM3::Viewport::SetViewportSize(VkExtent2D viewportSize)
 {
 	m_Viewport.width = static_cast<float>(viewportSize.width);
 	m_Viewport.height = static_cast<float>(viewportSize.height);
 }
 
-void D3D::Viewport::SetScissor(VkExtent2D extent)
+void DDM3::Viewport::SetScissor(VkExtent2D extent)
 {
 	m_Scissor.extent = extent;
 
@@ -46,7 +46,7 @@ void D3D::Viewport::SetScissor(VkExtent2D extent)
 	m_Scissor.offset = { 0, 0 };
 }
 
-void D3D::Viewport::SetViewport(VkCommandBuffer commandBuffer)
+void DDM3::Viewport::SetViewport(VkCommandBuffer commandBuffer)
 {
 	// Set the viewport
 	vkCmdSetViewport(commandBuffer, 0, 1, &m_Viewport);
@@ -55,7 +55,7 @@ void D3D::Viewport::SetViewport(VkCommandBuffer commandBuffer)
 	vkCmdSetScissor(commandBuffer, 0, 1, &m_Scissor);
 }
 
-void D3D::Viewport::SetViewportAndScissor(VkExtent2D size)
+void DDM3::Viewport::SetViewportAndScissor(VkExtent2D size)
 {
 	SetViewportSize(size);
 

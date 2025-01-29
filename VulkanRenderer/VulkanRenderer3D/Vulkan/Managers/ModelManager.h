@@ -11,7 +11,7 @@
 #include <vector>
 #include <memory>
 
-namespace D3D
+namespace DDM3
 {
 	class ModelManager final
 	{

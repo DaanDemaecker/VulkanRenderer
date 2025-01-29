@@ -12,13 +12,13 @@
 // Standard library includes
 #include <stdexcept>
 
-D3D::CubeMapMaterial::CubeMapMaterial(const std::initializer_list<const std::string>&& filePaths)
+DDM3::CubeMapMaterial::CubeMapMaterial(const std::initializer_list<const std::string>&& filePaths)
 	:CubeMapMaterial(filePaths)
 {
 	
 }
 
-D3D::CubeMapMaterial::CubeMapMaterial(const std::initializer_list<const std::string>& filePaths)
+DDM3::CubeMapMaterial::CubeMapMaterial(const std::initializer_list<const std::string>& filePaths)
 	:Material("Skybox")
 {
 	Texture cubeTexture{};
@@ -30,7 +30,7 @@ D3D::CubeMapMaterial::CubeMapMaterial(const std::initializer_list<const std::str
 	m_pDescriptorObject = std::make_unique<TextureDescriptorObject>(cubeTexture);
 }
 
-void D3D::CubeMapMaterial::CreateDescriptorSets(Model* pModel, std::vector<VkDescriptorSet>& descriptorSets)
+void DDM3::CubeMapMaterial::CreateDescriptorSets(Model* pModel, std::vector<VkDescriptorSet>& descriptorSets)
 {
 	// Get descriptorpool associated with this material
 	auto descriptorPool = GetDescriptorPool();
@@ -40,7 +40,7 @@ void D3D::CubeMapMaterial::CreateDescriptorSets(Model* pModel, std::vector<VkDes
 	descriptorPool->CreateDescriptorSets(GetDescriptorLayout(), descriptorSets);
 }
 
-void D3D::CubeMapMaterial::UpdateDescriptorSets(std::vector<VkDescriptorSet>& descriptorSets, std::vector<DescriptorObject*>& descriptorObjects)
+void DDM3::CubeMapMaterial::UpdateDescriptorSets(std::vector<VkDescriptorSet>& descriptorSets, std::vector<DescriptorObject*>& descriptorObjects)
 {
 	// Get pointer to the descriptorpool
 	auto descriptorPool = GetDescriptorPool();

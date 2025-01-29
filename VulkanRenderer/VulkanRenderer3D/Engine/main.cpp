@@ -1,5 +1,5 @@
 // File includes
-#include "D3DEngine.h"
+#include "DDM3Engine.h"
 
 #include "Vulkan/Vulkan3D.h"
 
@@ -15,7 +15,7 @@
 
 void SetupPipelines()
 {
-	auto& renderer{ D3D::Vulkan3D::GetInstance().GetRenderer() };
+	auto& renderer{ DDM3::Vulkan3D::GetInstance().GetRenderer() };
 
 	renderer.AddGraphicsPipeline("Diffuse", { "Resources/Shaders/Diffuse.Vert.spv", "Resources/Shaders/Diffuse.Frag.spv" });
 	renderer.AddGraphicsPipeline("NormalMap", { "Resources/Shaders/NormalMap.Vert.spv", "Resources/Shaders/NormalMap.Frag.spv" });
@@ -37,35 +37,35 @@ void load()
 {
 	SetupPipelines();
 
-	auto& renderer{ D3D::Vulkan3D::GetInstance().GetRenderer() };
+	auto& renderer{ DDM3::Vulkan3D::GetInstance().GetRenderer() };
 
-	std::shared_ptr<D3D::TexturedMaterial> pGroundPlaneMaterial{ std::make_shared<D3D::TexturedMaterial>(std::initializer_list<const std::string>{"resources/images/GroundPlane.png"}, "Diffuse") };
-	std::shared_ptr<D3D::ShadowMaterial> pGroundPlaneMaterial2{ std::make_shared<D3D::ShadowMaterial>(std::initializer_list<const std::string>{"resources/images/GroundPlane.png"}, "DiffuseShadow") };
+	std::shared_ptr<DDM3::TexturedMaterial> pGroundPlaneMaterial{ std::make_shared<DDM3::TexturedMaterial>(std::initializer_list<const std::string>{"resources/images/GroundPlane.png"}, "Diffuse") };
+	std::shared_ptr<DDM3::ShadowMaterial> pGroundPlaneMaterial2{ std::make_shared<DDM3::ShadowMaterial>(std::initializer_list<const std::string>{"resources/images/GroundPlane.png"}, "DiffuseShadow") };
 
-	std::shared_ptr<D3D::TexturedMaterial> pVikingMaterial{ std::make_shared<D3D::TexturedMaterial>(std::initializer_list<const std::string>{"resources/images/viking_room.png"}, "Diffuse") };
-	std::shared_ptr<D3D::TexturedMaterial> pVehicleMaterial{ std::make_shared<D3D::TexturedMaterial>(std::initializer_list<const std::string>{"resources/images/vehicle_diffuse.png"}, "Diffuse") };
-	std::shared_ptr<D3D::TexturedMaterial> pFireMaterial{ std::make_shared<D3D::TexturedMaterial>(std::initializer_list<const std::string>{"resources/images/fireFX_diffuse.png"}, "DiffuseUnshaded") };
+	std::shared_ptr<DDM3::TexturedMaterial> pVikingMaterial{ std::make_shared<DDM3::TexturedMaterial>(std::initializer_list<const std::string>{"resources/images/viking_room.png"}, "Diffuse") };
+	std::shared_ptr<DDM3::TexturedMaterial> pVehicleMaterial{ std::make_shared<DDM3::TexturedMaterial>(std::initializer_list<const std::string>{"resources/images/vehicle_diffuse.png"}, "Diffuse") };
+	std::shared_ptr<DDM3::TexturedMaterial> pFireMaterial{ std::make_shared<DDM3::TexturedMaterial>(std::initializer_list<const std::string>{"resources/images/fireFX_diffuse.png"}, "DiffuseUnshaded") };
 
-	std::shared_ptr<D3D::Material> pVehicle2Material{ std::make_shared<D3D::TexturedMaterial>
+	std::shared_ptr<DDM3::Material> pVehicle2Material{ std::make_shared<DDM3::TexturedMaterial>
 		(std::initializer_list<const std::string>{"resources/images/vehicle_diffuse.png", "resources/images/vehicle_normal.png"}, "DiffNorm") };
 
-	std::shared_ptr<D3D::TexturedMaterial> pTestMaterial{ std::make_shared<D3D::TexturedMaterial>(std::initializer_list<const std::string>{"resources/images/TestRed.png","resources/images/TestBlue.png"}, "Test") };
+	std::shared_ptr<DDM3::TexturedMaterial> pTestMaterial{ std::make_shared<DDM3::TexturedMaterial>(std::initializer_list<const std::string>{"resources/images/TestRed.png","resources/images/TestBlue.png"}, "Test") };
 
-	std::shared_ptr<D3D::TexturedMaterial> pVehicle3Material{ std::make_shared<D3D::TexturedMaterial>
+	std::shared_ptr<DDM3::TexturedMaterial> pVehicle3Material{ std::make_shared<DDM3::TexturedMaterial>
 		(std::initializer_list<const std::string>{"resources/images/vehicle_diffuse.png", "resources/images/vehicle_normal.png",
 		"resources/images/vehicle_gloss.png", "resources/images/vehicle_specular.png"},
 			"DiffNormSpec") };
 
-	std::shared_ptr<D3D::ShadowMaterial> pVehicleMaterial4{ std::make_shared<D3D::ShadowMaterial>(std::initializer_list<const std::string>{"resources/images/vehicle_diffuse.png"}, "DiffuseShadow") };
+	std::shared_ptr<DDM3::ShadowMaterial> pVehicleMaterial4{ std::make_shared<DDM3::ShadowMaterial>(std::initializer_list<const std::string>{"resources/images/vehicle_diffuse.png"}, "DiffuseShadow") };
 
 
-	auto pModelManager{ D3D::Vulkan3D::GetInstance().GetModelManager() };
+	auto pModelManager{ DDM3::Vulkan3D::GetInstance().GetModelManager() };
 
 
-	std::unique_ptr<D3D::Model> pCurrModel{};
+	std::unique_ptr<DDM3::Model> pCurrModel{};
 
 	// Load groundplane
-	pCurrModel = std::make_unique<D3D::Model>();
+	pCurrModel = std::make_unique<DDM3::Model>();
 
 	pCurrModel->LoadModel("Resources/Models/Plane.obj");
 	pCurrModel->SetMaterial(pGroundPlaneMaterial2);
@@ -75,7 +75,7 @@ void load()
 
 
 	// Load vehicle object
-	pCurrModel = std::make_unique<D3D::Model>();
+	pCurrModel = std::make_unique<DDM3::Model>();
 
 	pCurrModel->LoadModel("Resources/Models/vehicle.obj");
 	pCurrModel->SetMaterial(pVehicleMaterial4);
@@ -88,7 +88,7 @@ void load()
 
 
 	// Load fire vfx object
-	pCurrModel = std::make_unique<D3D::Model>();
+	pCurrModel = std::make_unique<DDM3::Model>();
 
 	pCurrModel->LoadModel("Resources/Models/fireFX.obj");
 	pCurrModel->SetCastsShadow(false);
@@ -99,7 +99,7 @@ void load()
 
 	pModelManager->AddModel(std::move(pCurrModel));
 
-	D3D::Vulkan3D::GetInstance().GetCameraManager()->SetSkybox(std::make_unique<D3D::SkyBox>(
+	DDM3::Vulkan3D::GetInstance().GetCameraManager()->SetSkybox(std::make_unique<DDM3::SkyBox>(
 		std::initializer_list<const std::string>{"resources/images/CubeMap/Sky_Right.png",
 		"resources/images/CubeMap/Sky_Left.png",
 		"resources/images/CubeMap/Sky_Up.png",
@@ -110,7 +110,7 @@ void load()
 
 int main()
 {
-	D3D::D3DEngine engine{};
+	DDM3::DDM3Engine engine{};
 	engine.Run(load);
 
 	return EXIT_SUCCESS;

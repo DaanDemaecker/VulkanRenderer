@@ -3,7 +3,7 @@
 // Header include
 #include "TimeManager.h"
 
-void D3D::TimeManager::SetDeltaTime(float dt)
+void DDM3::TimeManager::SetDeltaTime(float dt)
 {
 	// Set delta time
 	m_DeltaTime = dt;

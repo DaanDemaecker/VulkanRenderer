@@ -7,21 +7,21 @@
 #include "Vulkan/Wrappers/PipelineWrapper.h"
 #include "Vulkan/Wrappers/DescriptorPoolWrapper.h"
 
-D3D::PipelineManager::PipelineManager()
+DDM3::PipelineManager::PipelineManager()
 {
 }
 
-D3D::PipelineManager::~PipelineManager()
+DDM3::PipelineManager::~PipelineManager()
 {
 	Cleanup(Vulkan3D::GetInstance().GetDevice());
 }
 
-void D3D::PipelineManager::Cleanup(VkDevice device)
+void DDM3::PipelineManager::Cleanup(VkDevice device)
 {
 	
 }
 
-void D3D::PipelineManager::AddDefaultPipeline(VkDevice device, VkRenderPass renderPass, VkSampleCountFlagBits sampleCount)
+void DDM3::PipelineManager::AddDefaultPipeline(VkDevice device, VkRenderPass renderPass, VkSampleCountFlagBits sampleCount)
 {
 	// Get config manager
 	auto& configManager{ ConfigManager::GetInstance() };
@@ -36,12 +36,12 @@ void D3D::PipelineManager::AddDefaultPipeline(VkDevice device, VkRenderPass rend
 
 }
 
-void D3D::PipelineManager::AddGraphicsPipeline(VkDevice device, VkRenderPass renderPass, VkSampleCountFlagBits sampleCount, const std::string& pipelineName, std::initializer_list<const std::string>&& filePaths, bool hasDepthStencil)
+void DDM3::PipelineManager::AddGraphicsPipeline(VkDevice device, VkRenderPass renderPass, VkSampleCountFlagBits sampleCount, const std::string& pipelineName, std::initializer_list<const std::string>&& filePaths, bool hasDepthStencil)
 {
 	AddGraphicsPipeline(device, renderPass, sampleCount, pipelineName, filePaths, hasDepthStencil);
 }
 
-void D3D::PipelineManager::AddGraphicsPipeline(VkDevice device, VkRenderPass renderPass, VkSampleCountFlagBits sampleCount, const std::string& pipelineName, std::initializer_list<const std::string>& filePaths, bool hasDepthStencil)
+void DDM3::PipelineManager::AddGraphicsPipeline(VkDevice device, VkRenderPass renderPass, VkSampleCountFlagBits sampleCount, const std::string& pipelineName, std::initializer_list<const std::string>& filePaths, bool hasDepthStencil)
 {
 	// Check if pipeline already exists, if it does, delete it
 	if (m_GraphicPipelines.contains(pipelineName))
@@ -50,12 +50,12 @@ void D3D::PipelineManager::AddGraphicsPipeline(VkDevice device, VkRenderPass ren
 	}
 
 	// Create a new pipeline in the correct spot in the map
-	m_GraphicPipelines[pipelineName] = std::make_unique<D3D::PipelineWrapper>
+	m_GraphicPipelines[pipelineName] = std::make_unique<DDM3::PipelineWrapper>
 		(device, renderPass, sampleCount, filePaths, hasDepthStencil);
 	
 }
 
-D3D::PipelineWrapper* D3D::PipelineManager::GetPipeline(const std::string& name)
+DDM3::PipelineWrapper* DDM3::PipelineManager::GetPipeline(const std::string& name)
 {
 	// Check if pipeline exists
 	if (m_GraphicPipelines.contains(name))

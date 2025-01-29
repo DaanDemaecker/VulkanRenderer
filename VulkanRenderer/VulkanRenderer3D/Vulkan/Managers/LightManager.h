@@ -4,7 +4,7 @@
 #ifndef LightManagerIncluded
 #define LightManagerIncluded
 
-namespace D3D
+namespace DDM3
 {
 	class LightManager
 	{

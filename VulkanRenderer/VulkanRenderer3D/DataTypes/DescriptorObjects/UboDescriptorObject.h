@@ -10,7 +10,7 @@
 // File includes
 #include "Vulkan/Vulkan3D.h"
 
-namespace D3D
+namespace DDM3
 {
 	// Templated class so that the user can choose what the descriptor holds
 	template <typename T>
@@ -75,7 +75,7 @@ namespace D3D
 		if (m_Initialized)
 		{
 			// Clean up
-			Cleanup(D3D::Vulkan3D::GetInstance().GetDevice());
+			Cleanup(DDM3::Vulkan3D::GetInstance().GetDevice());
 		}
 	}
 

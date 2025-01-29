@@ -7,26 +7,26 @@
 //Standard library includes
 #include <functional>
 
-namespace D3D
+namespace DDM3
 {
-	class D3DEngine final
+	class DDM3Engine final
 	{
 	public:
 		// Constructor
-		D3DEngine();
+		DDM3Engine();
 
 		// Destructor
-		~D3DEngine();
+		~DDM3Engine();
 
 		// Function that will run the engine
 		// Parameters:
 		//     -load: function given that will be executed before game loop, used for loading in objects etc.
 		void Run(const std::function<void()>& load);
 
-		D3DEngine(const D3DEngine& other) = delete;
-		D3DEngine(D3DEngine&& other) = delete;
-		D3DEngine& operator=(const D3DEngine& other) = delete;
-		D3DEngine& operator=(D3DEngine&& other) = delete;
+		DDM3Engine(const DDM3Engine& other) = delete;
+		DDM3Engine(DDM3Engine&& other) = delete;
+		DDM3Engine& operator=(const DDM3Engine& other) = delete;
+		DDM3Engine& operator=(DDM3Engine&& other) = delete;
 	};
 }
 

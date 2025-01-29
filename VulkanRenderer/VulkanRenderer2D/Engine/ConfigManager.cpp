@@ -8,7 +8,7 @@
 #include <stdexcept>
 #include <vector>
 
-D2D::ConfigManager::ConfigManager()
+DDM2::ConfigManager::ConfigManager()
 {
 	FILE* pFile{};
 
@@ -38,7 +38,7 @@ D2D::ConfigManager::ConfigManager()
 	fclose(pFile);
 }
 
-const char* D2D::ConfigManager::GetString(const std::string& propertyName)
+const char* DDM2::ConfigManager::GetString(const std::string& propertyName)
 {
 	// Check if file contains property, if not, return default string
 	if (m_JsonFile.HasMember(propertyName.c_str()) && m_JsonFile[propertyName.c_str()].IsString())
@@ -50,12 +50,12 @@ const char* D2D::ConfigManager::GetString(const std::string& propertyName)
 	return m_DefaultString.c_str();
 }
 
-const char* D2D::ConfigManager::GetString(const std::string&& propertyName)
+const char* DDM2::ConfigManager::GetString(const std::string&& propertyName)
 {
 	return GetString(propertyName);
 }
 
-int D2D::ConfigManager::GetInt(const std::string& propertyName)
+int DDM2::ConfigManager::GetInt(const std::string& propertyName)
 {
 
 	// Check if file contains property, if not, return 0
@@ -69,12 +69,12 @@ int D2D::ConfigManager::GetInt(const std::string& propertyName)
 	return 0;
 }
 
-int D2D::ConfigManager::GetInt(const std::string&& propertyName)
+int DDM2::ConfigManager::GetInt(const std::string&& propertyName)
 {
 	return GetInt(propertyName);
 }
 
-bool D2D::ConfigManager::GetBool(const std::string& propertyName)
+bool DDM2::ConfigManager::GetBool(const std::string& propertyName)
 {
 	// Check if file contains property, if not, return false
 	if (m_JsonFile.HasMember(propertyName.c_str()) && m_JsonFile[propertyName.c_str()].IsBool())
@@ -86,12 +86,12 @@ bool D2D::ConfigManager::GetBool(const std::string& propertyName)
 	return false;
 }
 
-bool D2D::ConfigManager::GetBool(const std::string&& propertyName)
+bool DDM2::ConfigManager::GetBool(const std::string&& propertyName)
 {
 	return GetBool(propertyName);
 }
 
-float D2D::ConfigManager::GetFloat(const std::string& propertyName)
+float DDM2::ConfigManager::GetFloat(const std::string& propertyName)
 {
 	// Check if file contains property, if not, return 0
 	if (m_JsonFile.HasMember(propertyName.c_str()) && m_JsonFile[propertyName.c_str()].IsFloat())
@@ -103,7 +103,7 @@ float D2D::ConfigManager::GetFloat(const std::string& propertyName)
 	return 0;
 }
 
-float D2D::ConfigManager::GetFloat(const std::string&& propertyName)
+float DDM2::ConfigManager::GetFloat(const std::string&& propertyName)
 {
 	return GetFloat(propertyName);
 }

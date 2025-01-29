@@ -6,16 +6,16 @@
 // File includes
 #include "DataTypes/Camera.h"
 
-D3D::CameraManager::CameraManager()
+DDM3::CameraManager::CameraManager()
 {
 	m_pDefaultCamera = std::make_unique<Camera>();
 }
 
-D3D::CameraManager::~CameraManager()
+DDM3::CameraManager::~CameraManager()
 {
 }
 
-void D3D::CameraManager::SetCamera(std::unique_ptr<Camera> pNewCamera)
+void DDM3::CameraManager::SetCamera(std::unique_ptr<Camera> pNewCamera)
 {
 	if (pNewCamera != nullptr)
 	{
@@ -23,7 +23,7 @@ void D3D::CameraManager::SetCamera(std::unique_ptr<Camera> pNewCamera)
 	}
 }
 
-D3D::Camera* D3D::CameraManager::GetCamera()
+DDM3::Camera* DDM3::CameraManager::GetCamera()
 {
 	if (m_pCurrentCamera != nullptr)
 	{
@@ -33,12 +33,12 @@ D3D::Camera* D3D::CameraManager::GetCamera()
 	return m_pDefaultCamera.get();
 }
 
-void D3D::CameraManager::SetSkybox(std::unique_ptr<SkyBox> pSkybox)
+void DDM3::CameraManager::SetSkybox(std::unique_ptr<SkyBox> pSkybox)
 {
 	m_pSkyBox = std::move(pSkybox);
 }
 
-void D3D::CameraManager::RenderSkybox()
+void DDM3::CameraManager::RenderSkybox()
 {
 	if (m_pSkyBox != nullptr && GetCamera()->GetCameraType() == CameraType::Perspective)
 	{

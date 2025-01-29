@@ -10,7 +10,7 @@
 #include <stdexcept>
 #include <iostream>
 
-D3D::InstanceWrapper::InstanceWrapper()
+DDM3::InstanceWrapper::InstanceWrapper()
 {
 #ifdef NDEBUG
 	// If in release mode, disable validation layers
@@ -81,7 +81,7 @@ D3D::InstanceWrapper::InstanceWrapper()
 	SetupDebugMessenger(m_EnableValidationLayers);
 }
 
-D3D::InstanceWrapper::~InstanceWrapper()
+DDM3::InstanceWrapper::~InstanceWrapper()
 {
 	// If validation layers enabled, delete debug messenger
 	if (m_EnableValidationLayers)
@@ -93,7 +93,7 @@ D3D::InstanceWrapper::~InstanceWrapper()
 	vkDestroyInstance(m_Instance, nullptr);
 }
 
-void D3D::InstanceWrapper::SetupApplicationInfo(VkApplicationInfo& appInfo, std::string& applicationName, std::string& engineName)
+void DDM3::InstanceWrapper::SetupApplicationInfo(VkApplicationInfo& appInfo, std::string& applicationName, std::string& engineName)
 {
 	// Get config manager
 	auto& configManager{ ConfigManager::GetInstance() };
@@ -118,7 +118,7 @@ void D3D::InstanceWrapper::SetupApplicationInfo(VkApplicationInfo& appInfo, std:
 	appInfo.apiVersion = VK_API_VERSION_1_0;
 }
 
-bool D3D::InstanceWrapper::CheckValidationLayerSupport(const std::vector<const char *> validationLayers)
+bool DDM3::InstanceWrapper::CheckValidationLayerSupport(const std::vector<const char *> validationLayers)
 {
 	// Create layercount
 	uint32_t layerCount{};
@@ -159,7 +159,7 @@ bool D3D::InstanceWrapper::CheckValidationLayerSupport(const std::vector<const c
 	return true;
 }
 
-std::vector<const char*> D3D::InstanceWrapper::GetRequiredExtensions(bool enableValidationLayers)
+std::vector<const char*> DDM3::InstanceWrapper::GetRequiredExtensions(bool enableValidationLayers)
 {
 	// Crate uint fro the amount of glfw extensions
 	uint32_t glfwExtensionCount = 0;
@@ -189,7 +189,7 @@ std::vector<const char*> D3D::InstanceWrapper::GetRequiredExtensions(bool enable
 	return extensions;
 }
 
-void D3D::InstanceWrapper::PopulateDebugMessengerCreateInfo(VkDebugUtilsMessengerCreateInfoEXT& createInfo)
+void DDM3::InstanceWrapper::PopulateDebugMessengerCreateInfo(VkDebugUtilsMessengerCreateInfoEXT& createInfo)
 {
 	// Set type to messenger create info
 	createInfo.sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT;
@@ -204,7 +204,7 @@ void D3D::InstanceWrapper::PopulateDebugMessengerCreateInfo(VkDebugUtilsMessenge
 	createInfo.pfnUserCallback = debugCallback;
 }
 
-VKAPI_ATTR VkBool32 VKAPI_CALL D3D::InstanceWrapper::debugCallback(VkDebugUtilsMessageSeverityFlagBitsEXT /*messageSeverity*/, VkDebugUtilsMessageTypeFlagsEXT /*messageType*/, const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData, void* /*pUserData*/)
+VKAPI_ATTR VkBool32 VKAPI_CALL DDM3::InstanceWrapper::debugCallback(VkDebugUtilsMessageSeverityFlagBitsEXT /*messageSeverity*/, VkDebugUtilsMessageTypeFlagsEXT /*messageType*/, const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData, void* /*pUserData*/)
 {
 	// Print the validation layer error
 	std::cerr << "validation layer error: " << pCallbackData->pMessage << std::endl;
@@ -212,7 +212,7 @@ VKAPI_ATTR VkBool32 VKAPI_CALL D3D::InstanceWrapper::debugCallback(VkDebugUtilsM
 	return VK_FALSE;
 }
 
-void D3D::InstanceWrapper::SetupDebugMessenger(bool enableValidationLayers)
+void DDM3::InstanceWrapper::SetupDebugMessenger(bool enableValidationLayers)
 {
 	// If validation layers aren't enabled, return
 	if (!enableValidationLayers)
@@ -231,7 +231,7 @@ void D3D::InstanceWrapper::SetupDebugMessenger(bool enableValidationLayers)
 	}
 }
 
-VkResult D3D::InstanceWrapper::CreateDebugUtilsMessengerEXT(VkInstance instance, const VkDebugUtilsMessengerCreateInfoEXT* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkDebugUtilsMessengerEXT* pDebugMessenger)
+VkResult DDM3::InstanceWrapper::CreateDebugUtilsMessengerEXT(VkInstance instance, const VkDebugUtilsMessengerCreateInfoEXT* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkDebugUtilsMessengerEXT* pDebugMessenger)
 {
 	// Get the adress of the debug messenger creation function
 	auto func = (PFN_vkCreateDebugUtilsMessengerEXT)vkGetInstanceProcAddr(instance, "vkCreateDebugUtilsMessengerEXT");
@@ -249,7 +249,7 @@ VkResult D3D::InstanceWrapper::CreateDebugUtilsMessengerEXT(VkInstance instance,
 	}
 }
 
-void D3D::InstanceWrapper::DestroyDebugUtilsMessegerEXT(VkInstance instance, VkDebugUtilsMessengerEXT debugMessenger, const VkAllocationCallbacks* pAllocator)
+void DDM3::InstanceWrapper::DestroyDebugUtilsMessegerEXT(VkInstance instance, VkDebugUtilsMessengerEXT debugMessenger, const VkAllocationCallbacks* pAllocator)
 {
 	// Get the adress of the debug messenger delete function
 	auto func = (PFN_vkDestroyDebugUtilsMessengerEXT)vkGetInstanceProcAddr(instance, "vkDestroyDebugUtilsMessengerEXT");

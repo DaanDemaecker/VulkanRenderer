@@ -15,7 +15,7 @@
 
 // Standard library includes
 
-D3D::SkyBox::SkyBox(std::initializer_list<const std::string>&& filePaths)
+DDM3::SkyBox::SkyBox(std::initializer_list<const std::string>&& filePaths)
 {
 	// Create cubemap material
 	auto pMaterial = std::make_shared<CubeMapMaterial>(filePaths);
@@ -30,11 +30,11 @@ D3D::SkyBox::SkyBox(std::initializer_list<const std::string>&& filePaths)
 	m_pModel->SetMaterial(pMaterial);
 }
 
-D3D::SkyBox::~SkyBox()
+DDM3::SkyBox::~SkyBox()
 {
 }
 
-void D3D::SkyBox::Render()
+void DDM3::SkyBox::Render()
 {
 	// Render the model
 	m_pModel->Render();

@@ -15,7 +15,7 @@
 // Standard library includes
 #include <memory>
 
-namespace D3D
+namespace DDM3
 {
 	// Class forward declarations
 	class DispatchableManager;
@@ -85,16 +85,16 @@ namespace D3D
 		static uint32_t m_sCurrentFrame;
 
 		// Dispatchable manager
-		std::unique_ptr<D3D::DispatchableManager> m_pDispatchableManager{};
+		std::unique_ptr<DDM3::DispatchableManager> m_pDispatchableManager{};
 
 		// Renderer
-		std::unique_ptr<D3D::VulkanRenderer3D> m_pRenderer{};
+		std::unique_ptr<DDM3::VulkanRenderer3D> m_pRenderer{};
 
 		// Model Manager
-		std::unique_ptr<D3D::ModelManager> m_pModelManager{};
+		std::unique_ptr<DDM3::ModelManager> m_pModelManager{};
 
 		// Camera Manager
-		std::unique_ptr<D3D::CameraManager> m_pCameraManager{};
+		std::unique_ptr<DDM3::CameraManager> m_pCameraManager{};
 	};
 
 }

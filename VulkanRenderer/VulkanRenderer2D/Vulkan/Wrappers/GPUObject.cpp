@@ -6,12 +6,12 @@
 // Standard library includes
 #include <stdexcept>
 
-D2D::GPUObject::GPUObject(const VkInstance& instance)
+DDM2::GPUObject::GPUObject(const VkInstance& instance)
 {
 	SetupPhysicalDevice(instance);
 }
 
-void D2D::GPUObject::SetupPhysicalDevice(const VkInstance& instance)
+void DDM2::GPUObject::SetupPhysicalDevice(const VkInstance& instance)
 {
 	std::vector<VkPhysicalDevice> physicalDevices{};
 
@@ -28,7 +28,7 @@ void D2D::GPUObject::SetupPhysicalDevice(const VkInstance& instance)
 	}
 }
 
-void D2D::GPUObject::EnumeratePhysicalDevices(const VkInstance& instance, std::vector<VkPhysicalDevice>& devices)
+void DDM2::GPUObject::EnumeratePhysicalDevices(const VkInstance& instance, std::vector<VkPhysicalDevice>& devices)
 {
 	VkResult result = VK_SUCCESS;
 

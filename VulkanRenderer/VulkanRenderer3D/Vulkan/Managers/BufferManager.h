@@ -11,7 +11,7 @@
 // Standard library includes
 #include <vector>
 
-namespace D3D
+namespace DDM3
 {
 	// Class forward declaratoin
 	class GPUObject;
@@ -40,7 +40,7 @@ namespace D3D
 		//     properties: the property flags for the buffer
 		//     buffer: a reference to the buffer that will be created
 		//     bufferMemory: a reference to the memory for the buffer that will be created
-		void CreateBuffer(D3D::GPUObject* pGPUObbject, VkDeviceSize size,
+		void CreateBuffer(DDM3::GPUObject* pGPUObbject, VkDeviceSize size,
 			VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VkBuffer& buffer, VkDeviceMemory& bufferMemory);
 
 		// Copy a buffer to another buffer
@@ -50,7 +50,7 @@ namespace D3D
 		//     srcBuffer: the source buffer
 		//     dstBuffer: the destination buffer
 		//     size: the size of the buffers
-		void CopyBuffer(D3D::GPUObject* pGPUObject, D3D::CommandpoolManager* pCommandPoolManager, VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size);
+		void CopyBuffer(DDM3::GPUObject* pGPUObject, DDM3::CommandpoolManager* pCommandPoolManager, VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size);
 
 		// Create a vertex buffer
 		// Parameters:
@@ -61,8 +61,8 @@ namespace D3D
 		//     vertices: a vector of vertex objects to store in a buffer
 		//     vertexBuffer: handle of the vkBuffer to store the vertices in
 		//     vertexBufferMemory: handle of the VkDeviceMemory object
-		void CreateVertexBuffer(D3D::GPUObject* pGPUObject, D3D::CommandpoolManager* pCommandPoolManager,
-			std::vector<D3D::Vertex>& vertices, VkBuffer& vertexBuffer, VkDeviceMemory& vertexBufferMemory);
+		void CreateVertexBuffer(DDM3::GPUObject* pGPUObject, DDM3::CommandpoolManager* pCommandPoolManager,
+			std::vector<DDM3::Vertex>& vertices, VkBuffer& vertexBuffer, VkDeviceMemory& vertexBufferMemory);
 
 		// Create a vertex buffer
 		// Parameters:
@@ -73,7 +73,7 @@ namespace D3D
 		//     indices: a vector of indices to store in a buffer
 		//     indexBuffer: handle of the vkBuffer to store the indices in
 		//     indexBufferMemory: handle of the VkDeviceMemory object
-		void CreateIndexBuffer(D3D::GPUObject* pGPUObject, D3D::CommandpoolManager* pCommandPoolManager,
+		void CreateIndexBuffer(DDM3::GPUObject* pGPUObject, DDM3::CommandpoolManager* pCommandPoolManager,
 			std::vector<uint32_t>& indices, VkBuffer& indexBuffer, VkDeviceMemory& indexBufferMemory);
 	};
 }

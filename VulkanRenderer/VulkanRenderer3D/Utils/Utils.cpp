@@ -35,7 +35,7 @@ std::vector<char> Utils::readFile(const std::string& filename)
 }
 
 
-void Utils::LoadModel(const std::string& filename, std::vector<D3D::Vertex>& vertices, std::vector<uint32_t>& indices)
+void Utils::LoadModel(const std::string& filename, std::vector<DDM3::Vertex>& vertices, std::vector<uint32_t>& indices)
 {
 	// Clear the vectors in case they aren't empty
 	vertices.clear();
@@ -56,7 +56,7 @@ void Utils::LoadModel(const std::string& filename, std::vector<D3D::Vertex>& ver
 	}
 
 	// Create map to store vertices
-	std::unordered_map<D3D::Vertex, uint32_t> uniqueVertices{};
+	std::unordered_map<DDM3::Vertex, uint32_t> uniqueVertices{};
 
 	// Loop through every shape that was read from the file
 	for (const auto& shape : shapes)
@@ -65,7 +65,7 @@ void Utils::LoadModel(const std::string& filename, std::vector<D3D::Vertex>& ver
 		for (const auto& index : shape.mesh.indices)
 		{
 			// Create empty vertex
-			D3D::Vertex vertex{};
+			DDM3::Vertex vertex{};
 
 			// Add position to vertex
 			vertex.pos = {
@@ -117,7 +117,7 @@ void Utils::LoadModel(const std::string& filename, std::vector<D3D::Vertex>& ver
 }
 
 void Utils::SetupTangents
-(std::vector<D3D::Vertex>& vertices, std::vector<uint32_t>& indices)
+(std::vector<DDM3::Vertex>& vertices, std::vector<uint32_t>& indices)
 {
 	// After all vertices are added loop through them to calculate the tangents
 	for (size_t i = 0; i < indices.size(); i += 3)
@@ -128,9 +128,9 @@ void Utils::SetupTangents
 		uint32_t index2 = indices[i + 2];
 
 		// Get the vertices associated with this triangle
-		D3D::Vertex& v0 = vertices[index0];
-		D3D::Vertex& v1 = vertices[index1];
-		D3D::Vertex& v2 = vertices[index2];
+		DDM3::Vertex& v0 = vertices[index0];
+		DDM3::Vertex& v1 = vertices[index1];
+		DDM3::Vertex& v2 = vertices[index2];
 
 		// Get 2 edges of this triangle
 		glm::vec3 edge1 = v1.pos - v0.pos;

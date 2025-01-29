@@ -10,7 +10,7 @@
 // Standard library includes
 #include <memory>
 
-namespace D2D
+namespace DDM2
 {
 	// Class forward declarations
 	class InstanceWrapper;

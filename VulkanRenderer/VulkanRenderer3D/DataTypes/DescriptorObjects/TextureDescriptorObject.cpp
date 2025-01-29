@@ -6,7 +6,7 @@
 //File includes
 #include "Vulkan/Vulkan3D.h"
 
-D3D::TextureDescriptorObject::TextureDescriptorObject(Texture& texture)
+DDM3::TextureDescriptorObject::TextureDescriptorObject(Texture& texture)
 	:DescriptorObject(VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER)
 {
 	// Add the texture to the list of textures
@@ -16,7 +16,7 @@ D3D::TextureDescriptorObject::TextureDescriptorObject(Texture& texture)
 	SetupImageInfos();
 }
 
-D3D::TextureDescriptorObject::TextureDescriptorObject(std::initializer_list<const std::string>& filePaths)
+DDM3::TextureDescriptorObject::TextureDescriptorObject(std::initializer_list<const std::string>& filePaths)
 	:DescriptorObject(VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER)
 {
 	// Set up all textures
@@ -26,7 +26,7 @@ D3D::TextureDescriptorObject::TextureDescriptorObject(std::initializer_list<cons
 	SetupImageInfos();
 }
 
-D3D::TextureDescriptorObject::~TextureDescriptorObject()
+DDM3::TextureDescriptorObject::~TextureDescriptorObject()
 {
 	// Get the device and clean up all the textures
 
@@ -38,7 +38,7 @@ D3D::TextureDescriptorObject::~TextureDescriptorObject()
 	}
 }
 
-void D3D::TextureDescriptorObject::AddDescriptorWrite(VkDescriptorSet descriptorSet, std::vector<VkWriteDescriptorSet>& descriptorWrites, int& binding, int /*index*/)
+void DDM3::TextureDescriptorObject::AddDescriptorWrite(VkDescriptorSet descriptorSet, std::vector<VkWriteDescriptorSet>& descriptorWrites, int& binding, int /*index*/)
 {
 	// Resize the descriptor writes vector
 	descriptorWrites.resize(binding + m_Textures.size());
@@ -64,12 +64,12 @@ void D3D::TextureDescriptorObject::AddDescriptorWrite(VkDescriptorSet descriptor
 	}
 }
 
-D3D::Texture& D3D::TextureDescriptorObject::GetTexture(int index)
+DDM3::Texture& DDM3::TextureDescriptorObject::GetTexture(int index)
 {
 	{ return m_Textures[index]; }
 }
 
-void D3D::TextureDescriptorObject::SetupTextures(std::initializer_list<const std::string>& filePaths)
+void DDM3::TextureDescriptorObject::SetupTextures(std::initializer_list<const std::string>& filePaths)
 {
 	// Resize textures to textureAmount
 	m_Textures.resize(filePaths.size());
@@ -90,7 +90,7 @@ void D3D::TextureDescriptorObject::SetupTextures(std::initializer_list<const std
 	}
 }
 
-void D3D::TextureDescriptorObject::SetupImageInfos()
+void DDM3::TextureDescriptorObject::SetupImageInfos()
 {
 	// resize image infos
 	m_ImageInfos.resize(m_Textures.size());

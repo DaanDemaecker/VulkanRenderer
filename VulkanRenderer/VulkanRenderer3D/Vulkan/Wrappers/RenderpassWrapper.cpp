@@ -8,24 +8,24 @@
 #include <array>
 #include <stdexcept>
 
-D3D::RenderpassWrapper::RenderpassWrapper(VkDevice device, VkFormat swapchainImageFormat, VkFormat depthFormat, VkSampleCountFlagBits msaaSamples)
+DDM3::RenderpassWrapper::RenderpassWrapper(VkDevice device, VkFormat swapchainImageFormat, VkFormat depthFormat, VkSampleCountFlagBits msaaSamples)
 {
 	// Initialize renderpass
 	CreateRenderPass(device, swapchainImageFormat, depthFormat, msaaSamples);
 }
 
-D3D::RenderpassWrapper::~RenderpassWrapper()
+DDM3::RenderpassWrapper::~RenderpassWrapper()
 {
 	Cleanup(Vulkan3D::GetInstance().GetDevice());
 }
 
-void D3D::RenderpassWrapper::Cleanup(VkDevice device)
+void DDM3::RenderpassWrapper::Cleanup(VkDevice device)
 {
 	// Destroy the renderpass
 	vkDestroyRenderPass(device, m_RenderPass, nullptr);
 }
 
-void D3D::RenderpassWrapper::BeginRenderPass(VkCommandBuffer commandBuffer, VkFramebuffer frameBuffer, VkExtent2D swapchainExtent)
+void DDM3::RenderpassWrapper::BeginRenderPass(VkCommandBuffer commandBuffer, VkFramebuffer frameBuffer, VkExtent2D swapchainExtent)
 {
 	// Create renderpass begin info object
 	VkRenderPassBeginInfo renderPassInfo{};
@@ -56,7 +56,7 @@ void D3D::RenderpassWrapper::BeginRenderPass(VkCommandBuffer commandBuffer, VkFr
 	vkCmdBeginRenderPass(commandBuffer, &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
 }
 
-void D3D::RenderpassWrapper::CreateRenderPass(VkDevice device, VkFormat swapchainImageFormat, VkFormat depthFormat, VkSampleCountFlagBits msaaSamples)
+void DDM3::RenderpassWrapper::CreateRenderPass(VkDevice device, VkFormat swapchainImageFormat, VkFormat depthFormat, VkSampleCountFlagBits msaaSamples)
 {
 	// Create attachment description
 	VkAttachmentDescription colorAttachment{};

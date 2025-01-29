@@ -7,7 +7,7 @@
 
 // Standard library includes
 
-namespace D3D
+namespace DDM3
 {
 	class Viewport final
 	{

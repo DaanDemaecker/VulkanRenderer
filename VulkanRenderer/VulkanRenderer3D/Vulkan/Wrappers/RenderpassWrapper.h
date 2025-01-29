@@ -7,7 +7,7 @@
 // File includdes
 #include "Includes/VulkanIncludes.h"
 
-namespace D3D
+namespace DDM3
 {
 	class RenderpassWrapper final
 	{

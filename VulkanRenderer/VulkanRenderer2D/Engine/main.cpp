@@ -2,11 +2,11 @@
 //
 
 #include <iostream>
-#include "D2DEngine.h"
+#include "DDM2Engine.h"
 
 int main()
 {
-	D2D::D2DEngine engine{};
+	DDM2::DDM2Engine engine{};
 	engine.Run();
 
 	return EXIT_SUCCESS;

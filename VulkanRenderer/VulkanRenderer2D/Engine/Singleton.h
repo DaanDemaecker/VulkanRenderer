@@ -4,7 +4,7 @@
 #ifndef SingletonIncluded
 #define SingletonIncluded
 
-namespace D2D
+namespace DDM2
 {
 	// Make singletion templated class
 	template <typename T>

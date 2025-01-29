@@ -14,7 +14,7 @@
 #include <map>
 #include <memory>
 
-namespace D3D
+namespace DDM3
 {
 	// Class forward declarations
 	class Model;
@@ -27,7 +27,7 @@ namespace D3D
 		// Constructor
 		// Parameters:
 		//     shaderModules: a vector of shaderModules of the different requested shader files
-		DescriptorPoolWrapper(std::vector<std::unique_ptr<D3D::ShaderModuleWrapper>>& shaderModules);
+		DescriptorPoolWrapper(std::vector<std::unique_ptr<DDM3::ShaderModuleWrapper>>& shaderModules);
 
 		// Delete default constructor
 		DescriptorPoolWrapper() = delete;
@@ -94,7 +94,7 @@ namespace D3D
 		// Read the amount of bindings per type from the shader modules
 		// Parameters:
 		//     shaderModules: a vector of shaderModules of the different requested shader files
-		void ReadDescriptorTypeCount(std::vector<std::unique_ptr<D3D::ShaderModuleWrapper>>& shaderModules);
+		void ReadDescriptorTypeCount(std::vector<std::unique_ptr<DDM3::ShaderModuleWrapper>>& shaderModules);
 	};
 }
 

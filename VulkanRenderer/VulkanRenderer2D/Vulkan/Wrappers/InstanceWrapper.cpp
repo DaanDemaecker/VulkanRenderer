@@ -7,12 +7,12 @@
 // Standard library includes
 #include <stdexcept>
 
-D2D::InstanceWrapper::InstanceWrapper()
+DDM2::InstanceWrapper::InstanceWrapper()
 {
 	CreateInstance();
 }
 
-void D2D::InstanceWrapper::CreateInstance()
+void DDM2::InstanceWrapper::CreateInstance()
 {
 	VkInstanceCreateInfo createInfo{};
 
@@ -32,7 +32,7 @@ void D2D::InstanceWrapper::CreateInstance()
 	}
 }
 
-void D2D::InstanceWrapper::SetupApplicationInfo(VkApplicationInfo& info)
+void DDM2::InstanceWrapper::SetupApplicationInfo(VkApplicationInfo& info)
 {
 	auto& configManager = ConfigManager::GetInstance();
 

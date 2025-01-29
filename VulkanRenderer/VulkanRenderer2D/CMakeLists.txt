@@ -4,7 +4,7 @@ project(VulkanRenderer2D)
 # Create the executable
 add_executable(VulkanRenderer2D
     "Engine/ConfigManager.cpp"
-    "Engine/D2DEngine.cpp"
+    "Engine/DDM2Engine.cpp"
     "Engine/main.cpp"
     "Engine/Window.cpp"
     "Includes/STBIncludes.cpp"

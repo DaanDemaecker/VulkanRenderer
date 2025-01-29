@@ -14,19 +14,19 @@
 #include <stdexcept>
 #include <cmath>
 
-D3D::ImageManager::ImageManager(GPUObject* pGPUObject, D3D::BufferManager* pBufferManager, CommandpoolManager* pCommandPoolManager)
+DDM3::ImageManager::ImageManager(GPUObject* pGPUObject, DDM3::BufferManager* pBufferManager, CommandpoolManager* pCommandPoolManager)
 	:m_DefaultTextureName{ConfigManager::GetInstance().GetString("DefaultTextureName")}
 {
 	// Initialize the default textures
 	CreateDefaultResources(pGPUObject, pBufferManager, pCommandPoolManager);
 }
 
-D3D::ImageManager::~ImageManager()
+DDM3::ImageManager::~ImageManager()
 {
 	Cleanup(Vulkan3D::GetInstance().GetDevice());
 }
 
-void D3D::ImageManager::CreateDefaultResources(GPUObject* pGPUObject, D3D::BufferManager* pBufferManager,CommandpoolManager* pCommandPoolManager)
+void DDM3::ImageManager::CreateDefaultResources(GPUObject* pGPUObject, DDM3::BufferManager* pBufferManager,CommandpoolManager* pCommandPoolManager)
 {
 	// Create the default texture sampler
 	CreateTextureSampler(pGPUObject, m_TextureSampler, m_DefaultTexture.mipLevels);
@@ -36,7 +36,7 @@ void D3D::ImageManager::CreateDefaultResources(GPUObject* pGPUObject, D3D::Buffe
 	m_DefaultTexture.imageView = CreateImageView(pGPUObject->GetDevice(), m_DefaultTexture.image, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_ASPECT_COLOR_BIT, m_DefaultTexture.mipLevels);
 }
 
-VkImageView D3D::ImageManager::CreateImageView(VkDevice device, VkImage image, VkFormat format, VkImageAspectFlags aspectFlags, uint32_t mipLevels)
+VkImageView DDM3::ImageManager::CreateImageView(VkDevice device, VkImage image, VkFormat format, VkImageAspectFlags aspectFlags, uint32_t mipLevels)
 {
 	// Create image view create info
 	VkImageViewCreateInfo viewInfo{};
@@ -72,7 +72,7 @@ VkImageView D3D::ImageManager::CreateImageView(VkDevice device, VkImage image, V
 	return imageView;
 }
 
-void D3D::ImageManager::CreateCubeTexture(GPUObject* pGPUObject, D3D::BufferManager* pBufferManager, Texture& cubeTexture, const std::initializer_list<const std::string>& textureNames, CommandpoolManager* pCommandPoolManager)
+void DDM3::ImageManager::CreateCubeTexture(GPUObject* pGPUObject, DDM3::BufferManager* pBufferManager, Texture& cubeTexture, const std::initializer_list<const std::string>& textureNames, CommandpoolManager* pCommandPoolManager)
 {
 	// Get device
 	auto device{ pGPUObject->GetDevice() };
@@ -272,7 +272,7 @@ void D3D::ImageManager::CreateCubeTexture(GPUObject* pGPUObject, D3D::BufferMana
 	}
 }
 
-void D3D::ImageManager::CreateTextureSampler(GPUObject* pGPUObject, VkSampler& sampler, uint32_t miplevels)
+void DDM3::ImageManager::CreateTextureSampler(GPUObject* pGPUObject, VkSampler& sampler, uint32_t miplevels)
 {
 	// Create sampler create info
 	VkSamplerCreateInfo samplerInfo{};
@@ -323,7 +323,7 @@ void D3D::ImageManager::CreateTextureSampler(GPUObject* pGPUObject, VkSampler& s
 	}
 }
 
-void D3D::ImageManager::Cleanup(VkDevice device)
+void DDM3::ImageManager::Cleanup(VkDevice device)
 {
 	// Destroy the sampler
 	vkDestroySampler(device, m_TextureSampler, nullptr);
@@ -331,7 +331,7 @@ void D3D::ImageManager::Cleanup(VkDevice device)
 	m_DefaultTexture.Cleanup(device);
 }
 
-void D3D::ImageManager::CopyBufferToImage(VkCommandBuffer commandBuffer, VkBuffer buffer, VkImage image, uint32_t width, uint32_t height, uint32_t layerCount)
+void DDM3::ImageManager::CopyBufferToImage(VkCommandBuffer commandBuffer, VkBuffer buffer, VkImage image, uint32_t width, uint32_t height, uint32_t layerCount)
 {
 	// Create buffer image copy
 	VkBufferImageCopy region{};
@@ -365,7 +365,7 @@ void D3D::ImageManager::CopyBufferToImage(VkCommandBuffer commandBuffer, VkBuffe
 	vkCmdCopyBufferToImage(commandBuffer, buffer, image, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 1, &region);
 }
 
-void D3D::ImageManager::GenerateMipmaps(VkPhysicalDevice physicalDevice, VkCommandBuffer commandBuffer, VkImage image, VkFormat imageFormat, int32_t texWidth, int32_t texHeight, uint32_t mipLevels)
+void DDM3::ImageManager::GenerateMipmaps(VkPhysicalDevice physicalDevice, VkCommandBuffer commandBuffer, VkImage image, VkFormat imageFormat, int32_t texWidth, int32_t texHeight, uint32_t mipLevels)
 {
 	// Create format properties object
 	VkFormatProperties formatProperties{};
@@ -503,7 +503,7 @@ void D3D::ImageManager::GenerateMipmaps(VkPhysicalDevice physicalDevice, VkComma
 		1, &barrier);
 }
 
-void D3D::ImageManager::CreateTextureImage(GPUObject* pGPUObject, D3D::BufferManager* pBufferManager, D3D::Texture& texture, const std::string& textureName, D3D::CommandpoolManager* pCommandPoolManager)
+void DDM3::ImageManager::CreateTextureImage(GPUObject* pGPUObject, DDM3::BufferManager* pBufferManager, DDM3::Texture& texture, const std::string& textureName, DDM3::CommandpoolManager* pCommandPoolManager)
 {
 	// Get device
 	auto device{ pGPUObject->GetDevice() };
@@ -583,7 +583,7 @@ void D3D::ImageManager::CreateTextureImage(GPUObject* pGPUObject, D3D::BufferMan
 	pCommandPoolManager->EndSingleTimeCommands(pGPUObject, commandBuffer);
 }
 
-void D3D::ImageManager::CreateImage(GPUObject* pGPUObject, uint32_t width, uint32_t height, uint32_t mipLevels, VkSampleCountFlagBits numSamples, VkFormat format, VkImageTiling tiling, VkImageUsageFlags usage, VkMemoryPropertyFlags properties, Texture& texture)
+void DDM3::ImageManager::CreateImage(GPUObject* pGPUObject, uint32_t width, uint32_t height, uint32_t mipLevels, VkSampleCountFlagBits numSamples, VkFormat format, VkImageTiling tiling, VkImageUsageFlags usage, VkMemoryPropertyFlags properties, Texture& texture)
 {
 	// Get device
 	auto device{ pGPUObject->GetDevice() };
@@ -652,7 +652,7 @@ void D3D::ImageManager::CreateImage(GPUObject* pGPUObject, uint32_t width, uint3
 }
 
 
-void D3D::ImageManager::TransitionImageLayout(VkImage image, VkCommandBuffer commandBuffer, VkFormat format, VkImageLayout oldLayout, VkImageLayout newLayout, uint32_t mipLevels, uint32_t layerCount)
+void DDM3::ImageManager::TransitionImageLayout(VkImage image, VkCommandBuffer commandBuffer, VkFormat format, VkImageLayout oldLayout, VkImageLayout newLayout, uint32_t mipLevels, uint32_t layerCount)
 {
 	VkImageMemoryBarrier barrier{};
 	barrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
@@ -748,7 +748,7 @@ void D3D::ImageManager::TransitionImageLayout(VkImage image, VkCommandBuffer com
 
 
 
-bool D3D::ImageManager::HasStencilComponent(VkFormat format)
+bool DDM3::ImageManager::HasStencilComponent(VkFormat format)
 {
 	return format == VK_FORMAT_D32_SFLOAT_S8_UINT || format == VK_FORMAT_D24_UNORM_S8_UINT;
 }

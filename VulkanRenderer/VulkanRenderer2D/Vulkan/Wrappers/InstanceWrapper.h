@@ -7,7 +7,7 @@
 // File includes
 #include "../../Includes/VulkanIncludes.h"
 
-namespace D2D
+namespace DDM2
 {
 	class InstanceWrapper  final
 	{

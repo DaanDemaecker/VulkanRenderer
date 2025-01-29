@@ -18,7 +18,7 @@ uint32_t VulkanUtils::FindMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags 
 	// Create physical device memory properties object
 	VkPhysicalDeviceMemoryProperties memProperties;
 	// Get the memory properties
-	vkGetPhysicalDeviceMemoryProperties(D3D::Vulkan3D::GetInstance().GetPhysicalDevice(), &memProperties);
+	vkGetPhysicalDeviceMemoryProperties(DDM3::Vulkan3D::GetInstance().GetPhysicalDevice(), &memProperties);
 
 	// Loop trough the amount of memory types
 	for (uint32_t i = 0; i < memProperties.memoryTypeCount; ++i)
@@ -39,7 +39,7 @@ VkFormat VulkanUtils::FindDepthFormat()
 {
 	// Find a supported format for the depth resources
 	// Requested property flag is Depth stencil attachment
-	return VulkanUtils::FindSupportedFormat(D3D::Vulkan3D::GetInstance().GetPhysicalDevice(),
+	return VulkanUtils::FindSupportedFormat(DDM3::Vulkan3D::GetInstance().GetPhysicalDevice(),
 		{ VK_FORMAT_D32_SFLOAT, VK_FORMAT_D32_SFLOAT_S8_UINT, VK_FORMAT_D24_UNORM_S8_UINT },
 		VK_IMAGE_TILING_OPTIMAL,
 		VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT
@@ -74,10 +74,10 @@ VkFormat VulkanUtils::FindSupportedFormat(VkPhysicalDevice physicalDevice, const
 	throw std::runtime_error("failed to find supported format!");
 }
 
-D3D::QueueFamilyIndices VulkanUtils::FindQueueFamilies(VkPhysicalDevice physicalDevice, VkSurfaceKHR surface)
+DDM3::QueueFamilyIndices VulkanUtils::FindQueueFamilies(VkPhysicalDevice physicalDevice, VkSurfaceKHR surface)
 {
 	// Create quefamilyindices object
-	D3D::QueueFamilyIndices indices;
+	DDM3::QueueFamilyIndices indices;
 
 	// Create uint for amount of queuefamilies
 	uint32_t queueFamilyCount = 0;
@@ -196,10 +196,10 @@ VkSampleCountFlagBits VulkanUtils::GetMaxUsableSampleCount(VkPhysicalDevice phys
 	return VK_SAMPLE_COUNT_1_BIT;
 }
 
-D3D::SwapChainSupportDetails VulkanUtils::QuerySwapChainSupport(VkPhysicalDevice physicalDevice, VkSurfaceKHR surface)
+DDM3::SwapChainSupportDetails VulkanUtils::QuerySwapChainSupport(VkPhysicalDevice physicalDevice, VkSurfaceKHR surface)
 {
 	// Create swapchainsupport details object
-	D3D::SwapChainSupportDetails details;
+	DDM3::SwapChainSupportDetails details;
 
 	// Get surface capabilities
 	vkGetPhysicalDeviceSurfaceCapabilitiesKHR(physicalDevice, surface, &details.capabilities);
@@ -236,8 +236,8 @@ D3D::SwapChainSupportDetails VulkanUtils::QuerySwapChainSupport(VkPhysicalDevice
 	return details;
 }
 
-void VulkanUtils::CreateDepthImage(D3D::Texture& texture, D3D::GPUObject* pGPUObject, VkSampleCountFlagBits samples, VkExtent2D swapchainExtent, 
-	D3D::ImageManager* pImageManager, VkCommandBuffer commandBuffer, bool sampleBitSet)
+void VulkanUtils::CreateDepthImage(DDM3::Texture& texture, DDM3::GPUObject* pGPUObject, VkSampleCountFlagBits samples, VkExtent2D swapchainExtent, 
+	DDM3::ImageManager* pImageManager, VkCommandBuffer commandBuffer, bool sampleBitSet)
 {
 	// Get the depth formatµ
 	auto depthFormat = VulkanUtils::FindDepthFormat();

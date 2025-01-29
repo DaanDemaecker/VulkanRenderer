@@ -1,21 +1,21 @@
-#include "D2DEngine.h"
+#include "DDM2Engine.h"
 #include "Window.h"
 #include "Vulkan/Vulkan2D.h"
 
-D2D::D2DEngine::D2DEngine()
+DDM2::DDM2Engine::DDM2Engine()
 {
-	D2D::Window::GetInstance();
+	DDM2::Window::GetInstance();
 
-	D2D::Vulkan2D::GetInstance().Init();
+	DDM2::Vulkan2D::GetInstance().Init();
 }
 
-D2D::D2DEngine::~D2DEngine()
+DDM2::DDM2Engine::~DDM2Engine()
 {
 }
 
-void D2D::D2DEngine::Run()
+void DDM2::DDM2Engine::Run()
 {
-	auto& window{ D2D::Window::GetInstance() };
+	auto& window{ DDM2::Window::GetInstance() };
 
 
 	// Variable that will indicate when the gameloop should stop running

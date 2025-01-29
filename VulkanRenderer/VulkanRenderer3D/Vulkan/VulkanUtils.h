@@ -13,7 +13,7 @@
 #include <vector>
 
 // Class forward declarations
-namespace D3D
+namespace DDM3
 {
 	class ImageManager;
 	class GPUObject;
@@ -47,7 +47,7 @@ namespace VulkanUtils
 		// Parameters:
 		//     physicalDevice: handle of the VkPhysicalDevice
 		//     surface: handle of the VkSurfaceKHR
-	D3D::QueueFamilyIndices FindQueueFamilies(VkPhysicalDevice physicalDevice, VkSurfaceKHR surface);
+	DDM3::QueueFamilyIndices FindQueueFamilies(VkPhysicalDevice physicalDevice, VkSurfaceKHR surface);
 
 	// Check if a certain extension is supported
 		// Parameters:
@@ -58,7 +58,7 @@ namespace VulkanUtils
 		// Parameters:
 		//     physicalDevice: handle of the VkPhysicalDevice
 		//     surface: handle of the VkSurfaceKHR
-	D3D::SwapChainSupportDetails QuerySwapChainSupport(VkPhysicalDevice physicalDevice, VkSurfaceKHR surface);
+	DDM3::SwapChainSupportDetails QuerySwapChainSupport(VkPhysicalDevice physicalDevice, VkSurfaceKHR surface);
 
 	// Create a depth image
 		// Parameters:
@@ -69,7 +69,7 @@ namespace VulkanUtils
 		//     pImageManager: pointer to the image manager
 	    //     commandBuffer: a one time use commandbuffer used to create the image
 		//     sambleBitSet: a bool that indicates if this depth image will be used for sampling
-	void CreateDepthImage(D3D::Texture& texture, D3D::GPUObject* pGPUObject, VkSampleCountFlagBits samples, VkExtent2D swapchainExtent,
-		D3D::ImageManager* pImageManager, VkCommandBuffer commandBuffer, bool sampleBitSet = false);
+	void CreateDepthImage(DDM3::Texture& texture, DDM3::GPUObject* pGPUObject, VkSampleCountFlagBits samples, VkExtent2D swapchainExtent,
+		DDM3::ImageManager* pImageManager, VkCommandBuffer commandBuffer, bool sampleBitSet = false);
 }
 #endif // !VulkanUtilsIncluded

@@ -7,7 +7,7 @@
 // Parent class include
 #include "Singleton.h"
 
-namespace D3D
+namespace DDM3
 {
 	class TimeManager final : public Singleton<TimeManager>
 	{

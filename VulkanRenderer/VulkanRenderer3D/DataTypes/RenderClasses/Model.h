@@ -15,7 +15,7 @@
 #include <memory>
 #include <iostream>
 
-namespace D3D
+namespace DDM3
 {
 	// Class forward declarations
 	class Material;
@@ -99,13 +99,13 @@ namespace D3D
 		// Vector of dirty flags for UBOs
 		std::vector<bool> m_UboChanged{};
 
-		std::unique_ptr<D3D::UboDescriptorObject<UniformBufferObject>> m_pUboDescriptorObject{};
+		std::unique_ptr<DDM3::UboDescriptorObject<UniformBufferObject>> m_pUboDescriptorObject{};
 
 		// Vector of descriptorsets
 		std::vector<VkDescriptorSet> m_DescriptorSets{};
 
 		//Mesh
-		std::unique_ptr<D3D::Mesh> m_pMesh{};
+		std::unique_ptr<DDM3::Mesh> m_pMesh{};
 
 		//Material
 		std::shared_ptr<Material> m_pMaterial{};

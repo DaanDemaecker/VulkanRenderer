@@ -9,7 +9,7 @@
 // Standard library includes
 #include <stdexcept>
 
-D3D::CommandpoolManager::CommandpoolManager(GPUObject* pGPUObject, VkSurfaceKHR surface)
+DDM3::CommandpoolManager::CommandpoolManager(GPUObject* pGPUObject, VkSurfaceKHR surface)
 {
 	// Initialize the commandpool
 	CreateCommandPool(pGPUObject, surface);
@@ -17,21 +17,21 @@ D3D::CommandpoolManager::CommandpoolManager(GPUObject* pGPUObject, VkSurfaceKHR 
 	CreateCommandBuffers(pGPUObject->GetDevice());
 }
 
-D3D::CommandpoolManager::~CommandpoolManager()
+DDM3::CommandpoolManager::~CommandpoolManager()
 {
 	Cleanup(Vulkan3D::GetInstance().GetDevice());
 }
 
-void D3D::CommandpoolManager::Cleanup(VkDevice device)
+void DDM3::CommandpoolManager::Cleanup(VkDevice device)
 {
 	// Destroy the commandpool
 	vkDestroyCommandPool(device, m_CommandPool, nullptr);
 }
 
-void D3D::CommandpoolManager::CreateCommandPool(GPUObject* pGPUObject, VkSurfaceKHR surface)
+void DDM3::CommandpoolManager::CreateCommandPool(GPUObject* pGPUObject, VkSurfaceKHR surface)
 {
 	// Get the needed queuefamilies
-	D3D::QueueFamilyIndices queueFamilyIndices = VulkanUtils::FindQueueFamilies(pGPUObject->GetPhysicalDevice(), surface);
+	DDM3::QueueFamilyIndices queueFamilyIndices = VulkanUtils::FindQueueFamilies(pGPUObject->GetPhysicalDevice(), surface);
 
 	// Create commandpool create info object
 	VkCommandPoolCreateInfo poolInfo{};
@@ -50,7 +50,7 @@ void D3D::CommandpoolManager::CreateCommandPool(GPUObject* pGPUObject, VkSurface
 	}
 }
 
-void D3D::CommandpoolManager::CreateCommandBuffers(VkDevice device)
+void DDM3::CommandpoolManager::CreateCommandBuffers(VkDevice device)
 {
 	auto frames = Vulkan3D::GetMaxFrames();
 	// Resize the commandbuffer vector to the amount of frames
@@ -75,7 +75,7 @@ void D3D::CommandpoolManager::CreateCommandBuffers(VkDevice device)
 	}
 }
 
-VkCommandBuffer D3D::CommandpoolManager::BeginSingleTimeCommands(VkDevice device)
+VkCommandBuffer DDM3::CommandpoolManager::BeginSingleTimeCommands(VkDevice device)
 {
 	// Create commandbuffer allocate info
 	VkCommandBufferAllocateInfo allocInfo{};
@@ -107,7 +107,7 @@ VkCommandBuffer D3D::CommandpoolManager::BeginSingleTimeCommands(VkDevice device
 	return commandBuffer;
 }
 
-void D3D::CommandpoolManager::EndSingleTimeCommands(GPUObject* pGPUObject, VkCommandBuffer commandBuffer)
+void DDM3::CommandpoolManager::EndSingleTimeCommands(GPUObject* pGPUObject, VkCommandBuffer commandBuffer)
 {
 	// End the command buffer
 	vkEndCommandBuffer(commandBuffer);

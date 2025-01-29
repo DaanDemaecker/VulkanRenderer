@@ -1,7 +1,7 @@
 // D3DEngine.cpp
 
 // Header include
-#include "D3DEngine.h"
+#include "DDM3Engine.h"
 
 // File includes
 #include "TimeManager.h"
@@ -16,21 +16,21 @@
 #include <chrono>
 #include <thread>
 
-D3D::D3DEngine::D3DEngine()
+DDM3::DDM3Engine::DDM3Engine()
 {
 	// Create the window with the given width and height
-	D3D::Window::GetInstance();
+	DDM3::Window::GetInstance();
 	
-	D3D::Vulkan3D::GetInstance().Init();
+	DDM3::Vulkan3D::GetInstance().Init();
 }
 
-D3D::D3DEngine::~D3DEngine()
+DDM3::DDM3Engine::~DDM3Engine()
 {
-	D3D::Vulkan3D::GetInstance().Terminate();	
+	DDM3::Vulkan3D::GetInstance().Terminate();	
 }
 
 // This function will run the gameloop for the duration of the app
-void D3D::D3DEngine::Run(const std::function<void()>& load)
+void DDM3::DDM3Engine::Run(const std::function<void()>& load)
 {
 	// Run the load function
 	load();

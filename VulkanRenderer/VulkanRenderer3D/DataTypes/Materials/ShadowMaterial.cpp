@@ -14,21 +14,21 @@
 #include "DataTypes/DescriptorObjects/TextureDescriptorObject.h"
 #include "DataTypes/DirectionalLightObject.h"
 
-D3D::ShadowMaterial::ShadowMaterial(std::initializer_list<const std::string>&& filePaths, const std::string& pipelineName)
+DDM3::ShadowMaterial::ShadowMaterial(std::initializer_list<const std::string>&& filePaths, const std::string& pipelineName)
 	:Material(pipelineName)
 {
 	// Create a descriptor object with the list of file paths given
-	m_pDescriptorObject = std::make_unique<D3D::TextureDescriptorObject>(filePaths);
+	m_pDescriptorObject = std::make_unique<DDM3::TextureDescriptorObject>(filePaths);
 
 	// Create sampler
 	CreateTextureSampler();
 }
 
-D3D::ShadowMaterial::~ShadowMaterial()
+DDM3::ShadowMaterial::~ShadowMaterial()
 {
 }
 
-void D3D::ShadowMaterial::CreateDescriptorSets(Model* pModel, std::vector<VkDescriptorSet>& descriptorSets)
+void DDM3::ShadowMaterial::CreateDescriptorSets(Model* pModel, std::vector<VkDescriptorSet>& descriptorSets)
 {
 	// Get descriptorpool associated with this material
 	auto descriptorPool = GetDescriptorPool();
@@ -38,7 +38,7 @@ void D3D::ShadowMaterial::CreateDescriptorSets(Model* pModel, std::vector<VkDesc
 	descriptorPool->CreateDescriptorSets(GetDescriptorLayout(), descriptorSets);
 }
 
-void D3D::ShadowMaterial::UpdateDescriptorSets(std::vector<VkDescriptorSet>& descriptorSets, std::vector<DescriptorObject*>& descriptorObjects)
+void DDM3::ShadowMaterial::UpdateDescriptorSets(std::vector<VkDescriptorSet>& descriptorSets, std::vector<DescriptorObject*>& descriptorObjects)
 {
 	// Get pointer to the descriptorpool wrapper
 	auto descriptorPool = GetDescriptorPool();
@@ -70,7 +70,7 @@ void D3D::ShadowMaterial::UpdateDescriptorSets(std::vector<VkDescriptorSet>& des
 	descriptorPool->UpdateDescriptorSets(descriptorSets, descriptorObjectList);
 }
 
-void D3D::ShadowMaterial::CreateTextureSampler()
+void DDM3::ShadowMaterial::CreateTextureSampler()
 {
 	// Get sampler
 	m_TextureSampler = Vulkan3D::GetInstance().GetRenderer().GetSampler();

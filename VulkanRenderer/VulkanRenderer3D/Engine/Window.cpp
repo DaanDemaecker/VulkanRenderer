@@ -9,7 +9,7 @@
 // Static library includes
 #include <functional>
 
-D3D::Window::Window()
+DDM3::Window::Window()
 {
 	// Set the width of the window
 	m_Window.Width = ConfigManager::GetInstance().GetInt("WindowWidth");
@@ -20,7 +20,7 @@ D3D::Window::Window()
 	InitWindow();
 }
 
-D3D::Window::~Window()
+DDM3::Window::~Window()
 {
 	// Destroy the window
 	glfwDestroyWindow(m_Window.pWindow);
@@ -29,13 +29,13 @@ D3D::Window::~Window()
 	glfwTerminate();
 }
 
-void D3D::Window::SetFrameBufferResized(bool value)
+void DDM3::Window::SetFrameBufferResized(bool value)
 {
 	// Set the value of frameBufferResized to the requested value
 	m_Window.FrameBufferResized = value;
 }
 
-void D3D::Window::InitWindow()
+void DDM3::Window::InitWindow()
 {
 	// Initialize glfw
 	glfwInit();
@@ -116,7 +116,7 @@ void D3D::Window::InitWindow()
 	glfwSetWindowMaximizeCallback(m_Window.pWindow, MaximizeWindowCallback);
 }
 
-void D3D::Window::FramebufferResizeCallback(GLFWwindow* pWindow, int width, int height)
+void DDM3::Window::FramebufferResizeCallback(GLFWwindow* pWindow, int width, int height)
 {
 	// Get a reference to the window struct
 	auto& window = GetInstance().GetWindowStruct();
@@ -128,7 +128,7 @@ void D3D::Window::FramebufferResizeCallback(GLFWwindow* pWindow, int width, int 
 	window.Height = height;
 }
 
-void D3D::Window::MaximizeWindowCallback(GLFWwindow* /*pWindow*/, int /*maximized*/)
+void DDM3::Window::MaximizeWindowCallback(GLFWwindow* /*pWindow*/, int /*maximized*/)
 {
 
 }

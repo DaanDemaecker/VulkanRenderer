@@ -3,14 +3,14 @@
 #ifndef D2DEngineIncluded
 #define D2DEngineIncluded
 
-namespace D2D
+namespace DDM2
 {
-	class D2DEngine final
+	class DDM2Engine final
 	{
 	public:
-		D2DEngine();
+		DDM2Engine();
 
-		~D2DEngine();
+		~DDM2Engine();
 
 		void Run();
 	private:

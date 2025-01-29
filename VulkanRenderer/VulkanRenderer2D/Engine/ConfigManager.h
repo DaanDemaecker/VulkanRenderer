@@ -8,7 +8,7 @@
 // Standard library includes
 #include <iostream>
 
-namespace D2D
+namespace DDM2
 {
 	class ConfigManager : public Singleton<ConfigManager>
 	{

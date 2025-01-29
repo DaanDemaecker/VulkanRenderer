@@ -9,7 +9,7 @@
 
 #include "Utils/Utils.h"
 
-D3D::Mesh::Mesh(const std::string& filePath)
+DDM3::Mesh::Mesh(const std::string& filePath)
 {
 	// Load the vertices and indices
 	Utils::LoadModel(filePath, m_Vertices, m_Indices);
@@ -22,13 +22,13 @@ D3D::Mesh::Mesh(const std::string& filePath)
 	renderer.CreateIndexBuffer(m_Indices, m_IndexBuffer, m_IndexBufferMemory);
 }
 
-D3D::Mesh::~Mesh()
+DDM3::Mesh::~Mesh()
 {
 	// Call cleanup function
 	Cleanup();
 }
 
-void D3D::Mesh::Render(VkCommandBuffer commandBuffer)
+void DDM3::Mesh::Render(VkCommandBuffer commandBuffer)
 {
 	// Set and bind vertex buffer
 	VkBuffer vertexBuffers[] = { m_VertexBuffer };
@@ -43,10 +43,10 @@ void D3D::Mesh::Render(VkCommandBuffer commandBuffer)
 	vkCmdDrawIndexed(commandBuffer, static_cast<uint32_t>(m_Indices.size()), 1, 0, 0, 0);
 }
 
-void D3D::Mesh::Cleanup()
+void DDM3::Mesh::Cleanup()
 {
 	// Get handle of device
-	auto device = D3D::Vulkan3D::GetInstance().GetDevice();
+	auto device = DDM3::Vulkan3D::GetInstance().GetDevice();
 
 	// Wait until device is idle
 	vkDeviceWaitIdle(device);

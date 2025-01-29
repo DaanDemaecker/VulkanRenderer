@@ -8,7 +8,7 @@
 #include <functional>
 #include <string>
 
-D2D::Window::Window()
+DDM2::Window::Window()
 {
 	// Set the width of the window
 	m_Window.Width = ConfigManager::GetInstance().GetInt("WindowWidth");
@@ -19,7 +19,7 @@ D2D::Window::Window()
 	InitWindow();
 }
 
-D2D::Window::~Window()
+DDM2::Window::~Window()
 {
 	// Destroy the window
 	glfwDestroyWindow(m_Window.pWindow);
@@ -28,13 +28,13 @@ D2D::Window::~Window()
 	glfwTerminate();
 }
 
-void D2D::Window::SetFrameBufferResized(bool value)
+void DDM2::Window::SetFrameBufferResized(bool value)
 {
 	// Set the value of frameBufferResized to the requested value
 	m_Window.FrameBufferResized = value;
 }
 
-void D2D::Window::InitWindow()
+void DDM2::Window::InitWindow()
 {
 	// Initialize glfw
 	glfwInit();
@@ -114,7 +114,7 @@ void D2D::Window::InitWindow()
 	glfwSetWindowMaximizeCallback(m_Window.pWindow, MaximizeWindowCallback);
 }
 
-void D2D::Window::FramebufferResizeCallback(GLFWwindow* pWindow, int width, int height)
+void DDM2::Window::FramebufferResizeCallback(GLFWwindow* pWindow, int width, int height)
 {
 	// Get a reference to the window struct
 	auto& window = GetInstance().GetWindowStruct();
@@ -126,7 +126,7 @@ void D2D::Window::FramebufferResizeCallback(GLFWwindow* pWindow, int width, int 
 	window.Height = height;
 }
 
-void D2D::Window::MaximizeWindowCallback(GLFWwindow* /*pWindow*/, int /*maximized*/)
+void DDM2::Window::MaximizeWindowCallback(GLFWwindow* /*pWindow*/, int /*maximized*/)
 {
 
 }

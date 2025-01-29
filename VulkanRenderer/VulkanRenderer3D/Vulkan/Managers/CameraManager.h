@@ -9,7 +9,7 @@
 // Standard library includes
 #include <memory>
 
-namespace D3D
+namespace DDM3
 {
 	class Camera;
 

@@ -15,7 +15,7 @@
 #include <string>
 
 
-namespace D3D
+namespace DDM3
 {
     // Class forward declarations
     class Vulkan3D;
@@ -40,7 +40,7 @@ namespace D3D
     // Inherit from singleton
     class VulkanRenderer3D final
     {
-    friend class D3D::Vulkan3D;
+    friend class DDM3::Vulkan3D;
 
     public:
         // Constructor
@@ -104,7 +104,7 @@ namespace D3D
         //     vertices: reference to vector of vertices 
         //     vertexBuffer: handle to the vertex buffer to be created
         //     vertexBufferMemory: handle of the vertex buffer memory
-        void CreateVertexBuffer(std::vector<D3D::Vertex>& vertices, VkBuffer& vertexBuffer, VkDeviceMemory& vertexBufferMemory);
+        void CreateVertexBuffer(std::vector<DDM3::Vertex>& vertices, VkBuffer& vertexBuffer, VkDeviceMemory& vertexBufferMemory);
 
         // Create a vertex buffer
         // Parameters:

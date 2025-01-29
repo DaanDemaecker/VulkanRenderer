@@ -13,18 +13,18 @@
 // Standard library includes
 #include <iostream>
 
-D3D::DirectionalLightObject::DirectionalLightObject()
+DDM3::DirectionalLightObject::DirectionalLightObject()
 {
 	// Create light buffer
 	CreateLightBuffer();
 }
 
-D3D::DirectionalLightObject::~DirectionalLightObject()
+DDM3::DirectionalLightObject::~DirectionalLightObject()
 {
 	Cleanup(Vulkan3D::GetInstance().GetDevice());
 }
 
-void D3D::DirectionalLightObject::CreateLightBuffer()
+void DDM3::DirectionalLightObject::CreateLightBuffer()
 {
 	// Get the amount of frames in flight
 	int frames = static_cast<int>(Vulkan3D::GetMaxFrames());
@@ -46,18 +46,18 @@ void D3D::DirectionalLightObject::CreateLightBuffer()
 	}
 }
 
-void D3D::DirectionalLightObject::Cleanup(VkDevice /*device*/)
+void DDM3::DirectionalLightObject::Cleanup(VkDevice /*device*/)
 {
 	
 }
 
-void D3D::DirectionalLightObject::SetDirtyFlags()
+void DDM3::DirectionalLightObject::SetDirtyFlags()
 {
 	// Fill dirty flag with true values
 	std::fill(m_LightChanged.begin(), m_LightChanged.end(), true);
 }
 
-void D3D::DirectionalLightObject::CalculateLightTransform(int frame)
+void DDM3::DirectionalLightObject::CalculateLightTransform(int frame)
 {
 	auto cameraPos = Vulkan3D::GetInstance().GetCurrentCamera()->GetPosition();
 	//cameraPos = glm::vec3{};
@@ -94,7 +94,7 @@ void D3D::DirectionalLightObject::CalculateLightTransform(int frame)
 	//VulkanRenderer3D::GetInstance().GetCamera()->SetDirection(m_BufferObject.direction);
 }
 
-void D3D::DirectionalLightObject::UpdateBuffer(int frame)
+void DDM3::DirectionalLightObject::UpdateBuffer(int frame)
 {
 	CalculateLightTransform(frame);
 	// Check if dirty flag is set, if not, return
@@ -106,7 +106,7 @@ void D3D::DirectionalLightObject::UpdateBuffer(int frame)
 	m_LightChanged[frame] = false;
 }
 
-void D3D::DirectionalLightObject::SetDirection(glm::vec3& direction)
+void DDM3::DirectionalLightObject::SetDirection(glm::vec3& direction)
 {
 	// Set new direction after normalizing it
 	m_BufferObject.direction = glm::normalize(direction);
@@ -115,7 +115,7 @@ void D3D::DirectionalLightObject::SetDirection(glm::vec3& direction)
 	SetDirtyFlags();
 }
 
-void D3D::DirectionalLightObject::SetDirection(glm::vec3&& direction)
+void DDM3::DirectionalLightObject::SetDirection(glm::vec3&& direction)
 {
 	// Set new direction after normalizing it
 	m_BufferObject.direction = glm::normalize(direction);
@@ -124,7 +124,7 @@ void D3D::DirectionalLightObject::SetDirection(glm::vec3&& direction)
 	SetDirtyFlags();
 }
 
-void D3D::DirectionalLightObject::SetColor(glm::vec3& color)
+void DDM3::DirectionalLightObject::SetColor(glm::vec3& color)
 {
 	// Set new color
 	m_BufferObject.color = color;
@@ -133,7 +133,7 @@ void D3D::DirectionalLightObject::SetColor(glm::vec3& color)
 	SetDirtyFlags();
 }
 
-void D3D::DirectionalLightObject::SetColor(glm::vec3&& color)
+void DDM3::DirectionalLightObject::SetColor(glm::vec3&& color)
 {
 	// Set new color
 	m_BufferObject.color = color;
@@ -142,7 +142,7 @@ void D3D::DirectionalLightObject::SetColor(glm::vec3&& color)
 	SetDirtyFlags();
 }
 
-void D3D::DirectionalLightObject::SetIntensity(float intensity)
+void DDM3::DirectionalLightObject::SetIntensity(float intensity)
 {
 	// Set new intensity
 	m_BufferObject.intensity = intensity;
@@ -151,17 +151,17 @@ void D3D::DirectionalLightObject::SetIntensity(float intensity)
 	SetDirtyFlags();
 }
 
-D3D::DescriptorObject* D3D::DirectionalLightObject::GetDescriptorObject()
+DDM3::DescriptorObject* DDM3::DirectionalLightObject::GetDescriptorObject()
 {
 	return static_cast<DescriptorObject*>(m_DescriptorObject.get());
 }
 
-D3D::DescriptorObject* D3D::DirectionalLightObject::GetTransformDescriptorObject()
+DDM3::DescriptorObject* DDM3::DirectionalLightObject::GetTransformDescriptorObject()
 {
 	return static_cast<DescriptorObject*>(m_LightMatrixDescriptorObject.get());
 }
 
-glm::mat4& D3D::DirectionalLightObject::GetLightMatrix()
+glm::mat4& DDM3::DirectionalLightObject::GetLightMatrix()
 {
 	return m_LightTransform;
 }

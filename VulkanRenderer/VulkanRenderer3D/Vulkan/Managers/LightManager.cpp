@@ -3,10 +3,10 @@
 // Header include
 #include "LightManager.h"
 
-D3D::LightManager::LightManager()
+DDM3::LightManager::LightManager()
 {
 }
 
-D3D::LightManager::~LightManager()
+DDM3::LightManager::~LightManager()
 {
 }

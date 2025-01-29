@@ -9,7 +9,7 @@
 
 #include "Structs.h"
 
-namespace D3D
+namespace DDM3
 {
 	enum class CameraType
 	{

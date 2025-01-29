@@ -15,23 +15,23 @@
 #include "DataTypes/DescriptorObjects/DescriptorObject.h"
 #include "DataTypes/DirectionalLightObject.h"
 
-D3D::Material::Material(const std::string& pipelineName)
+DDM3::Material::Material(const std::string& pipelineName)
 {
 	// Get the requested pipeline from the renderer
 	m_Pipeline = Vulkan3D::GetInstance().GetRenderer().GetPipeline(pipelineName);
 }
 
-D3D::Material::~Material()
+DDM3::Material::~Material()
 {
 }
 
-D3D::PipelineWrapper* D3D::Material::GetPipeline()
+DDM3::PipelineWrapper* DDM3::Material::GetPipeline()
 {
 	// Return the pipeline
 	return m_Pipeline;
 }
 
-void D3D::Material::CreateDescriptorSets(Model* pModel, std::vector<VkDescriptorSet>& descriptorSets)
+void DDM3::Material::CreateDescriptorSets(Model* pModel, std::vector<VkDescriptorSet>& descriptorSets)
 {
 	// Get pointer to the descriptorpool wrapper
 	auto descriptorPool = GetDescriptorPool();
@@ -41,7 +41,7 @@ void D3D::Material::CreateDescriptorSets(Model* pModel, std::vector<VkDescriptor
 	descriptorPool->CreateDescriptorSets(GetDescriptorLayout(), descriptorSets);
 }
 
-void D3D::Material::UpdateDescriptorSets(std::vector<VkDescriptorSet>& descriptorSets, std::vector<DescriptorObject*>& descriptorObjects)
+void DDM3::Material::UpdateDescriptorSets(std::vector<VkDescriptorSet>& descriptorSets, std::vector<DescriptorObject*>& descriptorObjects)
 {
 	// Get pointer to the descriptorpool wrapper
 	auto descriptorPool = GetDescriptorPool();
@@ -61,13 +61,13 @@ void D3D::Material::UpdateDescriptorSets(std::vector<VkDescriptorSet>& descripto
 	descriptorPool->UpdateDescriptorSets(descriptorSets, descriptorObjectList);
 }
 
-VkDescriptorSetLayout D3D::Material::GetDescriptorLayout()
+VkDescriptorSetLayout DDM3::Material::GetDescriptorLayout()
 {
 	// Get the descriptorsets layout
 	return m_Pipeline->GetDescriptorSetLayout();
 }
 
-D3D::DescriptorPoolWrapper* D3D::Material::GetDescriptorPool()
+DDM3::DescriptorPoolWrapper* DDM3::Material::GetDescriptorPool()
 {
 	// Get descriptorpoolwrapper
 	return m_Pipeline->GetDescriptorPool();

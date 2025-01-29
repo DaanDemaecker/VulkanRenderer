@@ -4,7 +4,7 @@
 #ifndef SingletonIncluded
 #define SingletonIncluded
 
-namespace D3D
+namespace DDM3
 {
 	// Make singletion templated class
 	template <typename T>

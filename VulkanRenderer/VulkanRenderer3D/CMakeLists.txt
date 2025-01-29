@@ -14,7 +14,7 @@ add_executable(VulkanRenderer3D
     "DataTypes/Camera.cpp"
     "DataTypes/DirectionalLightObject.cpp"
     "Engine/ConfigManager.cpp"
-    "Engine/D3DEngine.cpp"
+    "Engine/DDM3Engine.cpp"
     "Engine/main.cpp"
     "Engine/TimeManager.cpp"
     "Engine/Window.cpp"

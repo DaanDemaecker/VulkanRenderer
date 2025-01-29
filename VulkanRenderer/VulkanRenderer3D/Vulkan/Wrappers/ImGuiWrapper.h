@@ -8,7 +8,7 @@
 #include "Includes/VulkanIncludes.h"
 #include "Includes/ImGuiIncludes.h"
 
-namespace D3D
+namespace DDM3
 {
 	class ImGuiWrapper final
 	{

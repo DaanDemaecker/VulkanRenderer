@@ -8,7 +8,7 @@
 #include "Singleton.h"
 #include "Includes/GLFWIncludes.h"
 
-namespace D2D
+namespace DDM2
 {
 	// Window struct
 	// Member variables:

@@ -11,7 +11,7 @@
 #include <string>
 #include <initializer_list>
 
-namespace D3D
+namespace DDM3
 {
 	// Class forward declarations
 	class Model;

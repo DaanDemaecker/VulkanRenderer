@@ -13,16 +13,16 @@
 
 #include "Vulkan/Vulkan3D.h"
 
-D3D::Camera::Camera()
+DDM3::Camera::Camera()
 {
 	SetRotation(m_TotalPitch, m_TotalYaw, 0);
 }
 
-D3D::Camera::~Camera()
+DDM3::Camera::~Camera()
 {
 }
 
-void D3D::Camera::Update()
+void DDM3::Camera::Update()
 {
 	glm::vec3 direction{};
 
@@ -87,14 +87,14 @@ void D3D::Camera::Update()
 	m_PrevYPos = ypos;
 }
 
-void D3D::Camera::SetDirection(glm::vec3& direction)
+void DDM3::Camera::SetDirection(glm::vec3& direction)
 {
 	m_Rotation = Utils::RotationFromDirection(direction);
 
 	SetDirtyFlag();
 }
 
-void D3D::Camera::UpdateUniformBuffer(UniformBufferObject& buffer)
+void DDM3::Camera::UpdateUniformBuffer(UniformBufferObject& buffer)
 {
 	VkExtent2D extent{Vulkan3D::GetInstance().GetRenderer().GetSwapchainExtent()};
 	// If the camera transform has changed, update matrix
@@ -106,11 +106,11 @@ void D3D::Camera::UpdateUniformBuffer(UniformBufferObject& buffer)
 
 	switch (m_Type)
 	{
-	case D3D::CameraType::Perspective:
+	case DDM3::CameraType::Perspective:
 		// Set the projection matrix
 		buffer.proj = glm::perspective(m_FovAngle, extent.width / static_cast<float>(extent.height), 0.1f, 100.0f);
 		break;
-	case D3D::CameraType::Ortographic:
+	case DDM3::CameraType::Ortographic:
 		buffer.proj = glm::ortho( m_OrthoBorders.x, m_OrthoBorders.y, m_OrthoBorders.z, m_OrthoBorders.w, 0.1f, 100.f);
 		break;
 	default:
@@ -122,7 +122,7 @@ void D3D::Camera::UpdateUniformBuffer(UniformBufferObject& buffer)
 	buffer.proj[2][3] *= -1;
 }
 
-void D3D::Camera::UpdateMatrix()
+void DDM3::Camera::UpdateMatrix()
 {
 	// Set hasChanged to false
 	m_HasChanged = false;
@@ -137,7 +137,7 @@ void D3D::Camera::UpdateMatrix()
 	m_Matrix = rotationMatrix * translationMatrix;
 }
 
-glm::vec3 D3D::Camera::GetForward()
+glm::vec3 DDM3::Camera::GetForward()
 {
 	
 	// Create the rotation matrix from the quaternion
@@ -152,7 +152,7 @@ glm::vec3 D3D::Camera::GetForward()
 	return finalRotatedVector;
 }
 
-glm::vec3 D3D::Camera::GetUp()
+glm::vec3 DDM3::Camera::GetUp()
 {
 	// Create the rotation matrix from the quaternion
 	glm::mat4 rotationMatrix = glm::mat4_cast(GetRotation());
@@ -166,7 +166,7 @@ glm::vec3 D3D::Camera::GetUp()
 	return finalRotatedVector;
 }
 
-glm::vec3 D3D::Camera::GetRight()
+glm::vec3 DDM3::Camera::GetRight()
 {
 	// Create the rotation matrix from the quaternion
 	glm::mat4 rotationMatrix = glm::mat4_cast(GetRotation());
@@ -180,7 +180,7 @@ glm::vec3 D3D::Camera::GetRight()
 	return finalRotatedVector;
 }
 
-void D3D::Camera::SetRotation(glm::vec3&& rotation)
+void DDM3::Camera::SetRotation(glm::vec3&& rotation)
 {
 	SetRotation(rotation);
 }

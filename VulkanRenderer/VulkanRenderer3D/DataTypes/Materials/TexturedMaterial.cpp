@@ -9,21 +9,21 @@
 #include "DataTypes/DescriptorObjects/TextureDescriptorObject.h"
 #include "DataTypes/DirectionalLightObject.h"
 
-D3D::TexturedMaterial::TexturedMaterial(std::initializer_list<const std::string>&& filePaths, const std::string& pipelineName)
+DDM3::TexturedMaterial::TexturedMaterial(std::initializer_list<const std::string>&& filePaths, const std::string& pipelineName)
 	:Material(pipelineName)
 {
 	// Create a descriptor object with the list of file paths given
-	m_pDescriptorObject = std::make_unique<D3D::TextureDescriptorObject>(filePaths);
+	m_pDescriptorObject = std::make_unique<DDM3::TextureDescriptorObject>(filePaths);
 
 	// Create sampler
 	CreateTextureSampler();
 }
 
-D3D::TexturedMaterial::~TexturedMaterial()
+DDM3::TexturedMaterial::~TexturedMaterial()
 {
 }
 
-void D3D::TexturedMaterial::CreateDescriptorSets(Model* pModel, std::vector<VkDescriptorSet>& descriptorSets)
+void DDM3::TexturedMaterial::CreateDescriptorSets(Model* pModel, std::vector<VkDescriptorSet>& descriptorSets)
 {
 	// Get descriptorpool associated with this material
 	auto descriptorPool = GetDescriptorPool();
@@ -33,7 +33,7 @@ void D3D::TexturedMaterial::CreateDescriptorSets(Model* pModel, std::vector<VkDe
 	descriptorPool->CreateDescriptorSets(GetDescriptorLayout(), descriptorSets);
 }
 
-void D3D::TexturedMaterial::UpdateDescriptorSets(std::vector<VkDescriptorSet>& descriptorSets, std::vector<DescriptorObject*>& descriptorObjects)
+void DDM3::TexturedMaterial::UpdateDescriptorSets(std::vector<VkDescriptorSet>& descriptorSets, std::vector<DescriptorObject*>& descriptorObjects)
 {
 	// Get pointer to the descriptorpool wrapper
 	auto descriptorPool = GetDescriptorPool();
@@ -56,7 +56,7 @@ void D3D::TexturedMaterial::UpdateDescriptorSets(std::vector<VkDescriptorSet>& d
 	descriptorPool->UpdateDescriptorSets(descriptorSets, descriptorObjectList);
 }
 
-void D3D::TexturedMaterial::CreateTextureSampler()
+void DDM3::TexturedMaterial::CreateTextureSampler()
 {
 	// Get sampler
 	m_TextureSampler = Vulkan3D::GetInstance().GetRenderer().GetSampler();

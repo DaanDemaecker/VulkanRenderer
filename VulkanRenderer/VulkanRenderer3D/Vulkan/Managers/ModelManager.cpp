@@ -6,15 +6,15 @@
 // File includes
 #include "DataTypes/RenderClasses/Model.h"
 
-D3D::ModelManager::ModelManager()
+DDM3::ModelManager::ModelManager()
 {
 }
 
-D3D::ModelManager::~ModelManager()
+DDM3::ModelManager::~ModelManager()
 {
 }
 
-void D3D::ModelManager::Update()
+void DDM3::ModelManager::Update()
 {
 	for (auto& pModel : m_pModels)
 	{
@@ -22,12 +22,12 @@ void D3D::ModelManager::Update()
 	}
 }
 
-void D3D::ModelManager::AddModel(std::unique_ptr<Model> pModel)
+void DDM3::ModelManager::AddModel(std::unique_ptr<Model> pModel)
 {
 	m_pModels.push_back(std::move(pModel));
 }
 
-std::vector<std::unique_ptr<D3D::Model>>& D3D::ModelManager::GetModels()
+std::vector<std::unique_ptr<DDM3::Model>>& DDM3::ModelManager::GetModels()
 {
 	return m_pModels;
 }

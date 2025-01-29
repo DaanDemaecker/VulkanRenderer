@@ -9,7 +9,7 @@
 // Standard library includes
 #include <memory>
 
-namespace D3D
+namespace DDM3
 {
 	class GPUObject;
 	class ImageManager;
@@ -45,7 +45,7 @@ namespace D3D
 
 		Texture m_ShadowTexture{};
 
-		std::unique_ptr<D3D::TextureDescriptorObject> m_pShadowTextureObject{};
+		std::unique_ptr<DDM3::TextureDescriptorObject> m_pShadowTextureObject{};
 
 		VkFramebuffer m_ShadowFrameBuffer{};
 

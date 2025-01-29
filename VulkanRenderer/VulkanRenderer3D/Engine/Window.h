@@ -10,7 +10,7 @@
 // File includes
 #include "Includes/GLFWIncludes.h"
 
-namespace D3D
+namespace DDM3
 {
 	// Window struct
 	// Member variables:

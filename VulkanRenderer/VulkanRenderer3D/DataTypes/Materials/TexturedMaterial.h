@@ -12,7 +12,7 @@
 #include <initializer_list>
 #include <string>
 
-namespace D3D
+namespace DDM3
 {
 	class TextureDescriptorObject;
 

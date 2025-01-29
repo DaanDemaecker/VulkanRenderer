@@ -11,7 +11,7 @@
 // Standard library includes
 #include <memory>
 
-namespace D3D
+namespace DDM3
 {
 	// Class forward declarations
 	class ImageManager;
@@ -27,7 +27,7 @@ namespace D3D
 		//     surface: handle of the VkSurfaceKHR
 		//     pImageManager: pointer to the image manager
 		//     msaaSamples: max amount of samples per pixel
-		SwapchainWrapper(GPUObject* pGPUObject, VkSurfaceKHR surface, D3D::ImageManager* pImageManager, VkSampleCountFlagBits msaaSamples);
+		SwapchainWrapper(GPUObject* pGPUObject, VkSurfaceKHR surface, DDM3::ImageManager* pImageManager, VkSampleCountFlagBits msaaSamples);
 
 		// Delete default constructor
 		SwapchainWrapper() = delete;
@@ -47,7 +47,7 @@ namespace D3D
 		//     pImageManager: pointer to the image manager
 		//     commandBuffer: commandbuffer that will be used to create depth image
 		//     renderPass: the renderpass that will be used with this swapchain
-		void SetupImageViews(GPUObject* pGPUObject, D3D::ImageManager* pImageManager,
+		void SetupImageViews(GPUObject* pGPUObject, DDM3::ImageManager* pImageManager,
 			VkCommandBuffer commandBuffer, VkRenderPass renderPass);
 
 
@@ -59,7 +59,7 @@ namespace D3D
 		//     commandBuffer: commandbuffer that will be used to create depth image
 		//     renderpass: the renderpass that will be used with this swapchain
 		void RecreateSwapChain(GPUObject* pGPUObject, VkSurfaceKHR surface,
-			D3D::ImageManager* pImageManager, VkCommandBuffer commandBuffer, VkRenderPass renderpass);
+			DDM3::ImageManager* pImageManager, VkCommandBuffer commandBuffer, VkRenderPass renderpass);
 
 		// Get the swapchain
 		VkSwapchainKHR GetSwapchain() const { return m_SwapChain; }
@@ -116,7 +116,7 @@ namespace D3D
 		//     commandBuffer: commandbuffer needed for creation of depth image
 		//     renderpass: the renderpass used with this swapchain
 		void SetupSwapchain(GPUObject* pGPUObject, VkSurfaceKHR surface,
-			D3D::ImageManager* pImageManager, VkCommandBuffer commandBuffer, VkRenderPass renderpass);
+			DDM3::ImageManager* pImageManager, VkCommandBuffer commandBuffer, VkRenderPass renderpass);
 
 		// Create the swapchain
 		// Parameters:

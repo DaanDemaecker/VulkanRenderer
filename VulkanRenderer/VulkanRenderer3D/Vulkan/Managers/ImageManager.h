@@ -11,7 +11,7 @@
 // Standard library includes
 #include <iostream>
 
-namespace D3D
+namespace DDM3
 {
 	// Class forward declarations
 	class GPUObject;
@@ -27,7 +27,7 @@ namespace D3D
 		//     pGPUObject : a pointer to the GPU object
 		//     pBufferManager: a poienter to the buffer manager
 		//     pCommandPoolManager: a pointer to the commandpool manager
-		ImageManager(GPUObject* pGPUObject, D3D::BufferManager* pBufferManager, CommandpoolManager* pCommandPoolManager);
+		ImageManager(GPUObject* pGPUObject, DDM3::BufferManager* pBufferManager, CommandpoolManager* pCommandPoolManager);
 		
 		// Delete default constructor
 		ImageManager() = delete;
@@ -76,7 +76,7 @@ namespace D3D
 		//     texture: reference to the texture that will be created
 		//     textureName: filepath to the texture
 		//     pCommandPoolManager: pointer to the commandpool manager
-		void CreateTextureImage(GPUObject* pGPUObject, D3D::BufferManager* pBufferManager, Texture& texture,
+		void CreateTextureImage(GPUObject* pGPUObject, DDM3::BufferManager* pBufferManager, Texture& texture,
 			const std::string& textureName, CommandpoolManager* pCommandPoolManager);
 
 		// Create a given cube texture image
@@ -86,7 +86,7 @@ namespace D3D
 		//     cubeTexture: reference to the texture that will be created
 		//     textureNames: filepaths to the texture that make up the faces of the cube
 		//     pCommandPoolManager: pointer to the commandpool manager
-		void CreateCubeTexture(GPUObject* pGPUObject, D3D::BufferManager* pBufferManager, Texture& cubeTexture,
+		void CreateCubeTexture(GPUObject* pGPUObject, DDM3::BufferManager* pBufferManager, Texture& cubeTexture,
 			const std::initializer_list<const std::string>& textureNames, CommandpoolManager* pCommandPoolManager);
 
 		// Create a texture sampler
@@ -155,7 +155,7 @@ namespace D3D
 		//     pGPUObject: a pointer to the GPU object 
 		//     pBufferManager: a pointer to the buffer manager
 		//     pCommandPoolManager: a pointer to the commandpool manager
-		void CreateDefaultResources(GPUObject* pGPUObject, D3D::BufferManager* pBufferManager, CommandpoolManager* pCommandPoolManager);
+		void CreateDefaultResources(GPUObject* pGPUObject, DDM3::BufferManager* pBufferManager, CommandpoolManager* pCommandPoolManager);
 
 		// Function for deleting alocated objects
 		// Parameters:

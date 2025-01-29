@@ -7,7 +7,7 @@
 // Standard library includes
 #include <stdexcept>
 
-D3D::ShaderModuleWrapper::ShaderModuleWrapper(VkDevice device, const std::string& filePath)
+DDM3::ShaderModuleWrapper::ShaderModuleWrapper(VkDevice device, const std::string& filePath)
 {
 	// Read the file into the shader code
 	m_ShaderCode = Utils::readFile(filePath);
@@ -22,7 +22,7 @@ D3D::ShaderModuleWrapper::ShaderModuleWrapper(VkDevice device, const std::string
 	CreateShaderStageInfo();
 }
 
-void D3D::ShaderModuleWrapper::Cleanup(VkDevice device)
+void DDM3::ShaderModuleWrapper::Cleanup(VkDevice device)
 {
 	// Destroy the reflected shadermodule
 	spvReflectDestroyShaderModule(&m_ReflectShaderModule);
@@ -30,7 +30,7 @@ void D3D::ShaderModuleWrapper::Cleanup(VkDevice device)
 	vkDestroyShaderModule(device, m_ShaderModule, nullptr);
 }
 
-void D3D::ShaderModuleWrapper::AddDescriptorSetLayoutBindings(std::vector<VkDescriptorSetLayoutBinding>& bindings)
+void DDM3::ShaderModuleWrapper::AddDescriptorSetLayoutBindings(std::vector<VkDescriptorSetLayoutBinding>& bindings)
 {
 	// Read the shader stage from the shader module
 	auto stage{ static_cast<VkShaderStageFlagBits>(m_ReflectShaderModule.shader_stage) };
@@ -57,7 +57,7 @@ void D3D::ShaderModuleWrapper::AddDescriptorSetLayoutBindings(std::vector<VkDesc
 	}
 }
 
-void D3D::ShaderModuleWrapper::AddDescriptorTypeCount(std::map<VkDescriptorType, int>& typeCount)
+void DDM3::ShaderModuleWrapper::AddDescriptorTypeCount(std::map<VkDescriptorType, int>& typeCount)
 {
 	// Get the amount of descriptor bindings
 	auto amount{ m_ReflectShaderModule.descriptor_binding_count };
@@ -83,7 +83,7 @@ void D3D::ShaderModuleWrapper::AddDescriptorTypeCount(std::map<VkDescriptorType,
 	}
 }
 
-void D3D::ShaderModuleWrapper::AddPushConstants(std::vector<VkPushConstantRange>& pushConstants)
+void DDM3::ShaderModuleWrapper::AddPushConstants(std::vector<VkPushConstantRange>& pushConstants)
 {
 	uint32_t pushConstantAmount{ m_ReflectShaderModule.push_constant_block_count };
 
@@ -104,7 +104,7 @@ void D3D::ShaderModuleWrapper::AddPushConstants(std::vector<VkPushConstantRange>
 	}
 }
 
-void D3D::ShaderModuleWrapper::CreateShaderModule(VkDevice device)
+void DDM3::ShaderModuleWrapper::CreateShaderModule(VkDevice device)
 {
 	// Create modlue create info
 	VkShaderModuleCreateInfo createInfo{};
@@ -123,7 +123,7 @@ void D3D::ShaderModuleWrapper::CreateShaderModule(VkDevice device)
 	}
 }
 
-void D3D::ShaderModuleWrapper::ReflectShader()
+void DDM3::ShaderModuleWrapper::ReflectShader()
 {
 	// Create the reflect shader module
 	SpvReflectResult result = spvReflectCreateShaderModule(m_ShaderCode.size() * sizeof(char), m_ShaderCode.data(), &m_ReflectShaderModule);
@@ -135,7 +135,7 @@ void D3D::ShaderModuleWrapper::ReflectShader()
 	}
 }
 
-void D3D::ShaderModuleWrapper::CreateShaderStageInfo()
+void DDM3::ShaderModuleWrapper::CreateShaderStageInfo()
 {
 	// Set type to pipeline shader stage create info
 	m_ShaderstageCreateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;

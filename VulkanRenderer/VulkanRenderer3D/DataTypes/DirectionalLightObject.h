@@ -12,7 +12,7 @@
 
 #include "DescriptorObjects/UboDescriptorObject.h"
 
-namespace D3D
+namespace DDM3
 {
 	// Class declaration for vulkan renderer
 	class VulkanRenderer3D;

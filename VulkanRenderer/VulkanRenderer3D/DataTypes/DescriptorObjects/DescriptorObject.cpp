@@ -1,5 +1,5 @@
 #include "DescriptorObject.h"
 
-D3D::DescriptorObject::~DescriptorObject()
+DDM3::DescriptorObject::~DescriptorObject()
 {
 }

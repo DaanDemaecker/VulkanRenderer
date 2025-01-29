@@ -7,7 +7,7 @@
 // Standard library includes
 #include <vector>
 
-namespace D2D
+namespace DDM2
 {
 	class GPUObject
 	{
