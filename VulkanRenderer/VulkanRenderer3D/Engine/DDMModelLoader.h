@@ -9,7 +9,7 @@
 
 // File includes
 #include "DataTypes/Structs.h"
-#include "src/DDMModelLoader.h"
+#include "DDMModelLoader/DDMModelLoader.h"
 
 // Standard library includes
 #include <memory>
