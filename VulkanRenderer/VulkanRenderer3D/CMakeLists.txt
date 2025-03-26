@@ -46,7 +46,8 @@ add_executable(VulkanRenderer3D
     "Vulkan/Managers/ModelManager.cpp"
     "DataTypes/DescriptorObjects/DescriptorObject.cpp"
     "Vulkan/Managers/CameraManager.cpp"
-    "Vulkan/Managers/LightManager.cpp")
+    "Vulkan/Managers/LightManager.cpp"
+    "Engine/DDMModelLoader.cpp")
 
 
 # Include directories specific to this target
@@ -73,3 +74,5 @@ add_custom_command(
     MAIN_DEPENDENCY ${CMAKE_SOURCE_DIR}/resources
     DEPENDS Shaders
 )
+
+

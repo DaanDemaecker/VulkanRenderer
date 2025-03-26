@@ -72,8 +72,6 @@ void load()
 	pCurrModel->SetRotate(false);
 	pModelManager->AddModel(std::move(pCurrModel));
 
-
-
 	// Load vehicle object
 	pCurrModel = std::make_unique<DDM3::Model>();
 

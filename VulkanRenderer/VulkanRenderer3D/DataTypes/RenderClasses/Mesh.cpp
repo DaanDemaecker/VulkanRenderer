@@ -6,13 +6,14 @@
 // File includes
 #include "Vulkan/Vulkan3D.h"
 #include "Vulkan/Wrappers/PipelineWrapper.h"
+#include "Engine/DDMModelLoader.h"
 
 #include "Utils/Utils.h"
 
 DDM3::Mesh::Mesh(const std::string& filePath)
 {
 	// Load the vertices and indices
-	Utils::LoadModel(filePath, m_Vertices, m_Indices);
+	DDM3::DDMModelLoader::GetInstance().LoadModel(filePath, m_Vertices, m_Indices);
 
 	// Get reference to the renderer
 	auto& renderer{ Vulkan3D::GetInstance().GetRenderer()};
