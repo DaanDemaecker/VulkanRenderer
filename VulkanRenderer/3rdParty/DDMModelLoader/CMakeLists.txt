@@ -5,7 +5,7 @@ include(FetchContent)
 FetchContent_Declare(
     DDMModelLoader
     GIT_REPOSITORY https://github.com/DaanDemaecker/DDM-ModelLoader.git
-    GIT_TAG main
+    GIT_TAG v1.0.1
     GIT_SHALLOW true
 )
 
