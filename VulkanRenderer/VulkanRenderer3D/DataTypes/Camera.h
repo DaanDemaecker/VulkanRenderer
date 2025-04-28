@@ -156,7 +156,7 @@ namespace DDM3
 		glm::mat4 m_Matrix{};
 
 		// Set the dirty flag
-		void SetDirtyFlag() { m_HasChanged = true; }
+		void SetDirtyFlag();
 
 		// Update the transform matrix
 		void UpdateMatrix();

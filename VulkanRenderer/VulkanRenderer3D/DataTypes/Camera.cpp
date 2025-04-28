@@ -108,10 +108,10 @@ void DDM3::Camera::UpdateUniformBuffer(UniformBufferObject& buffer)
 	{
 	case DDM3::CameraType::Perspective:
 		// Set the projection matrix
-		buffer.proj = glm::perspective(m_FovAngle, extent.width / static_cast<float>(extent.height), 0.1f, 100.0f);
+		buffer.proj = glm::perspective(m_FovAngle, extent.width / static_cast<float>(extent.height), 0.1f, 1000.0f);
 		break;
 	case DDM3::CameraType::Ortographic:
-		buffer.proj = glm::ortho( m_OrthoBorders.x, m_OrthoBorders.y, m_OrthoBorders.z, m_OrthoBorders.w, 0.1f, 100.f);
+		buffer.proj = glm::ortho( m_OrthoBorders.x, m_OrthoBorders.y, m_OrthoBorders.z, m_OrthoBorders.w, 0.1f, 1000.f);
 		break;
 	default:
 		break;
@@ -120,6 +120,11 @@ void DDM3::Camera::UpdateUniformBuffer(UniformBufferObject& buffer)
 	buffer.proj[1][1] *= -1;
 	buffer.proj[2][2] *= -1;
 	buffer.proj[2][3] *= -1;
+}
+
+void DDM3::Camera::SetDirtyFlag()
+{
+	m_HasChanged = true;
 }
 
 void DDM3::Camera::UpdateMatrix()

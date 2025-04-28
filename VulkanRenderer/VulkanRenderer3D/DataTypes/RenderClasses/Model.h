@@ -14,6 +14,7 @@
 // Standard library includes
 #include <memory>
 #include <iostream>
+#include <vector>
 
 namespace DDM3
 {
@@ -40,6 +41,13 @@ namespace DDM3
 		// Parameters:
 		//     textPath: textpath to where the model is stored
 		void LoadModel(const std::string& textPath);
+		
+		/// <summary>
+		/// Loads mesh with given vertex and index list
+		/// </summary>
+		/// <param name="vertices">List of vertices</param>
+		/// <param name="indices">List of indices</param>
+		void LoadModel(const std::vector<Vertex>& vertices, const std::vector<uint32_t>& indices);
 		
 		// Set the material
 		// Parameters:

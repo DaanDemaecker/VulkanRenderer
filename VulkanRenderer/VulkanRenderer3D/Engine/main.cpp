@@ -12,6 +12,9 @@
 #include "Vulkan/Managers/ModelManager.h"
 #include "Vulkan/Managers/CameraManager.h"
 
+#include "DataTypes/Structs.h"
+#include "Engine/DDMModelLoader.h"
+
 
 void SetupPipelines()
 {
@@ -58,6 +61,13 @@ void load()
 
 	std::shared_ptr<DDM3::ShadowMaterial> pVehicleMaterial4{ std::make_shared<DDM3::ShadowMaterial>(std::initializer_list<const std::string>{"resources/images/vehicle_diffuse.png"}, "DiffuseShadow") };
 
+	std::shared_ptr<DDM3::TexturedMaterial> pSkullMaterial{ std::make_shared<DDM3::TexturedMaterial>(std::initializer_list<const std::string>{"resources/images/Skull/SkullDiffuse.jpeg","resources/images/Skull/SkullNormal.jpeg" }, "DiffNorm")};
+
+
+
+	std::shared_ptr<DDM3::Material> pDefaultMaterial{std::make_shared<DDM3::Material>()};
+
+
 
 	auto pModelManager{ DDM3::Vulkan3D::GetInstance().GetModelManager() };
 
@@ -70,23 +80,50 @@ void load()
 	pCurrModel->LoadModel("Resources/Models/Plane.obj");
 	pCurrModel->SetMaterial(pGroundPlaneMaterial2);
 	pCurrModel->SetRotate(false);
+
 	pModelManager->AddModel(std::move(pCurrModel));
+
+
+	pCurrModel = std::make_unique<DDM3::Model>();
+	pCurrModel->LoadModel("Resources/Models/Skull/scene.gltf");
+	pCurrModel->SetMaterial(pSkullMaterial);
+	pCurrModel->SetPosition(0.f, 5, 0.f);
+	pCurrModel->SetRotation(0.f, glm::radians(90.f), glm::radians(90.f));
+	pCurrModel->SetRotate(false);
+
+	//pModelManager->AddModel(std::move(pCurrModel));
+
+	std::vector<std::vector<DDM3::Vertex>> verticesLists{};
+	std::vector<std::vector<uint32_t>> indicesLists{};
+	DDM3::DDMModelLoader::GetInstance().LoadScene("Resources/Models/SponzaAtrium/Sponza.gltf", verticesLists, indicesLists);
+
+
+	//pCurrModel = std::make_unique<DDM3::Model>();
+	//pCurrModel->LoadModel("Resources/Models/SponzaAtrium/Sponza.gltf");
+	//pCurrModel->SetMaterial(pDefaultMaterial);
+	//pCurrModel->SetPosition(0.f, 0.f, 0.f);
+	//pCurrModel->SetScale(0.05f, 0.05f, 0.05f);
+	//pCurrModel->SetRotate(false);
+
+	pModelManager->AddModel(std::move(pCurrModel));
+
 
 	// Load vehicle object
-	pCurrModel = std::make_unique<DDM3::Model>();
+	//pCurrModel = std::make_unique<DDM3::Model>();
 
-	pCurrModel->LoadModel("Resources/Models/vehicle.obj");
-	pCurrModel->SetMaterial(pVehicleMaterial4);
-	//pModel->SetMaterial(pTestMaterial);
-	pCurrModel->SetPosition(0.f, 5, 0.f);
-	pCurrModel->SetRotation(0.f, glm::radians(75.0f), 0.f);
-	pCurrModel->SetScale(0.25f, 0.25f, 0.25f);
 
-	pModelManager->AddModel(std::move(pCurrModel));
+	//pCurrModel->LoadModel("Resources/Models/vehicle.obj");
+	//pCurrModel->SetMaterial(pVehicleMaterial4);
+	////pModel->SetMaterial(pTestMaterial);
+	//pCurrModel->SetPosition(0.f, 5, 0.f);
+	//pCurrModel->SetRotation(0.f, glm::radians(75.0f), 0.f);
+	//pCurrModel->SetScale(0.25f, 0.25f, 0.25f);
+
+	//pModelManager->AddModel(std::move(pCurrModel));
 
 
 	// Load fire vfx object
-	pCurrModel = std::make_unique<DDM3::Model>();
+	/*pCurrModel = std::make_unique<DDM3::Model>();
 
 	pCurrModel->LoadModel("Resources/Models/fireFX.obj");
 	pCurrModel->SetCastsShadow(false);
@@ -95,7 +132,7 @@ void load()
 	pCurrModel->SetRotation(0.f, glm::radians(75.0f), 0.f);
 	pCurrModel->SetScale(0.25f, 0.25f, 0.25f);
 
-	pModelManager->AddModel(std::move(pCurrModel));
+	pModelManager->AddModel(std::move(pCurrModel));*/
 
 	DDM3::Vulkan3D::GetInstance().GetCameraManager()->SetSkybox(std::make_unique<DDM3::SkyBox>(
 		std::initializer_list<const std::string>{"resources/images/CubeMap/Sky_Right.png",

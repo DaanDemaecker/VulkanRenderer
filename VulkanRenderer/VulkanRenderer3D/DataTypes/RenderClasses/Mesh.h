@@ -19,10 +19,17 @@ namespace DDM3
 	class Mesh final
 	{
 	public:
-		// Constructor
-		// Parameters:
-		//     filePath: the filepath to the 3D model
+		/// Constructor, loads mesh from given filepath
+		///
+		/// \param     filePath: the filepath to the 3D model
 		Mesh(const std::string& filePath);
+
+		/// <summary>
+		/// Constructor, loads mesh with given vertex and index list
+		/// </summary>
+		/// <param name="vertices">List of vertices</param>
+		/// <param name="indices">List of indices</param>
+		Mesh(const std::vector<Vertex>& vertices, const std::vector<uint32_t>& indices);
 
 		// Delete default constructor
 		Mesh() = delete;
@@ -55,6 +62,11 @@ namespace DDM3
 
 		// Clean up all allocated objects
 		void Cleanup();
+
+		/// <summary>
+		/// Sets up vertex and index buffers
+		/// </summary>
+		void SetupBuffers();
 	};
 }
 

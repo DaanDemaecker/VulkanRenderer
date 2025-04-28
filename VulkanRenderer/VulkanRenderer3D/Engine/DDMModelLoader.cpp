@@ -2,6 +2,10 @@
 
 // Header include
 #include "DDMModelLoader.h"
+#include "Vulkan/Vulkan3D.h"
+#include "DataTypes/RenderClasses/Model.h"
+#include "Vulkan/Managers/ModelManager.h"
+#include "DataTypes/Materials/Material.h"
 
 DDM3::DDMModelLoader::DDMModelLoader()
 {
@@ -20,7 +24,7 @@ void DDM3::DDMModelLoader::LoadModel(const std::string& filename, std::vector<Ve
 
 	for (auto& ddmVertex : ddmVertices)
 	{
-		vertex.color = ddmVertex.color;
+		vertex.color = glm::vec3{ 1,1,1 }; //ddmVertex.color;
 		vertex.normal = ddmVertex.normal;
 		vertex.pos = ddmVertex.pos;
 		vertex.texCoord = ddmVertex.texCoord;
@@ -29,4 +33,51 @@ void DDM3::DDMModelLoader::LoadModel(const std::string& filename, std::vector<Ve
 		vertices.push_back(vertex);
 	}
 
+}
+
+void DDM3::DDMModelLoader::LoadScene(const std::string& path, std::vector<std::vector<Vertex>>& verticesLists, std::vector<std::vector<uint32_t>>& indicesLists)
+{
+	std::vector<std::vector<DDM::Vertex>> ddmVertices{};
+
+	m_pModelLoader->LoadScene(path, ddmVertices, indicesLists);
+
+	verticesLists.clear();
+	verticesLists.resize(ddmVertices.size());
+
+	DDM3::Vertex vertex{};
+
+	for (int i{}; i<ddmVertices.size(); ++i)
+	{
+		verticesLists[i].reserve(ddmVertices[i].size());
+		for (auto& ddmVertex : ddmVertices[i])
+		{
+			vertex.color = glm::vec3{ 1,1,1 }; //ddmVertex.color;
+			vertex.normal = ddmVertex.normal;
+			vertex.pos = ddmVertex.pos;
+			vertex.texCoord = ddmVertex.texCoord;
+			vertex.tangent = ddmVertex.tangent;
+
+			verticesLists[i].emplace_back(vertex);
+		}
+	}
+
+
+	auto pModelManager{ DDM3::Vulkan3D::GetInstance().GetModelManager() };
+
+
+	std::unique_ptr<DDM3::Model> pCurrModel{};
+	std::shared_ptr<DDM3::Material> pDefaultMaterial{ std::make_shared<DDM3::Material>() };
+
+	for (int i{}; i < verticesLists.size(); ++i)
+	{
+		// Load groundplane
+		pCurrModel = std::make_unique<DDM3::Model>();
+
+		pCurrModel->LoadModel(verticesLists[i], indicesLists[i]);
+		pCurrModel->SetMaterial(pDefaultMaterial);
+		pCurrModel->SetRotate(false);
+		pCurrModel->SetScale(0.08f, 0.08f, 0.08f);
+
+		pModelManager->AddModel(std::move(pCurrModel));
+	}
 }

@@ -37,7 +37,8 @@ DDM3::Model::~Model()
 }
 
 void DDM3::Model::LoadModel(const std::string& textPath)
-{// Check if model is initialized, if it is, clean up first
+{
+	// Check if model is initialized, if it is, clean up first
 	if (m_Initialized)
 	{
 		m_Initialized = false;
@@ -45,6 +46,26 @@ void DDM3::Model::LoadModel(const std::string& textPath)
 	}
 
 	m_pMesh = std::make_unique<Mesh>(textPath);
+
+	// Create uniform buffer
+	CreateUniformBuffers();
+	// Create descriptorsets
+	CreateDescriptorSets();
+
+	// Set initialized to true
+	m_Initialized = true;
+}
+
+void DDM3::Model::LoadModel(const std::vector<Vertex>& vertices, const std::vector<uint32_t>& indices)
+{
+	// Check if model is initialized, if it is, clean up first
+	if (m_Initialized)
+	{
+		m_Initialized = false;
+		Cleanup();
+	}
+
+	m_pMesh = std::make_unique<Mesh>(vertices, indices);
 
 	// Create uniform buffer
 	CreateUniformBuffers();
