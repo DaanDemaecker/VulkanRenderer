@@ -92,5 +92,5 @@ I had worked with JSON files before in C# but never in C++, so I had to learn an
 - ***Image loading***   
 Image loading is done with the STB library, as suggested by the Vulkan tutorial.  
 
-- ***Model Loading**
+- ***Model Loading***
 For loading 3D models, i am using my self made [ModelLoader](https://github.com/DaanDemaecker/DDM-ModelLoader)
