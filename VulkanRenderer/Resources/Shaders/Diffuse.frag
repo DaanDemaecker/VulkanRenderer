@@ -28,7 +28,7 @@ void main()
 
 	outColor = vec4(finalColor, sampledColor.w);
 
-    float alphaThreshold = 0.1;
+    float alphaThreshold = 0.01;
     if(outColor.w < alphaThreshold)
     {
         discard;

@@ -91,7 +91,7 @@ void load()
 	pCurrModel->SetRotation(0.f, glm::radians(90.f), glm::radians(90.f));
 	pCurrModel->SetRotate(false);
 
-	//pModelManager->AddModel(std::move(pCurrModel));
+	pModelManager->AddModel(std::move(pCurrModel));
 
 	std::vector<std::vector<DDM3::Vertex>> verticesLists{};
 	std::vector<std::vector<uint32_t>> indicesLists{};
@@ -105,7 +105,7 @@ void load()
 	//pCurrModel->SetScale(0.05f, 0.05f, 0.05f);
 	//pCurrModel->SetRotate(false);
 
-	pModelManager->AddModel(std::move(pCurrModel));
+	//pModelManager->AddModel(std::move(pCurrModel));
 
 
 	// Load vehicle object
