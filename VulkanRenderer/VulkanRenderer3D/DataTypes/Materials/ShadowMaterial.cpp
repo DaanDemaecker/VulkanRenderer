@@ -24,6 +24,16 @@ DDM3::ShadowMaterial::ShadowMaterial(std::initializer_list<const std::string>&& 
 	CreateTextureSampler();
 }
 
+DDM3::ShadowMaterial::ShadowMaterial(std::vector<std::string> filePaths, const std::string& pipelineName)
+	:Material(pipelineName)
+{
+	// Create a descriptor object with the list of file paths given
+	m_pDescriptorObject = std::make_unique<DDM3::TextureDescriptorObject>(filePaths);
+
+	// Create sampler
+	CreateTextureSampler();
+}
+
 DDM3::ShadowMaterial::~ShadowMaterial()
 {
 }

@@ -63,7 +63,7 @@ void DDM3::VulkanRenderer3D::SetupLight()
 	// Create global light
 	m_pGlobalLight = std::make_unique<DirectionalLightObject>();
 	// Set direction of global light
-	m_pGlobalLight->SetDirection(glm::vec3{ 1.f, -1.f, 1.f });
+	m_pGlobalLight->SetDirection(glm::vec3{ -1.f, -1.f, 0.f });
 	// Set color of global light
 	m_pGlobalLight->SetColor(glm::vec3{ 1.f, 1.f, 1.f });
 	// Set intensity of global light

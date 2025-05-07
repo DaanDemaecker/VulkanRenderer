@@ -10,6 +10,11 @@
 #include <string>
 #include <vector>
 
+namespace DDMML
+{
+	class Mesh;
+}
+
 namespace DDM3
 {
 	// Class forward declarations
@@ -30,6 +35,12 @@ namespace DDM3
 		/// <param name="vertices">List of vertices</param>
 		/// <param name="indices">List of indices</param>
 		Mesh(const std::vector<Vertex>& vertices, const std::vector<uint32_t>& indices);
+
+		/// <summary>
+		/// Constructor, loads in mesh with mesh class from DDMModelLoader
+		/// </summary>
+		/// <param name="ddmmlMesh: ">DDMModelLoader mesh</param>
+		Mesh(DDMML::Mesh& ddmmlMesh);
 
 		// Delete default constructor
 		Mesh() = delete;

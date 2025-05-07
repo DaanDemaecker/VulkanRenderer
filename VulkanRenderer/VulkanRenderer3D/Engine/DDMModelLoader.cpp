@@ -9,12 +9,12 @@
 
 DDM3::DDMModelLoader::DDMModelLoader()
 {
-	m_pModelLoader = std::make_unique<DDM::ModelLoader>();
+	m_pModelLoader = std::make_unique<DDMML::ModelLoader>();
 }
 
 void DDM3::DDMModelLoader::LoadModel(const std::string& filename, std::vector<Vertex>& vertices, std::vector<uint32_t>& indices)
 {
-	std::vector<DDM::Vertex> ddmVertices{};
+	std::vector<DDMML::Vertex> ddmVertices{};
 
 	m_pModelLoader->LoadModel(filename, ddmVertices, indices);
 	
@@ -37,28 +37,17 @@ void DDM3::DDMModelLoader::LoadModel(const std::string& filename, std::vector<Ve
 
 void DDM3::DDMModelLoader::LoadScene(const std::string& path, std::vector<std::vector<Vertex>>& verticesLists, std::vector<std::vector<uint32_t>>& indicesLists)
 {
-	std::vector<std::vector<DDM::Vertex>> ddmVertices{};
+	std::vector<std::vector<DDMML::Vertex>> ddmVertices{};
 
 	m_pModelLoader->LoadScene(path, ddmVertices, indicesLists);
 
 	verticesLists.clear();
 	verticesLists.resize(ddmVertices.size());
 
-	DDM3::Vertex vertex{};
 
 	for (int i{}; i<ddmVertices.size(); ++i)
 	{
-		verticesLists[i].reserve(ddmVertices[i].size());
-		for (auto& ddmVertex : ddmVertices[i])
-		{
-			vertex.color = glm::vec3{ 1,1,1 }; //ddmVertex.color;
-			vertex.normal = ddmVertex.normal;
-			vertex.pos = ddmVertex.pos;
-			vertex.texCoord = ddmVertex.texCoord;
-			vertex.tangent = ddmVertex.tangent;
-
-			verticesLists[i].emplace_back(vertex);
-		}
+		ConvertVertices(ddmVertices[i], verticesLists[i]);
 	}
 
 
@@ -79,5 +68,40 @@ void DDM3::DDMModelLoader::LoadScene(const std::string& path, std::vector<std::v
 		pCurrModel->SetScale(0.08f, 0.08f, 0.08f);
 
 		pModelManager->AddModel(std::move(pCurrModel));
+	}
+}
+
+void DDM3::DDMModelLoader::LoadScene(const std::string& path)
+{
+	std::vector<DDMML::Mesh> meshes{};
+
+	m_pModelLoader->LoadScene(path, meshes);
+
+	std::unique_ptr<DDM3::Model> pCurrModel{};
+
+	for (auto& mesh : meshes)
+	{
+		pCurrModel = std::make_unique<DDM3::Model>();
+		pCurrModel->LoadModel(mesh);
+		DDM3::Vulkan3D::GetInstance().GetModelManager()->AddModel(std::move(pCurrModel));
+	}
+
+}
+
+void DDM3::DDMModelLoader::ConvertVertices(const std::vector<DDMML::Vertex>& ddmmlVertices, std::vector<Vertex>& vertices)
+{
+
+	DDM3::Vertex vertex{};
+
+	vertices.reserve(ddmmlVertices.size());
+	for (auto& ddmVertex : ddmmlVertices)
+	{
+		vertex.color = glm::vec3{ 1,1,1 }; //ddmVertex.color;
+		vertex.normal = ddmVertex.normal;
+		vertex.pos = ddmVertex.pos;
+		vertex.texCoord = ddmVertex.texCoord;
+		vertex.tangent = ddmVertex.tangent;
+
+		vertices.emplace_back(vertex);
 	}
 }

@@ -33,6 +33,11 @@ namespace DDM3
         //     filePaths: a list of filepaths to the textures to be used in this object
         TextureDescriptorObject(std::initializer_list<const std::string>& filePaths);
 
+        // Constructor
+        // Parameters:
+        //     filePaths: a list of filepaths to the textures to be used in this object
+        TextureDescriptorObject(std::vector<std::string>& filePaths);
+
         // Destructor
         virtual ~TextureDescriptorObject();
 
@@ -56,6 +61,11 @@ namespace DDM3
         // Parameters:
         //     filePaths: a list of file paths pointing to the image files
         void SetupTextures(std::initializer_list<const std::string>& filePaths);
+
+        // Set up a list of textures
+        // Parameters:
+        //     filePaths: a list of file paths pointing to the image files
+        void SetupTextures(std::vector<std::string>& filePaths);
 
         // Set up an image info object for each texture
         void SetupImageInfos();

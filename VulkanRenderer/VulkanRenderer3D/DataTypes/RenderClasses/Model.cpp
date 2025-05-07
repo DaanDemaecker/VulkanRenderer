@@ -15,6 +15,8 @@
 #include "Vulkan/Vulkan3D.h"
 #include "Vulkan/Wrappers/DescriptorPoolWrapper.h"
 #include "Vulkan/Wrappers/PipelineWrapper.h"
+#include "DDMModelLoader/Mesh.h"
+#include "DataTypes/Materials/ShadowMaterial.h"
 
 // Standard library includes
 #include <memory>
@@ -51,6 +53,29 @@ void DDM3::Model::LoadModel(const std::string& textPath)
 	CreateUniformBuffers();
 	// Create descriptorsets
 	CreateDescriptorSets();
+
+	// Set initialized to true
+	m_Initialized = true;
+}
+
+void DDM3::Model::LoadModel(DDMML::Mesh& mesh)
+{
+	// Check if model is initialized, if it is, clean up first
+	if (m_Initialized)
+	{
+		m_Initialized = false;
+		Cleanup();
+	}
+
+	m_pMesh = std::make_unique<Mesh>(mesh);
+
+	// Create uniform buffer
+	CreateUniformBuffers();
+	// Create descriptorsets
+	CreateDescriptorSets();
+
+	// Set up material with textures loaded in from DDMML mesh
+	SetupMaterial(mesh);
 
 	// Set initialized to true
 	m_Initialized = true;
@@ -252,4 +277,13 @@ void DDM3::Model::SetDirtyFlags()
 {
 	// Set all dirty flags
 	std::fill(m_UboChanged.begin(), m_UboChanged.end(), true);
+}
+
+void DDM3::Model::SetupMaterial(DDMML::Mesh& mesh)
+{
+	auto& filePaths = mesh.GetDiffuseTextureNames();
+
+	std::shared_ptr<DDM3::ShadowMaterial> pMaterial{ std::make_shared<DDM3::ShadowMaterial>(filePaths, "DiffuseShadow")};
+
+	SetMaterial(pMaterial);	
 }

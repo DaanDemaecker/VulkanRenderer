@@ -16,6 +16,11 @@
 #include <iostream>
 #include <vector>
 
+namespace DDMML
+{
+	class Mesh;
+}
+
 namespace DDM3
 {
 	// Class forward declarations
@@ -41,6 +46,12 @@ namespace DDM3
 		// Parameters:
 		//     textPath: textpath to where the model is stored
 		void LoadModel(const std::string& textPath);
+
+		/// <summary>
+		/// Loads in a model using a DDML Mesh
+		/// </summary>
+		/// <param name="mesh: ">DDMML mesh</param>
+		void LoadModel(DDMML::Mesh& mesh);
 		
 		/// <summary>
 		/// Loads mesh with given vertex and index list
@@ -89,7 +100,7 @@ namespace DDM3
 		void SetRotate(bool rotate) { m_Rotate = rotate; }
 		void SetCastsShadow(bool shouldCast) { m_CastsShadow = shouldCast; }
 	private:
-		bool m_Rotate{true};
+		bool m_Rotate{false};
 		bool m_CastsShadow{ true };
 
 		//Is model initialized
@@ -137,6 +148,12 @@ namespace DDM3
 
 		// Set dirty flags for UBOs
 		void SetDirtyFlags();
+
+		/// <summary>
+		/// Sets up the materials with textures loaded in from DDMML mesh
+		/// </summary>
+		/// <param name="mesh: ">DDMML mesh</param>
+		void SetupMaterial(DDMML::Mesh& mesh);
 	};
 }
 

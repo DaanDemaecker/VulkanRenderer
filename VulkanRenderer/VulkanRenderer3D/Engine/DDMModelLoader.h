@@ -37,8 +37,21 @@ namespace DDM3
 		//		- indicesLists: A list of vectors of indicees, each vector will be filled with the indices for a single model
 		void LoadScene(const std::string& path, std::vector<std::vector<Vertex>>& verticesLists, std::vector<std::vector<uint32_t>>& indicesLists);
 
+		/// <summary>
+		/// This function will load in a complete scene and set up the textures
+		/// </summary>
+		/// <param name="Path: ">Path to the requested scene file</param>
+		void LoadScene(const std::string& path);
+
+		/// <summary>
+		/// This function converts the vertices from the DDMML::Vertex to the Vertex struct
+		/// </summary>
+		/// <param name="ddmmlVertices"></param>
+		/// <param name="vertices"></param>
+		void ConvertVertices(const std::vector<DDMML::Vertex>& ddmmlVertices, std::vector<Vertex>& vertices);
+
 	private:
-		std::unique_ptr<DDM::ModelLoader> m_pModelLoader;
+		std::unique_ptr<DDMML::ModelLoader> m_pModelLoader;
 	};
 }
 

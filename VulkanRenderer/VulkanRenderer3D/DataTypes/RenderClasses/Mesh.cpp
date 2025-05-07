@@ -8,6 +8,7 @@
 #include "Vulkan/Wrappers/PipelineWrapper.h"
 #include "Engine/DDMModelLoader.h"
 #include "Utils/Utils.h"
+#include "DDMModelLoader/Mesh.h"
 
 // Standard library includes
 #include <algorithm>
@@ -34,6 +35,25 @@ DDM3::Mesh::Mesh(const std::vector<DDM3::Vertex>& vertices, const std::vector<ui
 
 	SetupBuffers();
 }
+
+DDM3::Mesh::Mesh(DDMML::Mesh& ddmmlMesh)
+{
+	m_Vertices.clear();
+	m_Indices.clear();
+
+	auto& vertices = ddmmlMesh.GetVertices();
+	auto& indices = ddmmlMesh.GetIndices();
+
+	DDMModelLoader::GetInstance().ConvertVertices(vertices, m_Vertices);
+
+	m_Indices.resize(indices.size());
+
+	std::copy(indices.begin(), indices.end(), m_Indices.begin());
+
+
+	SetupBuffers();
+}
+
 
 DDM3::Mesh::~Mesh()
 {

@@ -25,6 +25,12 @@ namespace DDM3
 		//     pipelineName: the name of the graphics pipeline that should be used in this material
 		ShadowMaterial(std::initializer_list<const std::string>&& filePaths, const std::string& pipelineName = "Default");
 
+		// Constructor
+		// Parameters:
+		//     filePaths: an initializer list of the filepats to the textures in the order they should be for the shaders
+		//     pipelineName: the name of the graphics pipeline that should be used in this material
+		ShadowMaterial(std::vector<std::string> filePaths, const std::string& pipelineName = "Default");
+
 		// Destructor
 		virtual ~ShadowMaterial();
 

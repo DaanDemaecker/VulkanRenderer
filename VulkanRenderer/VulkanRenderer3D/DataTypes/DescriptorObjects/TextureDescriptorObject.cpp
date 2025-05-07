@@ -26,6 +26,16 @@ DDM3::TextureDescriptorObject::TextureDescriptorObject(std::initializer_list<con
 	SetupImageInfos();
 }
 
+DDM3::TextureDescriptorObject::TextureDescriptorObject(std::vector<std::string>& filePaths)
+	:DescriptorObject(VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER)
+{
+	// Set up all textures
+	SetupTextures(filePaths);
+
+	// Set up the image infos
+	SetupImageInfos();
+}
+
 DDM3::TextureDescriptorObject::~TextureDescriptorObject()
 {
 	// Get the device and clean up all the textures
@@ -88,6 +98,27 @@ void DDM3::TextureDescriptorObject::SetupTextures(std::initializer_list<const st
 		// Increment index
 		++index;
 	}
+}
+
+void DDM3::TextureDescriptorObject::SetupTextures(std::vector<std::string>& filePaths)
+{
+	// Resize textures to textureAmount
+	m_Textures.resize(filePaths.size());
+
+	// Initialize index variable
+	int index{};
+
+	auto& renderer{ Vulkan3D::GetInstance().GetRenderer() };
+
+	// Loop trough all filePaths
+	for (const auto& path : filePaths)
+	{
+		// Create texture
+		renderer.CreateTexture(m_Textures[index], path);
+
+		// Increment index
+	}
+
 }
 
 void DDM3::TextureDescriptorObject::SetupImageInfos()

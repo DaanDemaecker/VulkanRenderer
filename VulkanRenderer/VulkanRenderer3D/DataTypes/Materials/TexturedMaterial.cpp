@@ -19,8 +19,18 @@ DDM3::TexturedMaterial::TexturedMaterial(std::initializer_list<const std::string
 	CreateTextureSampler();
 }
 
+DDM3::TexturedMaterial::TexturedMaterial(std::vector<std::string>& filePaths, const std::string& pipelineName)
+{
+	// Create a descriptor object with the list of file paths given
+	m_pDescriptorObject = std::make_unique<DDM3::TextureDescriptorObject>(filePaths);
+
+	// Create sampler
+	CreateTextureSampler();
+}
+
 DDM3::TexturedMaterial::~TexturedMaterial()
 {
+	
 }
 
 void DDM3::TexturedMaterial::CreateDescriptorSets(Model* pModel, std::vector<VkDescriptorSet>& descriptorSets)
