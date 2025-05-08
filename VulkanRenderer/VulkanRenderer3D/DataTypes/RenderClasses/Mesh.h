@@ -53,6 +53,9 @@ namespace DDM3
 		//     -commandBuffer: the commandbuffer used in this renderpass
 		void Render(VkCommandBuffer commandBuffer);
 	private:
+		// Set to true if initialized
+		bool m_Initialized = false;
+
 		// Vector of vertices
 		std::vector<Vertex> m_Vertices{};
 

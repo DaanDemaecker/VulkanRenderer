@@ -61,7 +61,7 @@ namespace DDM3
 		//     vertices: a vector of vertex objects to store in a buffer
 		//     vertexBuffer: handle of the vkBuffer to store the vertices in
 		//     vertexBufferMemory: handle of the VkDeviceMemory object
-		void CreateVertexBuffer(DDM3::GPUObject* pGPUObject, DDM3::CommandpoolManager* pCommandPoolManager,
+		bool CreateVertexBuffer(DDM3::GPUObject* pGPUObject, DDM3::CommandpoolManager* pCommandPoolManager,
 			std::vector<DDM3::Vertex>& vertices, VkBuffer& vertexBuffer, VkDeviceMemory& vertexBufferMemory);
 
 		// Create a vertex buffer
@@ -73,7 +73,7 @@ namespace DDM3
 		//     indices: a vector of indices to store in a buffer
 		//     indexBuffer: handle of the vkBuffer to store the indices in
 		//     indexBufferMemory: handle of the VkDeviceMemory object
-		void CreateIndexBuffer(DDM3::GPUObject* pGPUObject, DDM3::CommandpoolManager* pCommandPoolManager,
+		bool CreateIndexBuffer(DDM3::GPUObject* pGPUObject, DDM3::CommandpoolManager* pCommandPoolManager,
 			std::vector<uint32_t>& indices, VkBuffer& indexBuffer, VkDeviceMemory& indexBufferMemory);
 	};
 }

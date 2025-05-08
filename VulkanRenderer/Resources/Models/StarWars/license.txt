@@ -1,0 +1,11 @@
+Model Information:
+* title:	The Force Awakens Lowpoly
+* source:	https://sketchfab.com/3d-models/the-force-awakens-lowpoly-be3cf507c06943809ad779a1a72a044d
+* author:	Fi Silva (https://sketchfab.com/fisilva)
+
+Model License:
+* license type:	CC-BY-NC-4.0 (http://creativecommons.org/licenses/by-nc/4.0/)
+* requirements:	Author must be credited. No commercial use.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "The Force Awakens Lowpoly" (https://sketchfab.com/3d-models/the-force-awakens-lowpoly-be3cf507c06943809ad779a1a72a044d) by Fi Silva (https://sketchfab.com/fisilva) licensed under CC-BY-NC-4.0 (http://creativecommons.org/licenses/by-nc/4.0/)

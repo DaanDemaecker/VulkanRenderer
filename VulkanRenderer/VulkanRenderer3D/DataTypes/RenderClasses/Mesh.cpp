@@ -63,6 +63,10 @@ DDM3::Mesh::~Mesh()
 
 void DDM3::Mesh::Render(VkCommandBuffer commandBuffer)
 {
+	// If not initialized, don't render
+	if (!m_Initialized)
+		return;
+
 	// Set and bind vertex buffer
 	VkBuffer vertexBuffers[] = { m_VertexBuffer };
 	VkDeviceSize offsets[] = { 0 };
@@ -101,6 +105,8 @@ void DDM3::Mesh::SetupBuffers()
 	auto& renderer{ Vulkan3D::GetInstance().GetRenderer() };
 
 	// Create vertex and index buffer
-	renderer.CreateVertexBuffer(m_Vertices, m_VertexBuffer, m_VertexBufferMemory);
+	m_Initialized =  renderer.CreateVertexBuffer(m_Vertices, m_VertexBuffer, m_VertexBufferMemory) &&
 	renderer.CreateIndexBuffer(m_Indices, m_IndexBuffer, m_IndexBufferMemory);
+
+
 }

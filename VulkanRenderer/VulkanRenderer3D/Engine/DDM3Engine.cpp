@@ -40,7 +40,7 @@ void DDM3::DDM3Engine::Run(const std::function<void()>& load)
 	auto& window{ Window::GetInstance() };
 
 	auto pCamera = vulkan.GetCurrentCamera();
-	pCamera->SetPosition(0, 5, -15);
+	//pCamera->SetPosition(0, 5, -15);
 	//auto rot{ glm::quat(glm::lookAt(pCamera->GetPosition(), glm::vec3{ 0, 0, 0 }, glm::vec3{ 0, 1, 0 }))};
 	//pCamera->SetRotation(glm::eulerAngles(rot));
 	

@@ -76,8 +76,11 @@ void DDM3::BufferManager::CopyBuffer(DDM3::GPUObject* pGPUObject, DDM3::Commandp
 	pCommandPoolManager->EndSingleTimeCommands(pGPUObject, commandBuffer);
 }
 
-void DDM3::BufferManager::CreateVertexBuffer(DDM3::GPUObject* pGPUObject, DDM3::CommandpoolManager* pCommandPoolManager, std::vector<DDM3::Vertex>& vertices, VkBuffer& vertexBuffer, VkDeviceMemory& vertexBufferMemory)
+bool DDM3::BufferManager::CreateVertexBuffer(DDM3::GPUObject* pGPUObject, DDM3::CommandpoolManager* pCommandPoolManager, std::vector<DDM3::Vertex>& vertices, VkBuffer& vertexBuffer, VkDeviceMemory& vertexBufferMemory)
 {
+	if (vertices.size() <= 0)
+		return false;
+
 	auto device{ pGPUObject->GetDevice() };
 
 	// Calculate buffer size for vertices
@@ -112,10 +115,14 @@ void DDM3::BufferManager::CreateVertexBuffer(DDM3::GPUObject* pGPUObject, DDM3::
 	// Free staging buffer memory
 	vkFreeMemory(device, stagingBufferMemory, nullptr);
 
+	return true;
 }
 
-void DDM3::BufferManager::CreateIndexBuffer(DDM3::GPUObject* pGPUObject, DDM3::CommandpoolManager* pCommandPoolManager, std::vector<uint32_t>& indices, VkBuffer& indexBuffer, VkDeviceMemory& indexBufferMemory)
+bool DDM3::BufferManager::CreateIndexBuffer(DDM3::GPUObject* pGPUObject, DDM3::CommandpoolManager* pCommandPoolManager, std::vector<uint32_t>& indices, VkBuffer& indexBuffer, VkDeviceMemory& indexBufferMemory)
 {
+	if (indices.size() <= 0)
+		return false;
+
 	auto device{ pGPUObject->GetDevice() };
 
 	// Calculate buffer size for indices
@@ -146,4 +153,6 @@ void DDM3::BufferManager::CreateIndexBuffer(DDM3::GPUObject* pGPUObject, DDM3::C
 
 	// Free staging buffer memory
 	vkFreeMemory(device, stagingBufferMemory, nullptr);
+
+	return true;
 }

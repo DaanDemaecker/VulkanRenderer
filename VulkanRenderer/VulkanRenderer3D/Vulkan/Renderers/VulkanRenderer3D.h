@@ -104,14 +104,14 @@ namespace DDM3
         //     vertices: reference to vector of vertices 
         //     vertexBuffer: handle to the vertex buffer to be created
         //     vertexBufferMemory: handle of the vertex buffer memory
-        void CreateVertexBuffer(std::vector<DDM3::Vertex>& vertices, VkBuffer& vertexBuffer, VkDeviceMemory& vertexBufferMemory);
+        bool CreateVertexBuffer(std::vector<DDM3::Vertex>& vertices, VkBuffer& vertexBuffer, VkDeviceMemory& vertexBufferMemory);
 
         // Create a vertex buffer
         // Parameters:
         //     indices: reference to vector of indices 
         //     indexBuffer: handle to the index buffer to be created
         //     indexBufferMemory: handle of the index buffer memory
-        void CreateIndexBuffer(std::vector<uint32_t>& indices, VkBuffer& indexBuffer, VkDeviceMemory& indexBufferMemory);
+        bool CreateIndexBuffer(std::vector<uint32_t>& indices, VkBuffer& indexBuffer, VkDeviceMemory& indexBufferMemory);
 
         // Create a texture
         // Parameters:

@@ -13,6 +13,9 @@
 
 #include "Vulkan/Vulkan3D.h"
 
+// standard library includes
+#include <iostream>
+
 DDM3::Camera::Camera()
 {
 	SetRotation(m_TotalPitch, m_TotalYaw, 0);

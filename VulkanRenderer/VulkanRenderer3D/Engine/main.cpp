@@ -74,6 +74,9 @@ void load()
 
 	std::unique_ptr<DDM3::Model> pCurrModel{};
 
+	// Load Diorama
+	pCurrModel = std::make_unique<DDM3::Model>();
+
 	// Load groundplane
 	//pCurrModel = std::make_unique<DDM3::Model>();
 	//
@@ -97,7 +100,11 @@ void load()
 	//std::vector<std::vector<uint32_t>> indicesLists{};
 	//DDM3::DDMModelLoader::GetInstance().LoadScene("Resources/Models/SponzaAtrium/Sponza.gltf", verticesLists, indicesLists);
 
-	DDM3::DDMModelLoader::GetInstance().LoadScene("Resources/Models/SponzaAtrium/Sponza.gltf");
+
+	//DDM3::DDMModelLoader::GetInstance().LoadScene("Resources/Models/SponzaAtrium/Sponza.gltf");
+
+	DDM3::DDMModelLoader::GetInstance().LoadScene("Resources/Models/StarWars/scene.gltf");
+
 
 	//pCurrModel = std::make_unique<DDM3::Model>();
 	//pCurrModel->LoadModel("Resources/Models/SponzaAtrium/Sponza.gltf");
@@ -134,6 +141,10 @@ void load()
 	pCurrModel->SetScale(0.25f, 0.25f, 0.25f);
 
 	pModelManager->AddModel(std::move(pCurrModel));*/
+
+	auto pCamera = DDM3::Vulkan3D::GetInstance().GetCameraManager()->GetCamera();
+
+	pCamera->SetPosition(0, 0, 0);
 
 	DDM3::Vulkan3D::GetInstance().GetCameraManager()->SetSkybox(std::make_unique<DDM3::SkyBox>(
 		std::initializer_list<const std::string>{"resources/images/CubeMap/Sky_Right.png",

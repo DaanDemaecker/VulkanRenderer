@@ -439,16 +439,16 @@ void DDM3::VulkanRenderer3D::CopyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, 
 	m_pBufferManager->CopyBuffer(DDM3::Vulkan3D::GetInstance().GetGPUObject(), m_pCommandPoolManager.get(), srcBuffer, dstBuffer, size);
 }
 
-void DDM3::VulkanRenderer3D::CreateVertexBuffer(std::vector<DDM3::Vertex>& vertices, VkBuffer& vertexBuffer, VkDeviceMemory& vertexBufferMemory)
+bool DDM3::VulkanRenderer3D::CreateVertexBuffer(std::vector<DDM3::Vertex>& vertices, VkBuffer& vertexBuffer, VkDeviceMemory& vertexBufferMemory)
 {
 	// Create a vertex buffer trough the buffer manager
-	m_pBufferManager->CreateVertexBuffer(DDM3::Vulkan3D::GetInstance().GetGPUObject(), m_pCommandPoolManager.get(), vertices, vertexBuffer, vertexBufferMemory);
+	return m_pBufferManager->CreateVertexBuffer(DDM3::Vulkan3D::GetInstance().GetGPUObject(), m_pCommandPoolManager.get(), vertices, vertexBuffer, vertexBufferMemory);
 }
 
-void DDM3::VulkanRenderer3D::CreateIndexBuffer(std::vector<uint32_t>& indices, VkBuffer& indexBuffer, VkDeviceMemory& indexBufferMemory)
+bool DDM3::VulkanRenderer3D::CreateIndexBuffer(std::vector<uint32_t>& indices, VkBuffer& indexBuffer, VkDeviceMemory& indexBufferMemory)
 {
 	// Create an index buffer trough the buffer manager
-	m_pBufferManager->CreateIndexBuffer(DDM3::Vulkan3D::GetInstance().GetGPUObject(), m_pCommandPoolManager.get(), indices, indexBuffer, indexBufferMemory);
+	return m_pBufferManager->CreateIndexBuffer(DDM3::Vulkan3D::GetInstance().GetGPUObject(), m_pCommandPoolManager.get(), indices, indexBuffer, indexBufferMemory);
 }
 
 void DDM3::VulkanRenderer3D::CreateTexture(Texture& texture, const std::string& textureName)
