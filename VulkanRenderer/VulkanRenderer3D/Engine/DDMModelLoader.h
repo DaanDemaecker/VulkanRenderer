@@ -51,7 +51,7 @@ namespace DDM3
 		void ConvertVertices(const std::vector<DDMML::Vertex>& ddmmlVertices, std::vector<Vertex>& vertices);
 
 	private:
-		std::unique_ptr<DDMML::ModelLoader> m_pModelLoader;
+		std::unique_ptr<DDMML::DDMModelLoader> m_pModelLoader;
 	};
 }
 

@@ -40,7 +40,7 @@ namespace DDM3
 		/// Constructor, loads in mesh with mesh class from DDMModelLoader
 		/// </summary>
 		/// <param name="ddmmlMesh: ">DDMModelLoader mesh</param>
-		Mesh(DDMML::Mesh& ddmmlMesh);
+		Mesh(DDMML::Mesh* ddmmlMesh);
 
 		// Delete default constructor
 		Mesh() = delete;

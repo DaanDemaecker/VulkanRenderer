@@ -115,8 +115,6 @@ void DDM3::TextureDescriptorObject::SetupTextures(std::vector<std::string>& file
 	{
 		// Create texture
 		renderer.CreateTexture(m_Textures[index], path);
-
-		// Increment index
 	}
 
 }

@@ -101,9 +101,9 @@ void load()
 	//DDM3::DDMModelLoader::GetInstance().LoadScene("Resources/Models/SponzaAtrium/Sponza.gltf", verticesLists, indicesLists);
 
 
-	//DDM3::DDMModelLoader::GetInstance().LoadScene("Resources/Models/SponzaAtrium/Sponza.gltf");
+	DDM3::DDMModelLoader::GetInstance().LoadScene("Resources/Models/SponzaAtrium/Sponza.gltf");
 
-	DDM3::DDMModelLoader::GetInstance().LoadScene("Resources/Models/StarWars/scene.gltf");
+	//DDM3::DDMModelLoader::GetInstance().LoadScene("Resources/Models/Diorama/miniHouse_FBX.FBX");
 
 
 	//pCurrModel = std::make_unique<DDM3::Model>();

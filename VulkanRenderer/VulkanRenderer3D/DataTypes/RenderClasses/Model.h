@@ -51,7 +51,7 @@ namespace DDM3
 		/// Loads in a model using a DDML Mesh
 		/// </summary>
 		/// <param name="mesh: ">DDMML mesh</param>
-		void LoadModel(DDMML::Mesh& mesh);
+		void LoadModel(DDMML::Mesh* mesh);
 		
 		/// <summary>
 		/// Loads mesh with given vertex and index list
@@ -153,7 +153,7 @@ namespace DDM3
 		/// Sets up the materials with textures loaded in from DDMML mesh
 		/// </summary>
 		/// <param name="mesh: ">DDMML mesh</param>
-		void SetupMaterial(DDMML::Mesh& mesh);
+		void SetupMaterial(DDMML::Mesh* mesh);
 	};
 }
 

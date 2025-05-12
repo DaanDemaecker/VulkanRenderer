@@ -9,80 +9,35 @@
 
 DDM3::DDMModelLoader::DDMModelLoader()
 {
-	m_pModelLoader = std::make_unique<DDMML::ModelLoader>();
+	m_pModelLoader = std::make_unique<DDMML::DDMModelLoader>();
 }
 
 void DDM3::DDMModelLoader::LoadModel(const std::string& filename, std::vector<Vertex>& vertices, std::vector<uint32_t>& indices)
 {
 	std::vector<DDMML::Vertex> ddmVertices{};
 
-	m_pModelLoader->LoadModel(filename, ddmVertices, indices);
+	auto mesh = std::make_unique<DDMML::Mesh>();
+
+	m_pModelLoader->LoadModel(filename, mesh.get());
 	
 	vertices.clear();
 
-	DDM3::Vertex vertex{};
+	auto model = std::make_unique<DDM3::Model>();
+	model->LoadModel(mesh.get());
+	DDM3::Vulkan3D::GetInstance().GetModelManager()->AddModel(std::move(model));
 
-	for (auto& ddmVertex : ddmVertices)
-	{
-		vertex.color = glm::vec3{ 1,1,1 }; //ddmVertex.color;
-		vertex.normal = ddmVertex.normal;
-		vertex.pos = ddmVertex.pos;
-		vertex.texCoord = ddmVertex.texCoord;
-		vertex.tangent = ddmVertex.tangent;
-
-		vertices.push_back(vertex);
-	}
-
-}
-
-void DDM3::DDMModelLoader::LoadScene(const std::string& path, std::vector<std::vector<Vertex>>& verticesLists, std::vector<std::vector<uint32_t>>& indicesLists)
-{
-	std::vector<std::vector<DDMML::Vertex>> ddmVertices{};
-
-	m_pModelLoader->LoadScene(path, ddmVertices, indicesLists);
-
-	verticesLists.clear();
-	verticesLists.resize(ddmVertices.size());
-
-
-	for (int i{}; i<ddmVertices.size(); ++i)
-	{
-		ConvertVertices(ddmVertices[i], verticesLists[i]);
-	}
-
-
-	auto pModelManager{ DDM3::Vulkan3D::GetInstance().GetModelManager() };
-
-
-	std::unique_ptr<DDM3::Model> pCurrModel{};
-	std::shared_ptr<DDM3::Material> pDefaultMaterial{ std::make_shared<DDM3::Material>() };
-
-	for (int i{}; i < verticesLists.size(); ++i)
-	{
-		// Load groundplane
-		pCurrModel = std::make_unique<DDM3::Model>();
-
-		pCurrModel->LoadModel(verticesLists[i], indicesLists[i]);
-		pCurrModel->SetMaterial(pDefaultMaterial);
-		pCurrModel->SetRotate(false);
-		pCurrModel->SetScale(0.08f, 0.08f, 0.08f);
-
-		pModelManager->AddModel(std::move(pCurrModel));
-	}
 }
 
 void DDM3::DDMModelLoader::LoadScene(const std::string& path)
 {
-	std::vector<DDMML::Mesh> meshes{};
+	std::vector<std::unique_ptr<DDMML::Mesh>> meshes{};
 
 	m_pModelLoader->LoadScene(path, meshes);
 
-	std::unique_ptr<DDM3::Model> pCurrModel{};
-
 	for (auto& mesh : meshes)
 	{
-		pCurrModel = std::make_unique<DDM3::Model>();
-		pCurrModel->LoadModel(mesh);
+		auto pCurrModel = std::make_unique<DDM3::Model>();
+		pCurrModel->LoadModel(mesh.get());
 		DDM3::Vulkan3D::GetInstance().GetModelManager()->AddModel(std::move(pCurrModel));
 	}
 

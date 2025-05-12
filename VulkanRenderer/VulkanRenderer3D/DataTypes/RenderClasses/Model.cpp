@@ -58,7 +58,7 @@ void DDM3::Model::LoadModel(const std::string& textPath)
 	m_Initialized = true;
 }
 
-void DDM3::Model::LoadModel(DDMML::Mesh& mesh)
+void DDM3::Model::LoadModel(DDMML::Mesh* mesh)
 {
 	// Check if model is initialized, if it is, clean up first
 	if (m_Initialized)
@@ -150,8 +150,6 @@ void DDM3::Model::Render()
 	auto frame{ Vulkan3D::GetCurrentFrame() };
 
 	UpdateUniformBuffer(frame);
-
-
 
 	// Get current commandbuffer
 	auto commandBuffer{ renderer.GetCurrentCommandBuffer() };
@@ -279,11 +277,20 @@ void DDM3::Model::SetDirtyFlags()
 	std::fill(m_UboChanged.begin(), m_UboChanged.end(), true);
 }
 
-void DDM3::Model::SetupMaterial(DDMML::Mesh& mesh)
+void DDM3::Model::SetupMaterial(DDMML::Mesh* mesh)
 {
-	auto& filePaths = mesh.GetDiffuseTextureNames();
+	auto& filePaths = mesh->GetDiffuseTextureNames();
 
-	std::shared_ptr<DDM3::ShadowMaterial> pMaterial{ std::make_shared<DDM3::ShadowMaterial>(filePaths, "DiffuseShadow")};
+	std::shared_ptr<DDM3::Material> pMaterial;
+
+	if (filePaths.size() > 0)
+	{
+		pMaterial = std::make_shared<DDM3::ShadowMaterial>(filePaths, "DiffuseShadow");
+	}
+	else
+	{
+		pMaterial = std::make_shared<DDM3::Material>();
+	}
 
 	SetMaterial(pMaterial);	
 }

@@ -36,13 +36,13 @@ DDM3::Mesh::Mesh(const std::vector<DDM3::Vertex>& vertices, const std::vector<ui
 	SetupBuffers();
 }
 
-DDM3::Mesh::Mesh(DDMML::Mesh& ddmmlMesh)
+DDM3::Mesh::Mesh(DDMML::Mesh* ddmmlMesh)
 {
 	m_Vertices.clear();
 	m_Indices.clear();
 
-	auto& vertices = ddmmlMesh.GetVertices();
-	auto& indices = ddmmlMesh.GetIndices();
+	auto& vertices = ddmmlMesh->GetVertices();
+	auto& indices = ddmmlMesh->GetIndices();
 
 	DDMModelLoader::GetInstance().ConvertVertices(vertices, m_Vertices);
 
