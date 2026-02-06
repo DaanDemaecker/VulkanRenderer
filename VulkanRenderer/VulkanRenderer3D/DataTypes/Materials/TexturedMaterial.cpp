@@ -20,6 +20,7 @@ DDM3::TexturedMaterial::TexturedMaterial(std::initializer_list<const std::string
 }
 
 DDM3::TexturedMaterial::TexturedMaterial(std::vector<std::string>& filePaths, const std::string& pipelineName)
+	:Material(pipelineName)
 {
 	// Create a descriptor object with the list of file paths given
 	m_pDescriptorObject = std::make_unique<DDM3::TextureDescriptorObject>(filePaths);

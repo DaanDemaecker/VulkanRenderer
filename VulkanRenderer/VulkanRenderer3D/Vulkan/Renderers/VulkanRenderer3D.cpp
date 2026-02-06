@@ -70,7 +70,7 @@ void DDM3::VulkanRenderer3D::SetupLight()
 	m_pGlobalLight->SetIntensity(1.f);
 }
 
-void DDM3::VulkanRenderer3D::SetupDefaultPipeline()
+void DDM3::VulkanRenderer3D::SetupDefaultPipelines()
 {
 	auto device{ Vulkan3D::GetInstance().GetDevice() };
 
@@ -313,7 +313,6 @@ void DDM3::VulkanRenderer3D::RecordCommandBuffer(VkCommandBuffer& commandBuffer,
 		// If unsuccessful, throw runtime error
 		throw std::runtime_error("failed to begin recording command buffer!");
 	}
-
 
 	m_pShadowRenderer->Render(pModels);
 

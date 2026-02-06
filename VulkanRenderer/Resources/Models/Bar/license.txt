@@ -1,0 +1,11 @@
+Model Information:
+* title:	Bar bar
+* source:	https://sketchfab.com/3d-models/bar-bar-818254b878dd46dda5566d2ae88f84da
+* author:	anDDDres (https://sketchfab.com/anDDDres)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Bar bar" (https://sketchfab.com/3d-models/bar-bar-818254b878dd46dda5566d2ae88f84da) by anDDDres (https://sketchfab.com/anDDDres) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

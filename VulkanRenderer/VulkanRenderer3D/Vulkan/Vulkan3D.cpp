@@ -33,7 +33,7 @@ void DDM3::Vulkan3D::Init()
 
 	m_pRenderer = std::make_unique<DDM3::VulkanRenderer3D>();
 
-	m_pRenderer->SetupDefaultPipeline();
+	m_pRenderer->SetupDefaultPipelines();
 	m_pRenderer->SetupLight();
 	m_pRenderer->SetupSkybox();
 

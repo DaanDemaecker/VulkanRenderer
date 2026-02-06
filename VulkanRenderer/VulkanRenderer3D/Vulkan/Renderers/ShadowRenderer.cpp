@@ -201,7 +201,6 @@ void DDM3::ShadowRenderer::RecreateFrameBuffer()
 
 void DDM3::ShadowRenderer::CreatePipeline(VkDevice device)
 {
-
 	auto& configManager{ ConfigManager::GetInstance() };
 
 	std::initializer_list<const std::string> filePaths{ configManager.GetString("ShadowVertName"),

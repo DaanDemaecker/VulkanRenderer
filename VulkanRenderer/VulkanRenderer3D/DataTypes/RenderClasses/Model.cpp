@@ -17,6 +17,7 @@
 #include "Vulkan/Wrappers/PipelineWrapper.h"
 #include "DDMModelLoader/Mesh.h"
 #include "DataTypes/Materials/ShadowMaterial.h"
+#include "DataTypes/Materials/TexturedMaterial.h"
 
 // Standard library includes
 #include <memory>
@@ -285,7 +286,9 @@ void DDM3::Model::SetupMaterial(DDMML::Mesh* mesh)
 
 	if (filePaths.size() > 0)
 	{
-		pMaterial = std::make_shared<DDM3::ShadowMaterial>(filePaths, "DiffuseShadow");
+		//pMaterial = std::make_shared<DDM3::ShadowMaterial>(filePaths, "DiffuseShadow");
+		//pMaterial = std::make_shared<DDM3::TexturedMaterial>(filePaths, "DiffuseUnshaded");
+		pMaterial = std::make_shared<DDM3::Material>("UnShaded");
 	}
 	else
 	{

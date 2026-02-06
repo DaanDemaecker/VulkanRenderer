@@ -34,6 +34,9 @@ void SetupPipelines()
 
 
 	renderer.AddGraphicsPipeline("DiffuseShadow", { "Resources/Shaders/DiffuseShadow.Vert.spv", "Resources/Shaders/DiffuseShadow.Frag.spv" });
+
+
+	renderer.AddGraphicsPipeline("UnShaded", { "Resources/Shaders/NoShading.Vert.spv", "Resources/Shaders/NoShading.Frag.spv" });
 }
 
 void load()
@@ -102,6 +105,9 @@ void load()
 
 
 	DDM3::DDMModelLoader::GetInstance().LoadScene("Resources/Models/SponzaAtrium/Sponza.gltf");
+
+	//DDM3::DDMModelLoader::GetInstance().LoadScene("Resources/Models/Bar/scene.gltf");
+
 
 	//DDM3::DDMModelLoader::GetInstance().LoadScene("Resources/Models/Diorama/miniHouse_FBX.FBX");
 

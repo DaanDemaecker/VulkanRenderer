@@ -107,6 +107,4 @@ void DDM3::Mesh::SetupBuffers()
 	// Create vertex and index buffer
 	m_Initialized =  renderer.CreateVertexBuffer(m_Vertices, m_VertexBuffer, m_VertexBufferMemory) &&
 	renderer.CreateIndexBuffer(m_Indices, m_IndexBuffer, m_IndexBufferMemory);
-
-
 }

@@ -19,13 +19,28 @@ void DDM3::DDMModelLoader::LoadModel(const std::string& filename, std::vector<Ve
 	auto mesh = std::make_unique<DDMML::Mesh>();
 
 	m_pModelLoader->LoadModel(filename, mesh.get());
-	
-	vertices.clear();
+
+	auto& ddmmlVertices = mesh->GetVertices();
+	auto& ddmmlIndices = mesh->GetIndices();
+
+	ConvertVertices(ddmmlVertices, vertices);
+
+	indices.clear();
+	indices.resize(ddmmlIndices.size());
+	std::copy(ddmmlIndices.begin(), ddmmlIndices.end(), indices.begin());
+}
+
+void DDM3::DDMModelLoader::LoadModel(const std::string& filename)
+{
+	std::vector<DDMML::Vertex> ddmVertices{};
+
+	auto mesh = std::make_unique<DDMML::Mesh>();
+
+	m_pModelLoader->LoadModel(filename, mesh.get());
 
 	auto model = std::make_unique<DDM3::Model>();
 	model->LoadModel(mesh.get());
 	DDM3::Vulkan3D::GetInstance().GetModelManager()->AddModel(std::move(model));
-
 }
 
 void DDM3::DDMModelLoader::LoadScene(const std::string& path)
@@ -47,6 +62,8 @@ void DDM3::DDMModelLoader::ConvertVertices(const std::vector<DDMML::Vertex>& ddm
 {
 
 	DDM3::Vertex vertex{};
+
+	vertices.clear();
 
 	vertices.reserve(ddmmlVertices.size());
 	for (auto& ddmVertex : ddmmlVertices)

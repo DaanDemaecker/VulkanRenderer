@@ -132,7 +132,7 @@ namespace DDM3
         void SetupLight();
 
         // Initialize the default pipeline
-        void SetupDefaultPipeline();
+        void SetupDefaultPipelines();
 
         TextureDescriptorObject* GetShadowMapDescriptorObject();
 
