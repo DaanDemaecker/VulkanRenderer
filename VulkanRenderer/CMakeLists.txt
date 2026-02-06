@@ -11,6 +11,6 @@ cmake_policy(SET CMP0079 NEW)
 # Add subdirectories for each project
 add_subdirectory(VulkanRenderer2D)
 add_subdirectory(VulkanRenderer3D)
+add_subdirectory(RendererOverhaul)
 add_subdirectory(3rdParty)
 add_subdirectory(Resources)
-	
