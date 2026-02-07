@@ -127,7 +127,7 @@ namespace DDM3
 		CameraType m_Type{ CameraType::Perspective };
 
 		const float m_Speed{ 5.f };
-		const float m_AngularSpeed{ 0.5f };
+		const float m_AngularSpeed{ 1.5f };
 
 		float m_TotalPitch{0};
 		float m_TotalYaw{0};

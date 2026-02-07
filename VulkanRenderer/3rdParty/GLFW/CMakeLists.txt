@@ -19,3 +19,5 @@ FetchContent_MakeAvailable(glfw)
 target_link_libraries(VulkanRenderer3D PRIVATE glfw)
 
 target_link_libraries(VulkanRenderer2D PRIVATE glfw)
+
+target_link_libraries(RendererOverhaul PRIVATE glfw)

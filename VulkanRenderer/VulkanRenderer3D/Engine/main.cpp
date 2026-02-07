@@ -90,21 +90,21 @@ void load()
 	//pModelManager->AddModel(std::move(pCurrModel));
 
 
-	//pCurrModel = std::make_unique<DDM3::Model>();
-	//pCurrModel->LoadModel("Resources/Models/Skull/scene.gltf");
-	//pCurrModel->SetMaterial(pSkullMaterial);
-	//pCurrModel->SetPosition(0.f, 5, 0.f);
-	//pCurrModel->SetRotation(0.f, glm::radians(90.f), glm::radians(90.f));
-	//pCurrModel->SetRotate(false);
+	pCurrModel = std::make_unique<DDM3::Model>();
+	pCurrModel->LoadModel("Resources/Models/Skull/scene.gltf");
+	pCurrModel->SetMaterial(pSkullMaterial);
+	pCurrModel->SetPosition(0.f, 5, 0.f);
+	pCurrModel->SetRotation(0.f, glm::radians(90.f), glm::radians(90.f));
+	pCurrModel->SetRotate(false);
 
-	//pModelManager->AddModel(std::move(pCurrModel));
+	pModelManager->AddModel(std::move(pCurrModel));
 
 	//std::vector<std::vector<DDM3::Vertex>> verticesLists{};
 	//std::vector<std::vector<uint32_t>> indicesLists{};
 	//DDM3::DDMModelLoader::GetInstance().LoadScene("Resources/Models/SponzaAtrium/Sponza.gltf", verticesLists, indicesLists);
 
 
-	DDM3::DDMModelLoader::GetInstance().LoadScene("Resources/Models/SponzaAtrium/Sponza.gltf");
+	//DDM3::DDMModelLoader::GetInstance().LoadScene("Resources/Models/SponzaAtrium/Sponza.gltf");
 
 	//DDM3::DDMModelLoader::GetInstance().LoadScene("Resources/Models/Bar/scene.gltf");
 

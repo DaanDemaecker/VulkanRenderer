@@ -75,4 +75,9 @@ add_custom_command(
     DEPENDS Shaders
 )
 
-
+add_custom_command(TARGET VulkanRenderer3D POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+        $<TARGET_RUNTIME_DLLS:VulkanRenderer3D>
+        $<TARGET_FILE_DIR:VulkanRenderer3D>
+    COMMAND_EXPAND_LISTS
+)

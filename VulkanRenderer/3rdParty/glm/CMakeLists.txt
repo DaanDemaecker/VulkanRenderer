@@ -13,3 +13,5 @@ FetchContent_MakeAvailable(glm)
 target_link_libraries(VulkanRenderer3D PRIVATE glm::glm)
 
 target_link_libraries(VulkanRenderer2D PRIVATE glm::glm)
+
+target_link_libraries(RendererOverhaul PRIVATE glm::glm)
