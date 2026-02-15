@@ -9,6 +9,9 @@ add_executable(RendererOverhaul
  "Engine/DDMEngine.cpp"
  "Engine/Window.cpp"
 
+ "ServiceLocator/ServiceLocator.cpp"
+
+
 )
 
 # Include directories specific to this target
