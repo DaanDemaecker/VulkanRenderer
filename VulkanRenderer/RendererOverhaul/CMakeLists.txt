@@ -1,6 +1,14 @@
 
 add_executable(RendererOverhaul 
+
 "main.cpp"
+
+"Includes/STBIncludes.cpp"
+
+ "Engine/ConfigManager.cpp"
+ "Engine/DDMEngine.cpp"
+ "Engine/Window.cpp"
+
 )
 
 # Include directories specific to this target
@@ -17,4 +25,14 @@ add_custom_command(
         $<TARGET_FILE_DIR:RendererOverhaul>/resources
     MAIN_DEPENDENCY ${CMAKE_SOURCE_DIR}/resources
     DEPENDS Shaders
+)
+
+# Add custom target to copy config file
+add_custom_target(configFileOverhaul ALL)
+add_custom_command(
+    TARGET configFileOverhaul POST_BUILD
+    COMMAND ${CMAKE_COMMAND}
+    -E copy
+    ${CMAKE_CURRENT_SOURCE_DIR}/Config.json
+    $<TARGET_FILE_DIR:RendererOverhaul>
 )

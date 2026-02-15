@@ -1,6 +1,14 @@
+// Fil eincludes
+#include "Engine/DDMEngine.h"
+
+
+// Standard library includes
 #include <iostream>
 
 int main()
 {
-	std::cout << "Hello world! \n";
+	DDM::DDMEngine engine{};
+	engine.Run();
+
+	return EXIT_SUCCESS;
 }
