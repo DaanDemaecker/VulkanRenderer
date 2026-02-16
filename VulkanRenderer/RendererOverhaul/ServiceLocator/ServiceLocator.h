@@ -4,6 +4,7 @@
 #define _DDM_SERVICE_LOCATOR_
 
 // File includes
+#include "Window/IWindow.h"
 
 // Standard library includes
 #include <memory>
@@ -15,7 +16,7 @@ namespace DDM
 	public:
 		ServiceLocator() = delete;
 
-		~ServiceLocator();
+		~ServiceLocator() = default;
 
 		ServiceLocator(ServiceLocator&) = delete;
 		ServiceLocator(ServiceLocator&&) = delete;
@@ -23,8 +24,12 @@ namespace DDM
 		ServiceLocator& operator=(ServiceLocator&) = delete;
 		ServiceLocator& operator=(ServiceLocator&&) = delete;
 
-	private:
+		static void RegisterWindow(std::unique_ptr<IWindow> pWindow);
+		static IWindow& GetWindow();
 
+	private:
+		static std::unique_ptr<DefaultWindow> m_pDefaultWindowInstance;
+		static std::unique_ptr<IWindow> m_pWindowInstance;
 	};
 }
 

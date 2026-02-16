@@ -1,9 +1,15 @@
+// DDMEngine.cpp
+
+// Header include
 #include "DDMEngine.h"
+
+// File includes
 #include "Window.h"
+#include "ServiceLocator/ServiceLocator.h"
 
 DDM::DDMEngine::DDMEngine()
 {
-	DDM::Window::GetInstance();
+	//DDM::Window::GetInstance();
 }
 
 DDM::DDMEngine::~DDMEngine()
@@ -13,8 +19,9 @@ DDM::DDMEngine::~DDMEngine()
 
 void DDM::DDMEngine::Run()
 {
-	auto& window{ DDM::Window::GetInstance() };
+	//auto& window{ DDM::Window::GetInstance() };
 
+	DDM::ServiceLocator::GetWindow().CreateWindow();
 
 	// Variable that will indicate when the gameloop should stop running
 	bool shouldQuit{ false };
@@ -24,9 +31,9 @@ void DDM::DDMEngine::Run()
 	{
 
 
-		glfwPollEvents();
+		//glfwPollEvents();
 
 		// Check if aplication should quit
-		shouldQuit = glfwWindowShouldClose(window.GetWindowStruct().pWindow);
+		//shouldQuit = glfwWindowShouldClose(window.GetWindowStruct().pWindow);
 	}
 }

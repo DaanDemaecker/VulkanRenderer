@@ -1,0 +1,48 @@
+// IWindow.h
+// This file will hold the parent and default classes of the window Interface
+
+#ifndef _DDM_I_WINDOW_
+#define _DDM_I_WINDOW_
+
+namespace DDM
+{
+	struct WindowData
+	{
+		void* handle{};
+		int width{};
+		int height{};
+	};
+
+	class IWindow
+	{
+	public:
+		IWindow() = default;
+		virtual ~IWindow() = default;
+
+		IWindow(IWindow&) = delete;
+		IWindow(IWindow&&) = delete;
+
+		IWindow& operator=(IWindow&) = delete;
+		IWindow& operator=(IWindow&&) = delete;
+
+		virtual void CreateWindow() = 0;
+	};
+
+	class DefaultWindow final : public IWindow
+	{
+	public:
+		DefaultWindow() = default;
+		~DefaultWindow() = default;
+
+		DefaultWindow(DefaultWindow&) = delete;
+		DefaultWindow(DefaultWindow&&) = delete;
+
+		DefaultWindow& operator=(DefaultWindow&) = delete;
+		DefaultWindow& operator=(DefaultWindow&&) = delete;
+
+		virtual void CreateWindow() {}
+
+	};
+}
+
+#endif // !_DDM_I_WINDOW_

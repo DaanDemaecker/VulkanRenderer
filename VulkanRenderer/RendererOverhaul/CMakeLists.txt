@@ -11,6 +11,7 @@ add_executable(RendererOverhaul
 
  "ServiceLocator/ServiceLocator.cpp"
 
+ "ServiceLocator/Window/GLFW/GLFWWindow.cpp"
 
 )
 
