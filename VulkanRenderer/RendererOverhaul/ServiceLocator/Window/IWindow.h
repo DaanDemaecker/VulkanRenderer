@@ -26,6 +26,10 @@ namespace DDM
 		IWindow& operator=(IWindow&&) = delete;
 
 		virtual void CreateWindow() = 0;
+
+		virtual void PollEvents() = 0;
+
+		virtual bool ShouldClose() = 0;
 	};
 
 	class DefaultWindow final : public IWindow
@@ -40,8 +44,11 @@ namespace DDM
 		DefaultWindow& operator=(DefaultWindow&) = delete;
 		DefaultWindow& operator=(DefaultWindow&&) = delete;
 
-		virtual void CreateWindow() {}
+		virtual void CreateWindow() override {}
 
+		virtual void PollEvents() override {}
+
+		virtual bool ShouldClose() override { return false; }
 	};
 }
 

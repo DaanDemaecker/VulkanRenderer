@@ -31,9 +31,9 @@ void DDM::DDMEngine::Run()
 	{
 
 
-		//glfwPollEvents();
+		DDM::ServiceLocator::GetWindow().PollEvents();
 
 		// Check if aplication should quit
-		//shouldQuit = glfwWindowShouldClose(window.GetWindowStruct().pWindow);
+		shouldQuit = DDM::ServiceLocator::GetWindow().ShouldClose();
 	}
 }

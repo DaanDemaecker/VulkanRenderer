@@ -25,8 +25,11 @@ namespace DDM
 		GLFWWindow& operator=(GLFWWindow&) = delete;
 		GLFWWindow& operator=(GLFWWindow&&) = delete;
 
-		virtual void CreateWindow();
+		virtual void CreateWindow() override;
 
+		virtual void PollEvents() override;
+
+		virtual bool ShouldClose() override;
 	private:
 		std::unique_ptr<GLFWImpl> m_pImpl{};
 	};

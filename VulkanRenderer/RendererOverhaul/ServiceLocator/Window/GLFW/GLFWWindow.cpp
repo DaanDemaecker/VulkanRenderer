@@ -48,6 +48,16 @@ namespace DDM
 			m_pWindow.handle = glfwCreateWindow(800, 600, "test", nullptr, nullptr);
 		}
 
+		void PollEvents()
+		{
+			glfwPollEvents();
+		}
+
+		bool ShouldClose()
+		{
+			return glfwWindowShouldClose(static_cast<GLFWwindow*>(m_pWindow.handle));
+		}
+
 	private:
 		// Window data
 		WindowData m_pWindow{};
@@ -84,4 +94,14 @@ DDM::GLFWWindow::~GLFWWindow()
 void DDM::GLFWWindow::CreateWindow()
 {
 	m_pImpl->CreateWindow();
+}
+
+void DDM::GLFWWindow::PollEvents()
+{
+	m_pImpl->PollEvents();
+}
+
+bool DDM::GLFWWindow::ShouldClose()
+{
+	return m_pImpl->ShouldClose();
 }
