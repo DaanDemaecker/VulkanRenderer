@@ -11,6 +11,9 @@
 std::unique_ptr<DDM::DefaultWindow> DDM::ServiceLocator::m_pDefaultWindowInstance{ std::make_unique<DefaultWindow>() };
 std::unique_ptr<DDM::IWindow> DDM::ServiceLocator::m_pWindowInstance{ nullptr };
 
+std::unique_ptr<DDM::DefaultFileSystem> DDM::ServiceLocator::m_pDefaultFileSystemInstance{ std::make_unique<DDM::DefaultFileSystem>() };
+std::unique_ptr<DDM::IFileSystem> DDM::ServiceLocator::m_pFileSystemInstance{ nullptr };
+
 void DDM::ServiceLocator::RegisterWindow(std::unique_ptr<IWindow> pWindow)
 {
 	if (pWindow != nullptr)
@@ -22,4 +25,17 @@ void DDM::ServiceLocator::RegisterWindow(std::unique_ptr<IWindow> pWindow)
 DDM::IWindow& DDM::ServiceLocator::GetWindow()
 {
 	return m_pWindowInstance == nullptr ? *m_pDefaultWindowInstance.get() : *m_pWindowInstance.get();
+}
+
+void DDM::ServiceLocator::RegisterFileSystem(std::unique_ptr<IFileSystem> pFileSystem)
+{
+	if (pFileSystem != nullptr)
+	{
+		m_pFileSystemInstance = std::move(pFileSystem);
+	}
+}
+
+DDM::IFileSystem& DDM::ServiceLocator::GetFileSystem()
+{
+	return m_pFileSystemInstance == nullptr ? *m_pDefaultFileSystemInstance.get() : *m_pFileSystemInstance.get();
 }

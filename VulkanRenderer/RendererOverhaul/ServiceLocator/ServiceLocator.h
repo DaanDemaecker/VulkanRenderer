@@ -5,6 +5,7 @@
 
 // File includes
 #include "Window/IWindow.h"
+#include "FileSystem/IFileSystem.h"
 
 // Standard library includes
 #include <memory>
@@ -27,9 +28,15 @@ namespace DDM
 		static void RegisterWindow(std::unique_ptr<IWindow> pWindow);
 		static IWindow& GetWindow();
 
+		static void RegisterFileSystem(std::unique_ptr<IFileSystem> pFileSystem);
+		static IFileSystem& GetFileSystem();
+
 	private:
 		static std::unique_ptr<DefaultWindow> m_pDefaultWindowInstance;
 		static std::unique_ptr<IWindow> m_pWindowInstance;
+
+		static std::unique_ptr<DefaultFileSystem> m_pDefaultFileSystemInstance;
+		static std::unique_ptr<IFileSystem> m_pFileSystemInstance;
 	};
 }
 
