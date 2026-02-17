@@ -5,6 +5,9 @@
 #ifndef _DDM_I_FILE_SYSTEM_
 #define _DDM_I_FILE_SYSTEM_
 
+// File includes
+#include <string>
+
 namespace DDM
 {
 	class IFileSystem
@@ -18,6 +21,10 @@ namespace DDM
 
 		IFileSystem& operator=(IFileSystem&) = delete;
 		IFileSystem& operator=(IFileSystem&&) = delete;
+
+		virtual bool OpenWrite(std::string& fileName) = 0;
+
+		virtual bool CloseWrite(std::string& fileName) = 0;
 	};
 
 	class DefaultFileSystem final : public IFileSystem
@@ -31,6 +38,10 @@ namespace DDM
 
 		DefaultFileSystem& operator=(DefaultFileSystem&) = delete;
 		DefaultFileSystem& operator=(DefaultFileSystem&&) = delete;
+
+		virtual bool OpenWrite(std::string& fileName) override { return false; }
+
+		virtual bool CloseWrite(std::string& fileName) override { return false; }
 	};
 }
 

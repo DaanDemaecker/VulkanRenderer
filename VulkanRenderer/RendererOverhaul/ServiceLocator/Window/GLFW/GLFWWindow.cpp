@@ -6,6 +6,7 @@
 // File includes
 #include "Includes/GLFWIncludes.h"
 #include "Engine/ConfigManager.h"
+#include "ServiceLocator/ServiceLocator.h"
 
 // Standard library includes
 #include <iostream>
@@ -35,6 +36,8 @@ namespace DDM
 
 		~GLFWImpl()
 		{
+			WriteToFile();
+
 			if (m_pWindow.handle != nullptr)
 			{
 				glfwDestroyWindow(static_cast<GLFWwindow*>(m_pWindow.handle));
@@ -62,8 +65,11 @@ namespace DDM
 		// Window data
 		WindowData m_pWindow{};
 
-		static GLFWImpl* m_sInstance;
+		// Path to init data
+		std::string m_DataPath = "Data/Window.txt";
 
+		// Single instance of GLFWImpl
+		static GLFWImpl* m_sInstance;
 
 		static void error_callback(int error, const char* description)
 		{
@@ -73,6 +79,19 @@ namespace DDM
 		void HandleError(int error, const char* description)
 		{
 			std::cout << "Glfw error: " << error << "\n" << description << "\n";
+		}
+
+		void WriteToFile()
+		{
+			auto& fileSystem = DDM::ServiceLocator::GetFileSystem();
+
+			if (fileSystem.OpenWrite(m_DataPath))
+			{
+
+
+			}
+
+			fileSystem.CloseWrite(m_DataPath);
 		}
 	};
 
@@ -93,15 +112,33 @@ DDM::GLFWWindow::~GLFWWindow()
 
 void DDM::GLFWWindow::CreateWindow()
 {
-	m_pImpl->CreateWindow();
+	if (m_pImpl != nullptr)
+	{
+		m_pImpl->CreateWindow();
+	}
 }
 
 void DDM::GLFWWindow::PollEvents()
 {
-	m_pImpl->PollEvents();
+	if (m_pImpl != nullptr)
+	{
+		m_pImpl->PollEvents();
+	}
 }
 
 bool DDM::GLFWWindow::ShouldClose()
 {
-	return m_pImpl->ShouldClose();
+	bool shouldClose = false;
+
+	if (m_pImpl != nullptr)
+	{
+		shouldClose = m_pImpl->ShouldClose();
+	}
+
+	if (shouldClose)
+	{
+		m_pImpl.reset();
+	}
+
+	return shouldClose;
 }
