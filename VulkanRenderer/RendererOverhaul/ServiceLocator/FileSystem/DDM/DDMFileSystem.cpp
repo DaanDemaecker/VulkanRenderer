@@ -54,3 +54,18 @@ bool DDM::DDMFileSystem::CloseWrite(std::string& fileName)
 
 	return true;
 }
+
+bool DDM::DDMFileSystem::Write(std::string& fileName, const char* start, size_t size)
+{
+	if (!m_WriteFiles.contains(fileName) || !m_WriteFiles[fileName].is_open())
+	{
+		if (!OpenWrite(fileName))
+		{
+			return false;
+		}
+	}
+
+	m_WriteFiles[fileName].write(start, size);
+
+	return true;
+}

@@ -87,11 +87,17 @@ namespace DDM
 
 			if (fileSystem.OpenWrite(m_DataPath))
 			{
+				auto initData = GetInitData();
 
-
+				fileSystem.Write(m_DataPath, (const char*)&initData, sizeof(InitData));
 			}
 
 			fileSystem.CloseWrite(m_DataPath);
+		}
+
+		InitData GetInitData()
+		{
+			return InitData();
 		}
 	};
 
