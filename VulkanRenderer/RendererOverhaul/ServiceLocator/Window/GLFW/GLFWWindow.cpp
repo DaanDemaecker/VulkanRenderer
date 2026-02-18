@@ -15,6 +15,8 @@ namespace DDM
 {
 	struct InitData
 	{
+		int posX;
+		int posY;
 		int width;
 		int height;
 		int Monitor;
@@ -97,7 +99,43 @@ namespace DDM
 
 		InitData GetInitData()
 		{
-			return InitData();
+			auto initData = InitData();
+
+			auto handle = static_cast<GLFWwindow*>(m_pWindow.handle);
+
+			glfwGetWindowPos(handle, &initData.posX, &initData.posY);
+			glfwGetWindowSize(handle, &initData.width, &initData.height);
+
+			int maximized = glfwGetWindowAttrib(handle, GLFW_MAXIMIZED);
+
+			initData.maximized = maximized == GLFW_TRUE;
+
+
+			auto monitor = glfwGetWindowMonitor(handle);
+
+			if (monitor == nullptr)
+			{
+				initData.fullscreen = false;
+			}
+			else
+			{
+				initData.fullscreen = true;
+
+				int monitorCount;
+
+				auto monitors = glfwGetMonitors(&monitorCount);
+
+				for (int i{}; i < monitorCount; ++i)
+				{
+					if (monitor == monitors[i])
+					{
+						initData.Monitor = i;
+						break;
+					}
+				}
+			}
+
+			return initData;
 		}
 	};
 
