@@ -27,6 +27,12 @@ namespace DDM
 		virtual bool CloseWrite(std::string& fileName) = 0;
 
 		virtual bool Write(std::string& fileName, const char* start, size_t size) = 0;
+
+		virtual bool OpenRead(std::string& fileName) = 0;
+
+		virtual bool CloseRead(std::string& fileName) = 0;
+
+		virtual bool Read(std::string& fileName, char* start, size_t size) = 0;
 	};
 
 	class DefaultFileSystem final : public IFileSystem
@@ -46,6 +52,12 @@ namespace DDM
 		virtual bool CloseWrite(std::string& fileName) override { return false; }
 
 		virtual bool Write(std::string& fileName, const char* start, size_t size) override { return false; }
+
+		virtual bool OpenRead(std::string& fileName) override { return false; }
+
+		virtual bool CloseRead(std::string& fileName) override { return false; }
+
+		virtual bool Read(std::string& fileName, char* start, size_t size) override { return false; }
 	};
 }
 

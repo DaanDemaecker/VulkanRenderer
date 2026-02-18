@@ -30,6 +30,12 @@ namespace DDM
 		virtual bool CloseWrite(std::string& fileName) override;
 
 		virtual bool Write(std::string& fileName, const char* start, size_t size) override;
+
+		virtual bool OpenRead(std::string& fileName) override;
+
+		virtual bool CloseRead(std::string& fileName) override;
+
+		virtual bool Read(std::string& fileName, char* start, size_t size) override;
 	private:
 		std::unordered_map<std::string, std::ofstream> m_WriteFiles{};
 

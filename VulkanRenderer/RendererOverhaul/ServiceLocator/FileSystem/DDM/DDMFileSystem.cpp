@@ -69,3 +69,50 @@ bool DDM::DDMFileSystem::Write(std::string& fileName, const char* start, size_t 
 
 	return true;
 }
+
+bool DDM::DDMFileSystem::OpenRead(std::string& fileName)
+{
+	if (m_WriteFiles.contains(fileName) || (m_ReadFiles.contains(fileName) && m_ReadFiles[fileName].is_open()))
+	{
+		return false;
+	}
+
+	if (!std::filesystem::exists(fileName))
+	{
+		return false;
+	}
+
+	m_ReadFiles[fileName] = std::ifstream();
+	m_ReadFiles[fileName].open(fileName, std::ios::binary);
+
+	return true;
+}
+
+bool DDM::DDMFileSystem::CloseRead(std::string& fileName)
+{
+	if (!m_ReadFiles.contains(fileName) || !m_ReadFiles[fileName].is_open())
+	{
+		return false;
+	}
+
+	m_ReadFiles[fileName].close();
+
+	m_ReadFiles.erase(fileName);
+
+	return true;
+}
+
+bool DDM::DDMFileSystem::Read(std::string& fileName, char* start, size_t size)
+{
+	if (!m_ReadFiles.contains(fileName) || !m_ReadFiles[fileName].is_open())
+	{
+		if (!OpenRead(fileName))
+		{
+			return false;
+		}
+	}
+
+	m_ReadFiles[fileName].read(start, size);
+
+	return true;
+}

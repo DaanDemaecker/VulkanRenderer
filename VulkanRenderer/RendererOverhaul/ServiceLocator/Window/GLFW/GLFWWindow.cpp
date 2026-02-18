@@ -19,7 +19,7 @@ namespace DDM
 		int posY;
 		int width;
 		int height;
-		int Monitor;
+		int monitor;
 		bool fullscreen;
 		bool maximized;
 	};
@@ -50,7 +50,9 @@ namespace DDM
 
 		void CreateWindow()
 		{
-			m_pWindow.handle = glfwCreateWindow(800, 600, "test", nullptr, nullptr);
+			InitData initData = ReadInitData();
+
+			m_pWindow.handle = glfwCreateWindow(initData.width, initData.height, "test", nullptr, nullptr);
 		}
 
 		void PollEvents()
@@ -89,7 +91,7 @@ namespace DDM
 
 			if (fileSystem.OpenWrite(m_DataPath))
 			{
-				auto initData = GetInitData();
+				auto initData = GetFinalInitData();
 
 				fileSystem.Write(m_DataPath, (const char*)&initData, sizeof(InitData));
 			}
@@ -97,7 +99,23 @@ namespace DDM
 			fileSystem.CloseWrite(m_DataPath);
 		}
 
-		InitData GetInitData()
+		InitData ReadInitData()
+		{
+			InitData initData{};
+
+			auto& fileSystem = DDM::ServiceLocator::GetFileSystem();
+
+			if (fileSystem.OpenRead(m_DataPath))
+			{
+				fileSystem.Read(m_DataPath, (char*)&initData, sizeof(InitData));
+			}
+
+			fileSystem.CloseRead(m_DataPath);
+
+			return initData;
+		}
+
+		InitData GetFinalInitData()
 		{
 			auto initData = InitData();
 
@@ -129,7 +147,7 @@ namespace DDM
 				{
 					if (monitor == monitors[i])
 					{
-						initData.Monitor = i;
+						initData.monitor = i;
 						break;
 					}
 				}
