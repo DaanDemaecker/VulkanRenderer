@@ -11,6 +11,7 @@ namespace DDM
 		void* handle{};
 		int width{};
 		int height{};
+		bool fullscreen{};
 	};
 
 	class IWindow
@@ -30,6 +31,12 @@ namespace DDM
 		virtual void PollEvents() = 0;
 
 		virtual bool ShouldClose() = 0;
+
+		virtual const WindowData& GetWindowData() = 0;
+
+		virtual void SetFullscreenMode(bool fullscreen) = 0;
+
+		virtual void ToggleFullscreenMode() = 0;
 	};
 
 	class DefaultWindow final : public IWindow
@@ -49,6 +56,12 @@ namespace DDM
 		virtual void PollEvents() override {}
 
 		virtual bool ShouldClose() override { return false; }
+
+		virtual const WindowData& GetWindowData() override { return WindowData(); }
+
+		virtual void SetFullscreenMode(bool fullscreen) override {}
+
+		virtual void ToggleFullscreenMode() override {}
 	};
 }
 

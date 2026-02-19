@@ -30,6 +30,12 @@ namespace DDM
 		virtual void PollEvents() override;
 
 		virtual bool ShouldClose() override;
+
+		virtual const WindowData& GetWindowData() override;
+
+		virtual void SetFullscreenMode(bool fullscreen) override;
+
+		virtual void ToggleFullscreenMode() override;
 	private:
 		std::unique_ptr<GLFWImpl> m_pImpl{};
 	};

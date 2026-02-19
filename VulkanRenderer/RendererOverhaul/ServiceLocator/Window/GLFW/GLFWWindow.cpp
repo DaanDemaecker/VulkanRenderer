@@ -7,6 +7,7 @@
 #include "Includes/GLFWIncludes.h"
 #include "Engine/ConfigManager.h"
 #include "ServiceLocator/ServiceLocator.h"
+#include "Includes/GLMIncludes.h"
 
 // Standard library includes
 #include <iostream>
@@ -40,9 +41,9 @@ namespace DDM
 		{
 			WriteToFile();
 
-			if (m_pWindow.handle != nullptr)
+			if (m_Window.handle != nullptr)
 			{
-				glfwDestroyWindow(static_cast<GLFWwindow*>(m_pWindow.handle));
+				glfwDestroyWindow(static_cast<GLFWwindow*>(m_Window.handle));
 			}
 
 			glfwTerminate();
@@ -52,7 +53,34 @@ namespace DDM
 		{
 			InitData initData = ReadInitData();
 
-			m_pWindow.handle = glfwCreateWindow(initData.width, initData.height, "test", nullptr, nullptr);
+			auto handle = glfwCreateWindow(initData.width, initData.height, "test", nullptr, nullptr);
+
+
+			glfwSetWindowSizeCallback(handle, resize_callback);
+
+			m_Window.handle = handle;
+			m_Window.width = initData.width;
+			m_Window.height = initData.height;
+
+			GLFWmonitor* monitor = nullptr;
+
+			if (initData.fullscreen)
+			{
+				int count = 0;
+
+				auto monitors = glfwGetMonitors(&count);
+
+				if (count > initData.monitor)
+				{
+					monitor = monitors[initData.monitor];
+				}
+				else
+				{
+					monitor = glfwGetPrimaryMonitor();
+				}
+			}
+
+			glfwSetWindowMonitor(handle, monitor, initData.posX, initData.posY, initData.width, initData.height, GLFW_DONT_CARE);
 		}
 
 		void PollEvents()
@@ -62,12 +90,41 @@ namespace DDM
 
 		bool ShouldClose()
 		{
-			return glfwWindowShouldClose(static_cast<GLFWwindow*>(m_pWindow.handle));
+			return glfwWindowShouldClose(static_cast<GLFWwindow*>(m_Window.handle));
+		}
+
+		const WindowData& GetWindowData()
+		{
+			return m_Window;
+		}
+
+		void SetFullScreenMode(bool fullScreen)
+		{
+			m_Window.fullscreen = fullScreen;
+
+			GLFWwindow* handle = static_cast<GLFWwindow*>(m_Window.handle);
+
+			if (fullScreen)
+			{
+				glfwSetWindowMonitor(handle, glfwGetPrimaryMonitor(), 0, 0, m_Window.width, m_Window.height, GLFW_DONT_CARE);
+			}
+			else
+			{
+				glfwSetWindowMonitor(handle, nullptr, 0, 0, m_Window.width, m_Window.height, GLFW_DONT_CARE);
+			}
+
+		}
+
+		void ToggleFullscreen()
+		{
+			SetFullScreenMode(!m_Window.fullscreen);
+
+			std::cout << "fullscreen toggled \n";
 		}
 
 	private:
 		// Window data
-		WindowData m_pWindow{};
+		WindowData m_Window{};
 
 		// Path to init data
 		std::string m_DataPath = "Data/Window.txt";
@@ -75,14 +132,26 @@ namespace DDM
 		// Single instance of GLFWImpl
 		static GLFWImpl* m_sInstance;
 
+		// Default width
+		const int m_DefaultWidth{ 800 };
+
+		// Default height
+		const int m_DefaultHeight{ 600 };
+
 		static void error_callback(int error, const char* description)
 		{
-			m_sInstance->HandleError(error, description);
+			std::cout << "Glfw error: " << error << "\n" << description << "\n";
 		}
 
-		void HandleError(int error, const char* description)
+		static void resize_callback(GLFWwindow* window, int width, int height)
 		{
-			std::cout << "Glfw error: " << error << "\n" << description << "\n";
+			m_sInstance->Resized(width, height);
+		}
+
+		void Resized(int width, int height)
+		{
+			m_Window.width = width;
+			m_Window.height = height;
 		}
 
 		void WriteToFile()
@@ -108,18 +177,49 @@ namespace DDM
 			if (fileSystem.OpenRead(m_DataPath))
 			{
 				fileSystem.Read(m_DataPath, (char*)&initData, sizeof(InitData));
+
+				fileSystem.CloseRead(m_DataPath);
+
+				if (initData.width == 0 || initData.height == 0)
+				{
+					ReadInitFromConfig(initData);
+				}
+
+			}
+			else
+			{
+				ReadInitFromConfig(initData);
 			}
 
-			fileSystem.CloseRead(m_DataPath);
+			if (initData.width <= 0)
+			{
+				initData.width = m_DefaultWidth;
+			}
+
+			if (initData.height <= 0)
+			{
+				initData.height = m_DefaultHeight;
+			}
 
 			return initData;
+		}
+
+		void ReadInitFromConfig(InitData& initData)
+		{
+			auto& config = ConfigManager::GetInstance();
+
+			initData.width = config.GetInt("WindowWidth");
+			initData.height = config.GetInt("WindowHeight");
+			initData.monitor = config.GetInt("Monitor");
+			initData.fullscreen = config.GetBool("FullScreen");
+			initData.maximized = config.GetBool("Maximized");
 		}
 
 		InitData GetFinalInitData()
 		{
 			auto initData = InitData();
 
-			auto handle = static_cast<GLFWwindow*>(m_pWindow.handle);
+			auto handle = static_cast<GLFWwindow*>(m_Window.handle);
 
 			glfwGetWindowPos(handle, &initData.posX, &initData.posY);
 			glfwGetWindowSize(handle, &initData.width, &initData.height);
@@ -133,7 +233,8 @@ namespace DDM
 
 			if (monitor == nullptr)
 			{
-				initData.fullscreen = false;
+				initData.fullscreen = true;
+				initData.monitor = 1;
 			}
 			else
 			{
@@ -203,4 +304,19 @@ bool DDM::GLFWWindow::ShouldClose()
 	}
 
 	return shouldClose;
+}
+
+const DDM::WindowData& DDM::GLFWWindow::GetWindowData()
+{
+	return m_pImpl->GetWindowData();
+}
+
+void DDM::GLFWWindow::SetFullscreenMode(bool fullscreen)
+{
+	m_pImpl->SetFullScreenMode(fullscreen);
+}
+
+void DDM::GLFWWindow::ToggleFullscreenMode()
+{
+	m_pImpl->ToggleFullscreen();
 }
