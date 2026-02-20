@@ -25,7 +25,7 @@ namespace DDM
 		bool maximized;
 	};
 
-	class GLFWImpl
+	class GLFWImpl final
 	{
 	public:
 		GLFWImpl()
@@ -51,36 +51,25 @@ namespace DDM
 
 		void CreateWindow()
 		{
+			if (m_Window.handle != nullptr)
+			{
+				return;
+			}
+
 			InitData initData = ReadInitData();
 
 			auto handle = glfwCreateWindow(initData.width, initData.height, "test", nullptr, nullptr);
 
 
 			glfwSetWindowSizeCallback(handle, resize_callback);
+			glfwSetWindowPosCallback(handle, moved_callback);
 
 			m_Window.handle = handle;
 			m_Window.width = initData.width;
 			m_Window.height = initData.height;
+			m_Window.fullscreen = initData.fullscreen;
 
-			GLFWmonitor* monitor = nullptr;
-
-			if (initData.fullscreen)
-			{
-				int count = 0;
-
-				auto monitors = glfwGetMonitors(&count);
-
-				if (count > initData.monitor)
-				{
-					monitor = monitors[initData.monitor];
-				}
-				else
-				{
-					monitor = glfwGetPrimaryMonitor();
-				}
-			}
-
-			glfwSetWindowMonitor(handle, monitor, initData.posX, initData.posY, initData.width, initData.height, GLFW_DONT_CARE);
+			SetWindowPosAndSize();
 		}
 
 		void PollEvents()
@@ -110,7 +99,7 @@ namespace DDM
 			}
 			else
 			{
-				glfwSetWindowMonitor(handle, nullptr, 0, 0, m_Window.width, m_Window.height, GLFW_DONT_CARE);
+				glfwSetWindowMonitor(handle, nullptr, m_Window.posX, m_Window.posY, m_Window.width, m_Window.height, GLFW_DONT_CARE);
 			}
 
 		}
@@ -120,6 +109,14 @@ namespace DDM
 			SetFullScreenMode(!m_Window.fullscreen);
 
 			std::cout << "fullscreen toggled \n";
+		}
+
+		void SetDimensions(int x, int y)
+		{
+			m_Window.width = x;
+			m_Window.height = y;
+
+			SetWindowPosAndSize();
 		}
 
 	private:
@@ -138,6 +135,9 @@ namespace DDM
 		// Default height
 		const int m_DefaultHeight{ 600 };
 
+		// Default xpos
+		const int m_DefaultYPos{ 10 };
+
 		static void error_callback(int error, const char* description)
 		{
 			std::cout << "Glfw error: " << error << "\n" << description << "\n";
@@ -148,10 +148,21 @@ namespace DDM
 			m_sInstance->Resized(width, height);
 		}
 
+		static void moved_callback(GLFWwindow* window, int x, int y)
+		{
+			m_sInstance->Moved(x, y);
+		}
+
 		void Resized(int width, int height)
 		{
 			m_Window.width = width;
 			m_Window.height = height;
+		}
+
+		void Moved(int x, int y)
+		{
+			m_Window.posX = x;
+			m_Window.posY = y;
 		}
 
 		void WriteToFile()
@@ -172,9 +183,11 @@ namespace DDM
 		{
 			InitData initData{};
 
+			bool shouldReadFromData = ConfigManager::GetInstance().GetBool("ReadLastState");
+
 			auto& fileSystem = DDM::ServiceLocator::GetFileSystem();
 
-			if (fileSystem.OpenRead(m_DataPath))
+			if (shouldReadFromData && fileSystem.OpenRead(m_DataPath))
 			{
 				fileSystem.Read(m_DataPath, (char*)&initData, sizeof(InitData));
 
@@ -199,6 +212,11 @@ namespace DDM
 			if (initData.height <= 0)
 			{
 				initData.height = m_DefaultHeight;
+			}
+
+			if (initData.posY <= 0)
+			{
+				initData.posY = m_DefaultYPos;
 			}
 
 			return initData;
@@ -228,36 +246,50 @@ namespace DDM
 
 			initData.maximized = maximized == GLFW_TRUE;
 
+			initData.fullscreen = m_Window.fullscreen;
 
-			auto monitor = glfwGetWindowMonitor(handle);
-
-			if (monitor == nullptr)
+			if (m_Window.fullscreen)
 			{
-				initData.fullscreen = true;
-				initData.monitor = 1;
-			}
-			else
-			{
-				initData.fullscreen = true;
+				auto monitor = glfwGetWindowMonitor(handle);
 
-				int monitorCount;
-
-				auto monitors = glfwGetMonitors(&monitorCount);
-
-				for (int i{}; i < monitorCount; ++i)
+				if (monitor == nullptr)
 				{
-					if (monitor == monitors[i])
+					initData.monitor = 0;
+				}
+				else
+				{
+					int monitorCount;
+
+					auto monitors = glfwGetMonitors(&monitorCount);
+
+					for (int i{}; i < monitorCount; ++i)
 					{
-						initData.monitor = i;
-						break;
+						if (monitor == monitors[i])
+						{
+							initData.monitor = i;
+							break;
+						}
 					}
 				}
 			}
 
 			return initData;
 		}
-	};
 
+		void SetWindowPosAndSize()
+		{
+			GLFWwindow* handle = static_cast<GLFWwindow*>(m_Window.handle);
+
+			GLFWmonitor* monitor = nullptr;
+
+			if (m_Window.fullscreen)
+			{
+				monitor = glfwGetPrimaryMonitor();
+			}
+
+			glfwSetWindowMonitor(handle, monitor, m_Window.posX, m_Window.posY, m_Window.width, m_Window.height, GLFW_DONT_CARE);
+		}
+	};
 
 	GLFWImpl* GLFWImpl::m_sInstance = nullptr;
 }
@@ -319,4 +351,9 @@ void DDM::GLFWWindow::SetFullscreenMode(bool fullscreen)
 void DDM::GLFWWindow::ToggleFullscreenMode()
 {
 	m_pImpl->ToggleFullscreen();
+}
+
+void DDM::GLFWWindow::SetDimensions(int x, int y)
+{
+	m_pImpl->SetDimensions(x, y);
 }

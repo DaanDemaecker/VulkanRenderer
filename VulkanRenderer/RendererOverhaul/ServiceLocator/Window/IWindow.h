@@ -11,6 +11,8 @@ namespace DDM
 		void* handle{};
 		int width{};
 		int height{};
+		int posX{};
+		int posY{};
 		bool fullscreen{};
 	};
 
@@ -37,6 +39,8 @@ namespace DDM
 		virtual void SetFullscreenMode(bool fullscreen) = 0;
 
 		virtual void ToggleFullscreenMode() = 0;
+
+		virtual void SetDimensions(int x, int y) = 0;
 	};
 
 	class DefaultWindow final : public IWindow
@@ -62,6 +66,8 @@ namespace DDM
 		virtual void SetFullscreenMode(bool fullscreen) override {}
 
 		virtual void ToggleFullscreenMode() override {}
+
+		virtual void SetDimensions(int x, int y) override {};
 	};
 }
 

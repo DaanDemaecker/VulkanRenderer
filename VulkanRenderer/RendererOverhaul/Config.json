@@ -5,7 +5,7 @@
     "FullScreen" : false,
     "Maximized" : false,
     "Monitor": 1,
-    "ReadLastState" :  false,
+    "ReadLastState" :  true,
     "ApplicationName": "RendererOverhaul",
     "ApplicationVersionVariant" : 1,
     "ApplicationVersionMajor" : 1,

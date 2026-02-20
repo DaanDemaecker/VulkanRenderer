@@ -23,6 +23,8 @@ void DDM::DDMEngine::Run()
 {
 	DDM::ServiceLocator::GetWindow().CreateWindow();
 
+	DDM::ServiceLocator::GetWindow().SetDimensions(20, 20);
+
 	// Variable that will indicate when the gameloop should stop running
 	bool shouldQuit{ false };
 
