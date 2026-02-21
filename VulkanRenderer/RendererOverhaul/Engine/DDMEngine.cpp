@@ -4,7 +4,6 @@
 #include "DDMEngine.h"
 
 // File includes
-#include "Window.h"
 #include "ServiceLocator/ServiceLocator.h"
 
 #include "Includes/GLFWIncludes.h"
@@ -23,8 +22,6 @@ void DDM::DDMEngine::Run()
 {
 	DDM::ServiceLocator::GetWindow().CreateWindow();
 
-	DDM::ServiceLocator::GetWindow().SetDimensions(20, 20);
-
 	// Variable that will indicate when the gameloop should stop running
 	bool shouldQuit{ false };
 
@@ -33,14 +30,18 @@ void DDM::DDMEngine::Run()
 	// As long as the app shouldn't quit, the gameloop will run
 	while (!shouldQuit)
 	{
+		DDM::ServiceLocator::GetWindow().PollEvents();
+
+
+		// This is only for testing purposes and will be removed in the future
+		//------------
 		int state = glfwGetKey(static_cast<GLFWwindow*>(DDM::ServiceLocator::GetWindow().GetWindowData().handle), GLFW_KEY_F11);
 		if (state == GLFW_PRESS && !f11PressedLastFrame)
 		{
 			DDM::ServiceLocator::GetWindow().ToggleFullscreenMode();
 		}
 		f11PressedLastFrame = state == GLFW_PRESS;
-
-		DDM::ServiceLocator::GetWindow().PollEvents();
+		//-----------
 
 		// Check if aplication should quit
 		shouldQuit = DDM::ServiceLocator::GetWindow().ShouldClose();

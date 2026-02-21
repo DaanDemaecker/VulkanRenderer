@@ -7,7 +7,7 @@ add_executable(RendererOverhaul
 
  "Engine/ConfigManager.cpp"
  "Engine/DDMEngine.cpp"
- "Engine/Window.cpp"
+ 
 
  "ServiceLocator/ServiceLocator.cpp"
 
