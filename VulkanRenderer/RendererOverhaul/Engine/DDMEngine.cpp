@@ -22,6 +22,8 @@ void DDM::DDMEngine::Run()
 {
 	DDM::ServiceLocator::GetWindow().CreateWindow();
 
+	DDM::ServiceLocator::GetRenderer().Render();
+
 	// Variable that will indicate when the gameloop should stop running
 	bool shouldQuit{ false };
 
@@ -46,4 +48,6 @@ void DDM::DDMEngine::Run()
 		// Check if aplication should quit
 		shouldQuit = DDM::ServiceLocator::GetWindow().ShouldClose();
 	}
+
+	DDM::ServiceLocator::GetRenderer().Terminate();
 }
