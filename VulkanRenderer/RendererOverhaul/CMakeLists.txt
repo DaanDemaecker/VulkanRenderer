@@ -7,13 +7,14 @@ add_executable(RendererOverhaul
 
  "Engine/ConfigManager.cpp"
  "Engine/DDMEngine.cpp"
- 
 
  "ServiceLocator/ServiceLocator.cpp"
 
  "ServiceLocator/Window/GLFW/GLFWWindow.cpp"
+
  "ServiceLocator/FileSystem/DDM/DDMFileSystem.cpp"
 
+ "ServiceLocator/Renderer/VulkanRenderer/VulkanRenderer.cpp"
 )
 
 # Include directories specific to this target

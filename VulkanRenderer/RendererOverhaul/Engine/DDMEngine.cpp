@@ -22,7 +22,7 @@ void DDM::DDMEngine::Run()
 {
 	DDM::ServiceLocator::GetWindow().CreateWindow();
 
-	DDM::ServiceLocator::GetRenderer().Render();
+	DDM::ServiceLocator::GetRenderer().Init();
 
 	// Variable that will indicate when the gameloop should stop running
 	bool shouldQuit{ false };
@@ -44,6 +44,9 @@ void DDM::DDMEngine::Run()
 		}
 		f11PressedLastFrame = state == GLFW_PRESS;
 		//-----------
+
+		// Render
+		DDM::ServiceLocator::GetRenderer().Render();
 
 		// Check if aplication should quit
 		shouldQuit = DDM::ServiceLocator::GetWindow().ShouldClose();
