@@ -5,7 +5,7 @@
 #define _DDM_VULKAN_RENDERER_
 
 // Parent include
-#include "IRenderer.h"
+#include "ServiceLocator/Renderer/IRenderer.h"
 
 // Standard library includes
 #include <memory>
