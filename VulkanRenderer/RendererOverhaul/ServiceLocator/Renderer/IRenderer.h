@@ -18,9 +18,9 @@ namespace DDM
 		IRenderer& operator=(IRenderer&) = delete;
 		IRenderer& operator=(IRenderer&&) = delete;
 
-		virtual void Render() = 0;
-
 		virtual void Init() = 0;
+
+		virtual void Render() = 0;
 
 		virtual void Terminate() = 0;
 	};

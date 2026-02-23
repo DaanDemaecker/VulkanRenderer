@@ -21,7 +21,9 @@ namespace DDM
 		~VulkanRenderer() override;
 
 		void Init() override;
+
 		void Render() override;
+
 		void Terminate() override;
 
 	private:

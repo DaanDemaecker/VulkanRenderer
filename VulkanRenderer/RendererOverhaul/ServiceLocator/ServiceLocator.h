@@ -16,33 +16,83 @@ namespace DDM
 	class ServiceLocator final
 	{
 	public:
+		// This class should never be instantiated, so the constructor is deleted
 		ServiceLocator() = delete;
 
-		~ServiceLocator() = default;
+		// The destructor is also deleted
+		~ServiceLocator() = delete;
 
+		// The copy and move constructors and assignment operators are also deleted
 		ServiceLocator(ServiceLocator&) = delete;
 		ServiceLocator(ServiceLocator&&) = delete;
 
 		ServiceLocator& operator=(ServiceLocator&) = delete;
 		ServiceLocator& operator=(ServiceLocator&&) = delete;
 
+		//------------------
+		// Window
+		//------------------
+
+		/// <summary>
+		/// Register a new IWindow interface
+		/// </summary>
+		/// <param name="pWindow: ">unique pointer to the new window interface</param>
 		static void RegisterWindow(std::unique_ptr<IWindow> pWindow);
+
+		/// <summary>
+		/// Get a reference to the IWindow interface
+		/// </summary>
+		/// <returns>Reference to the IWindow interface</returns>
 		static IWindow& GetWindow();
 
+
+		//------------------
+		// File system
+		//------------------
+
+		/// <summary>
+		/// Register a new IFileSystem interface
+		/// </summary>
+		/// <param name="pFileSystem: ">unique pointer to the new IFileSystem interface</param>
 		static void RegisterFileSystem(std::unique_ptr<IFileSystem> pFileSystem);
+
+		/// <summary>
+		/// Get a reference to the IFileSystem interface
+		/// </summary>
+		/// <returns>Reference to the IFileSystem interface</returns>
 		static IFileSystem& GetFileSystem();
 
+
+		//------------------
+		// Renderer
+		//------------------
+
+		/// <summary>
+		/// Register a new IRenderer interface
+		/// </summary>
+		/// <param name="pRenderer: ">unique pointer to the new IRenderer interface</param>
 		static void RegisterRenderer(std::unique_ptr<IRenderer> pRenderer);
+
+		/// <summary>
+		/// Get a reference to the IRenderer interface
+		/// </summary>
+		/// <returns>Reference to the IRenderer interface</returns>
 		static IRenderer& GetRenderer();
 
 	private:
+		// Default window instance
 		static std::unique_ptr<DefaultWindow> m_pDefaultWindowInstance;
+		// Current window instance
 		static std::unique_ptr<IWindow> m_pWindowInstance;
 
+		// Default file system instance
 		static std::unique_ptr<DefaultFileSystem> m_pDefaultFileSystemInstance;
+		// Current file system instance
 		static std::unique_ptr<IFileSystem> m_pFileSystemInstance;
 
+		// Default renderer instance
 		static std::unique_ptr<DefaultRenderer> m_pDefaultRendererInstance;
+		// Current renderer instance
 		static std::unique_ptr<IRenderer> m_pRendererInstance;
 	};
 }

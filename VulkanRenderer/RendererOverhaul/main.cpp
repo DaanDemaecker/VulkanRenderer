@@ -11,6 +11,7 @@
 
 int main()
 {
+	// Register services
 	DDM::ServiceLocator::RegisterWindow(std::make_unique<DDM::GLFWWindow>());
 	DDM::ServiceLocator::RegisterFileSystem(std::make_unique<DDM::DDMFileSystem>());
 	DDM::ServiceLocator::RegisterRenderer(std::make_unique<DDM::VulkanRenderer>());
