@@ -1,9 +1,16 @@
 // GLFWIncludes.h
 
-#ifndef GLFWIncluded
-#define GLFWIncluded
+#ifndef _DDM_GLFW_
+#define _DDM_GLFW_
 
-#define GLFW_INCLUDE_VULKAN
+#define WIN32_LEAN_AND_MEAN
+#define NOMINMAX
+
+#include <windows.h>  
+
 #include <GLFW/glfw3.h>
 
-#endif // !GLFWIncluded
+#define GLFW_EXPOSE_NATIVE_WIN32
+#include <GLFW/glfw3native.h>
+
+#endif // !_DDM_GLFW_

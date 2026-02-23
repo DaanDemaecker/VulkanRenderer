@@ -25,7 +25,7 @@ namespace DDM
 		GLFWWindow& operator=(GLFWWindow&) = delete;
 		GLFWWindow& operator=(GLFWWindow&&) = delete;
 
-		virtual void CreateWindow() override;
+		virtual void InitializeWindow() override;
 
 		virtual void PollEvents() override;
 

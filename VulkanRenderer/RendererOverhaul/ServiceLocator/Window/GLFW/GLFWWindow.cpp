@@ -35,6 +35,9 @@ namespace DDM
 			glfwInit();
 
 			glfwSetErrorCallback(error_callback);
+
+			glfwGetWin32Window(nullptr);
+
 		}
 
 		~GLFWImpl()
@@ -49,7 +52,7 @@ namespace DDM
 			glfwTerminate();
 		}
 
-		void CreateWindow()
+		void InitializeWindow()
 		{
 			if (m_Window.handle != nullptr)
 			{
@@ -305,11 +308,11 @@ DDM::GLFWWindow::~GLFWWindow()
 {
 }
 
-void DDM::GLFWWindow::CreateWindow()
+void DDM::GLFWWindow::InitializeWindow()
 {
 	if (m_pImpl != nullptr)
 	{
-		m_pImpl->CreateWindow();
+		m_pImpl->InitializeWindow();
 	}
 }
 

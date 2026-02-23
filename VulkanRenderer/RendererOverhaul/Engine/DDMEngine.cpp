@@ -20,7 +20,7 @@ DDM::DDMEngine::~DDMEngine()
 
 void DDM::DDMEngine::Run()
 {
-	DDM::ServiceLocator::GetWindow().CreateWindow();
+	DDM::ServiceLocator::GetWindow().InitializeWindow();
 
 	DDM::ServiceLocator::GetRenderer().Init();
 

@@ -28,7 +28,7 @@ namespace DDM
 		IWindow& operator=(IWindow&) = delete;
 		IWindow& operator=(IWindow&&) = delete;
 
-		virtual void CreateWindow() = 0;
+		virtual void InitializeWindow() = 0;
 
 		virtual void PollEvents() = 0;
 
@@ -55,7 +55,7 @@ namespace DDM
 		DefaultWindow& operator=(DefaultWindow&) = delete;
 		DefaultWindow& operator=(DefaultWindow&&) = delete;
 
-		virtual void CreateWindow() override {}
+		virtual void InitializeWindow() override {}
 
 		virtual void PollEvents() override {}
 
