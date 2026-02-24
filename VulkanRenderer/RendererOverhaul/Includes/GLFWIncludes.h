@@ -1,12 +1,7 @@
 // GLFWIncludes.h
 
 #ifndef _DDM_GLFW_
-#define _DDM_GLFW_
-
-#define WIN32_LEAN_AND_MEAN
-#define NOMINMAX
-
-#include <windows.h>  
+#define _DDM_GLFW_ 
 
 #include <GLFW/glfw3.h>
 

@@ -4,6 +4,11 @@
 #ifndef _DDM_I_WINDOW_
 #define _DDM_I_WINDOW_
 
+#define WIN32_LEAN_AND_MEAN
+#define NOMINMAX
+
+#include <windows.h> 
+
 namespace DDM
 {
 	struct WindowData
@@ -41,6 +46,8 @@ namespace DDM
 		virtual void ToggleFullscreenMode() = 0;
 
 		virtual void SetDimensions(int x, int y) = 0;
+
+		virtual HWND GetNativeHandle() = 0;
 	};
 
 	class DefaultWindow final : public IWindow
@@ -68,6 +75,8 @@ namespace DDM
 		virtual void ToggleFullscreenMode() override {}
 
 		virtual void SetDimensions(int x, int y) override {};
+
+		virtual HWND GetNativeHandle() override { return nullptr; }
 	};
 }
 

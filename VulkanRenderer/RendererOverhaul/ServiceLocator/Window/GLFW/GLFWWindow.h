@@ -38,6 +38,8 @@ namespace DDM
 		virtual void ToggleFullscreenMode() override;
 
 		virtual void SetDimensions(int x, int y) override;
+
+		virtual HWND GetNativeHandle() override;
 	private:
 		std::unique_ptr<GLFWImpl> m_pImpl{};
 	};
