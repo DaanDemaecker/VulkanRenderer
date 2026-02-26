@@ -4,7 +4,6 @@
 #define _DDM_SERVICE_LOCATOR_
 
 // File includes
-#include "Window/IWindow.h"
 #include "FileSystem/IFileSystem.h"
 #include "Renderer/IRenderer.h"
 
@@ -28,23 +27,6 @@ namespace DDM
 
 		ServiceLocator& operator=(ServiceLocator&) = delete;
 		ServiceLocator& operator=(ServiceLocator&&) = delete;
-
-		//------------------
-		// Window
-		//------------------
-
-		/// <summary>
-		/// Register a new IWindow interface
-		/// </summary>
-		/// <param name="pWindow: ">unique pointer to the new window interface</param>
-		static void RegisterWindow(std::unique_ptr<IWindow> pWindow);
-
-		/// <summary>
-		/// Get a reference to the IWindow interface
-		/// </summary>
-		/// <returns>Reference to the IWindow interface</returns>
-		static IWindow& GetWindow();
-
 
 		//------------------
 		// File system
@@ -80,11 +62,6 @@ namespace DDM
 		static IRenderer& GetRenderer();
 
 	private:
-		// Default window instance
-		static std::unique_ptr<DefaultWindow> m_pDefaultWindowInstance;
-		// Current window instance
-		static std::unique_ptr<IWindow> m_pWindowInstance;
-
 		// Default file system instance
 		static std::unique_ptr<DefaultFileSystem> m_pDefaultFileSystemInstance;
 		// Current file system instance

@@ -1,13 +1,12 @@
-// GLFWWindow.cpp
+// Window.cpp
 
 // Header include
-#include "GLFWWindow.h"
+#include "Window.h"
 
 // File includes
 #include "Includes/GLFWIncludes.h"
-#include "Engine/ConfigManager.h"
 #include "ServiceLocator/ServiceLocator.h"
-#include "Includes/GLMIncludes.h"
+#include "Engine/ConfigManager.h"
 
 // Standard library includes
 #include <iostream>
@@ -116,11 +115,6 @@ namespace DDM
 			m_Window.height = y;
 
 			SetWindowPosAndSize();
-		}
-
-		HWND GetNativeHandle() const
-		{
-			return glfwGetWin32Window(GetGLFWHandle());
 		}
 
 	private:
@@ -304,70 +298,50 @@ namespace DDM
 }
 
 
-// GLFWWindow
-DDM::GLFWWindow::GLFWWindow()
+
+DDM::Window::Window()
 {
 	m_pImpl = std::make_unique<GLFWImpl>();
+
+	InitializeWindow();
 }
 
-DDM::GLFWWindow::~GLFWWindow()
+DDM::Window::~Window()
 {
+
 }
 
-void DDM::GLFWWindow::InitializeWindow()
+void DDM::Window::PollEvents()
 {
-	if (m_pImpl != nullptr)
-	{
-		m_pImpl->InitializeWindow();
-	}
+	m_pImpl->PollEvents();
 }
 
-void DDM::GLFWWindow::PollEvents()
+bool DDM::Window::ShouldClose()
 {
-	if (m_pImpl != nullptr)
-	{
-		m_pImpl->PollEvents();
-	}
+	return m_pImpl->ShouldClose();
 }
 
-bool DDM::GLFWWindow::ShouldClose()
-{
-	bool shouldClose = false;
-
-	if (m_pImpl != nullptr)
-	{
-		shouldClose = m_pImpl->ShouldClose();
-	}
-
-	if (shouldClose)
-	{
-		m_pImpl.reset();
-	}
-
-	return shouldClose;
-}
-
-const DDM::WindowData& DDM::GLFWWindow::GetWindowData()
+const DDM::WindowData& DDM::Window::GetWindowData()
 {
 	return m_pImpl->GetWindowData();
 }
 
-void DDM::GLFWWindow::SetFullscreenMode(bool fullscreen)
+void DDM::Window::SetFullscreenMode(bool fullscreen)
 {
 	m_pImpl->SetFullScreenMode(fullscreen);
 }
 
-void DDM::GLFWWindow::ToggleFullscreenMode()
+void DDM::Window::ToggleFullscreenMode()
 {
 	m_pImpl->ToggleFullscreen();
 }
 
-void DDM::GLFWWindow::SetDimensions(int x, int y)
+void DDM::Window::SetDimensions(int x, int y)
 {
 	m_pImpl->SetDimensions(x, y);
 }
 
-HWND DDM::GLFWWindow::GetNativeHandle()
+void DDM::Window::InitializeWindow()
 {
-	return m_pImpl->GetNativeHandle();
+	m_pImpl->InitializeWindow();
 }

@@ -13,9 +13,6 @@ namespace DDM
 	class ConfigManager : public DDM::Singleton<ConfigManager>
 	{
 	public:
-		// Constructor
-		ConfigManager();
-
 		// Get string object from json
 		// Parameters:
 		//     propertyName: name of the property
@@ -57,6 +54,9 @@ namespace DDM
 		float GetFloat(const std::string&& propertyName);
 
 	private:
+		friend class Singleton<ConfigManager>;
+		ConfigManager();
+
 		// File name of the config file
 		const std::string m_FileName{ "Config.json" };
 

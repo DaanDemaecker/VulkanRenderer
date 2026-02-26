@@ -5,6 +5,7 @@
 
 // File includes
 #include "ServiceLocator/ServiceLocator.h"
+#include "Window/Window.h"
 
 #include "Includes/GLFWIncludes.h"
 
@@ -20,7 +21,7 @@ DDM::DDMEngine::~DDMEngine()
 
 void DDM::DDMEngine::Run()
 {
-	DDM::ServiceLocator::GetWindow().InitializeWindow();
+	auto& window{ DDM::Window::GetInstance()};
 
 	DDM::ServiceLocator::GetRenderer().Init();
 
@@ -32,15 +33,15 @@ void DDM::DDMEngine::Run()
 	// As long as the app shouldn't quit, the gameloop will run
 	while (!shouldQuit)
 	{
-		DDM::ServiceLocator::GetWindow().PollEvents();
+		DDM::Window::GetInstance().PollEvents();
 
 
 		// This is only for testing purposes and will be removed in the future
 		//------------
-		int state = glfwGetKey(static_cast<GLFWwindow*>(DDM::ServiceLocator::GetWindow().GetWindowData().handle), GLFW_KEY_F11);
+		int state = glfwGetKey(static_cast<GLFWwindow*>(window.GetWindowData().handle), GLFW_KEY_F11);
 		if (state == GLFW_PRESS && !f11PressedLastFrame)
 		{
-			DDM::ServiceLocator::GetWindow().ToggleFullscreenMode();
+			window.ToggleFullscreenMode();
 		}
 		f11PressedLastFrame = state == GLFW_PRESS;
 		//-----------
@@ -49,7 +50,7 @@ void DDM::DDMEngine::Run()
 		DDM::ServiceLocator::GetRenderer().Render();
 
 		// Check if aplication should quit
-		shouldQuit = DDM::ServiceLocator::GetWindow().ShouldClose();
+		shouldQuit = window.ShouldClose();
 	}
 
 	DDM::ServiceLocator::GetRenderer().Terminate();

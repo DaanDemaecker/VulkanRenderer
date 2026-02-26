@@ -8,14 +8,13 @@ add_executable(RendererOverhaul
  "Engine/ConfigManager.cpp"
  "Engine/DDMEngine.cpp"
 
- "ServiceLocator/ServiceLocator.cpp"
+ "Engine/Window/Window.cpp"
 
- "ServiceLocator/Window/GLFW/GLFWWindow.cpp"
+ "ServiceLocator/ServiceLocator.cpp"
 
  "ServiceLocator/FileSystem/DDM/DDMFileSystem.cpp"
 
- "ServiceLocator/Renderer/VulkanRenderer/VulkanRenderer.cpp"
-)
+ "ServiceLocator/Renderer/VulkanRenderer/VulkanRenderer.cpp")
 
 # Include directories specific to this target
 target_include_directories(RendererOverhaul PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
