@@ -93,7 +93,9 @@ namespace DDM
 
 			if (fullScreen)
 			{
-				glfwSetWindowMonitor(GetGLFWHandle(), glfwGetPrimaryMonitor(), 0, 0, m_Window.width, m_Window.height, GLFW_DONT_CARE);
+				GLFWmonitor* pMonitor = GetCurrentMonitor();
+
+				glfwSetWindowMonitor(GetGLFWHandle(), pMonitor, 0, 0, m_Window.width, m_Window.height, GLFW_DONT_CARE);
 			}
 			else
 			{
@@ -105,8 +107,6 @@ namespace DDM
 		void ToggleFullscreen()
 		{
 			SetFullScreenMode(!m_Window.fullscreen);
-
-			std::cout << "fullscreen toggled \n";
 		}
 
 		void SetDimensions(int x, int y)
@@ -287,10 +287,73 @@ namespace DDM
 
 			if (m_Window.fullscreen)
 			{
-				monitor = glfwGetPrimaryMonitor();
+				monitor = GetCurrentMonitor();
 			}
 
 			glfwSetWindowMonitor(GetGLFWHandle(), monitor, m_Window.posX, m_Window.posY, m_Window.width, m_Window.height, GLFW_DONT_CARE);
+		}
+
+		GLFWmonitor* GetCurrentMonitor()
+		{
+			int lowesMonitorX{};
+			int leftMonitor{};
+
+			int monitorCount{};
+
+			const auto monitors = glfwGetMonitors(&monitorCount);
+			for (int i{}; i < monitorCount; ++i)
+			{
+				const auto monitor = monitors[i];
+
+				int monitorX{};
+				int monitorY{};
+
+				glfwGetMonitorPos(monitor, &monitorX, &monitorY);
+
+				if (monitorX < lowesMonitorX)
+				{
+					lowesMonitorX = monitorX;
+					leftMonitor = i;
+				}
+
+				int monitorWidth{};
+				int monitorHeight{};
+
+				int modeCount{};
+
+				const GLFWvidmode* modes = glfwGetVideoModes(monitor, &modeCount);
+
+				for (int i{}; i < modeCount; ++i)
+				{
+					const auto currentMode = modes[i];
+
+					if (currentMode.width > monitorWidth)
+					{
+						monitorWidth = currentMode.width;
+					}
+					
+					if (currentMode.height > monitorHeight)
+					{
+						monitorHeight = currentMode.height;
+					}
+				}
+
+				if (m_Window.posX >= monitorX &&
+					m_Window.posX <= monitorX + monitorWidth &&
+					m_Window.posY >= monitorY &&
+					m_Window.posY <= monitorY + monitorHeight)
+				{
+					return monitor;
+				}
+			}
+
+			if (m_Window.posX < lowesMonitorX)
+			{
+				return monitors[leftMonitor];
+			}
+
+
+			return glfwGetPrimaryMonitor();
 		}
 	};
 
