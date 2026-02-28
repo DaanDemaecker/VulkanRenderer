@@ -2,7 +2,7 @@
 
 // Header include
 #include "VulkanRenderer.h"
-#include "Includes/VulkanIncludes.h"
+#include "Vulkan/VulkanImplementation.h"
 
 // VulkanImpl
 //------------------
@@ -13,7 +13,7 @@ namespace DDM
 	public:
 		VulkanImpl()
 		{
-
+			m_pVulkanObject = std::make_unique<VulkanImplementation>();
 		}
 
 		~VulkanImpl()
@@ -43,7 +43,7 @@ namespace DDM
 		}
 
 	private:
-
+		std::unique_ptr<VulkanImplementation> m_pVulkanObject{};
 	};
 }
 //------------------
