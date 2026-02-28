@@ -1,8 +1,8 @@
 // VulkanIncludes.h
 
-#ifndef VulkanIncluded
-#define VulkanIncluded
+#ifndef _DDM_VULKAN_
+#define _DDM_VULKAN_
 
 #include "vulkan/vulkan.h"
 
-#endif // !VulkanIncluded
+#endif // !_DDM_VULKAN_

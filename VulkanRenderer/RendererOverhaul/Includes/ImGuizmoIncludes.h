@@ -1,5 +1,7 @@
-#ifndef ImGuizmoIncluded
-#define ImGuizmoIncluded
+// ImGuizmoIncludes.h
+
+#ifndef _DDM_IMGUIZMO_
+#define _DDM_IMGUIZMO_
 
 #include "ImGuiIncludes.h"
 
@@ -11,4 +13,4 @@
 #include "ImGuizmo/GraphEditor.h"
 
 
-#endif // !ImGuizmoIncluded
+#endif // !_DDM_IMGUIZMO_

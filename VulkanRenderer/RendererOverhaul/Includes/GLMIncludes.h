@@ -1,7 +1,7 @@
 // GLMIncludes.h
 
-#ifndef GLMIncluded
-#define GLMIncluded
+#ifndef _DDM_GLM_
+#define _DDM_GLM_
 
 #define GLM_FORCE_RADIANS
 #define GLM_FORCE_DEPTH_ZERO_TO_ONE
@@ -18,5 +18,5 @@
 #include <glm/gtx/string_cast.hpp>
 #pragma warning(pop)
 
-#endif // !GLMIncluded
+#endif // !_DDM_GLM_
 

@@ -1,7 +1,7 @@
 // STBIncludes.h
 
-#ifndef STBIncluded
-#define STBIncluded
+#ifndef _DDM_STB_
+#define _DDM_STB_
 
 #pragma warning(push)
 #pragma warning(disable : 26819)
@@ -12,4 +12,4 @@
 #pragma warning(pop)
 
 
-#endif //STBIncluded
+#endif //_DDM_STB_

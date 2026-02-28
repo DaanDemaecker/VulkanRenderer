@@ -34,7 +34,6 @@ namespace DDM
 			glfwInit();
 
 			glfwSetErrorCallback(error_callback);
-
 		}
 
 		~GLFWImpl()
