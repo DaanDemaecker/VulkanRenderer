@@ -5,10 +5,14 @@
 #define _DDM_VULKAN_IMPLEMENTATION_
 
 // File includes
-#include "Includes/VulkanIncludes.h"
+
+// Standard library includes
+#include <memory>
 
 namespace DDM
 {
+	class VulkanCore;
+
 	class VulkanImplementation final
 	{
 	public:
@@ -31,7 +35,7 @@ namespace DDM
 		VulkanImplementation& operator=(VulkanImplementation&&) = delete;
 
 	private:
-		
+		std::unique_ptr<VulkanCore> m_pCore{};
 	};
 }
 
