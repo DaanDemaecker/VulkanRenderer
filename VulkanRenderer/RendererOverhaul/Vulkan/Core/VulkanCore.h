@@ -4,6 +4,9 @@
 #ifndef _DDM_VULKAN_CORE_
 #define _DDM_VULKAN_CORE_
 
+// File includes
+#include "Includes/VulkanIncludes.h"
+
 namespace DDM
 {
 	class VulkanCore final
@@ -29,7 +32,19 @@ namespace DDM
 		
 
 	private:
+		// Vulkan instance
+		VkInstance m_VkInstance{};
 
+		/// <summary>
+		/// Create the vulkan instance
+		/// </summary>
+		void CreateInstance();
+
+		/// <summary>
+		/// Retrieve application info for Instance creation
+		/// </summary>
+		/// <returns>Application info struct</returns>
+		VkApplicationInfo GetApplicationInfo();
 	};
 }
 

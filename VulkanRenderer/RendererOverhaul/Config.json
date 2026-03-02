@@ -7,13 +7,13 @@
     "Monitor": 1,
     "ReadLastState" :  true,
     "ApplicationName": "RendererOverhaul",
-    "ApplicationVersionVariant" : 1,
-    "ApplicationVersionMajor" : 1,
+    "ApplicationVersionVariant" : 0,
+    "ApplicationVersionMajor" : 0,
     "ApplicationVersionMinor" : 0,
     "ApplicationVersionPatch" : 0,
     "EngineName" : "DDM",
-    "EngineVersionVariant" : 1,
-    "EngineVersionMajor" : 1,
+    "EngineVersionVariant" : 0,
+    "EngineVersionMajor" : 0,
     "EngineVersionMinor" : 0,
     "EngineVersionPatch" : 0
 }

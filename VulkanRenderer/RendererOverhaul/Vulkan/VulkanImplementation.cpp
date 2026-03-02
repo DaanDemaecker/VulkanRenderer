@@ -13,4 +13,5 @@ DDM::VulkanImplementation::VulkanImplementation()
 
 DDM::VulkanImplementation::~VulkanImplementation()
 {
+
 }
