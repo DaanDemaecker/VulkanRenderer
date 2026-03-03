@@ -20,6 +20,7 @@ void DDM::VulkanCore::CreateInstance()
 	auto applicationInfo = GetApplicationInfo();
 
 	createInfo.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
+	createInfo.flags = 0;
 	createInfo.pNext = nullptr;
 	createInfo.pApplicationInfo = &applicationInfo;
 

@@ -33,6 +33,8 @@ namespace DDM
 
 			glfwInit();
 
+			glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
+
 			glfwSetErrorCallback(error_callback);
 		}
 
