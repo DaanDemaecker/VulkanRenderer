@@ -7,6 +7,9 @@
 // File includes
 #include "Includes/VulkanIncludes.h"
 
+// Standard library includes
+#include <vector>
+
 namespace DDM
 {
 	class VulkanCore final
@@ -35,6 +38,12 @@ namespace DDM
 		// Vulkan instance
 		VkInstance m_VkInstance{};
 
+		const std::vector<char const*> m_ValidationLayers = {
+			"VK_LAYER_KHRONOS_validation"
+			};
+
+		bool m_EnableValidationLayers = true;
+
 		/// <summary>
 		/// Create the vulkan instance
 		/// </summary>
@@ -45,6 +54,18 @@ namespace DDM
 		/// </summary>
 		/// <returns>Application info struct</returns>
 		VkApplicationInfo GetApplicationInfo();
+
+		/// <summary>
+		/// Set up the validation layers for the instance creation info struct
+		/// </summary>
+		/// <param name="createInfo: ">reference to the VkInstanceCreateInfo struct</param>
+		void SetupValidationLayers(VkInstanceCreateInfo& createInfo);
+
+		/// <summary>
+		/// Check if validation layers are supported
+		/// </summary>
+		/// <returns>bool indicating support for validation layers</returns>
+		bool QueryValidationLayerSupport();
 	};
 }
 

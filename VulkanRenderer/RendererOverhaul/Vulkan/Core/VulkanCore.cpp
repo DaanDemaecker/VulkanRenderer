@@ -11,6 +11,7 @@ DDM::VulkanCore::VulkanCore()
 
 DDM::VulkanCore::~VulkanCore()
 {
+	vkDestroyInstance(m_VkInstance, nullptr);
 }
 
 void DDM::VulkanCore::CreateInstance()
@@ -24,8 +25,7 @@ void DDM::VulkanCore::CreateInstance()
 	createInfo.pNext = nullptr;
 	createInfo.pApplicationInfo = &applicationInfo;
 
-	createInfo.enabledLayerCount = 0;
-	createInfo.ppEnabledLayerNames = nullptr;
+	SetupValidationLayers(createInfo);
 
 	createInfo.enabledExtensionCount = 0;
 	createInfo.ppEnabledExtensionNames = nullptr;
@@ -60,4 +60,56 @@ VkApplicationInfo DDM::VulkanCore::GetApplicationInfo()
 	info.apiVersion = VK_API_VERSION_1_3;
 
 	return info;
+}
+
+void DDM::VulkanCore::SetupValidationLayers(VkInstanceCreateInfo& createInfo)
+{
+#ifdef NDEBUG
+	m_EnableValidationLayers = false;
+#else
+	m_EnableValidationLayers = true;
+#endif
+
+	if (!m_EnableValidationLayers)
+	{
+		createInfo.enabledLayerCount = 0;
+		createInfo.ppEnabledLayerNames = nullptr;
+
+		return;
+	}
+
+	if (!QueryValidationLayerSupport())
+	{
+		throw std::runtime_error("Validation layers requested, but not available!");
+	}
+
+	createInfo.enabledLayerCount = static_cast<uint32_t>(m_ValidationLayers.size());
+	createInfo.ppEnabledLayerNames = m_ValidationLayers.data();
+}
+
+bool DDM::VulkanCore::QueryValidationLayerSupport()
+{
+	uint32_t layerCount;
+
+	vkEnumerateInstanceLayerProperties(&layerCount, nullptr);
+
+	std::vector<VkLayerProperties> availableLayers(layerCount);
+	vkEnumerateInstanceLayerProperties(&layerCount, availableLayers.data());
+
+	for (const char* layerName : m_ValidationLayers) {
+		bool layerFound = false;
+
+		for (const auto& layerProperties : availableLayers) {
+			if (strcmp(layerName, layerProperties.layerName) == 0) {
+				layerFound = true;
+				break;
+			}
+		}
+
+		if (!layerFound) {
+			return false;
+		}
+	}
+
+	return true;
 }

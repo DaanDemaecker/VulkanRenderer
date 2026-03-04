@@ -15,5 +15,9 @@
     "EngineVersionVariant" : 0,
     "EngineVersionMajor" : 0,
     "EngineVersionMinor" : 0,
-    "EngineVersionPatch" : 0
+    "EngineVersionPatch": 0,
+    "ValidationSeverityError": true,
+    "ValidationSeverityWarning": true,
+    "ValidationSeverityInfo": true,
+    "ValidationSeverityVerbose": true
 }
