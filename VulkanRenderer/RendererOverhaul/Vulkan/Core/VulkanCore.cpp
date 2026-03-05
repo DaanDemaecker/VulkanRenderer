@@ -4,6 +4,9 @@
 #include "VulkanCore.h"
 #include "Engine/ConfigManager.h"
 
+#include "Includes/VulkanIncludes.h"
+#include "Includes/GLFWIncludes.h"
+
 DDM::VulkanCore::VulkanCore()
 {
 	CreateInstance();
@@ -26,9 +29,11 @@ void DDM::VulkanCore::CreateInstance()
 	createInfo.pApplicationInfo = &applicationInfo;
 
 	SetupValidationLayers(createInfo);
+	
+	auto extensions = GetExtensions();
 
-	createInfo.enabledExtensionCount = 0;
-	createInfo.ppEnabledExtensionNames = nullptr;
+	createInfo.enabledExtensionCount = extensions.size();
+	createInfo.ppEnabledExtensionNames = extensions.data();
 
 	vkCreateInstance(&createInfo, nullptr, &m_VkInstance);
 }
@@ -112,4 +117,20 @@ bool DDM::VulkanCore::QueryValidationLayerSupport()
 	}
 
 	return true;
+}
+
+std::vector<const char*> DDM::VulkanCore::GetExtensions()
+{
+	uint32_t glfwExtensionCount = 0;
+
+	auto glfwExtensions = glfwGetRequiredInstanceExtensions(&glfwExtensionCount);
+
+	std::vector<const char*> extensions(glfwExtensions, glfwExtensions + glfwExtensionCount);
+
+	if (m_EnableValidationLayers)
+	{
+		extensions.push_back(VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
+	}
+
+	return extensions;
 }

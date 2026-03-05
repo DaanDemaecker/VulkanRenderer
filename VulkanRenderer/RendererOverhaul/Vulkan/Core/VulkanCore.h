@@ -66,6 +66,12 @@ namespace DDM
 		/// </summary>
 		/// <returns>bool indicating support for validation layers</returns>
 		bool QueryValidationLayerSupport();
+
+		/// <summary>
+		/// Get the required extensions for the instance
+		/// </summary>
+		/// <returns>List of required extensions</returns>
+		std::vector<const char*> GetExtensions();
 	};
 }
 
