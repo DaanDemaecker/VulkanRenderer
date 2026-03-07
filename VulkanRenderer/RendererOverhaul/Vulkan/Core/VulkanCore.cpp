@@ -10,10 +10,18 @@
 DDM::VulkanCore::VulkanCore()
 {
 	CreateInstance();
+
+	SetupDebugMessenger();
 }
 
 DDM::VulkanCore::~VulkanCore()
 {
+	if (m_VkDebugMessenger != VK_NULL_HANDLE)
+	{
+		DestroyDebugMessenger(m_VkInstance, m_VkDebugMessenger, nullptr);
+	}
+
+
 	vkDestroyInstance(m_VkInstance, nullptr);
 }
 
@@ -133,4 +141,97 @@ std::vector<const char*> DDM::VulkanCore::GetExtensions()
 	}
 
 	return extensions;
+}
+
+void DDM::VulkanCore::SetupDebugMessenger()
+{
+	if (!m_EnableValidationLayers)
+	{
+		return;
+	}
+
+	VkDebugUtilsMessengerCreateInfoEXT createInfo{};
+	createInfo.sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT;
+	createInfo.pNext = nullptr;
+	createInfo.flags = 0;
+
+	SetupDebugMessengerSeverities(createInfo);
+
+	SetupDebugMessengerTypes(createInfo);
+
+	createInfo.pfnUserCallback = debugCallback;
+
+	createInfo.pUserData = nullptr;
+
+	if (CreateDebugMessenger(m_VkInstance, &createInfo, nullptr, &m_VkDebugMessenger))
+	{
+		throw std::runtime_error("failed to set up debug messenger!");
+	}
+}
+
+void DDM::VulkanCore::SetupDebugMessengerSeverities(VkDebugUtilsMessengerCreateInfoEXT& createInfo)
+{
+	createInfo.messageSeverity = 0;
+	
+	auto& config = ConfigManager::GetInstance();
+
+	if (config.GetBool("ValidationSeverityVerbose"))
+	{
+		createInfo.messageSeverity |= VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT;
+	}
+
+	if (config.GetBool("ValidationSeverityInfo"))
+	{
+		createInfo.messageSeverity |= VK_DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT;
+	}
+
+	if (config.GetBool("ValidationSeverityWarning"))
+	{
+		createInfo.messageSeverity |= VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT;
+	}
+
+	if (config.GetBool("ValidationSeverityError"))
+	{
+		createInfo.messageSeverity |= VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT;
+	}
+}
+
+void DDM::VulkanCore::SetupDebugMessengerTypes(VkDebugUtilsMessengerCreateInfoEXT& createInfo)
+{
+	createInfo.messageType = VK_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT |
+		VK_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT |
+		VK_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT;
+}
+
+VkResult DDM::VulkanCore::CreateDebugMessenger(VkInstance instance, const VkDebugUtilsMessengerCreateInfoEXT* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkDebugUtilsMessengerEXT* pDebugMessenger)
+{
+	auto func = (PFN_vkCreateDebugUtilsMessengerEXT)vkGetInstanceProcAddr(instance, "vkCreateDebugUtilsMessengerEXT");
+
+	if (func != nullptr)
+	{
+		return func(instance, pCreateInfo, pAllocator, pDebugMessenger);
+	}
+	else
+	{
+		return VK_ERROR_EXTENSION_NOT_PRESENT;
+	}
+}
+
+void DDM::VulkanCore::DestroyDebugMessenger(VkInstance instance, VkDebugUtilsMessengerEXT debugMessenger, const VkAllocationCallbacks* pAllocator)
+{
+	auto func = (PFN_vkDestroyDebugUtilsMessengerEXT)vkGetInstanceProcAddr(instance, "vkDestroyDebugUtilsMessengerEXT");
+
+	if (func != nullptr)
+	{
+		func(instance, debugMessenger, pAllocator);
+	}
+}
+
+
+VKAPI_ATTR VkBool32 VKAPI_CALL DDM::VulkanCore::debugCallback(VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity, VkDebugUtilsMessageTypeFlagsEXT messageType, const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData, void* pUserData)
+{
+	std::cout << "Validation layer error: " << pCallbackData->pMessage << std::endl;
+
+
+	return VK_FALSE;
 }

@@ -38,10 +38,15 @@ namespace DDM
 		// Vulkan instance
 		VkInstance m_VkInstance{};
 
+		// Debug messenger
+		VkDebugUtilsMessengerEXT m_VkDebugMessenger{};
+
+		// List of names of validation layers
 		const std::vector<char const*> m_ValidationLayers = {
 			"VK_LAYER_KHRONOS_validation"
 			};
 
+		// Indicates whether validation layers should be active
 		bool m_EnableValidationLayers = true;
 
 		/// <summary>
@@ -72,6 +77,60 @@ namespace DDM
 		/// </summary>
 		/// <returns>List of required extensions</returns>
 		std::vector<const char*> GetExtensions();
+
+		/// <summary>
+		/// Initialize the debug messenger
+		/// </summary>
+		void SetupDebugMessenger();
+
+		/// <summary>
+		/// Set up required severities for the debug messenger
+		/// </summary>
+		/// <param name="createInfo: ">reference to the create info struct for debug messenger</param>
+		void SetupDebugMessengerSeverities(VkDebugUtilsMessengerCreateInfoEXT& createInfo);
+
+		/// <summary>
+		/// Set up required message types for the debug messenger
+		/// </summary>
+		/// <param name="createInfo: ">reference to the create info struct for debug messenger</param>
+		void SetupDebugMessengerTypes(VkDebugUtilsMessengerCreateInfoEXT& createInfo);
+
+		/// <summary>
+		/// Create the debug messenger
+		/// </summary>
+		/// <param name="instance: ">Vulkan instance associated with messenger</param>
+		/// <param name="pCreateInfo: ">Create info of the messenger</param>
+		/// <param name="pAllocator: ">Custom vulkan allocator</param>
+		/// <param name="pDebugMessenger: ">Pointer to the future debug messenger</param>
+		/// <returns>Result of the operation</returns>
+		VkResult CreateDebugMessenger(VkInstance instance,
+			const VkDebugUtilsMessengerCreateInfoEXT* pCreateInfo,
+			const VkAllocationCallbacks* pAllocator,
+			VkDebugUtilsMessengerEXT* pDebugMessenger);
+
+		/// <summary>
+		/// Destroy the debug messenger
+		/// </summary>
+		/// <param name="instance: ">Vulkan instance associated with messenger</param>
+		/// <param name="debugMessenger: ">Messenger to destroy</param>
+		/// <param name="pAllocator: ">Custom vulkan allocator</param>
+		void DestroyDebugMessenger(VkInstance instance,
+			VkDebugUtilsMessengerEXT debugMessenger,
+			const VkAllocationCallbacks* pAllocator);
+
+		/// <summary>
+		/// Debug messenger callback
+		/// </summary>
+		/// <param name="messageSeverity: ">Severity of the message</param>
+		/// <param name="messageType: ">Type of message</param>
+		/// <param name="pCallbackData: ">Data about the debug callback</param>
+		/// <param name="pUserData: ">Data specified by user</param>
+		/// <returns></returns>
+		static VKAPI_ATTR VkBool32 VKAPI_CALL debugCallback(
+			VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
+			VkDebugUtilsMessageTypeFlagsEXT messageType,
+			const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData,
+			void* pUserData);
 	};
 }
 
