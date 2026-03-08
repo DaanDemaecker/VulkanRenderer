@@ -29,14 +29,25 @@ void DDM::VulkanCore::CreateInstance()
 {
 	VkInstanceCreateInfo createInfo{};
 
+	SetupValidationLayers(createInfo);
+
 	auto applicationInfo = GetApplicationInfo();
 
 	createInfo.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
 	createInfo.flags = 0;
+
+	VkDebugUtilsMessengerCreateInfoEXT debugCreateInfo{};
+
+	if (m_EnableValidationLayers)
+	{
+		PopulateDebugMessenger(debugCreateInfo);
+		createInfo.pNext = &debugCreateInfo;
+	}
+
+
 	createInfo.pNext = nullptr;
 	createInfo.pApplicationInfo = &applicationInfo;
 
-	SetupValidationLayers(createInfo);
 	
 	auto extensions = GetExtensions();
 
@@ -151,6 +162,17 @@ void DDM::VulkanCore::SetupDebugMessenger()
 	}
 
 	VkDebugUtilsMessengerCreateInfoEXT createInfo{};
+
+	PopulateDebugMessenger(createInfo);
+
+	if (CreateDebugMessenger(m_VkInstance, &createInfo, nullptr, &m_VkDebugMessenger))
+	{
+		throw std::runtime_error("failed to set up debug messenger!");
+	}
+}
+
+void DDM::VulkanCore::PopulateDebugMessenger(VkDebugUtilsMessengerCreateInfoEXT& createInfo)
+{
 	createInfo.sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT;
 	createInfo.pNext = nullptr;
 	createInfo.flags = 0;
@@ -162,11 +184,6 @@ void DDM::VulkanCore::SetupDebugMessenger()
 	createInfo.pfnUserCallback = debugCallback;
 
 	createInfo.pUserData = nullptr;
-
-	if (CreateDebugMessenger(m_VkInstance, &createInfo, nullptr, &m_VkDebugMessenger))
-	{
-		throw std::runtime_error("failed to set up debug messenger!");
-	}
 }
 
 void DDM::VulkanCore::SetupDebugMessengerSeverities(VkDebugUtilsMessengerCreateInfoEXT& createInfo)

@@ -84,6 +84,12 @@ namespace DDM
 		void SetupDebugMessenger();
 
 		/// <summary>
+		/// Fill in all fields for the debug messenger create info
+		/// </summary>
+		/// <param name="createInfo: ">Reference to the createinfo to fill in</param>
+		void PopulateDebugMessenger(VkDebugUtilsMessengerCreateInfoEXT& createInfo);
+
+		/// <summary>
 		/// Set up required severities for the debug messenger
 		/// </summary>
 		/// <param name="createInfo: ">reference to the create info struct for debug messenger</param>
