@@ -5,7 +5,7 @@ In this repository, I will be making a 3D renderer using the Vulkan API
 
 As Vulkan is not easy to start with without help, I used this tutorial to get started:  
 https://vulkan-tutorial.com.  
-Late,r I also bought and used the official Vulkan programming guide from OpenGL for a deeper understanding:
+Later, I also bought and used the official Vulkan programming guide from OpenGL for a deeper understanding:
 https://www.vulkanprogrammingguide.com
 
 <img src="Content/VulkanRenderer3D.gif" alt="drawing"/>
