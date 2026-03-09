@@ -4,5 +4,4 @@ target_include_directories(rapidjson INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/inclu
 
 
 target_link_libraries(VulkanRenderer3D PRIVATE rapidjson)
-target_link_libraries(VulkanRenderer2D PRIVATE rapidjson)
 target_link_libraries(RendererOverhaul PRIVATE rapidjson)

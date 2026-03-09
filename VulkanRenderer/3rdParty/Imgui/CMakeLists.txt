@@ -28,8 +28,5 @@ target_link_libraries(imgui_library PRIVATE Vulkan::Vulkan)
 target_include_directories(VulkanRenderer3D PRIVATE ${imgui_SOURCE_DIR})
 target_link_libraries(VulkanRenderer3D PRIVATE imgui_library)
 
-target_include_directories(VulkanRenderer2D PRIVATE ${imgui_SOURCE_DIR})
-target_link_libraries(VulkanRenderer2D PRIVATE imgui_library)
-
 target_include_directories(RendererOverhaul PRIVATE ${imgui_SOURCE_DIR})
 target_link_libraries(RendererOverhaul PRIVATE imgui_library)
