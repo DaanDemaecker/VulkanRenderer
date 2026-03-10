@@ -84,13 +84,13 @@ For window handling I chose GLFW, in class we always used OpenGl and SDL and I w
 In class, we learned about Dear ImGui, but I feel we didn't explore it to its full potential so I chose to explore it further on my own and implement it into my renderer.  
 
 - ***Math***  
-For math support, GLM I chose GLM as it was the library I was most familiar with, I usually enjoy experimenting and learning new libraries but a math library didn't seem interesting enough to explore for me. GLM also seems to be the best at communicating with Vulkan.  
+For math support, GLM I chose GLM as it was the library I was most familiar with. GLM also seems to be the best at communicating with Vulkan.  
 
 - ***JSON file reading***  
-I had worked with JSON files before in C# but never in C++, so I had to learn and look for a library that could fit my requirements and I ended up choosing RapidJSON.
+I had worked with JSON files before in C# but never in C++, so I had to learn and look for a library that could fit my requirements and I ended up choosing RapidJSON.  
 
 - ***Image loading***   
 Image loading is done with the STB library, as suggested by the Vulkan tutorial.  
 
-- ***Model Loading***
+- ***Model Loading***  
 For loading 3D models, i am using my self made [ModelLoader](https://github.com/DaanDemaecker/DDM-ModelLoader)
