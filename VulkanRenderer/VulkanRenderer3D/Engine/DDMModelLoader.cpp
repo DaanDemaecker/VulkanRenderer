@@ -16,9 +16,7 @@ void DDM3::DDMModelLoader::LoadModel(const std::string& filename, std::vector<Ve
 {
 	std::vector<DDMML::Vertex> ddmVertices{};
 
-	auto mesh = std::make_unique<DDMML::Mesh>();
-
-	m_pModelLoader->LoadModel(filename, mesh.get());
+	auto mesh = m_pModelLoader->LoadModel(filename, "");
 
 	auto& ddmmlVertices = mesh->GetVertices();
 	auto& ddmmlIndices = mesh->GetIndices();
@@ -34,9 +32,7 @@ void DDM3::DDMModelLoader::LoadModel(const std::string& filename)
 {
 	std::vector<DDMML::Vertex> ddmVertices{};
 
-	auto mesh = std::make_unique<DDMML::Mesh>();
-
-	m_pModelLoader->LoadModel(filename, mesh.get());
+	auto mesh = m_pModelLoader->LoadModel(filename, "");
 
 	auto model = std::make_unique<DDM3::Model>();
 	model->LoadModel(mesh.get());
