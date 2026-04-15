@@ -12,6 +12,8 @@ DDM::VulkanCore::VulkanCore()
 	CreateInstance();
 
 	SetupDebugMessenger();
+
+	SetupPhysicalDevice();
 }
 
 DDM::VulkanCore::~VulkanCore()
@@ -54,7 +56,10 @@ void DDM::VulkanCore::CreateInstance()
 	createInfo.enabledExtensionCount = extensions.size();
 	createInfo.ppEnabledExtensionNames = extensions.data();
 
-	vkCreateInstance(&createInfo, nullptr, &m_VkInstance);
+	if (vkCreateInstance(&createInfo, nullptr, &m_VkInstance) != VK_SUCCESS)
+	{
+		throw std::runtime_error("failed to set vulkan instance!");
+	}
 }
 
 VkApplicationInfo DDM::VulkanCore::GetApplicationInfo()
@@ -165,7 +170,7 @@ void DDM::VulkanCore::SetupDebugMessenger()
 
 	PopulateDebugMessenger(createInfo);
 
-	if (CreateDebugMessenger(m_VkInstance, &createInfo, nullptr, &m_VkDebugMessenger))
+	if (CreateDebugMessenger(m_VkInstance, &createInfo, nullptr, &m_VkDebugMessenger) != VK_SUCCESS)
 	{
 		throw std::runtime_error("failed to set up debug messenger!");
 	}
@@ -251,4 +256,35 @@ VKAPI_ATTR VkBool32 VKAPI_CALL DDM::VulkanCore::debugCallback(VkDebugUtilsMessag
 
 
 	return VK_FALSE;
+}
+
+void DDM::VulkanCore::SetupPhysicalDevice()
+{
+	m_VkPhysicalDevice = PickPhysicalDevice();
+}
+
+VkPhysicalDevice DDM::VulkanCore::PickPhysicalDevice()
+{
+	// Enumerate all devices
+	uint32_t deviceCount{};
+
+	VkResult result = vkEnumeratePhysicalDevices(m_VkInstance, &deviceCount, nullptr);
+
+	if (result != VK_SUCCESS)
+	{
+		throw std::runtime_error("failed to enumerate physical devices!");
+	}
+
+	std::vector<VkPhysicalDevice> physicalDevices = std::vector<VkPhysicalDevice>(deviceCount);
+	
+	result = vkEnumeratePhysicalDevices(m_VkInstance, &deviceCount, physicalDevices.data());
+
+	if (result != VK_SUCCESS)
+	{
+		throw std::runtime_error("failed to enumerate physical devices!");
+	}
+
+
+	// For now, return first device in list
+	return physicalDevices[0];
 }

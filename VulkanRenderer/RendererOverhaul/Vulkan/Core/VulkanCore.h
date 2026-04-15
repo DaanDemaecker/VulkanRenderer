@@ -35,6 +35,10 @@ namespace DDM
 		
 
 	private:
+		// ---------------------------------------
+		// Instance
+		//----------------------------------------
+
 		// Vulkan instance
 		VkInstance m_VkInstance{};
 
@@ -48,6 +52,18 @@ namespace DDM
 
 		// Indicates whether validation layers should be active
 		bool m_EnableValidationLayers = true;
+
+		// ---------------------------------------
+		// Physical device
+		//----------------------------------------
+
+		// Vulkan physical device
+		VkPhysicalDevice m_VkPhysicalDevice{};
+
+
+		// ---------------------------------------
+		// Instance
+		//----------------------------------------
 
 		/// <summary>
 		/// Create the vulkan instance
@@ -137,6 +153,22 @@ namespace DDM
 			VkDebugUtilsMessageTypeFlagsEXT messageType,
 			const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData,
 			void* pUserData);
+
+
+		// ---------------------------------------
+		// Physical device
+		//----------------------------------------
+
+		/// <summary>
+		/// Do all the setup necessary for the vulkan physical device
+		/// </summary>
+		void SetupPhysicalDevice();
+
+		/// <summary>
+		/// Pick the physical device to use for rendering
+		/// </summary>
+		/// <returns>Handle of the physical device</returns>
+		VkPhysicalDevice PickPhysicalDevice();
 	};
 }
 
