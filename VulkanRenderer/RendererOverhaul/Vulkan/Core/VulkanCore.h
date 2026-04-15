@@ -169,6 +169,13 @@ namespace DDM
 		/// </summary>
 		/// <returns>Handle of the physical device</returns>
 		VkPhysicalDevice PickPhysicalDevice();
+
+		/// <summary>
+		/// Give a score to the current physical device to compare to others
+		/// </summary>
+		/// <param name="physicalDevice: ">device to score</param>
+		/// <returns>Score of the device</returns>
+		uint32_t ScorePhysicalDevice(VkPhysicalDevice physicalDevice);
 	};
 }
 

@@ -261,6 +261,11 @@ VKAPI_ATTR VkBool32 VKAPI_CALL DDM::VulkanCore::debugCallback(VkDebugUtilsMessag
 void DDM::VulkanCore::SetupPhysicalDevice()
 {
 	m_VkPhysicalDevice = PickPhysicalDevice();
+
+	if (m_VkPhysicalDevice == VK_NULL_HANDLE)
+	{
+		throw std::runtime_error("Failed to pick a physical device");
+	}
 }
 
 VkPhysicalDevice DDM::VulkanCore::PickPhysicalDevice()
@@ -270,7 +275,7 @@ VkPhysicalDevice DDM::VulkanCore::PickPhysicalDevice()
 
 	VkResult result = vkEnumeratePhysicalDevices(m_VkInstance, &deviceCount, nullptr);
 
-	if (result != VK_SUCCESS)
+	if (result != VK_SUCCESS || deviceCount == 0)
 	{
 		throw std::runtime_error("failed to enumerate physical devices!");
 	}
@@ -284,7 +289,50 @@ VkPhysicalDevice DDM::VulkanCore::PickPhysicalDevice()
 		throw std::runtime_error("failed to enumerate physical devices!");
 	}
 
+	// Score all physical devices and pick highest scored one
+	uint32_t maxScore = 0;
 
-	// For now, return first device in list
-	return physicalDevices[0];
+	VkPhysicalDevice chosenDevice = VK_NULL_HANDLE;
+
+	for (auto physicalDevice : physicalDevices)
+	{
+		uint32_t score = ScorePhysicalDevice(physicalDevice);
+
+		if (score > maxScore)
+		{
+			maxScore = score;
+
+			chosenDevice = physicalDevice;
+		}
+	}
+
+	return chosenDevice;
+}
+
+uint32_t DDM::VulkanCore::ScorePhysicalDevice(VkPhysicalDevice physicalDevice)
+{
+	constexpr uint32_t baseScore = 1;
+
+	uint32_t score = baseScore;
+
+	VkPhysicalDeviceProperties properties{};
+	vkGetPhysicalDeviceProperties(physicalDevice, &properties);
+
+	// Device type
+	// Take a preference of discrete gpu over integrated gpu and prefer both of these over any other type
+	constexpr uint32_t integratedMultiplier = 2;
+	constexpr uint32_t discreteMultiplier = 3;
+
+	if (properties.deviceType == VK_PHYSICAL_DEVICE_TYPE_INTEGRATED_GPU)
+	{
+		score *= integratedMultiplier;
+	}
+	else if (properties.deviceType == VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU)
+	{
+		score *= discreteMultiplier;
+	}
+
+	std::cout << "Score of gpu " << properties.deviceName << ": " << score << std::endl;
+
+	return score;
 }

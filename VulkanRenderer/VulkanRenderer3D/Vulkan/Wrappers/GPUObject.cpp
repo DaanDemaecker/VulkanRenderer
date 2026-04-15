@@ -60,10 +60,6 @@ void DDM3::GPUObject::PickPhysicalDevice(InstanceWrapper* pInstanceWrapper, VkSu
 			m_PhysicalDevice = device;
 			break;
 		}
-
-
-
-
 	}
 
 
