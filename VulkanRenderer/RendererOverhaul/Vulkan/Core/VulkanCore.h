@@ -60,6 +60,13 @@ namespace DDM
 		// Vulkan physical device
 		VkPhysicalDevice m_VkPhysicalDevice{};
 
+		// List of required device extensions
+		const std::vector<const char*> m_RequiredExtensions =
+		{
+			VK_KHR_SWAPCHAIN_EXTENSION_NAME
+		};
+
+
 
 		// ---------------------------------------
 		// Instance
@@ -176,6 +183,20 @@ namespace DDM
 		/// <param name="physicalDevice: ">device to score</param>
 		/// <returns>Score of the device</returns>
 		uint32_t ScorePhysicalDevice(VkPhysicalDevice physicalDevice);
+
+		/// <summary>
+		/// Check if the given device is a valid option
+		/// </summary>
+		/// <param name="physicalDevice: ">device to check</param>
+		/// <returns>Bool indicating validity</returns>
+		bool IsDeviceValid(VkPhysicalDevice physicalDevice);
+
+		/// <summary>
+		/// Check if given device has all requested extensions
+		/// </summary>
+		/// <param name="physicalDevice: ">device to check</param>
+		/// <returns>Bool indicating if device has extensions</returns>
+		bool HasRequiredExtensions(VkPhysicalDevice physicalDevice);
 	};
 }
 

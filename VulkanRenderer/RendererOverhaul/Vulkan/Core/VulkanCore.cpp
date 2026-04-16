@@ -7,6 +7,9 @@
 #include "Includes/VulkanIncludes.h"
 #include "Includes/GLFWIncludes.h"
 
+// Standard library includes
+#include <set>
+
 DDM::VulkanCore::VulkanCore()
 {
 	CreateInstance();
@@ -296,6 +299,11 @@ VkPhysicalDevice DDM::VulkanCore::PickPhysicalDevice()
 
 	for (auto physicalDevice : physicalDevices)
 	{
+		if (!IsDeviceValid(physicalDevice))
+		{
+			continue;
+		}
+
 		uint32_t score = ScorePhysicalDevice(physicalDevice);
 
 		if (score > maxScore)
@@ -335,4 +343,38 @@ uint32_t DDM::VulkanCore::ScorePhysicalDevice(VkPhysicalDevice physicalDevice)
 	std::cout << "Score of gpu " << properties.deviceName << ": " << score << std::endl;
 
 	return score;
+}
+
+bool DDM::VulkanCore::IsDeviceValid(VkPhysicalDevice physicalDevice)
+{
+	if (!HasRequiredExtensions(physicalDevice))
+	{
+		return false;
+	}
+
+
+	return true;
+}
+
+bool DDM::VulkanCore::HasRequiredExtensions(VkPhysicalDevice physicalDevice)
+{
+	//Check how many extensions this device supports
+	uint32_t extensionCount;
+	vkEnumerateDeviceExtensionProperties(physicalDevice, nullptr, &extensionCount, nullptr);
+
+	//Get a list of all available extensions
+	std::vector<VkExtensionProperties> availableExtensions(extensionCount);
+	vkEnumerateDeviceExtensionProperties(physicalDevice, nullptr, &extensionCount, availableExtensions.data());
+
+	//Create a set of required extensions to avoid duplicates
+	std::set<std::string> requiredExtensions(m_RequiredExtensions.begin(), m_RequiredExtensions.end());
+
+	//Clear all available extensions from the required ones
+	for (const auto& extension : availableExtensions)
+	{
+		requiredExtensions.erase(extension.extensionName);
+	}
+
+	//If the required extensions are empty, they are all available
+	return requiredExtensions.empty();
 }
