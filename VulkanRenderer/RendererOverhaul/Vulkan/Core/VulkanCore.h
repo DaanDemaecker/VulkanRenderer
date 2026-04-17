@@ -35,9 +35,9 @@ namespace DDM
 		
 
 	private:
-		// ---------------------------------------
+		// ------------------------------------------------------------------------------
 		// Instance
-		//----------------------------------------
+		// ------------------------------------------------------------------------------
 
 		// Vulkan instance
 		VkInstance m_VkInstance{};
@@ -53,9 +53,9 @@ namespace DDM
 		// Indicates whether validation layers should be active
 		bool m_EnableValidationLayers = true;
 
-		// ---------------------------------------
+		// ------------------------------------------------------------------------------
 		// Physical device
-		//----------------------------------------
+		// ------------------------------------------------------------------------------
 
 		// Vulkan physical device
 		VkPhysicalDevice m_VkPhysicalDevice{};
@@ -66,11 +66,17 @@ namespace DDM
 			VK_KHR_SWAPCHAIN_EXTENSION_NAME
 		};
 
+		const std::vector<uint32_t> m_RequiredQueueFlags =
+		{
+			VK_QUEUE_GRAPHICS_BIT,
+			VK_QUEUE_TRANSFER_BIT
+		};
 
 
-		// ---------------------------------------
+
+		// ------------------------------------------------------------------------------
 		// Instance
-		//----------------------------------------
+		//-------------------------------------------------------------------------------
 
 		/// <summary>
 		/// Create the vulkan instance
@@ -162,9 +168,9 @@ namespace DDM
 			void* pUserData);
 
 
-		// ---------------------------------------
+		// ------------------------------------------------------------------------------
 		// Physical device
-		//----------------------------------------
+		//-------------------------------------------------------------------------------
 
 		/// <summary>
 		/// Do all the setup necessary for the vulkan physical device
@@ -197,6 +203,20 @@ namespace DDM
 		/// <param name="physicalDevice: ">device to check</param>
 		/// <returns>Bool indicating if device has extensions</returns>
 		bool HasRequiredExtensions(VkPhysicalDevice physicalDevice);
+
+		/// <summary>
+		/// Check if given device has queue families required for drawing etc
+		/// </summary>
+		/// <param name="physicalDevice: ">device to check</param>
+		/// <returns>Bool indicating if device has correct queue families</returns>
+		bool HasRequiredQueueFamily(VkPhysicalDevice physicalDevice);
+
+		/// <summary>
+		/// Check if given queue family has required flags
+		/// </summary>
+		/// <param name="family: ">queue family to check</param>
+		/// <returns>Bool indicating if family is valid</returns>
+		bool IsValidQueueFamily(VkQueueFamilyProperties family);
 	};
 }
 

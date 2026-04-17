@@ -352,6 +352,10 @@ bool DDM::VulkanCore::IsDeviceValid(VkPhysicalDevice physicalDevice)
 		return false;
 	}
 
+	if (!HasRequiredQueueFamily(physicalDevice))
+	{
+		return false;
+	}
 
 	return true;
 }
@@ -377,4 +381,38 @@ bool DDM::VulkanCore::HasRequiredExtensions(VkPhysicalDevice physicalDevice)
 
 	//If the required extensions are empty, they are all available
 	return requiredExtensions.empty();
+}
+
+bool DDM::VulkanCore::HasRequiredQueueFamily(VkPhysicalDevice physicalDevice)
+{
+	uint32_t queueFamilyCount{};
+
+	vkGetPhysicalDeviceQueueFamilyProperties(physicalDevice, &queueFamilyCount, nullptr);
+
+	std::vector<VkQueueFamilyProperties> queueFamilies(queueFamilyCount);
+
+	vkGetPhysicalDeviceQueueFamilyProperties(physicalDevice, &queueFamilyCount, queueFamilies.data());
+
+	for (auto& family : queueFamilies)
+	{
+		if (IsValidQueueFamily(family))
+		{
+			return true;
+		}
+	}
+
+	return false;
+}
+
+bool DDM::VulkanCore::IsValidQueueFamily(VkQueueFamilyProperties family)
+{
+	for (auto bit : m_RequiredQueueFlags)
+	{
+		if ((family.queueFlags & bit) == 0)
+		{
+			return false;
+		}
+	}
+
+	return true;
 }
