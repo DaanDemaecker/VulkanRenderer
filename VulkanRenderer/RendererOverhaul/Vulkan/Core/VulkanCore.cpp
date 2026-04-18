@@ -5,30 +5,42 @@
 #include "Engine/ConfigManager.h"
 
 #include "Includes/VulkanIncludes.h"
-#include "Includes/GLFWIncludes.h"
+#define GLFW_INCLUDE_VULKAN
+#include "Includes/GlfwIncludes.h"
+#include "Engine/Window/Window.h"
 
 // Standard library includes
 #include <set>
 
 DDM::VulkanCore::VulkanCore()
 {
+	// Window must be initialized BEFORE creating instance
+	Window::GetInstance();
+
 	CreateInstance();
 
 	SetupDebugMessenger();
+
+	CreateSurface();
 
 	SetupPhysicalDevice();
 }
 
 DDM::VulkanCore::~VulkanCore()
 {
+	vkDestroySurfaceKHR(m_VkInstance, m_VkSurface, nullptr);
+
 	if (m_VkDebugMessenger != VK_NULL_HANDLE)
 	{
 		DestroyDebugMessenger(m_VkInstance, m_VkDebugMessenger, nullptr);
 	}
 
-
 	vkDestroyInstance(m_VkInstance, nullptr);
 }
+
+// ------------------------------------------------------------------------------
+// Instance
+//-------------------------------------------------------------------------------
 
 void DDM::VulkanCore::CreateInstance()
 {
@@ -260,6 +272,33 @@ VKAPI_ATTR VkBool32 VKAPI_CALL DDM::VulkanCore::debugCallback(VkDebugUtilsMessag
 
 	return VK_FALSE;
 }
+
+
+// ------------------------------------------------------------------------------
+// Surface
+// ------------------------------------------------------------------------------
+
+void DDM::VulkanCore::CreateSurface()
+{
+	if (!glfwVulkanSupported())
+	{
+		throw std::runtime_error("Vulkan is not supported by glfw");
+	}
+
+	VkResult result = glfwCreateWindowSurface(m_VkInstance,
+		static_cast<GLFWwindow*>(DDM::Window::GetInstance().GetWindowData().handle),
+		nullptr, &m_VkSurface);
+
+	if (result != VK_SUCCESS)
+	{
+		throw std::runtime_error("Failed to create window surface");
+	}
+}
+
+
+// ------------------------------------------------------------------------------
+// Physical device
+//-------------------------------------------------------------------------------
 
 void DDM::VulkanCore::SetupPhysicalDevice()
 {

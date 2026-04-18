@@ -53,6 +53,15 @@ namespace DDM
 		// Indicates whether validation layers should be active
 		bool m_EnableValidationLayers = true;
 
+
+		// ------------------------------------------------------------------------------
+		// Surface
+		// ------------------------------------------------------------------------------
+
+		// Vulkan surface
+		VkSurfaceKHR m_VkSurface{};
+
+
 		// ------------------------------------------------------------------------------
 		// Physical device
 		// ------------------------------------------------------------------------------
@@ -166,6 +175,13 @@ namespace DDM
 			VkDebugUtilsMessageTypeFlagsEXT messageType,
 			const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData,
 			void* pUserData);
+
+
+		// ------------------------------------------------------------------------------
+		// Surface
+		// ------------------------------------------------------------------------------
+
+		void CreateSurface();
 
 
 		// ------------------------------------------------------------------------------
