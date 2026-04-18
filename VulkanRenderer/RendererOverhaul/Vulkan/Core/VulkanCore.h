@@ -75,12 +75,19 @@ namespace DDM
 			VK_KHR_SWAPCHAIN_EXTENSION_NAME
 		};
 
+		// List of required flags for queue families
 		const std::vector<uint32_t> m_RequiredQueueFlags =
 		{
 			VK_QUEUE_GRAPHICS_BIT,
 			VK_QUEUE_TRANSFER_BIT
 		};
 
+		// ------------------------------------------------------------------------------
+		// Logical device
+		//-------------------------------------------------------------------------------
+
+		// Vulkan logical device
+		VkDevice m_VkDevice{};
 
 
 		// ------------------------------------------------------------------------------
@@ -233,6 +240,42 @@ namespace DDM
 		/// <param name="family: ">queue family to check</param>
 		/// <returns>Bool indicating if family is valid</returns>
 		bool IsValidQueueFamily(VkQueueFamilyProperties family);
+
+		/// <summary>
+		/// Retrieve all the available queue families from a specified device
+		/// </summary>
+		/// <param name="device: ">device to query</param>
+		/// <param name="families: ">will be filled in with the families</param>
+		void GetQueueFamilies(VkPhysicalDevice device, std::vector<VkQueueFamilyProperties>& families);
+
+
+		// ------------------------------------------------------------------------------
+		// Logical device
+		//-------------------------------------------------------------------------------
+
+		/// <summary>
+		/// Create the vulkan logical device
+		/// </summary>
+		void CreateLogicalDevice();
+
+		/// <summary>
+		/// Set up a list of VkDeviceQueueCreateInfo structs with the correct values
+		/// </summary>
+		/// <param name="infos: ">list of infos to fill in</param>
+		void SetupQueueCreateInfos(std::vector<VkDeviceQueueCreateInfo>& infos, std::vector<std::vector<float>>& priorities);
+
+		/// <summary>
+		/// Find the queuefamily that is most optimal
+		/// </summary>
+		/// <param name="index: ">will be filled in with index of the family</param>
+		/// <param name="count: ">will be filled in with the max amount of queues in the family</param>
+		void FindOptimalQueueFamily(uint32_t& index, uint32_t& count);
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="features"></param>
+		void SetupPhysicalDeviceFeatures(VkPhysicalDeviceFeatures& features);
 	};
 }
 

@@ -24,10 +24,14 @@ DDM::VulkanCore::VulkanCore()
 	CreateSurface();
 
 	SetupPhysicalDevice();
+
+	CreateLogicalDevice();
 }
 
 DDM::VulkanCore::~VulkanCore()
 {
+	vkDestroyDevice(m_VkDevice, nullptr);
+
 	vkDestroySurfaceKHR(m_VkInstance, m_VkSurface, nullptr);
 
 	if (m_VkDebugMessenger != VK_NULL_HANDLE)
@@ -267,8 +271,23 @@ void DDM::VulkanCore::DestroyDebugMessenger(VkInstance instance, VkDebugUtilsMes
 
 VKAPI_ATTR VkBool32 VKAPI_CALL DDM::VulkanCore::debugCallback(VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity, VkDebugUtilsMessageTypeFlagsEXT messageType, const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData, void* pUserData)
 {
-	std::cout << "Validation layer error: " << pCallbackData->pMessage << std::endl;
-
+	switch (messageSeverity)
+	{
+	case VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT:
+		//std::cout << "Validation layer verbose: " << pCallbackData->pMessage << "\n \n";
+		break;
+	case VK_DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT:
+		//std::cout << "Validation layer info: " << pCallbackData->pMessage << "\n \n";
+		break;
+	case VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT:
+		std::cout << "Validation layer warning: " << pCallbackData->pMessage << "\n \n";
+		break;
+	case VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT:
+		std::cout << "Validation layer error: " << pCallbackData->pMessage << "\n \n";
+		break;
+	default:
+		break;
+	}
 
 	return VK_FALSE;
 }
@@ -401,36 +420,28 @@ bool DDM::VulkanCore::IsDeviceValid(VkPhysicalDevice physicalDevice)
 
 bool DDM::VulkanCore::HasRequiredExtensions(VkPhysicalDevice physicalDevice)
 {
-	//Check how many extensions this device supports
 	uint32_t extensionCount;
 	vkEnumerateDeviceExtensionProperties(physicalDevice, nullptr, &extensionCount, nullptr);
-
-	//Get a list of all available extensions
+	
 	std::vector<VkExtensionProperties> availableExtensions(extensionCount);
 	vkEnumerateDeviceExtensionProperties(physicalDevice, nullptr, &extensionCount, availableExtensions.data());
 
 	//Create a set of required extensions to avoid duplicates
 	std::set<std::string> requiredExtensions(m_RequiredExtensions.begin(), m_RequiredExtensions.end());
 
-	//Clear all available extensions from the required ones
 	for (const auto& extension : availableExtensions)
 	{
 		requiredExtensions.erase(extension.extensionName);
 	}
 
-	//If the required extensions are empty, they are all available
 	return requiredExtensions.empty();
 }
 
 bool DDM::VulkanCore::HasRequiredQueueFamily(VkPhysicalDevice physicalDevice)
 {
-	uint32_t queueFamilyCount{};
+	std::vector<VkQueueFamilyProperties> queueFamilies{};
 
-	vkGetPhysicalDeviceQueueFamilyProperties(physicalDevice, &queueFamilyCount, nullptr);
-
-	std::vector<VkQueueFamilyProperties> queueFamilies(queueFamilyCount);
-
-	vkGetPhysicalDeviceQueueFamilyProperties(physicalDevice, &queueFamilyCount, queueFamilies.data());
+	GetQueueFamilies(physicalDevice, queueFamilies);
 
 	for (auto& family : queueFamilies)
 	{
@@ -454,4 +465,108 @@ bool DDM::VulkanCore::IsValidQueueFamily(VkQueueFamilyProperties family)
 	}
 
 	return true;
+}
+
+void DDM::VulkanCore::GetQueueFamilies(VkPhysicalDevice device, std::vector<VkQueueFamilyProperties>& families)
+{
+	uint32_t queueFamilyCount{};
+
+	vkGetPhysicalDeviceQueueFamilyProperties(device, &queueFamilyCount, nullptr);
+
+	families.resize(queueFamilyCount);
+
+	vkGetPhysicalDeviceQueueFamilyProperties(device, &queueFamilyCount, families.data());
+}
+
+
+// ------------------------------------------------------------------------------
+// Logical device
+//-------------------------------------------------------------------------------
+
+void DDM::VulkanCore::CreateLogicalDevice()
+{
+	VkDeviceCreateInfo deviceCreateInfo{};
+
+	deviceCreateInfo.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
+	deviceCreateInfo.pNext = nullptr;
+	deviceCreateInfo.flags = 0;
+
+
+	// Set up queue create info
+	std::vector<VkDeviceQueueCreateInfo> queueCreateInfo{};
+	std::vector<std::vector<float>> queuePriorities{};
+
+	SetupQueueCreateInfos(queueCreateInfo, queuePriorities);
+
+	deviceCreateInfo.pQueueCreateInfos = queueCreateInfo.data();
+	deviceCreateInfo.queueCreateInfoCount = static_cast<uint32_t>(queueCreateInfo.size());
+
+
+	// Set up layers info
+	if (m_EnableValidationLayers)
+	{
+		deviceCreateInfo.enabledLayerCount = static_cast<uint32_t>(m_ValidationLayers.size());
+		deviceCreateInfo.ppEnabledLayerNames = m_ValidationLayers.data();
+	}
+	else
+	{
+		deviceCreateInfo.enabledLayerCount = 0;
+	}
+
+	// Set up extensions info
+	deviceCreateInfo.ppEnabledExtensionNames = m_RequiredExtensions.data();
+	deviceCreateInfo.enabledExtensionCount = static_cast<uint32_t>(m_RequiredExtensions.size());
+
+	// Set up features info
+	VkPhysicalDeviceFeatures features{};
+
+	vkGetPhysicalDeviceFeatures(m_VkPhysicalDevice, &features);
+
+	deviceCreateInfo.pEnabledFeatures = &features;
+
+	// Create the device
+	vkCreateDevice(m_VkPhysicalDevice, &deviceCreateInfo, nullptr, &m_VkDevice);
+}
+
+void DDM::VulkanCore::SetupQueueCreateInfos(std::vector<VkDeviceQueueCreateInfo>& infos, std::vector<std::vector<float>>& priorities)
+{
+	VkDeviceQueueCreateInfo info{};
+	info.sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
+	info.pNext = nullptr;
+	info.flags = 0;
+
+	FindOptimalQueueFamily(info.queueFamilyIndex, info.queueCount);
+
+	priorities.push_back(std::vector<float>());
+
+	for (int i{}; i < info.queueCount; ++i)
+	{
+		priorities[0].push_back(1.0f);
+	}
+
+	info.pQueuePriorities = priorities[0].data();
+
+	infos.push_back(info);
+}
+
+void DDM::VulkanCore::FindOptimalQueueFamily(uint32_t& index, uint32_t& count)
+{
+	index = 0;
+	count = 0;
+
+	std::vector<VkQueueFamilyProperties> queueFamilies{};
+
+	GetQueueFamilies(m_VkPhysicalDevice, queueFamilies);
+
+	for (int i{}; i < queueFamilies.size(); ++i)
+	{
+		if (IsValidQueueFamily(queueFamilies[i]))
+		{
+			if (queueFamilies[i].queueCount > count)
+			{
+				count = queueFamilies[i].queueCount;
+				index = i;
+			}
+		}
+	}
 }
