@@ -12,17 +12,22 @@
 
 namespace DDM
 {
+	// Class forward declarations
+	class VulkanAllocator;
+
 	class VulkanCore final
 	{
 	public:
-		/// <summary>
-		/// Default constructor
-		/// </summary>
-		VulkanCore();
+		// Delete default constructor
+		VulkanCore() = delete;
 
 		/// <summary>
-		/// Destructor
+		/// Constructor
 		/// </summary>
+		/// <param name="pAllocator">Object used for all Vulkan allocation</param>
+		VulkanCore(VulkanAllocator* pAllocator);
+
+		// Destructor
 		~VulkanCore();
 
 		// Delete copy and move constructors
@@ -35,6 +40,12 @@ namespace DDM
 		
 
 	private:
+
+		// ------------------------------------------------------------------------------
+		// Allocator
+		// ------------------------------------------------------------------------------
+		VulkanAllocator* m_pAllocator{};
+
 		// ------------------------------------------------------------------------------
 		// Instance
 		// ------------------------------------------------------------------------------
@@ -188,6 +199,9 @@ namespace DDM
 		// Surface
 		// ------------------------------------------------------------------------------
 
+		/// <summary>
+		/// Create the vulkan surface
+		/// </summary>
 		void CreateSurface();
 
 
@@ -272,9 +286,9 @@ namespace DDM
 		void FindOptimalQueueFamily(uint32_t& index, uint32_t& count);
 
 		/// <summary>
-		/// 
+		/// Set up the requested device features
 		/// </summary>
-		/// <param name="features"></param>
+		/// <param name="features: ">reference to a VkPhysicalDeviceFeatures struct to fill in</param>
 		void SetupPhysicalDeviceFeatures(VkPhysicalDeviceFeatures& features);
 	};
 }

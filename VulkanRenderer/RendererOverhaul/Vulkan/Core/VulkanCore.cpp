@@ -2,18 +2,25 @@
 
 // Header include
 #include "VulkanCore.h"
+
+// File includes
 #include "Engine/ConfigManager.h"
 
 #include "Includes/VulkanIncludes.h"
+
 #define GLFW_INCLUDE_VULKAN
 #include "Includes/GlfwIncludes.h"
+
 #include "Engine/Window/Window.h"
+#include "Vulkan/Core/VulkanAllocator.h"
 
 // Standard library includes
 #include <set>
 
-DDM::VulkanCore::VulkanCore()
+DDM::VulkanCore::VulkanCore(VulkanAllocator* pAllocator)
 {
+	m_pAllocator = pAllocator;
+
 	// Window must be initialized BEFORE creating instance
 	Window::GetInstance();
 
@@ -30,16 +37,18 @@ DDM::VulkanCore::VulkanCore()
 
 DDM::VulkanCore::~VulkanCore()
 {
-	vkDestroyDevice(m_VkDevice, nullptr);
+	vkDeviceWaitIdle(m_VkDevice);
 
-	vkDestroySurfaceKHR(m_VkInstance, m_VkSurface, nullptr);
+	vkDestroyDevice(m_VkDevice, m_pAllocator->GetAllocator());
+
+	vkDestroySurfaceKHR(m_VkInstance, m_VkSurface, m_pAllocator->GetAllocator());
 
 	if (m_VkDebugMessenger != VK_NULL_HANDLE)
 	{
-		DestroyDebugMessenger(m_VkInstance, m_VkDebugMessenger, nullptr);
+		DestroyDebugMessenger(m_VkInstance, m_VkDebugMessenger, m_pAllocator->GetAllocator());
 	}
 
-	vkDestroyInstance(m_VkInstance, nullptr);
+	vkDestroyInstance(m_VkInstance, m_pAllocator->GetAllocator());
 }
 
 // ------------------------------------------------------------------------------
@@ -58,6 +67,7 @@ void DDM::VulkanCore::CreateInstance()
 	createInfo.flags = 0;
 
 	VkDebugUtilsMessengerCreateInfoEXT debugCreateInfo{};
+	createInfo.pNext = nullptr;
 
 	if (m_EnableValidationLayers)
 	{
@@ -66,7 +76,6 @@ void DDM::VulkanCore::CreateInstance()
 	}
 
 
-	createInfo.pNext = nullptr;
 	createInfo.pApplicationInfo = &applicationInfo;
 
 	
@@ -75,7 +84,7 @@ void DDM::VulkanCore::CreateInstance()
 	createInfo.enabledExtensionCount = extensions.size();
 	createInfo.ppEnabledExtensionNames = extensions.data();
 
-	if (vkCreateInstance(&createInfo, nullptr, &m_VkInstance) != VK_SUCCESS)
+	if (vkCreateInstance(&createInfo, m_pAllocator->GetAllocator(), &m_VkInstance) != VK_SUCCESS)
 	{
 		throw std::runtime_error("failed to set vulkan instance!");
 	}
@@ -147,7 +156,8 @@ bool DDM::VulkanCore::QueryValidationLayerSupport()
 	for (const char* layerName : m_ValidationLayers) {
 		bool layerFound = false;
 
-		for (const auto& layerProperties : availableLayers) {
+		for (const auto& layerProperties : availableLayers)
+		{
 			if (strcmp(layerName, layerProperties.layerName) == 0) {
 				layerFound = true;
 				break;
@@ -166,7 +176,7 @@ std::vector<const char*> DDM::VulkanCore::GetExtensions()
 {
 	uint32_t glfwExtensionCount = 0;
 
-	auto glfwExtensions = glfwGetRequiredInstanceExtensions(&glfwExtensionCount);
+	const char** glfwExtensions = glfwGetRequiredInstanceExtensions(&glfwExtensionCount);
 
 	std::vector<const char*> extensions(glfwExtensions, glfwExtensions + glfwExtensionCount);
 
@@ -189,7 +199,7 @@ void DDM::VulkanCore::SetupDebugMessenger()
 
 	PopulateDebugMessenger(createInfo);
 
-	if (CreateDebugMessenger(m_VkInstance, &createInfo, nullptr, &m_VkDebugMessenger) != VK_SUCCESS)
+	if (CreateDebugMessenger(m_VkInstance, &createInfo, m_pAllocator->GetAllocator(), &m_VkDebugMessenger) != VK_SUCCESS)
 	{
 		throw std::runtime_error("failed to set up debug messenger!");
 	}
@@ -306,7 +316,7 @@ void DDM::VulkanCore::CreateSurface()
 
 	VkResult result = glfwCreateWindowSurface(m_VkInstance,
 		static_cast<GLFWwindow*>(DDM::Window::GetInstance().GetWindowData().handle),
-		nullptr, &m_VkSurface);
+		m_pAllocator->GetAllocator(), &m_VkSurface);
 
 	if (result != VK_SUCCESS)
 	{
@@ -502,16 +512,9 @@ void DDM::VulkanCore::CreateLogicalDevice()
 	deviceCreateInfo.queueCreateInfoCount = static_cast<uint32_t>(queueCreateInfo.size());
 
 
-	// Set up layers info
-	if (m_EnableValidationLayers)
-	{
-		deviceCreateInfo.enabledLayerCount = static_cast<uint32_t>(m_ValidationLayers.size());
-		deviceCreateInfo.ppEnabledLayerNames = m_ValidationLayers.data();
-	}
-	else
-	{
-		deviceCreateInfo.enabledLayerCount = 0;
-	}
+	// Device layers are depricated in modern vulkan
+	deviceCreateInfo.enabledLayerCount = 0;
+	deviceCreateInfo.ppEnabledLayerNames = nullptr;
 
 	// Set up extensions info
 	deviceCreateInfo.ppEnabledExtensionNames = m_RequiredExtensions.data();
@@ -520,12 +523,12 @@ void DDM::VulkanCore::CreateLogicalDevice()
 	// Set up features info
 	VkPhysicalDeviceFeatures features{};
 
-	vkGetPhysicalDeviceFeatures(m_VkPhysicalDevice, &features);
+	SetupPhysicalDeviceFeatures(features);
 
 	deviceCreateInfo.pEnabledFeatures = &features;
 
 	// Create the device
-	vkCreateDevice(m_VkPhysicalDevice, &deviceCreateInfo, nullptr, &m_VkDevice);
+	vkCreateDevice(m_VkPhysicalDevice, &deviceCreateInfo, m_pAllocator->GetAllocator(), &m_VkDevice);
 }
 
 void DDM::VulkanCore::SetupQueueCreateInfos(std::vector<VkDeviceQueueCreateInfo>& infos, std::vector<std::vector<float>>& priorities)
@@ -569,4 +572,10 @@ void DDM::VulkanCore::FindOptimalQueueFamily(uint32_t& index, uint32_t& count)
 			}
 		}
 	}
+}
+
+void DDM::VulkanCore::SetupPhysicalDeviceFeatures(VkPhysicalDeviceFeatures& features)
+{
+	// Enable all available features
+	vkGetPhysicalDeviceFeatures(m_VkPhysicalDevice, &features);
 }

@@ -11,6 +11,7 @@
 
 namespace DDM
 {
+	class VulkanAllocator;
 	class VulkanCore;
 
 	class VulkanImplementation final
@@ -35,6 +36,8 @@ namespace DDM
 		VulkanImplementation& operator=(VulkanImplementation&&) = delete;
 
 	private:
+		std::unique_ptr<VulkanAllocator> m_pAllocator{};
+
 		std::unique_ptr<VulkanCore> m_pCore{};
 	};
 }

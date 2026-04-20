@@ -18,7 +18,7 @@ add_executable(RendererOverhaul
  
  "Vulkan/VulkanImplementation.cpp"
 
- "Vulkan/Core/VulkanCore.cpp")
+ "Vulkan/Core/VulkanCore.cpp" "Vulkan/Core/VulkanAllocator.cpp")
 
 # Include directories specific to this target
 target_include_directories(RendererOverhaul PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
