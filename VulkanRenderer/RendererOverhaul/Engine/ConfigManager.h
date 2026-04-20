@@ -1,6 +1,9 @@
 // ConfigManager.h
 // This singleton will read, write and manage the config file
 
+#ifndef _DDM_CONFIG_MANAGER_
+#define _DDM_CONFIG_MANAGER_
+
 // File includes
 #include "Singleton.h"
 #include "Includes/RapidJSONIncludes.h"
@@ -68,3 +71,4 @@ namespace DDM
 	};
 }
 
+#endif // !_DDM_CONFIG_MANAGER_

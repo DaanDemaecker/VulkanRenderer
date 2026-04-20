@@ -119,7 +119,7 @@ namespace DDM
 		/// <summary>
 		/// Set up the validation layers for the instance creation info struct
 		/// </summary>
-		/// <param name="createInfo: ">reference to the VkInstanceCreateInfo struct</param>
+		/// <param name="createInfo">reference to the VkInstanceCreateInfo struct</param>
 		void SetupValidationLayers(VkInstanceCreateInfo& createInfo);
 
 		/// <summary>
@@ -142,28 +142,28 @@ namespace DDM
 		/// <summary>
 		/// Fill in all fields for the debug messenger create info
 		/// </summary>
-		/// <param name="createInfo: ">Reference to the createinfo to fill in</param>
+		/// <param name="createInfo">Reference to the createinfo to fill in</param>
 		void PopulateDebugMessenger(VkDebugUtilsMessengerCreateInfoEXT& createInfo);
 
 		/// <summary>
 		/// Set up required severities for the debug messenger
 		/// </summary>
-		/// <param name="createInfo: ">reference to the create info struct for debug messenger</param>
+		/// <param name="createInfo">reference to the create info struct for debug messenger</param>
 		void SetupDebugMessengerSeverities(VkDebugUtilsMessengerCreateInfoEXT& createInfo);
 
 		/// <summary>
 		/// Set up required message types for the debug messenger
 		/// </summary>
-		/// <param name="createInfo: ">reference to the create info struct for debug messenger</param>
+		/// <param name="createInfo">reference to the create info struct for debug messenger</param>
 		void SetupDebugMessengerTypes(VkDebugUtilsMessengerCreateInfoEXT& createInfo);
 
 		/// <summary>
 		/// Create the debug messenger
 		/// </summary>
-		/// <param name="instance: ">Vulkan instance associated with messenger</param>
-		/// <param name="pCreateInfo: ">Create info of the messenger</param>
-		/// <param name="pAllocator: ">Custom vulkan allocator</param>
-		/// <param name="pDebugMessenger: ">Pointer to the future debug messenger</param>
+		/// <param name="instance">Vulkan instance associated with messenger</param>
+		/// <param name="pCreateInfo">Create info of the messenger</param>
+		/// <param name="pAllocator">Custom vulkan allocator</param>
+		/// <param name="pDebugMessenger">Pointer to the future debug messenger</param>
 		/// <returns>Result of the operation</returns>
 		VkResult CreateDebugMessenger(VkInstance instance,
 			const VkDebugUtilsMessengerCreateInfoEXT* pCreateInfo,
@@ -173,9 +173,9 @@ namespace DDM
 		/// <summary>
 		/// Destroy the debug messenger
 		/// </summary>
-		/// <param name="instance: ">Vulkan instance associated with messenger</param>
-		/// <param name="debugMessenger: ">Messenger to destroy</param>
-		/// <param name="pAllocator: ">Custom vulkan allocator</param>
+		/// <param name="instance">Vulkan instance associated with messenger</param>
+		/// <param name="debugMessenger">Messenger to destroy</param>
+		/// <param name="pAllocator">Custom vulkan allocator</param>
 		void DestroyDebugMessenger(VkInstance instance,
 			VkDebugUtilsMessengerEXT debugMessenger,
 			const VkAllocationCallbacks* pAllocator);
@@ -183,10 +183,10 @@ namespace DDM
 		/// <summary>
 		/// Debug messenger callback
 		/// </summary>
-		/// <param name="messageSeverity: ">Severity of the message</param>
-		/// <param name="messageType: ">Type of message</param>
-		/// <param name="pCallbackData: ">Data about the debug callback</param>
-		/// <param name="pUserData: ">Data specified by user</param>
+		/// <param name="messageSeverity">Severity of the message</param>
+		/// <param name="messageType">Type of message</param>
+		/// <param name="pCallbackData">Data about the debug callback</param>
+		/// <param name="pUserData">Data specified by user</param>
 		/// <returns></returns>
 		static VKAPI_ATTR VkBool32 VKAPI_CALL debugCallback(
 			VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
@@ -223,43 +223,43 @@ namespace DDM
 		/// <summary>
 		/// Give a score to the current physical device to compare to others
 		/// </summary>
-		/// <param name="physicalDevice: ">device to score</param>
+		/// <param name="physicalDevice">device to score</param>
 		/// <returns>Score of the device</returns>
 		uint32_t ScorePhysicalDevice(VkPhysicalDevice physicalDevice);
 
 		/// <summary>
 		/// Check if the given device is a valid option
 		/// </summary>
-		/// <param name="physicalDevice: ">device to check</param>
+		/// <param name="physicalDevice">device to check</param>
 		/// <returns>Bool indicating validity</returns>
 		bool IsDeviceValid(VkPhysicalDevice physicalDevice);
 
 		/// <summary>
 		/// Check if given device has all requested extensions
 		/// </summary>
-		/// <param name="physicalDevice: ">device to check</param>
+		/// <param name="physicalDevice">device to check</param>
 		/// <returns>Bool indicating if device has extensions</returns>
 		bool HasRequiredExtensions(VkPhysicalDevice physicalDevice);
 
 		/// <summary>
 		/// Check if given device has queue families required for drawing etc
 		/// </summary>
-		/// <param name="physicalDevice: ">device to check</param>
+		/// <param name="physicalDevice">device to check</param>
 		/// <returns>Bool indicating if device has correct queue families</returns>
 		bool HasRequiredQueueFamily(VkPhysicalDevice physicalDevice);
 
 		/// <summary>
 		/// Check if given queue family has required flags
 		/// </summary>
-		/// <param name="family: ">queue family to check</param>
+		/// <param name="family">queue family to check</param>
 		/// <returns>Bool indicating if family is valid</returns>
 		bool IsValidQueueFamily(VkQueueFamilyProperties family);
 
 		/// <summary>
 		/// Retrieve all the available queue families from a specified device
 		/// </summary>
-		/// <param name="device: ">device to query</param>
-		/// <param name="families: ">will be filled in with the families</param>
+		/// <param name="device">device to query</param>
+		/// <param name="families">will be filled in with the families</param>
 		void GetQueueFamilies(VkPhysicalDevice device, std::vector<VkQueueFamilyProperties>& families);
 
 
@@ -275,20 +275,20 @@ namespace DDM
 		/// <summary>
 		/// Set up a list of VkDeviceQueueCreateInfo structs with the correct values
 		/// </summary>
-		/// <param name="infos: ">list of infos to fill in</param>
+		/// <param name="infos">list of infos to fill in</param>
 		void SetupQueueCreateInfos(std::vector<VkDeviceQueueCreateInfo>& infos, std::vector<std::vector<float>>& priorities);
 
 		/// <summary>
 		/// Find the queuefamily that is most optimal
 		/// </summary>
-		/// <param name="index: ">will be filled in with index of the family</param>
-		/// <param name="count: ">will be filled in with the max amount of queues in the family</param>
+		/// <param name="index">will be filled in with index of the family</param>
+		/// <param name="count">will be filled in with the max amount of queues in the family</param>
 		void FindOptimalQueueFamily(uint32_t& index, uint32_t& count);
 
 		/// <summary>
 		/// Set up the requested device features
 		/// </summary>
-		/// <param name="features: ">reference to a VkPhysicalDeviceFeatures struct to fill in</param>
+		/// <param name="features">reference to a VkPhysicalDeviceFeatures struct to fill in</param>
 		void SetupPhysicalDeviceFeatures(VkPhysicalDeviceFeatures& features);
 	};
 }

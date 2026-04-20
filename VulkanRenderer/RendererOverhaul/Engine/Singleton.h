@@ -1,8 +1,8 @@
 // Singleton.h
 // This class will serve as the base for any singleton
 
-#ifndef SingletonIncluded
-#define SingletonIncluded
+#ifndef _DDM_SINGLETON_
+#define _DDM_SINGLETON_
 
 namespace DDM
 {
@@ -32,4 +32,4 @@ namespace DDM
 	};
 }
 
-#endif // !SingletonIncluded
+#endif // !_DDM_SINGLETON_

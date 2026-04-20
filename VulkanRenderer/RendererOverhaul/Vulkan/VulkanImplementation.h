@@ -36,8 +36,10 @@ namespace DDM
 		VulkanImplementation& operator=(VulkanImplementation&&) = delete;
 
 	private:
+		// Custom vulkan allocator
 		std::unique_ptr<VulkanAllocator> m_pAllocator{};
 
+		// Core object of vulkan application
 		std::unique_ptr<VulkanCore> m_pCore{};
 	};
 }

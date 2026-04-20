@@ -35,7 +35,7 @@ namespace DDM
 		/// <summary>
 		/// Register a new IFileSystem interface
 		/// </summary>
-		/// <param name="pFileSystem: ">unique pointer to the new IFileSystem interface</param>
+		/// <param name="pFileSystem">unique pointer to the new IFileSystem interface</param>
 		static void RegisterFileSystem(std::unique_ptr<IFileSystem> pFileSystem);
 
 		/// <summary>
@@ -52,7 +52,7 @@ namespace DDM
 		/// <summary>
 		/// Register a new IRenderer interface
 		/// </summary>
-		/// <param name="pRenderer: ">unique pointer to the new IRenderer interface</param>
+		/// <param name="pRenderer">unique pointer to the new IRenderer interface</param>
 		static void RegisterRenderer(std::unique_ptr<IRenderer> pRenderer);
 
 		/// <summary>

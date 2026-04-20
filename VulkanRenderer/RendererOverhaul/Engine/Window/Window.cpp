@@ -67,6 +67,8 @@ namespace DDM
 
 			m_Window.handle = handle;
 			m_Window.width = initData.width;
+			m_Window.posX = initData.posX;
+			m_Window.posY = initData.posY;
 			m_Window.height = initData.height;
 			m_Window.fullscreen = initData.fullscreen;
 
@@ -135,7 +137,7 @@ namespace DDM
 		const int m_DefaultHeight{ 600 };
 
 		// Default xpos
-		const int m_DefaultYPos{ 10 };
+		const int m_DefaultYPos{ 50 };
 
 
 		GLFWwindow* GetGLFWHandle() const

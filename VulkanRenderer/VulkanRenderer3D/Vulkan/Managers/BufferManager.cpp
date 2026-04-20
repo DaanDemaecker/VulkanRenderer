@@ -20,6 +20,7 @@ void DDM3::BufferManager::CreateBuffer(DDM3::GPUObject* pGPUObject, VkDeviceSize
 	VkBufferCreateInfo bufferInfo{};
 	// Set type to buffer create info
 	bufferInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
+	bufferInfo.pNext = nullptr;
 	// Set size to given size
 	bufferInfo.size = size;
 	// Set usage to given usage

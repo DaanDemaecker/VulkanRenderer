@@ -1,7 +1,7 @@
 // D2DEngine.h
 // This class will hold the main engine that will run the update loop
-#ifndef D2DEngineIncluded
-#define D2DEngineIncluded
+#ifndef _DDM_DDM_ENGINE_
+#define _DDM_DDM_ENGINE_
 
 namespace DDM
 {
@@ -17,4 +17,4 @@ namespace DDM
 
 	};
 }
-#endif // !D2DEngineIncluded
+#endif // !_DDM_DDM_ENGINE_
