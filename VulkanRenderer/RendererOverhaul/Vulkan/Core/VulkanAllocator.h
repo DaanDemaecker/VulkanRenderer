@@ -22,9 +22,14 @@ namespace DDM
 		/// </summary>
 		~VulkanAllocator();
 
+		/// <summary>
+		/// Get a pointer to the allocationcallback struct
+		/// </summary>
+		/// <returns>Pointer to the allocationcallback struct</returns>
 		const VkAllocationCallbacks* GetAllocator() const;
 
 	private:
+		// Allocation callback struct
 		VkAllocationCallbacks m_VkAllocationCallbacks{};
 
 

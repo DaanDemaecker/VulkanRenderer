@@ -17,6 +17,11 @@
 // Standard library includes
 #include <set>
 
+bool DDM::VulkanCore::m_LogError{ false };
+bool DDM::VulkanCore::m_LogWarning{ false };
+bool DDM::VulkanCore::m_LogInfo{ false };
+bool DDM::VulkanCore::m_LogVerbose{ false };
+
 DDM::VulkanCore::VulkanCore(VulkanAllocator* pAllocator)
 {
 	m_pAllocator = pAllocator;
@@ -81,7 +86,7 @@ void DDM::VulkanCore::CreateInstance()
 	
 	auto extensions = GetExtensions();
 
-	createInfo.enabledExtensionCount = extensions.size();
+	createInfo.enabledExtensionCount = static_cast<uint32_t>(extensions.size());
 	createInfo.ppEnabledExtensionNames = extensions.data();
 
 	if (vkCreateInstance(&createInfo, m_pAllocator->GetAllocator(), &m_VkInstance) != VK_SUCCESS)
@@ -195,6 +200,19 @@ void DDM::VulkanCore::SetupDebugMessenger()
 		return;
 	}
 
+	auto& config = ConfigManager::GetInstance();
+
+	m_LogError = config.GetBool("LogValidationError");
+
+
+	m_LogWarning = config.GetBool("LogValidationWarning");
+
+
+	m_LogInfo = config.GetBool("LogValidationInfo");
+
+
+	m_LogVerbose = config.GetBool("LogValidationVerbose");
+
 	VkDebugUtilsMessengerCreateInfoEXT createInfo{};
 
 	PopulateDebugMessenger(createInfo);
@@ -284,16 +302,28 @@ VKAPI_ATTR VkBool32 VKAPI_CALL DDM::VulkanCore::debugCallback(VkDebugUtilsMessag
 	switch (messageSeverity)
 	{
 	case VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT:
-		//std::cout << "Validation layer verbose: " << pCallbackData->pMessage << "\n \n";
+		if (m_LogVerbose)
+		{
+			std::cout << "Validation layer verbose: " << pCallbackData->pMessage << "\n \n";
+		}
 		break;
 	case VK_DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT:
-		//std::cout << "Validation layer info: " << pCallbackData->pMessage << "\n \n";
+		if (m_LogInfo)
+		{
+			std::cout << "Validation layer info: " << pCallbackData->pMessage << "\n \n";
+		}
 		break;
 	case VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT:
-		std::cout << "Validation layer warning: " << pCallbackData->pMessage << "\n \n";
+		if (m_LogWarning)
+		{
+			std::cout << "Validation layer warning: " << pCallbackData->pMessage << "\n \n";
+		}
 		break;
 	case VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT:
-		std::cout << "Validation layer error: " << pCallbackData->pMessage << "\n \n";
+		if (m_LogError)
+		{
+			std::cout << "Validation layer error: " << pCallbackData->pMessage << "\n \n";
+		}
 		break;
 	default:
 		break;
@@ -542,7 +572,7 @@ void DDM::VulkanCore::SetupQueueCreateInfos(std::vector<VkDeviceQueueCreateInfo>
 
 	priorities.push_back(std::vector<float>());
 
-	for (int i{}; i < info.queueCount; ++i)
+	for (uint32_t i{}; i < info.queueCount; ++i)
 	{
 		priorities[0].push_back(1.0f);
 	}

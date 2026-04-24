@@ -55,7 +55,7 @@ void DDM3::Camera::Update()
 		direction += GetRight();
 	}
 
-	glm::normalize(direction);
+	direction = glm::normalize(direction);
 
 	direction *= m_Speed * deltaTime;
 

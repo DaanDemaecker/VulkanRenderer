@@ -40,10 +40,11 @@ namespace DDM
 		
 
 	private:
-
 		// ------------------------------------------------------------------------------
 		// Allocator
 		// ------------------------------------------------------------------------------
+
+		// Vulkan allocator
 		VulkanAllocator* m_pAllocator{};
 
 		// ------------------------------------------------------------------------------
@@ -63,6 +64,18 @@ namespace DDM
 
 		// Indicates whether validation layers should be active
 		bool m_EnableValidationLayers = true;
+
+		// Indicates whether validation layer errors should be logged
+		static bool m_LogError;
+
+		// Indicates whether validation layer warnings should be logged
+		static bool m_LogWarning;
+
+		// Indicates whether validation layer infos should be logged
+		static bool m_LogInfo;
+
+		// Indicates whether validation layer verbose should be logged
+		static bool m_LogVerbose;
 
 
 		// ------------------------------------------------------------------------------

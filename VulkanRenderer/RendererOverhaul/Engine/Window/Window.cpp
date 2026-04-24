@@ -191,7 +191,7 @@ namespace DDM
 		{
 			InitData initData{};
 
-			bool shouldReadFromData = ConfigManager::GetInstance().GetBool("ReadLastState");
+			bool shouldReadFromData = ConfigManager::GetInstance().GetBool("ReadLastWindowState");
 
 			auto& fileSystem = DDM::ServiceLocator::GetFileSystem();
 

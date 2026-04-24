@@ -5,7 +5,7 @@
     "FullScreen" : false,
     "Maximized" : false,
     "Monitor": 1,
-    "ReadLastState" :  true,
+    "ReadLastWindowState" :  true,
     "ApplicationName": "RendererOverhaul",
     "ApplicationVersionVariant" : 0,
     "ApplicationVersionMajor" : 0,
@@ -19,5 +19,9 @@
     "ValidationSeverityError": true,
     "ValidationSeverityWarning": true,
     "ValidationSeverityInfo": true,
-    "ValidationSeverityVerbose": true
+    "ValidationSeverityVerbose": true,
+    "LogValidationError": true,
+    "LogValidationWarning": true,
+    "LogValidationInfo": false,
+    "LogValidationVerbose":  false
 }
