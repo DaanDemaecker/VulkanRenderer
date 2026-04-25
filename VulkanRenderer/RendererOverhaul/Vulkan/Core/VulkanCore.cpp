@@ -551,11 +551,9 @@ void DDM::VulkanCore::CreateLogicalDevice()
 	deviceCreateInfo.enabledExtensionCount = static_cast<uint32_t>(m_RequiredExtensions.size());
 
 	// Set up features info
-	VkPhysicalDeviceFeatures features{};
+	SetupPhysicalDeviceFeatures(m_EnabledFeatures);
 
-	SetupPhysicalDeviceFeatures(features);
-
-	deviceCreateInfo.pEnabledFeatures = &features;
+	deviceCreateInfo.pEnabledFeatures = &m_EnabledFeatures;
 
 	// Create the device
 	vkCreateDevice(m_VkPhysicalDevice, &deviceCreateInfo, m_pAllocator->GetAllocator(), &m_VkDevice);

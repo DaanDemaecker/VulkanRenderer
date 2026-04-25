@@ -59,7 +59,7 @@ namespace DDM
 
 			InitData initData = ReadInitData();
 
-			auto handle = glfwCreateWindow(initData.width, initData.height, "test", nullptr, nullptr);
+			auto handle = glfwCreateWindow(initData.width, initData.height, ConfigManager::GetInstance().GetString("WindowName"), nullptr, nullptr);
 
 
 			glfwSetWindowSizeCallback(handle, resize_callback);

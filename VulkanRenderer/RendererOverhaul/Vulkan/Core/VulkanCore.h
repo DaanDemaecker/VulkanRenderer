@@ -106,6 +106,8 @@ namespace DDM
 			VK_QUEUE_TRANSFER_BIT
 		};
 
+		VkPhysicalDeviceFeatures m_EnabledFeatures{};
+
 		// ------------------------------------------------------------------------------
 		// Logical device
 		//-------------------------------------------------------------------------------
