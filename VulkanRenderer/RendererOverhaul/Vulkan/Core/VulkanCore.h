@@ -9,11 +9,13 @@
 
 // Standard library includes
 #include <vector>
+#include <memory>
 
 namespace DDM
 {
 	// Class forward declarations
 	class VulkanAllocator;
+	class PhysicalDeviceInfo;
 
 	class VulkanCore final
 	{
@@ -90,23 +92,8 @@ namespace DDM
 		// Physical device
 		// ------------------------------------------------------------------------------
 
-		// Vulkan physical device
-		VkPhysicalDevice m_VkPhysicalDevice{};
-
-		// List of required device extensions
-		const std::vector<const char*> m_RequiredExtensions =
-		{
-			VK_KHR_SWAPCHAIN_EXTENSION_NAME
-		};
-
-		// List of required flags for queue families
-		const std::vector<uint32_t> m_RequiredQueueFlags =
-		{
-			VK_QUEUE_GRAPHICS_BIT,
-			VK_QUEUE_TRANSFER_BIT
-		};
-
-		VkPhysicalDeviceFeatures m_EnabledFeatures{};
+		// Physical device info
+		std::unique_ptr<PhysicalDeviceInfo> m_pPhysicalDeviceInfo{};
 
 		// ------------------------------------------------------------------------------
 		// Logical device
@@ -232,50 +219,8 @@ namespace DDM
 		/// <summary>
 		/// Pick the physical device to use for rendering
 		/// </summary>
-		/// <returns>Handle of the physical device</returns>
-		VkPhysicalDevice PickPhysicalDevice();
-
-		/// <summary>
-		/// Give a score to the current physical device to compare to others
-		/// </summary>
-		/// <param name="physicalDevice">device to score</param>
-		/// <returns>Score of the device</returns>
-		uint32_t ScorePhysicalDevice(VkPhysicalDevice physicalDevice);
-
-		/// <summary>
-		/// Check if the given device is a valid option
-		/// </summary>
-		/// <param name="physicalDevice">device to check</param>
-		/// <returns>Bool indicating validity</returns>
-		bool IsDeviceValid(VkPhysicalDevice physicalDevice);
-
-		/// <summary>
-		/// Check if given device has all requested extensions
-		/// </summary>
-		/// <param name="physicalDevice">device to check</param>
-		/// <returns>Bool indicating if device has extensions</returns>
-		bool HasRequiredExtensions(VkPhysicalDevice physicalDevice);
-
-		/// <summary>
-		/// Check if given device has queue families required for drawing etc
-		/// </summary>
-		/// <param name="physicalDevice">device to check</param>
-		/// <returns>Bool indicating if device has correct queue families</returns>
-		bool HasRequiredQueueFamily(VkPhysicalDevice physicalDevice);
-
-		/// <summary>
-		/// Check if given queue family has required flags
-		/// </summary>
-		/// <param name="family">queue family to check</param>
-		/// <returns>Bool indicating if family is valid</returns>
-		bool IsValidQueueFamily(VkQueueFamilyProperties family);
-
-		/// <summary>
-		/// Retrieve all the available queue families from a specified device
-		/// </summary>
-		/// <param name="device">device to query</param>
-		/// <param name="families">will be filled in with the families</param>
-		void GetQueueFamilies(VkPhysicalDevice device, std::vector<VkQueueFamilyProperties>& families);
+		/// <returns>Unique pointer to physical device wrapper</returns>
+		std::unique_ptr<PhysicalDeviceInfo> PickPhysicalDevice();
 
 
 		// ------------------------------------------------------------------------------
@@ -292,13 +237,6 @@ namespace DDM
 		/// </summary>
 		/// <param name="infos">list of infos to fill in</param>
 		void SetupQueueCreateInfos(std::vector<VkDeviceQueueCreateInfo>& infos, std::vector<std::vector<float>>& priorities);
-
-		/// <summary>
-		/// Find the queuefamily that is most optimal
-		/// </summary>
-		/// <param name="index">will be filled in with index of the family</param>
-		/// <param name="count">will be filled in with the max amount of queues in the family</param>
-		void FindOptimalQueueFamily(uint32_t& index, uint32_t& count);
 
 		/// <summary>
 		/// Set up the requested device features

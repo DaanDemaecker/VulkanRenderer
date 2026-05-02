@@ -13,6 +13,7 @@
 
 #include "Engine/Window/Window.h"
 #include "Vulkan/Core/VulkanAllocator.h"
+#include "Vulkan/Core/PhysicalDeviceInfo.h"
 
 // Standard library includes
 #include <set>
@@ -361,15 +362,15 @@ void DDM::VulkanCore::CreateSurface()
 
 void DDM::VulkanCore::SetupPhysicalDevice()
 {
-	m_VkPhysicalDevice = PickPhysicalDevice();
+	m_pPhysicalDeviceInfo = PickPhysicalDevice();
 
-	if (m_VkPhysicalDevice == VK_NULL_HANDLE)
+	if (m_pPhysicalDeviceInfo == nullptr)
 	{
 		throw std::runtime_error("Failed to pick a physical device");
 	}
 }
 
-VkPhysicalDevice DDM::VulkanCore::PickPhysicalDevice()
+std::unique_ptr<DDM::PhysicalDeviceInfo> DDM::VulkanCore::PickPhysicalDevice()
 {
 	// Enumerate all devices
 	uint32_t deviceCount{};
@@ -390,132 +391,37 @@ VkPhysicalDevice DDM::VulkanCore::PickPhysicalDevice()
 		throw std::runtime_error("failed to enumerate physical devices!");
 	}
 
-	// Score all physical devices and pick highest scored one
-	uint32_t maxScore = 0;
-
-	VkPhysicalDevice chosenDevice = VK_NULL_HANDLE;
+	std::vector<std::unique_ptr<DDM::PhysicalDeviceInfo>> devices{};
 
 	for (auto physicalDevice : physicalDevices)
 	{
-		if (!IsDeviceValid(physicalDevice))
-		{
-			continue;
-		}
+		devices.push_back(std::make_unique<DDM::PhysicalDeviceInfo>(physicalDevice));
+	}
 
-		uint32_t score = ScorePhysicalDevice(physicalDevice);
+
+	// Score all physical devices and pick highest scored one
+	int maxScore = -1;
+
+	int chosenDeviceIndex = -1;
+
+	for (int i{}; i < devices.size(); ++i)
+	{
+		int score = devices[i]->GetScore();
 
 		if (score > maxScore)
 		{
 			maxScore = score;
 
-			chosenDevice = physicalDevice;
+			chosenDeviceIndex = i;
 		}
 	}
 
-	return chosenDevice;
-}
-
-uint32_t DDM::VulkanCore::ScorePhysicalDevice(VkPhysicalDevice physicalDevice)
-{
-	constexpr uint32_t baseScore = 1;
-
-	uint32_t score = baseScore;
-
-	VkPhysicalDeviceProperties properties{};
-	vkGetPhysicalDeviceProperties(physicalDevice, &properties);
-
-	// Device type
-	// Take a preference of discrete gpu over integrated gpu and prefer both of these over any other type
-	constexpr uint32_t integratedMultiplier = 2;
-	constexpr uint32_t discreteMultiplier = 3;
-
-	if (properties.deviceType == VK_PHYSICAL_DEVICE_TYPE_INTEGRATED_GPU)
+	if (chosenDeviceIndex < 0)
 	{
-		score *= integratedMultiplier;
-	}
-	else if (properties.deviceType == VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU)
-	{
-		score *= discreteMultiplier;
+		return nullptr;
 	}
 
-	std::cout << "Score of gpu " << properties.deviceName << ": " << score << std::endl;
-
-	return score;
-}
-
-bool DDM::VulkanCore::IsDeviceValid(VkPhysicalDevice physicalDevice)
-{
-	if (!HasRequiredExtensions(physicalDevice))
-	{
-		return false;
-	}
-
-	if (!HasRequiredQueueFamily(physicalDevice))
-	{
-		return false;
-	}
-
-	return true;
-}
-
-bool DDM::VulkanCore::HasRequiredExtensions(VkPhysicalDevice physicalDevice)
-{
-	uint32_t extensionCount;
-	vkEnumerateDeviceExtensionProperties(physicalDevice, nullptr, &extensionCount, nullptr);
-	
-	std::vector<VkExtensionProperties> availableExtensions(extensionCount);
-	vkEnumerateDeviceExtensionProperties(physicalDevice, nullptr, &extensionCount, availableExtensions.data());
-
-	//Create a set of required extensions to avoid duplicates
-	std::set<std::string> requiredExtensions(m_RequiredExtensions.begin(), m_RequiredExtensions.end());
-
-	for (const auto& extension : availableExtensions)
-	{
-		requiredExtensions.erase(extension.extensionName);
-	}
-
-	return requiredExtensions.empty();
-}
-
-bool DDM::VulkanCore::HasRequiredQueueFamily(VkPhysicalDevice physicalDevice)
-{
-	std::vector<VkQueueFamilyProperties> queueFamilies{};
-
-	GetQueueFamilies(physicalDevice, queueFamilies);
-
-	for (auto& family : queueFamilies)
-	{
-		if (IsValidQueueFamily(family))
-		{
-			return true;
-		}
-	}
-
-	return false;
-}
-
-bool DDM::VulkanCore::IsValidQueueFamily(VkQueueFamilyProperties family)
-{
-	for (auto bit : m_RequiredQueueFlags)
-	{
-		if ((family.queueFlags & bit) == 0)
-		{
-			return false;
-		}
-	}
-
-	return true;
-}
-
-void DDM::VulkanCore::GetQueueFamilies(VkPhysicalDevice device, std::vector<VkQueueFamilyProperties>& families)
-{
-	uint32_t queueFamilyCount{};
-
-	vkGetPhysicalDeviceQueueFamilyProperties(device, &queueFamilyCount, nullptr);
-
-	families.resize(queueFamilyCount);
-
-	vkGetPhysicalDeviceQueueFamilyProperties(device, &queueFamilyCount, families.data());
+	return std::move(devices[chosenDeviceIndex]);
 }
 
 
@@ -547,16 +453,13 @@ void DDM::VulkanCore::CreateLogicalDevice()
 	deviceCreateInfo.ppEnabledLayerNames = nullptr;
 
 	// Set up extensions info
-	deviceCreateInfo.ppEnabledExtensionNames = m_RequiredExtensions.data();
-	deviceCreateInfo.enabledExtensionCount = static_cast<uint32_t>(m_RequiredExtensions.size());
+	deviceCreateInfo.ppEnabledExtensionNames = m_pPhysicalDeviceInfo->GetRequiredExtensionName();
+	deviceCreateInfo.enabledExtensionCount = m_pPhysicalDeviceInfo->GetRequiredExtensionCount();
 
-	// Set up features info
-	SetupPhysicalDeviceFeatures(m_EnabledFeatures);
-
-	deviceCreateInfo.pEnabledFeatures = &m_EnabledFeatures;
+	deviceCreateInfo.pEnabledFeatures = &m_pPhysicalDeviceInfo->GetEnabledFeatures();
 
 	// Create the device
-	vkCreateDevice(m_VkPhysicalDevice, &deviceCreateInfo, m_pAllocator->GetAllocator(), &m_VkDevice);
+	vkCreateDevice(m_pPhysicalDeviceInfo->GetDeviceHandle(), &deviceCreateInfo, m_pAllocator->GetAllocator(), &m_VkDevice);
 }
 
 void DDM::VulkanCore::SetupQueueCreateInfos(std::vector<VkDeviceQueueCreateInfo>& infos, std::vector<std::vector<float>>& priorities)
@@ -566,7 +469,7 @@ void DDM::VulkanCore::SetupQueueCreateInfos(std::vector<VkDeviceQueueCreateInfo>
 	info.pNext = nullptr;
 	info.flags = 0;
 
-	FindOptimalQueueFamily(info.queueFamilyIndex, info.queueCount);
+	m_pPhysicalDeviceInfo->FindOptimalQueueFamily(info.queueFamilyIndex, info.queueCount);
 
 	priorities.push_back(std::vector<float>());
 
@@ -578,32 +481,4 @@ void DDM::VulkanCore::SetupQueueCreateInfos(std::vector<VkDeviceQueueCreateInfo>
 	info.pQueuePriorities = priorities[0].data();
 
 	infos.push_back(info);
-}
-
-void DDM::VulkanCore::FindOptimalQueueFamily(uint32_t& index, uint32_t& count)
-{
-	index = 0;
-	count = 0;
-
-	std::vector<VkQueueFamilyProperties> queueFamilies{};
-
-	GetQueueFamilies(m_VkPhysicalDevice, queueFamilies);
-
-	for (int i{}; i < queueFamilies.size(); ++i)
-	{
-		if (IsValidQueueFamily(queueFamilies[i]))
-		{
-			if (queueFamilies[i].queueCount > count)
-			{
-				count = queueFamilies[i].queueCount;
-				index = i;
-			}
-		}
-	}
-}
-
-void DDM::VulkanCore::SetupPhysicalDeviceFeatures(VkPhysicalDeviceFeatures& features)
-{
-	// Enable all available features
-	vkGetPhysicalDeviceFeatures(m_VkPhysicalDevice, &features);
 }
