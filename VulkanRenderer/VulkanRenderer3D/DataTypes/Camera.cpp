@@ -55,7 +55,10 @@ void DDM3::Camera::Update()
 		direction += GetRight();
 	}
 
-	direction = glm::normalize(direction);
+	if(glm::length(direction) != 0)
+	{
+		direction = glm::normalize(direction);
+	}
 
 	direction *= m_Speed * deltaTime;
 
@@ -79,8 +82,8 @@ void DDM3::Camera::Update()
 		double deltaX = xpos - m_PrevXPos;
 		double deltaY = ypos - m_PrevYPos;
 
-		m_TotalPitch += static_cast<float>(deltaY * deltaTime * m_AngularSpeed);
-		m_TotalYaw += static_cast<float>(deltaX * deltaTime * m_AngularSpeed);
+		m_TotalPitch += static_cast<float>(deltaY * m_AngularSpeed);
+		m_TotalYaw += static_cast<float>(deltaX * m_AngularSpeed);
 
 		// Rotate the camera based on mouse movement
 		SetRotation(m_TotalPitch, m_TotalYaw, 0);
@@ -138,8 +141,10 @@ void DDM3::Camera::UpdateMatrix()
 	// Create rotation matrix
 	glm::mat4 rotationMatrix = glm::mat4_cast(glm::conjugate(GetRotation()));
 
+	auto& position = GetPosition();
+
 	// Create translation matrix
-	glm::mat4 translationMatrix = glm::translate(glm::mat4(1.0f), -GetPosition());
+	glm::mat4 translationMatrix = glm::translate(glm::mat4(1.0f), -position);
 
 	// Multiply matrices (apply rotation first, then translation)
 	m_Matrix = rotationMatrix * translationMatrix;
