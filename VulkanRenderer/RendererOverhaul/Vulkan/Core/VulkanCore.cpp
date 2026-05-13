@@ -453,8 +453,7 @@ void DDM::VulkanCore::CreateLogicalDevice()
 	deviceCreateInfo.ppEnabledLayerNames = nullptr;
 
 	// Set up extensions info
-	deviceCreateInfo.ppEnabledExtensionNames = m_pPhysicalDeviceInfo->GetRequiredExtensionName();
-	deviceCreateInfo.enabledExtensionCount = m_pPhysicalDeviceInfo->GetRequiredExtensionCount();
+	m_pPhysicalDeviceInfo->SetupExtensions(deviceCreateInfo);
 
 	deviceCreateInfo.pEnabledFeatures = &m_pPhysicalDeviceInfo->GetEnabledFeatures();
 

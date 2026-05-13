@@ -44,16 +44,10 @@ namespace DDM
 		VkPhysicalDevice GetDeviceHandle() const { return m_VkPhysicalDevice; }
 
 		/// <summary>
-		/// Get the names of the required extensions
+		/// Set up the extensions in the VkDeviceCreateInfo struct
 		/// </summary>
-		/// <returns>Pointer to array of C-strings of extensions</returns>
-		const char* const* GetRequiredExtensionName() const;
-
-		/// <summary>
-		/// Get amount of requiredd extensions
-		/// </summary>
-		/// <returns>Amount of required extensions</returns>
-		uint32_t GetRequiredExtensionCount() const;
+		/// <param name="createInfo: ">reference to the VkDeviceCreateInfo struct</param>
+		void SetupExtensions(VkDeviceCreateInfo& createInfo);
 
 		/// <summary>
 		/// Get a list of enabled features
@@ -92,11 +86,14 @@ namespace DDM
 			VK_QUEUE_TRANSFER_BIT
 		};
 
-		VkPhysicalDeviceFeatures m_EnabledFeatures{};
+		// Struct of enabled device features
+		VkPhysicalDeviceFeatures m_VkEnabledFeatures{};
 
-		std::vector<VkQueueFamilyProperties> m_QueueFamilies{};
+		// List of queufamily properties
+		std::vector<VkQueueFamilyProperties> m_VkQueueFamilies{};
 
-		VkPhysicalDeviceProperties m_Properties{};
+		// Struct holding device properties
+		VkPhysicalDeviceProperties m_VkProperties{};
 
 		/// <summary>
 		/// Fetch and set up all features to enable
@@ -137,12 +134,6 @@ namespace DDM
 		/// <param name="family">queue family to check</param>
 		/// <returns>Bool indicating if family is valid</returns>
 		bool IsValidQueueFamily(VkQueueFamilyProperties family);
-
-		/// <summary>
-		/// Retrieve all the available queue families from a specified device
-		/// </summary>
-		/// <param name="families">will be filled in with the families</param>
-		void GetQueueFamilies(std::vector<VkQueueFamilyProperties>& families);
 	};
 }
 

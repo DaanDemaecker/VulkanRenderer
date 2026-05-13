@@ -22,19 +22,15 @@ DDM::PhysicalDeviceInfo::~PhysicalDeviceInfo()
 {
 }
 
-const char* const* DDM::PhysicalDeviceInfo::GetRequiredExtensionName() const
+void DDM::PhysicalDeviceInfo::SetupExtensions(VkDeviceCreateInfo& createInfo)
 {
-	return m_RequiredExtensions.data();
-}
-
-uint32_t DDM::PhysicalDeviceInfo::GetRequiredExtensionCount() const
-{
-	return static_cast<uint32_t>(m_RequiredExtensions.size());
+	createInfo.enabledExtensionCount = static_cast<uint32_t>(m_RequiredExtensions.size());
+	createInfo.ppEnabledExtensionNames = m_RequiredExtensions.data();
 }
 
 const VkPhysicalDeviceFeatures& DDM::PhysicalDeviceInfo::GetEnabledFeatures() const
 {
-	return m_EnabledFeatures;
+	return m_VkEnabledFeatures;
 }
 
 int DDM::PhysicalDeviceInfo::GetScore()
@@ -53,16 +49,16 @@ int DDM::PhysicalDeviceInfo::GetScore()
 	constexpr uint32_t integratedMultiplier = 2;
 	constexpr uint32_t discreteMultiplier = 3;
 
-	if (m_Properties.deviceType == VK_PHYSICAL_DEVICE_TYPE_INTEGRATED_GPU)
+	if (m_VkProperties.deviceType == VK_PHYSICAL_DEVICE_TYPE_INTEGRATED_GPU)
 	{
 		score *= integratedMultiplier;
 	}
-	else if (m_Properties.deviceType == VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU)
+	else if (m_VkProperties.deviceType == VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU)
 	{
 		score *= discreteMultiplier;
 	}
 
-	std::cout << "Score of gpu " << m_Properties.deviceName << ": " << score << std::endl;
+	std::cout << "Score of gpu " << m_VkProperties.deviceName << ": " << score << std::endl;
 
 	return score;
 }
@@ -72,13 +68,13 @@ void DDM::PhysicalDeviceInfo::FindOptimalQueueFamily(uint32_t& index, uint32_t& 
 	index = 0;
 	count = 0;
 
-	for (int i{}; i < m_QueueFamilies.size(); ++i)
+	for (int i{}; i < m_VkQueueFamilies.size(); ++i)
 	{
-		if (IsValidQueueFamily(m_QueueFamilies[i]))
+		if (IsValidQueueFamily(m_VkQueueFamilies[i]))
 		{
-			if (m_QueueFamilies[i].queueCount > count)
+			if (m_VkQueueFamilies[i].queueCount > count)
 			{
-				count = m_QueueFamilies[i].queueCount;
+				count = m_VkQueueFamilies[i].queueCount;
 				index = i;
 			}
 		}
@@ -88,7 +84,7 @@ void DDM::PhysicalDeviceInfo::FindOptimalQueueFamily(uint32_t& index, uint32_t& 
 void DDM::PhysicalDeviceInfo::SetupFeatures()
 {
 	// Enable all available features
-	vkGetPhysicalDeviceFeatures(m_VkPhysicalDevice, &m_EnabledFeatures);
+	vkGetPhysicalDeviceFeatures(m_VkPhysicalDevice, &m_VkEnabledFeatures);
 }
 
 void DDM::PhysicalDeviceInfo::SetupQueueFamilies()
@@ -97,14 +93,14 @@ void DDM::PhysicalDeviceInfo::SetupQueueFamilies()
 
 	vkGetPhysicalDeviceQueueFamilyProperties(m_VkPhysicalDevice, &queueFamilyCount, nullptr);
 
-	m_QueueFamilies.resize(queueFamilyCount);
+	m_VkQueueFamilies.resize(queueFamilyCount);
 
-	vkGetPhysicalDeviceQueueFamilyProperties(m_VkPhysicalDevice, &queueFamilyCount, m_QueueFamilies.data());
+	vkGetPhysicalDeviceQueueFamilyProperties(m_VkPhysicalDevice, &queueFamilyCount, m_VkQueueFamilies.data());
 }
 
 void DDM::PhysicalDeviceInfo::SetupProperties()
 {
-	vkGetPhysicalDeviceProperties(m_VkPhysicalDevice, &m_Properties);
+	vkGetPhysicalDeviceProperties(m_VkPhysicalDevice, &m_VkProperties);
 }
 
 bool DDM::PhysicalDeviceInfo::IsDeviceValid()
@@ -143,7 +139,7 @@ bool DDM::PhysicalDeviceInfo::HasRequiredExtensions()
 
 bool DDM::PhysicalDeviceInfo::HasRequiredQueueFamily()
 {
-	for (auto& family : m_QueueFamilies)
+	for (auto& family : m_VkQueueFamilies)
 	{
 		if (IsValidQueueFamily(family))
 		{
