@@ -40,7 +40,17 @@ namespace DDM
 		VulkanCore& operator=(VulkanCore&) = delete;
 		VulkanCore& operator=(VulkanCore&&) = delete;
 		
+		/// <summary>
+		/// Get the handle of the Vulkan logical device
+		/// </summary>
+		/// <returns>Handle of device</returns>
+		VkDevice GetDeviceHandle() const { return m_VkDevice; }
 
+		/// <summary>
+		/// Get the index of the primary queue family
+		/// </summary>
+		/// <returns>Index of the primary queue family</returns>
+		uint32_t GetPrimaryQueueFamily() const { return m_PrimaryQueueFamilyIndex; }
 	private:
 		// ------------------------------------------------------------------------------
 		// Allocator
@@ -101,6 +111,9 @@ namespace DDM
 
 		// Vulkan logical device
 		VkDevice m_VkDevice{};
+
+		// Index of the primary queue family to be used
+		uint32_t m_PrimaryQueueFamilyIndex{};
 
 
 		// ------------------------------------------------------------------------------

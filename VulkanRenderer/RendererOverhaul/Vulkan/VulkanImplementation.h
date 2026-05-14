@@ -13,6 +13,7 @@ namespace DDM
 {
 	class VulkanAllocator;
 	class VulkanCore;
+	class CommandPool;
 
 	class VulkanImplementation final
 	{
@@ -41,6 +42,9 @@ namespace DDM
 
 		// Core object of vulkan application
 		std::unique_ptr<VulkanCore> m_pCore{};
+
+		// Vulkan commandpool used for single commands (transient commandbuffers)
+		std::unique_ptr<CommandPool> m_pShortTermCommandPool{};
 	};
 }
 

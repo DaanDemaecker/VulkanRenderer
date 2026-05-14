@@ -43,18 +43,20 @@ DDM::VulkanCore::VulkanCore(VulkanAllocator* pAllocator)
 
 DDM::VulkanCore::~VulkanCore()
 {
+	auto allocatorStruct = m_pAllocator->GetAllocator();
+
 	vkDeviceWaitIdle(m_VkDevice);
 
-	vkDestroyDevice(m_VkDevice, m_pAllocator->GetAllocator());
+	vkDestroyDevice(m_VkDevice, allocatorStruct);
 
-	vkDestroySurfaceKHR(m_VkInstance, m_VkSurface, m_pAllocator->GetAllocator());
+	vkDestroySurfaceKHR(m_VkInstance, m_VkSurface, allocatorStruct);
 
 	if (m_VkDebugMessenger != VK_NULL_HANDLE)
 	{
-		DestroyDebugMessenger(m_VkInstance, m_VkDebugMessenger, m_pAllocator->GetAllocator());
+		DestroyDebugMessenger(m_VkInstance, m_VkDebugMessenger, allocatorStruct);
 	}
 
-	vkDestroyInstance(m_VkInstance, m_pAllocator->GetAllocator());
+	vkDestroyInstance(m_VkInstance, allocatorStruct);
 }
 
 // ------------------------------------------------------------------------------
