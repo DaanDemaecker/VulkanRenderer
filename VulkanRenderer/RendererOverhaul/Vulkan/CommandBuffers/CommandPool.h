@@ -7,10 +7,15 @@
 // File includes
 #include "Includes/VulkanIncludes.h"
 
+// Standard library includes
+#include <memory>
+
 namespace DDM
 {
 	// Class forward declarations
 	class VulkanAllocator;
+	class CommandBuffer;
+	class VulkanCore;
 
 	class CommandPool final
 	{
@@ -30,32 +35,39 @@ namespace DDM
 		/// Constructor
 		/// </summary>
 		/// <param name="pAllocator">pointer to the custom allocator</param>
-		/// <param name="device">handle of the Vulkan device</param>
+		/// <param name="pCore">pointer to VulkanCore object</param>
 		/// <param name="queueFamilyIndex">index of the queuefamily to use for this pool</param>
 		/// <param name="transient">set to true if commandbuffers are for short duration</param>
 		/// <param name="reset">set to true if commandbuffers should be reused</param>
-		CommandPool(VulkanAllocator* pAllocator, VkDevice device, uint32_t queueFamilyIndex, bool transient, bool reset);
+		CommandPool(const VulkanAllocator* pAllocator, const VulkanCore* pCore, uint32_t queueFamilyIndex, bool transient, bool reset);
 
 		/// <summary>
 		/// Destructor
 		/// </summary>
 		~CommandPool();
 
+		/// <summary>
+		/// Create and retrieve a new commandbuffer
+		/// </summary>
+		/// <returns></returns>
+		std::unique_ptr<CommandBuffer> GetCommandBuffer() const;
 	private:
-		// Pointer to the custom allocator
-		VulkanAllocator* m_pAllocator{};
+		friend class CommandBuffer;
 
-		// Handle of the owning device
-		VkDevice m_VkDevice{};
+		// Pointer to the custom allocator
+		const VulkanAllocator* m_pAllocator;
+
+		// Pointer to the core object
+		const VulkanCore* m_pCore;
 
 		// Handle of the commandpool
 		VkCommandPool m_VkCommandPool{};
 
 		// Indicates whether transient bit is set
-		bool m_Transient;
+		const bool m_Transient;
 
 		// Indicates whether reset bit is set
-		bool m_Reset;
+		const bool m_Reset;
 
 		/// <summary>
 		/// Set up the createinfo struct for creation of commandpool
@@ -63,6 +75,18 @@ namespace DDM
 		/// <param name="createInfo:>reference to the creatinfo struct to fill in</param>
 		/// <param name="queueFamilyIndex">index of the queuefamily to use for this pool</param>
 		void SetupCreateInfo(VkCommandPoolCreateInfo& createInfo, uint32_t queueFamilyIndex);
+
+		/// <summary>
+		/// Allocate a new command buffer
+		/// </summary>
+		/// <param name="pCommandBuffer">pointer to a handle to fill in with new command buffer</param>
+		void AllocateCommandBuffer(VkCommandBuffer* pCommandBuffer) const;
+
+		/// <summary>
+		/// Free a given commandbuffer
+		/// </summary>
+		/// <param name="pCommandBuffer">Commandbuffer to free</param>
+		void FreeCommandBuffer(VkCommandBuffer* pCommandBuffer) const;
 	};
 }
 
