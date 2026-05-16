@@ -23,6 +23,17 @@ DDM::STBImage::~STBImage()
 	}
 }
 
+VkExtent3D DDM::STBImage::GetExtent() const
+{
+	VkExtent3D extent{};
+
+	extent.width = m_Width;
+	extent.height = m_Height;
+	extent.depth = 1;
+
+	return extent;
+}
+
 void DDM::STBImage::LoadImage(const std::string& path)
 {
 	m_pData = stbi_load(path.c_str(), &m_Width, &m_Height, &m_Channels, 4);

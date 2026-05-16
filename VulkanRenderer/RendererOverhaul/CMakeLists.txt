@@ -25,7 +25,10 @@ add_executable(RendererOverhaul
  "Vulkan/CommandBuffers/CommandPool.cpp"
  "Vulkan/CommandBuffers/CommandBuffer.cpp"
  
- "Vulkan/Images/STBImage.cpp")
+ "Vulkan/Images/STBImage.cpp"
+ "Vulkan/Images/VulkanImage.cpp"
+
+)
 
 # Include directories specific to this target
 target_include_directories(RendererOverhaul PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})

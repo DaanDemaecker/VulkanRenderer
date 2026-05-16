@@ -26,6 +26,7 @@ namespace DDM
 
 		void ResetCommandBuffer();
 	private:
+		// The owning commandpool
 		const CommandPool* m_pPool;
 
 		// Handle of the vulkan command buffer

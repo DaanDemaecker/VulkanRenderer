@@ -11,6 +11,7 @@
 #include "Vulkan/CommandBuffers/CommandBuffer.h"
 
 #include "Vulkan/Images/STBImage.h"
+#include "Vulkan/Images/VulkanImage.h"
 
 DDM::VulkanImplementation::VulkanImplementation()
 {
@@ -19,6 +20,10 @@ DDM::VulkanImplementation::VulkanImplementation()
 	m_pCore = std::make_unique<VulkanCore>(m_pAllocator.get());
 
 	m_pShortTermCommandPool = std::make_unique<CommandPool>(m_pAllocator.get(), m_pCore.get(), m_pCore->GetPrimaryQueueFamily(), true, false);
+
+	auto image = std::make_unique<VulkanImage>(m_pAllocator.get(), m_pCore.get());
+
+	image->LoadImage("Resources/DefaultResources/DefaultTexture.png");
 }
 
 DDM::VulkanImplementation::~VulkanImplementation()

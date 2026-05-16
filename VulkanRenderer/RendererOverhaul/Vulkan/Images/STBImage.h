@@ -4,6 +4,9 @@
 #ifndef _DDM_STB_IMAGE_
 #define _DDM_STB_IMAGE_
 
+// File includes
+#include "Includes/VulkanIncludes.h"
+
 // Standard library includes
 #include <string>
 
@@ -34,7 +37,11 @@ namespace DDM
 		/// </summary>
 		~STBImage();
 
-
+		/// <summary>
+		/// Get the Vulkan extent of the loaded image
+		/// </summary>
+		/// <returns>VKExtent3D structure holding values of the image size</returns>
+		VkExtent3D GetExtent() const;
 
 	private:
 		int m_Width{};
