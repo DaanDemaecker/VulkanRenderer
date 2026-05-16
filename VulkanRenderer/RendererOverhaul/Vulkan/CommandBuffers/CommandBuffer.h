@@ -20,12 +20,19 @@ namespace DDM
 
 		~CommandBuffer();
 
+		void BeginCommandBuffer();
+
+		void EndCommandBuffer();
+
+		void ResetCommandBuffer();
 	private:
 		const CommandPool* m_pPool;
 
 		// Handle of the vulkan command buffer
 		VkCommandBuffer m_VkCommandBuffer{};
-	
+		
+		bool m_InUse{ false };
+
 		void SetupCommandBuffer();
 	};
 }

@@ -16,7 +16,7 @@ DDM::VulkanImplementation::VulkanImplementation()
 
 	m_pCore = std::make_unique<VulkanCore>(m_pAllocator.get());
 
-	m_pShortTermCommandPool = std::make_unique<CommandPool>(m_pAllocator.get(), m_pCore.get(), m_pCore->GetPrimaryQueueFamily(), true, true);
+	m_pShortTermCommandPool = std::make_unique<CommandPool>(m_pAllocator.get(), m_pCore.get(), m_pCore->GetPrimaryQueueFamily(), true, false);
 }
 
 DDM::VulkanImplementation::~VulkanImplementation()
