@@ -10,6 +10,8 @@
 #include "Vulkan/CommandBuffers/CommandPool.h"
 #include "Vulkan/CommandBuffers/CommandBuffer.h"
 
+#include "Vulkan/Images/STBImage.h"
+
 DDM::VulkanImplementation::VulkanImplementation()
 {
 	m_pAllocator = std::make_unique<VulkanAllocator>();

@@ -23,7 +23,9 @@ add_executable(RendererOverhaul
  "Vulkan/Core/PhysicalDeviceInfo.cpp"
 
  "Vulkan/CommandBuffers/CommandPool.cpp"
- "Vulkan/CommandBuffers/CommandBuffer.cpp")
+ "Vulkan/CommandBuffers/CommandBuffer.cpp"
+ 
+ "Vulkan/Images/STBImage.cpp")
 
 # Include directories specific to this target
 target_include_directories(RendererOverhaul PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
