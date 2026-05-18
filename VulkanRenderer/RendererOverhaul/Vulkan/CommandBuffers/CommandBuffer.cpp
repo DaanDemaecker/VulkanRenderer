@@ -67,3 +67,13 @@ void DDM::CommandBuffer::ResetCommandBuffer()
 
 	m_InUse = false;
 }
+
+void DDM::CommandBuffer::SubmitCommandBuffer()
+{
+
+}
+
+VkCommandBuffer DDM::CommandBuffer::GetHandle() const
+{
+	return m_VkCommandBuffer;
+}

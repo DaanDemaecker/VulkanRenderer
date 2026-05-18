@@ -6,14 +6,17 @@
 // File includes
 #include "Vulkan/Core/VulkanCore.h"
 #include "Vulkan/Core/VulkanAllocator.h"
+#include "Vulkan/CommandBuffers/CommandPool.h"
 #include "Vulkan/Images/STBImage.h"
+#include "Vulkan/Buffers/VulkanBuffer.h"
 
 // Standard library includes
 #include <stdexcept>
 
-DDM::VulkanImage::VulkanImage(const VulkanAllocator* pAllocator, const VulkanCore* pCore)
-	:m_pAllocator{pAllocator},
-	m_pCore{pCore}
+DDM::VulkanImage::VulkanImage(const VulkanAllocator* pAllocator, const VulkanCore* pCore, const CommandPool* pCommandPool)
+	:m_pAllocator{ pAllocator },
+	m_pCore{ pCore },
+	m_pCommandPool{ pCommandPool }
 {
 
 }
@@ -58,4 +61,23 @@ void DDM::VulkanImage::CreateImage(STBImage* pSTBImage)
 	}
 
 	m_Initialized = true;
+
+	// Create temp buffer
+	auto tempBuffer = std::make_unique<VulkanBuffer>(m_pAllocator, m_pCore);
+
+	tempBuffer->CreateBuffer(pSTBImage->GetSize());
+
+	tempBuffer->WriteToBuffer(pSTBImage->GetHandle());
+}
+
+void DDM::VulkanImage::CopyBufferToImage()
+{
+	//auto commandBuffer = m_pCommandPool->GetCommandBuffer();
+	//
+	//VkCommandBuffer commandBufferHandle = commandBuffer->GetHandle();
+	//
+	//commandBuffer->BeginCommandBuffer();
+	//
+	//
+	//commandBuffer->EndCommandBuffer();
 }

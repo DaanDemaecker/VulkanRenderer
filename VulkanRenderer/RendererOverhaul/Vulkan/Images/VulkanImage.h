@@ -16,11 +16,12 @@ namespace DDM
 	class VulkanCore;
 	class VulkanAllocator;
 	class STBImage;
+	class CommandPool;
 
 	class VulkanImage final
 	{
 	public:
-		VulkanImage(const VulkanAllocator* pAllocator, const VulkanCore* pCore);
+		VulkanImage(const VulkanAllocator* pAllocator, const VulkanCore* pCore, const CommandPool* pCommandPool);
 
 		~VulkanImage();
 
@@ -32,13 +33,18 @@ namespace DDM
 		// Pointer to the core object
 		const VulkanCore* m_pCore;
 
+		// Pointer to the commandpool object
+		const CommandPool* m_pCommandPool;
+
 		// Vulkan image object
 		VkImage m_VkImage{};
 
 		// Indicates whether object is correctly initialized
-		bool m_Initialized{};
+		bool m_Initialized{false};
 
 		void CreateImage(STBImage* pSTBImage);
+
+		void CopyBufferToImage();
 	};
 }
 

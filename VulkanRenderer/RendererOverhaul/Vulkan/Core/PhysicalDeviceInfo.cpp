@@ -16,6 +16,8 @@ DDM::PhysicalDeviceInfo::PhysicalDeviceInfo(VkPhysicalDevice device)
 	SetupQueueFamilies();
 
 	SetupProperties();
+
+	SetupDeviceMemoryProperties();
 }
 
 DDM::PhysicalDeviceInfo::~PhysicalDeviceInfo()
@@ -161,4 +163,18 @@ bool DDM::PhysicalDeviceInfo::IsValidQueueFamily(VkQueueFamilyProperties family)
 	}
 
 	return true;
+}
+
+void DDM::PhysicalDeviceInfo::SetupDeviceMemoryProperties()
+{
+	vkGetPhysicalDeviceMemoryProperties(m_VkPhysicalDevice, &m_VkMemoryPropeties);
+
+	for (uint32_t index{ 0 }; index < m_VkMemoryPropeties.memoryTypeCount; ++index)
+	{
+		if ((m_VkMemoryPropeties.memoryTypes[index].propertyFlags & VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT) != 0)
+		{
+			m_HostVisibleHeapIndex = index;
+			break;
+		}
+	}
 }

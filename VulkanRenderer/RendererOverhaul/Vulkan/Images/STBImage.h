@@ -43,12 +43,25 @@ namespace DDM
 		/// <returns>VKExtent3D structure holding values of the image size</returns>
 		VkExtent3D GetExtent() const;
 
+		/// <summary>
+		/// Get the size of the image in bytes
+		/// </summary>
+		/// <returns>Size of image in bytes</returns>
+		VkDeviceSize GetSize() const;
+
+		/// <summary>
+		/// Get a pointer to the image data
+		/// </summary>
+		/// <returns>Pointer to the image data</returns>
+		void* GetHandle() const;
 	private:
 		int m_Width{};
 
 		int m_Height{};
 
 		int m_Channels{};
+
+		int m_DesiredChannels{ 4 };
 
 		void* m_pData{};
 

@@ -9,7 +9,6 @@
 // File includes
 #include "Vulkan/Core/VulkanAllocator.h"
 #include "Vulkan/Core/VulkanCore.h"
-#include "Vulkan/CommandBuffers/CommandBuffer.h"
 
 DDM::CommandPool::CommandPool(const VulkanAllocator* pAllocator, const VulkanCore* pCore, uint32_t queueFamilyIndex, bool transient, bool reset)
 	:

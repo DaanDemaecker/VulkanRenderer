@@ -34,9 +34,19 @@ VkExtent3D DDM::STBImage::GetExtent() const
 	return extent;
 }
 
+VkDeviceSize DDM::STBImage::GetSize() const
+{
+	return static_cast<uint32_t>(m_Height) * static_cast<uint32_t>(m_Width) * static_cast<uint32_t>(m_DesiredChannels);
+}
+
+void* DDM::STBImage::GetHandle() const
+{
+	return m_pData;
+}
+
 void DDM::STBImage::LoadImage(const std::string& path)
 {
-	m_pData = stbi_load(path.c_str(), &m_Width, &m_Height, &m_Channels, 4);
+	m_pData = stbi_load(path.c_str(), &m_Width, &m_Height, &m_Channels, m_DesiredChannels);
 
 	if (m_pData != nullptr)
 	{

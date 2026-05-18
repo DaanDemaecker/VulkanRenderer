@@ -11,6 +11,7 @@
 
 namespace DDM
 {
+	// Class forward declarations
 	class VulkanAllocator;
 	class VulkanCore;
 	class CommandPool;

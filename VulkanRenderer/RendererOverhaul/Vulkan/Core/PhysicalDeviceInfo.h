@@ -69,6 +69,11 @@ namespace DDM
 		/// <param name="count">will be filled in with the max amount of queues in the family</param>
 		void FindOptimalQueueFamily(uint32_t& index, uint32_t& count);
 
+		/// <summary>
+		/// Get the index of the memory heap visible to the host
+		/// </summary>
+		/// <returns>Index of memory heap</returns>
+		uint32_t GetHostVisibleHeapIndex() const { return m_HostVisibleHeapIndex; }
 	private:
 		// Vulkan physical device
 		VkPhysicalDevice m_VkPhysicalDevice{};
@@ -94,6 +99,12 @@ namespace DDM
 
 		// Struct holding device properties
 		VkPhysicalDeviceProperties m_VkProperties{};
+
+		// Struct holding device memory properties
+		VkPhysicalDeviceMemoryProperties m_VkMemoryPropeties{};
+
+		// Index of the memory heap visible to the host
+		uint32_t m_HostVisibleHeapIndex{};
 
 		/// <summary>
 		/// Fetch and set up all features to enable
@@ -134,6 +145,11 @@ namespace DDM
 		/// <param name="family">queue family to check</param>
 		/// <returns>Bool indicating if family is valid</returns>
 		bool IsValidQueueFamily(VkQueueFamilyProperties family);
+
+		/// <summary>
+		/// Query and set up Vulkan memroy properties
+		/// </summary>
+		void SetupDeviceMemoryProperties();
 	};
 }
 

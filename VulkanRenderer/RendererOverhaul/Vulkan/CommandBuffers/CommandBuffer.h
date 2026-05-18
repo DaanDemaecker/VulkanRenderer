@@ -25,6 +25,10 @@ namespace DDM
 		void EndCommandBuffer();
 
 		void ResetCommandBuffer();
+
+		void SubmitCommandBuffer();
+
+		VkCommandBuffer GetHandle() const;
 	private:
 		// The owning commandpool
 		const CommandPool* m_pPool;

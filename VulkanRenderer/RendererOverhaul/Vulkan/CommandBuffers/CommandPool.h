@@ -6,6 +6,7 @@
 
 // File includes
 #include "Includes/VulkanIncludes.h"
+#include "Vulkan/CommandBuffers/CommandBuffer.h"
 
 // Standard library includes
 #include <memory>
@@ -14,7 +15,6 @@ namespace DDM
 {
 	// Class forward declarations
 	class VulkanAllocator;
-	class CommandBuffer;
 	class VulkanCore;
 
 	class CommandPool final

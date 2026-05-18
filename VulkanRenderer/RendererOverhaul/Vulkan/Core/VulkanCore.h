@@ -51,6 +51,12 @@ namespace DDM
 		/// </summary>
 		/// <returns>Index of the primary queue family</returns>
 		uint32_t GetPrimaryQueueFamily() const { return m_PrimaryQueueFamilyIndex; }
+
+		/// <summary>
+		/// Get a pointer to the object holding all physical device info
+		/// </summary>
+		/// <returns>Pointer to physical device info object</returns>
+		const PhysicalDeviceInfo* GetPhysicalDeviceInfo() const { return m_pPhysicalDeviceInfo.get(); }
 	private:
 		// ------------------------------------------------------------------------------
 		// Allocator
