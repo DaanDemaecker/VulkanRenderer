@@ -10,12 +10,14 @@
 // Standard library includes
 #include <vector>
 #include <memory>
+#include <map>
 
 namespace DDM
 {
 	// Class forward declarations
 	class VulkanAllocator;
 	class PhysicalDeviceInfo;
+	class VulkanQueue;
 
 	class VulkanCore final
 	{
@@ -121,6 +123,20 @@ namespace DDM
 		// Index of the primary queue family to be used
 		uint32_t m_PrimaryQueueFamilyIndex{};
 
+		// ------------------------------------------------------------------------------
+		// Queues
+		//-------------------------------------------------------------------------------
+
+		// List of required flags for queue families
+		const std::vector<uint32_t> m_RequiredQueueFlags =
+		{
+			VK_QUEUE_GRAPHICS_BIT,
+			VK_QUEUE_TRANSFER_BIT
+		};
+
+		std::unique_ptr<VulkanQueue> m_pGraphicsQueue{};
+
+		std::unique_ptr<VulkanQueue> m_pTransferQueue{};
 
 		// ------------------------------------------------------------------------------
 		// Instance
@@ -255,13 +271,27 @@ namespace DDM
 		/// Set up a list of VkDeviceQueueCreateInfo structs with the correct values
 		/// </summary>
 		/// <param name="infos">list of infos to fill in</param>
-		void SetupQueueCreateInfos(std::vector<VkDeviceQueueCreateInfo>& infos, std::vector<std::vector<float>>& priorities);
+		void SetupQueueCreateInfos(std::vector<VkDeviceQueueCreateInfo>& infos, std::map<uint32_t, std::vector<float>>& priorities);
 
 		/// <summary>
 		/// Set up the requested device features
 		/// </summary>
 		/// <param name="features">reference to a VkPhysicalDeviceFeatures struct to fill in</param>
 		void SetupPhysicalDeviceFeatures(VkPhysicalDeviceFeatures& features);
+
+		// ------------------------------------------------------------------------------
+		// Queues
+		//-------------------------------------------------------------------------------
+
+		/// <summary>
+		/// Set up the vulkan queues
+		/// </summary>
+		void SetupQueues();
+
+		/// <summary>
+		/// Retrieve VkQueue objects from logical device
+		/// </summary>
+		void RetrieveQueues();
 	};
 }
 

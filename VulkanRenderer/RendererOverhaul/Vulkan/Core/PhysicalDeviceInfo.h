@@ -10,9 +10,14 @@
 // Standard library includes
 #include <vector>	
 #include <memory>
+#include <map>
 
 namespace DDM
 {
+	// Class forward declarations
+	class VulkanQueueFamily;
+	class VulkanQueue;
+
 	class PhysicalDeviceInfo final
 	{
 	public:
@@ -58,22 +63,32 @@ namespace DDM
 		/// <summary>
 		/// Get the score given to this specific device
 		/// </summary>
+		/// <param name="requiredQueueFlags">A list of the minimum required queue family flags</param>
 		/// <returns>Int indicating score, -1 if not valid</returns>
-		int GetScore();
-
-
-		/// <summary>
-		/// Find the queuefamily that is most optimal
-		/// </summary>
-		/// <param name="index">will be filled in with index of the family</param>
-		/// <param name="count">will be filled in with the max amount of queues in the family</param>
-		void FindOptimalQueueFamily(uint32_t& index, uint32_t& count);
+		int GetScore(const std::vector<uint32_t>& requiredQueueFlags);
 
 		/// <summary>
 		/// Get the index of the memory heap visible to the host
 		/// </summary>
 		/// <returns>Index of memory heap</returns>
 		uint32_t GetHostVisibleHeapIndex() const { return m_HostVisibleHeapIndex; }
+
+		/// <summary>
+		/// Get a queue family index an queue index given a number of specified flags
+		/// </summary>
+		/// <param name="requiredQueueFlags">Minimum required flags for requested queue</param>
+		/// <param name="familyIndex">Will be filled in with index of the queuefamily with requested capabilities</param>
+		/// <param name="queueIndex">Will be filled in with index of queue within the family</param>
+		/// <returns>Boolean indicating succes</returns>
+		bool GetQueue(const std::vector<uint32_t>& requiredQueueFlags, uint32_t& familyIndex, uint32_t& queueIndex);
+
+		/// <summary>
+		/// Set up a list of VkDeviceQueueCreateInfo structs with the correct values
+		/// </summary>
+		/// <param name="pQueues">list of all used queues</param>
+		/// <param name="infos">list of infos to fill in</param>
+		/// <param name="priorities">list of priorities per family index to fill in</param>
+		void SetupQueueCreateInfos(std::vector<VulkanQueue*> pQueues, std::vector<VkDeviceQueueCreateInfo>& infos, std::map<uint32_t, std::vector<float>>& priorities);
 	private:
 		// Vulkan physical device
 		VkPhysicalDevice m_VkPhysicalDevice{};
@@ -84,18 +99,11 @@ namespace DDM
 			VK_KHR_SWAPCHAIN_EXTENSION_NAME
 		};
 
-		// List of required flags for queue families
-		const std::vector<uint32_t> m_RequiredQueueFlags =
-		{
-			VK_QUEUE_GRAPHICS_BIT,
-			VK_QUEUE_TRANSFER_BIT
-		};
-
 		// Struct of enabled device features
 		VkPhysicalDeviceFeatures m_VkEnabledFeatures{};
 
 		// List of queufamily properties
-		std::vector<VkQueueFamilyProperties> m_VkQueueFamilies{};
+		std::vector<std::shared_ptr<VulkanQueueFamily>> m_QueueFamilies{};
 
 		// Struct holding device properties
 		VkPhysicalDeviceProperties m_VkProperties{};
@@ -125,7 +133,7 @@ namespace DDM
 		/// Check if the given device is a valid option
 		/// </summary>
 		/// <returns>Bool indicating validity</returns>
-		bool IsDeviceValid();
+		bool IsDeviceValid(const std::vector<uint32_t>& requiredQueueFlags);
 
 		/// <summary>
 		/// Check if given device has all requested extensions
@@ -137,14 +145,7 @@ namespace DDM
 		/// Check if given device has queue families required for drawing etc
 		/// </summary>
 		/// <returns>Bool indicating if device has correct queue families</returns>
-		bool HasRequiredQueueFamily();
-
-		/// <summary>
-		/// Check if given queue family has required flags
-		/// </summary>
-		/// <param name="family">queue family to check</param>
-		/// <returns>Bool indicating if family is valid</returns>
-		bool IsValidQueueFamily(VkQueueFamilyProperties family);
+		bool HasRequiredQueueFamily(const std::vector<uint32_t>& requiredQueueFlags);
 
 		/// <summary>
 		/// Query and set up Vulkan memroy properties

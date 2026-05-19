@@ -14,6 +14,7 @@
 #include "Engine/Window/Window.h"
 #include "Vulkan/Core/VulkanAllocator.h"
 #include "Vulkan/Core/PhysicalDeviceInfo.h"
+#include "Vulkan/Queues/VulkanQueue.h"
 
 // Standard library includes
 #include <set>
@@ -38,7 +39,11 @@ DDM::VulkanCore::VulkanCore(VulkanAllocator* pAllocator)
 
 	SetupPhysicalDevice();
 
+	SetupQueues();
+
 	CreateLogicalDevice();
+
+	RetrieveQueues();
 }
 
 DDM::VulkanCore::~VulkanCore()
@@ -408,7 +413,7 @@ std::unique_ptr<DDM::PhysicalDeviceInfo> DDM::VulkanCore::PickPhysicalDevice()
 
 	for (int i{}; i < devices.size(); ++i)
 	{
-		int score = devices[i]->GetScore();
+		int score = devices[i]->GetScore(m_RequiredQueueFlags);
 
 		if (score > maxScore)
 		{
@@ -442,9 +447,9 @@ void DDM::VulkanCore::CreateLogicalDevice()
 
 	// Set up queue create info
 	std::vector<VkDeviceQueueCreateInfo> queueCreateInfo{};
-	std::vector<std::vector<float>> queuePriorities{};
+	std::map<uint32_t, std::vector<float>> prioriesPerFamily{};
 
-	SetupQueueCreateInfos(queueCreateInfo, queuePriorities);
+	SetupQueueCreateInfos(queueCreateInfo, prioriesPerFamily);
 
 	deviceCreateInfo.pQueueCreateInfos = queueCreateInfo.data();
 	deviceCreateInfo.queueCreateInfoCount = static_cast<uint32_t>(queueCreateInfo.size());
@@ -463,23 +468,42 @@ void DDM::VulkanCore::CreateLogicalDevice()
 	vkCreateDevice(m_pPhysicalDeviceInfo->GetDeviceHandle(), &deviceCreateInfo, m_pAllocator->GetAllocator(), &m_VkDevice);
 }
 
-void DDM::VulkanCore::SetupQueueCreateInfos(std::vector<VkDeviceQueueCreateInfo>& infos, std::vector<std::vector<float>>& priorities)
+void DDM::VulkanCore::SetupQueueCreateInfos(std::vector<VkDeviceQueueCreateInfo>& infos, std::map<uint32_t, std::vector<float>>& priorities)
 {
-	VkDeviceQueueCreateInfo info{};
-	info.sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
-	info.pNext = nullptr;
-	info.flags = 0;
+	std::vector<VulkanQueue*> queues{};
+	queues.push_back(m_pGraphicsQueue.get());
+	queues.push_back(m_pTransferQueue.get());
 
-	m_pPhysicalDeviceInfo->FindOptimalQueueFamily(info.queueFamilyIndex, info.queueCount);
+	m_pPhysicalDeviceInfo->SetupQueueCreateInfos(queues, infos, priorities);
+}
 
-	priorities.push_back(std::vector<float>());
+void DDM::VulkanCore::SetupQueues()
+{
+	const std::vector<uint32_t> graphicsQueueFlags = { VK_QUEUE_GRAPHICS_BIT };
 
-	for (uint32_t i{}; i < info.queueCount; ++i)
+	uint32_t familyIndex{};
+	uint32_t queueIndex{};
+
+	if (!m_pPhysicalDeviceInfo->GetQueue(graphicsQueueFlags, familyIndex, queueIndex))
 	{
-		priorities[0].push_back(1.0f);
+		throw std::runtime_error("Failed to find a suitable graphics queue");
 	}
 
-	info.pQueuePriorities = priorities[0].data();
+	m_pGraphicsQueue = std::make_unique<VulkanQueue>(familyIndex, queueIndex);
 
-	infos.push_back(info);
+
+	const std::vector<uint32_t> transferQueueFlags = { VK_QUEUE_TRANSFER_BIT };
+
+	if (!m_pPhysicalDeviceInfo->GetQueue(transferQueueFlags, familyIndex, queueIndex))
+	{
+		throw std::runtime_error("Failed to find a suitable transfer queue");
+	}
+
+	m_pTransferQueue = std::make_unique<VulkanQueue>(familyIndex, queueIndex);
+}
+
+void DDM::VulkanCore::RetrieveQueues()
+{
+	m_pGraphicsQueue->RetrieveQueue(m_VkDevice);
+	m_pTransferQueue->RetrieveQueue(m_VkDevice);
 }
