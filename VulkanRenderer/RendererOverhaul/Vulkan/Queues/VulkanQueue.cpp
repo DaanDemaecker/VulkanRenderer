@@ -19,3 +19,8 @@ void DDM::VulkanQueue::RetrieveQueue(VkDevice device)
 {
 	vkGetDeviceQueue(device, m_FamilyIndex, m_QueueIndex, &m_VkQueue);
 }
+
+void DDM::VulkanQueue::WaitIdle() const
+{
+	vkQueueWaitIdle(m_VkQueue);
+}

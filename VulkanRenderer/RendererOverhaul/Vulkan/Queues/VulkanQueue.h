@@ -53,6 +53,17 @@ namespace DDM
 		/// </summary>
 		/// <returns>Value of priority</returns>
 		float GetPriority() const { return m_Priority; }
+
+		/// <summary>
+		/// Get the handle of the VkQueue object
+		/// </summary>
+		/// <returns>Handle of queue object</returns>
+		VkQueue GetQueueHandle() const { return m_VkQueue; }
+
+		/// <summary>
+		/// Wait until the queue finished all tasks
+		/// </summary>
+		void WaitIdle() const;
 	private:
 		// Priority of the queue
 		const float m_Priority;

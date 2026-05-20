@@ -49,16 +49,16 @@ namespace DDM
 		VkDevice GetDeviceHandle() const { return m_VkDevice; }
 
 		/// <summary>
-		/// Get the index of the primary queue family
-		/// </summary>
-		/// <returns>Index of the primary queue family</returns>
-		uint32_t GetPrimaryQueueFamily() const { return m_PrimaryQueueFamilyIndex; }
-
-		/// <summary>
 		/// Get a pointer to the object holding all physical device info
 		/// </summary>
 		/// <returns>Pointer to physical device info object</returns>
 		const PhysicalDeviceInfo* GetPhysicalDeviceInfo() const { return m_pPhysicalDeviceInfo.get(); }
+
+		/// <summary>
+		/// Get the VulkanQueue object used for transfering data
+		/// </summary>
+		/// <returns>Pointer to requested queue</returns>
+		const VulkanQueue* GetTransferQueue() const { return m_pTransferQueue.get(); }
 	private:
 		// ------------------------------------------------------------------------------
 		// Allocator
@@ -119,9 +119,6 @@ namespace DDM
 
 		// Vulkan logical device
 		VkDevice m_VkDevice{};
-
-		// Index of the primary queue family to be used
-		uint32_t m_PrimaryQueueFamilyIndex{};
 
 		// ------------------------------------------------------------------------------
 		// Queues

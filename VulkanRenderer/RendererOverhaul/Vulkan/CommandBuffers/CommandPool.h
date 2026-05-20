@@ -16,6 +16,7 @@ namespace DDM
 	// Class forward declarations
 	class VulkanAllocator;
 	class VulkanCore;
+	class VulkanQueue;
 
 	class CommandPool final
 	{
@@ -36,10 +37,10 @@ namespace DDM
 		/// </summary>
 		/// <param name="pAllocator">pointer to the custom allocator</param>
 		/// <param name="pCore">pointer to VulkanCore object</param>
-		/// <param name="queueFamilyIndex">index of the queuefamily to use for this pool</param>
+		/// <param name="pQueue">pointer to the VkQueue wrapper</param>
 		/// <param name="transient">set to true if commandbuffers are for short duration</param>
 		/// <param name="reset">set to true if commandbuffers should be reused</param>
-		CommandPool(const VulkanAllocator* pAllocator, const VulkanCore* pCore, uint32_t queueFamilyIndex, bool transient, bool reset);
+		CommandPool(const VulkanAllocator* pAllocator, const VulkanCore* pCore, const VulkanQueue* pQueue, bool transient, bool reset);
 
 		/// <summary>
 		/// Destructor
@@ -60,6 +61,9 @@ namespace DDM
 		// Pointer to the core object
 		const VulkanCore* m_pCore;
 
+		// Pointer to the queue object
+		const VulkanQueue* m_pQueue;
+
 		// Handle of the commandpool
 		VkCommandPool m_VkCommandPool{};
 
@@ -73,8 +77,7 @@ namespace DDM
 		/// Set up the createinfo struct for creation of commandpool
 		/// </summary>
 		/// <param name="createInfo:>reference to the creatinfo struct to fill in</param>
-		/// <param name="queueFamilyIndex">index of the queuefamily to use for this pool</param>
-		void SetupCreateInfo(VkCommandPoolCreateInfo& createInfo, uint32_t queueFamilyIndex);
+		void SetupCreateInfo(VkCommandPoolCreateInfo& createInfo);
 
 		/// <summary>
 		/// Allocate a new command buffer

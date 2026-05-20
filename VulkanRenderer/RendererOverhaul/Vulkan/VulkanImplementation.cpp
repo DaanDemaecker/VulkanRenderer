@@ -19,9 +19,9 @@ DDM::VulkanImplementation::VulkanImplementation()
 
 	m_pCore = std::make_unique<VulkanCore>(m_pAllocator.get());
 
-	m_pShortTermCommandPool = std::make_unique<CommandPool>(m_pAllocator.get(), m_pCore.get(), m_pCore->GetPrimaryQueueFamily(), true, false);
+	m_pTransferCommandPool = std::make_unique<CommandPool>(m_pAllocator.get(), m_pCore.get(), m_pCore->GetTransferQueue(), true, false);
 
-	auto testImage = std::make_unique<VulkanImage>(m_pAllocator.get(), m_pCore.get(), m_pShortTermCommandPool.get());
+	auto testImage = std::make_unique<VulkanImage>(m_pAllocator.get(), m_pCore.get(), m_pTransferCommandPool.get());
 
 	testImage->LoadImage("Resources/DefaultResources/DefaultTexture.png");
 }

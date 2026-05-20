@@ -9,17 +9,19 @@
 // File includes
 #include "Vulkan/Core/VulkanAllocator.h"
 #include "Vulkan/Core/VulkanCore.h"
+#include "Vulkan/Queues/VulkanQueue.h"
 
-DDM::CommandPool::CommandPool(const VulkanAllocator* pAllocator, const VulkanCore* pCore, uint32_t queueFamilyIndex, bool transient, bool reset)
+DDM::CommandPool::CommandPool(const VulkanAllocator* pAllocator, const VulkanCore* pCore, const VulkanQueue* pQueue, bool transient, bool reset)
 	:
 	m_pAllocator{pAllocator},
 	m_pCore{pCore},
+	m_pQueue{pQueue},
 	m_Transient{ transient },
 	m_Reset{ reset }
 {
 	VkCommandPoolCreateInfo createInfo{};
 
-	SetupCreateInfo(createInfo, queueFamilyIndex);
+	SetupCreateInfo(createInfo);
 
 	if(vkCreateCommandPool(m_pCore->GetDeviceHandle(), &createInfo, m_pAllocator->GetAllocator(), &m_VkCommandPool) != VK_SUCCESS)
 	{
@@ -34,10 +36,10 @@ DDM::CommandPool::~CommandPool()
 
 std::unique_ptr<DDM::CommandBuffer> DDM::CommandPool::GetCommandBuffer() const
 {
-	return std::make_unique<CommandBuffer>(this);
+	return std::make_unique<CommandBuffer>(this, m_pQueue);
 }
 
-void DDM::CommandPool::SetupCreateInfo(VkCommandPoolCreateInfo& createInfo, uint32_t queueFamilyIndex)
+void DDM::CommandPool::SetupCreateInfo(VkCommandPoolCreateInfo& createInfo)
 {
 	createInfo.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
 	createInfo.pNext = nullptr;
@@ -45,7 +47,7 @@ void DDM::CommandPool::SetupCreateInfo(VkCommandPoolCreateInfo& createInfo, uint
 	createInfo.flags |= m_Reset ? VK_COMMAND_POOL_CREATE_TRANSIENT_BIT : 0;
 	createInfo.flags |= m_Reset ? VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT : 0;
 
-	createInfo.queueFamilyIndex = queueFamilyIndex;
+	createInfo.queueFamilyIndex = m_pQueue->GetFamilyIndex();
 }
 
 void DDM::CommandPool::AllocateCommandBuffer(VkCommandBuffer* pCommandBuffer) const

@@ -45,7 +45,7 @@ namespace DDM
 		std::unique_ptr<VulkanCore> m_pCore{};
 
 		// Vulkan commandpool used for single commands (transient commandbuffers)
-		std::unique_ptr<CommandPool> m_pShortTermCommandPool{};
+		std::unique_ptr<CommandPool> m_pTransferCommandPool{};
 	};
 }
 

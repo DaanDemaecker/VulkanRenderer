@@ -17,6 +17,7 @@ namespace DDM
 	class VulkanAllocator;
 	class STBImage;
 	class CommandPool;
+	class VulkanBuffer;
 
 	class VulkanImage final
 	{
@@ -44,7 +45,7 @@ namespace DDM
 
 		void CreateImage(STBImage* pSTBImage);
 
-		void CopyBufferToImage();
+		void CopyBufferToImage(VulkanBuffer* pBuffer);
 	};
 }
 

@@ -68,16 +68,15 @@ void DDM::VulkanImage::CreateImage(STBImage* pSTBImage)
 	tempBuffer->CreateBuffer(pSTBImage->GetSize());
 
 	tempBuffer->WriteToBuffer(pSTBImage->GetHandle());
+
+	CopyBufferToImage(tempBuffer.get());
 }
 
-void DDM::VulkanImage::CopyBufferToImage()
+void DDM::VulkanImage::CopyBufferToImage(VulkanBuffer* pBuffer)
 {
-	//auto commandBuffer = m_pCommandPool->GetCommandBuffer();
-	//
-	//VkCommandBuffer commandBufferHandle = commandBuffer->GetHandle();
-	//
-	//commandBuffer->BeginCommandBuffer();
-	//
-	//
-	//commandBuffer->EndCommandBuffer();
+	auto commandBuffer = m_pCommandPool->GetCommandBuffer();
+	
+	
+
+	commandBuffer->Submit();
 }
