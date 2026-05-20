@@ -6,6 +6,7 @@
 
 // File includes
 #include "Includes/VulkanIncludes.h"
+#include "Vulkan/Core/PhysicalDeviceInfo.h"
 
 // Standard library includes
 #include <vector>
@@ -16,7 +17,6 @@ namespace DDM
 {
 	// Class forward declarations
 	class VulkanAllocator;
-	class PhysicalDeviceInfo;
 	class VulkanQueue;
 
 	class VulkanCore final

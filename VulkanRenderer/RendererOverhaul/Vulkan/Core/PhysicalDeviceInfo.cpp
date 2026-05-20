@@ -142,6 +142,19 @@ void DDM::PhysicalDeviceInfo::SetupQueueCreateInfos(std::vector<VulkanQueue*> pQ
 	}
 }
 
+uint32_t DDM::PhysicalDeviceInfo::GetMemoryType(const VkMemoryRequirements& requirements) const
+{
+	for (uint32_t index{ 0 }; index < m_VkMemoryPropeties.memoryTypeCount; ++index)
+	{
+		if ((requirements.memoryTypeBits & (1 << index)) != 0)
+		{
+			return index;
+		}
+	}
+
+	throw std::runtime_error("Failed to find suitable memory type");
+}
+
 void DDM::PhysicalDeviceInfo::SetupFeatures()
 {
 	// Enable all available features

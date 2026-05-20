@@ -9,7 +9,9 @@
 #include "Vulkan/CommandBuffers/CommandPool.h"
 #include "Vulkan/Images/STBImage.h"
 #include "Vulkan/Buffers/VulkanBuffer.h"
+
 #include "Vulkan/Barriers/VulkanPipelineBarrier.h"
+#include "Vulkan/Barriers/VulkanImageBarrier.h"
 
 // Standard library includes
 #include <stdexcept>
@@ -28,6 +30,11 @@ DDM::VulkanImage::~VulkanImage()
 	{
 		vkDestroyImage(m_pCore->GetDeviceHandle(), m_VkImage, m_pAllocator->GetAllocator());
 	}
+
+	if (m_MemoryAllocated)
+	{
+		vkFreeMemory(m_pCore->GetDeviceHandle(), m_VkMemory, m_pAllocator->GetAllocator());
+	}
 }
 
 void DDM::VulkanImage::LoadImage(const std::string& filePath)
@@ -35,6 +42,19 @@ void DDM::VulkanImage::LoadImage(const std::string& filePath)
 	auto pSTBImage = std::make_unique<STBImage>(filePath);
 
 	CreateImage(pSTBImage.get());
+}
+
+void DDM::VulkanImage::SetBarrierInfo(VkImageMemoryBarrier& barrier)
+{
+	barrier.oldLayout = m_VkLayout;
+	barrier.image = m_VkImage;
+
+	barrier.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+	barrier.subresourceRange.baseArrayLayer = 0;
+	barrier.subresourceRange.layerCount = 1;
+
+	barrier.subresourceRange.baseMipLevel = 0;
+	barrier.subresourceRange.levelCount = 1;
 }
 
 void DDM::VulkanImage::CreateImage(STBImage* pSTBImage)
@@ -50,16 +70,18 @@ void DDM::VulkanImage::CreateImage(STBImage* pSTBImage)
 	createInfo.arrayLayers = 1;
 	createInfo.samples = VK_SAMPLE_COUNT_1_BIT;
 	createInfo.tiling = VK_IMAGE_TILING_OPTIMAL;
-	createInfo.usage = VK_IMAGE_USAGE_SAMPLED_BIT;
+	createInfo.usage = VK_IMAGE_USAGE_SAMPLED_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT;
 	createInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
 	createInfo.queueFamilyIndexCount = 0;
 	createInfo.pQueueFamilyIndices = nullptr;
-	createInfo.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+	createInfo.initialLayout = m_VkLayout;
 
 	if (vkCreateImage(m_pCore->GetDeviceHandle(), &createInfo, m_pAllocator->GetAllocator(), &m_VkImage) != VK_SUCCESS)
 	{
 		throw std::runtime_error("Failed to create Vulkan Image");
 	}
+
+	AllocateMemory();
 
 	m_Initialized = true;
 
@@ -73,15 +95,49 @@ void DDM::VulkanImage::CreateImage(STBImage* pSTBImage)
 	CopyBufferToImage(tempBuffer.get());
 }
 
+void DDM::VulkanImage::AllocateMemory()
+{
+	// Create memory requirements object
+	VkMemoryRequirements memRequirements;
+
+	// Get memory requirements
+	vkGetImageMemoryRequirements(m_pCore->GetDeviceHandle(), m_VkImage, &memRequirements);
+
+	VkMemoryAllocateInfo allocInfo{};
+	allocInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
+	allocInfo.pNext = nullptr;
+
+	allocInfo.allocationSize = memRequirements.size;
+
+	allocInfo.memoryTypeIndex = m_pCore->GetPhysicalDeviceInfo()->GetMemoryType(memRequirements);
+
+	if (vkAllocateMemory(m_pCore->GetDeviceHandle(), &allocInfo, m_pAllocator->GetAllocator(), &m_VkMemory) != VK_SUCCESS)
+	{
+		throw std::runtime_error("Failed to allocate Vulkan Device memory");
+	}
+
+	vkBindImageMemory(m_pCore->GetDeviceHandle(), m_VkImage, m_VkMemory, 0);
+
+	m_MemoryAllocated = true;
+}
+
 void DDM::VulkanImage::CopyBufferToImage(VulkanBuffer* pBuffer)
 {
+	// Create a barrier to transition image from undefined layout to transfer destination layout
 	std::unique_ptr<VulkanPipelineBarrier> pBarrier = std::make_unique<VulkanPipelineBarrier>(VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, VK_PIPELINE_STAGE_TRANSFER_BIT, 0);
+
+	std::unique_ptr<VulkanImageBarrier> pImageBarrier = std::make_unique<VulkanImageBarrier>(this, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL);
+
+	pBarrier->AddImageBarriers(std::move(pImageBarrier));
+
 
 	auto commandBuffer = m_pCommandPool->GetCommandBuffer();
 
 	commandBuffer->CmdPipelineBarrier(pBarrier.get());
 
 	commandBuffer->Submit();
+
+	m_VkLayout = VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL;
 
 	commandBuffer->CmdPipelineBarrier(pBarrier.get());
 

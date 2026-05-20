@@ -27,6 +27,8 @@ namespace DDM
 		~VulkanImage();
 
 		void LoadImage(const std::string& filePath);
+
+		void SetBarrierInfo(VkImageMemoryBarrier& barrier);
 	private:
 		// Pointer to the custom allocator
 		const VulkanAllocator* m_pAllocator;
@@ -40,10 +42,21 @@ namespace DDM
 		// Vulkan image object
 		VkImage m_VkImage{};
 
+		// Handle to the vulkan device memory
+		VkDeviceMemory m_VkMemory{};
+
+		// Vulkan image layout
+		VkImageLayout m_VkLayout{VK_IMAGE_LAYOUT_UNDEFINED};
+
 		// Indicates whether object is correctly initialized
 		bool m_Initialized{false};
 
+		// Indicates whether memory was correctly allocated
+		bool m_MemoryAllocated{ false };
+
 		void CreateImage(STBImage* pSTBImage);
+
+		void AllocateMemory();
 
 		void CopyBufferToImage(VulkanBuffer* pBuffer);
 	};

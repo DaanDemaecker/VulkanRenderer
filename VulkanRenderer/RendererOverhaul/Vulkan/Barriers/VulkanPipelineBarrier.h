@@ -7,8 +7,15 @@
 // File includes
 #include "Includes/VulkanIncludes.h"
 
+// Standard library includes
+#include <vector>
+#include <memory>
+
 namespace DDM
 {
+	// Class forward declarations
+	class VulkanImageBarrier;
+
 	class VulkanPipelineBarrier final
 	{
 	public:
@@ -42,6 +49,11 @@ namespace DDM
 		/// <param name="commandBuffer">Commandbuffer to execute on</param>
 		void Execute(VkCommandBuffer commandBuffer);
 
+		/// <summary>
+		/// Add an image barrier
+		/// </summary>
+		/// <param name="pImageBarrier">Image barrier to add</param>
+		void AddImageBarriers(std::unique_ptr<VulkanImageBarrier> pImageBarrier);
 	private:
 		// Source stage mask
 		const VkPipelineStageFlags m_SrcStageMask;
@@ -51,6 +63,8 @@ namespace DDM
 
 		// Dependency flags
 		const VkDependencyFlags m_DependencyFlags;
+
+		std::vector<std::unique_ptr<VulkanImageBarrier>> m_ImageBarriers{};
 	};
 }
 

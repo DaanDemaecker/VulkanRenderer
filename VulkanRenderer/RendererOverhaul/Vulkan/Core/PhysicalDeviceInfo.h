@@ -89,6 +89,13 @@ namespace DDM
 		/// <param name="infos">list of infos to fill in</param>
 		/// <param name="priorities">list of priorities per family index to fill in</param>
 		void SetupQueueCreateInfos(std::vector<VulkanQueue*> pQueues, std::vector<VkDeviceQueueCreateInfo>& infos, std::map<uint32_t, std::vector<float>>& priorities);
+	
+		/// <summary>
+		/// Get the memory type with given requirements
+		/// </summary>
+		/// <param name="requirements">requirements for memory type</param>
+		/// <returns>Index of the memory type</returns>
+		uint32_t GetMemoryType(const VkMemoryRequirements& requirements) const;
 	private:
 		// Vulkan physical device
 		VkPhysicalDevice m_VkPhysicalDevice{};

@@ -13,7 +13,6 @@
 
 #include "Engine/Window/Window.h"
 #include "Vulkan/Core/VulkanAllocator.h"
-#include "Vulkan/Core/PhysicalDeviceInfo.h"
 #include "Vulkan/Queues/VulkanQueue.h"
 
 // Standard library includes
