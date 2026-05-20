@@ -19,7 +19,7 @@ DDM::VulkanImplementation::VulkanImplementation()
 
 	m_pCore = std::make_unique<VulkanCore>(m_pAllocator.get());
 
-	m_pTransferCommandPool = std::make_unique<CommandPool>(m_pAllocator.get(), m_pCore.get(), m_pCore->GetTransferQueue(), true, false);
+	m_pTransferCommandPool = std::make_unique<CommandPool>(m_pAllocator.get(), m_pCore.get(), m_pCore->GetTransferQueue(), true, true);
 
 	auto testImage = std::make_unique<VulkanImage>(m_pAllocator.get(), m_pCore.get(), m_pTransferCommandPool.get());
 

@@ -6,13 +6,16 @@
 // File includes
 #include "Vulkan/CommandBuffers/CommandPool.h"
 #include "Vulkan/Queues/VulkanQueue.h"
+#include "Vulkan/Barriers/VulkanPipelineBarrier.h"
 
 // Standard library includes
 #include <stdexcept>
+#include <iostream>
 
-DDM::CommandBuffer::CommandBuffer(const CommandPool* pPool, const VulkanQueue* pQueue)
+DDM::CommandBuffer::CommandBuffer(const CommandPool* pPool, const VulkanQueue* pQueue, const bool resetBitSet)
 	:m_pPool{pPool},
-	m_pQueue{pQueue}
+	m_pQueue{pQueue},
+	m_ResetBitSet{resetBitSet}
 {
 	m_pPool->AllocateCommandBuffer(&m_VkCommandBuffer);
 }
@@ -24,6 +27,16 @@ DDM::CommandBuffer::~CommandBuffer()
 
 void DDM::CommandBuffer::Submit()
 {
+	if (m_InUse)
+	{
+		EndCommandBuffer();
+	}
+
+	if (!m_CommandRecorded)
+	{
+		return;
+	}
+
 	VkSubmitInfo submitInfo{};
 	submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
 	submitInfo.pNext = nullptr;
@@ -43,12 +56,36 @@ void DDM::CommandBuffer::Submit()
 	m_pQueue->WaitIdle();
 
 	m_Submitted = true;
+
+	if (!m_ResetBitSet)
+	{
+		m_Unuseable = true;
+	}
+}
+
+
+// ------------------------------------------------------------------------------
+// Commands
+// ------------------------------------------------------------------------------
+
+
+void DDM::CommandBuffer::CmdPipelineBarrier(VulkanPipelineBarrier* pBarrier)
+{
+	// Check if commandbuffer can record commands
+	if (!CanRecord())
+	{
+		return;
+	}
+
+	pBarrier->Execute(m_VkCommandBuffer);
+
+	m_CommandRecorded = true;
 }
 
 void DDM::CommandBuffer::BeginCommandBuffer()
 {
-	// Don't begin command buffer if already in use
-	if (m_InUse)
+	// Don't begin command buffer if already in use or commandbuffer is unuseable
+	if (m_InUse || m_Unuseable)
 	{
 		return;
 	}
@@ -69,8 +106,8 @@ void DDM::CommandBuffer::BeginCommandBuffer()
 
 void DDM::CommandBuffer::EndCommandBuffer()
 {
-	// Don't end command buffer if not in use
-	if (!m_InUse)
+	// Don't end command buffer if not in use or if commandbuffer is unuseable
+	if (!m_InUse || m_Unuseable)
 	{
 		return;
 	}
@@ -85,8 +122,8 @@ void DDM::CommandBuffer::EndCommandBuffer()
 
 void DDM::CommandBuffer::ResetCommandBuffer()
 {
-	// Only reset a commandbuffer after it has been submitted
-	if (!m_Submitted)
+	// Only reset a commandbuffer after it has been submitted, it is useable and the reset bit has been set
+	if (!m_ResetBitSet && !m_Submitted)
 	{
 		return;
 	}
@@ -98,4 +135,26 @@ void DDM::CommandBuffer::ResetCommandBuffer()
 
 	m_InUse = false;
 	m_Submitted = false;
+}
+
+bool DDM::CommandBuffer::CanRecord()
+{
+	if (m_Unuseable)
+	{
+		std::cout << "Command buffer is not useable \n";
+		return false;
+	}
+
+	if (m_Submitted && m_ResetBitSet)
+	{
+		ResetCommandBuffer();
+	}
+
+	if (!m_InUse)
+	{
+		BeginCommandBuffer();
+		return true;
+	}
+
+	return false;
 }

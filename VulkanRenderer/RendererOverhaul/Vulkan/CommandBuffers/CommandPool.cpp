@@ -16,8 +16,8 @@ DDM::CommandPool::CommandPool(const VulkanAllocator* pAllocator, const VulkanCor
 	m_pAllocator{pAllocator},
 	m_pCore{pCore},
 	m_pQueue{pQueue},
-	m_Transient{ transient },
-	m_Reset{ reset }
+	m_TransientBitSet{ transient },
+	m_ResetBitSet{ reset }
 {
 	VkCommandPoolCreateInfo createInfo{};
 
@@ -36,7 +36,7 @@ DDM::CommandPool::~CommandPool()
 
 std::unique_ptr<DDM::CommandBuffer> DDM::CommandPool::GetCommandBuffer() const
 {
-	return std::make_unique<CommandBuffer>(this, m_pQueue);
+	return std::make_unique<CommandBuffer>(this, m_pQueue, m_ResetBitSet);
 }
 
 void DDM::CommandPool::SetupCreateInfo(VkCommandPoolCreateInfo& createInfo)
@@ -44,8 +44,8 @@ void DDM::CommandPool::SetupCreateInfo(VkCommandPoolCreateInfo& createInfo)
 	createInfo.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
 	createInfo.pNext = nullptr;
 
-	createInfo.flags |= m_Reset ? VK_COMMAND_POOL_CREATE_TRANSIENT_BIT : 0;
-	createInfo.flags |= m_Reset ? VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT : 0;
+	createInfo.flags |= m_TransientBitSet ? VK_COMMAND_POOL_CREATE_TRANSIENT_BIT : 0;
+	createInfo.flags |= m_ResetBitSet ? VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT : 0;
 
 	createInfo.queueFamilyIndex = m_pQueue->GetFamilyIndex();
 }

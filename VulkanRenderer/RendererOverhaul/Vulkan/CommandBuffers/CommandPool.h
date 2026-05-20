@@ -68,10 +68,10 @@ namespace DDM
 		VkCommandPool m_VkCommandPool{};
 
 		// Indicates whether transient bit is set
-		const bool m_Transient;
+		const bool m_TransientBitSet;
 
 		// Indicates whether reset bit is set
-		const bool m_Reset;
+		const bool m_ResetBitSet;
 
 		/// <summary>
 		/// Set up the createinfo struct for creation of commandpool

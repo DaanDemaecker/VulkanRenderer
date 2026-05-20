@@ -9,6 +9,7 @@
 #include "Vulkan/CommandBuffers/CommandPool.h"
 #include "Vulkan/Images/STBImage.h"
 #include "Vulkan/Buffers/VulkanBuffer.h"
+#include "Vulkan/Barriers/VulkanPipelineBarrier.h"
 
 // Standard library includes
 #include <stdexcept>
@@ -74,9 +75,15 @@ void DDM::VulkanImage::CreateImage(STBImage* pSTBImage)
 
 void DDM::VulkanImage::CopyBufferToImage(VulkanBuffer* pBuffer)
 {
+	std::unique_ptr<VulkanPipelineBarrier> pBarrier = std::make_unique<VulkanPipelineBarrier>(VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, VK_PIPELINE_STAGE_TRANSFER_BIT, 0);
+
 	auto commandBuffer = m_pCommandPool->GetCommandBuffer();
-	
-	
+
+	commandBuffer->CmdPipelineBarrier(pBarrier.get());
+
+	commandBuffer->Submit();
+
+	commandBuffer->CmdPipelineBarrier(pBarrier.get());
 
 	commandBuffer->Submit();
 }
