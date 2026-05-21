@@ -14,13 +14,33 @@ namespace DDM
 	class CommandPool;
 	class VulkanQueue;
 	class VulkanPipelineBarrier;
+	class VulkanBuffer;
+	class VulkanImage;
 
 	class CommandBuffer final
 	{
 	public:
+		/// <summary>
+		/// Constructor
+		/// </summary>
+		/// <param name="pPool">Owning commandpool</param>
+		/// <param name="pQueue">Queue to execute on</param>
+		/// <param name="resetBitSet">Indicates whether commandbuffer can be reset</param>
 		CommandBuffer(const CommandPool* pPool, const VulkanQueue* pQueue, const bool resetBitSet);
 
+		// Destructor
 		~CommandBuffer();
+
+		// Delete default constructor
+		CommandBuffer() = delete;
+
+		// Delete copy and move constructors
+		CommandBuffer(CommandBuffer&) = delete;
+		CommandBuffer(CommandBuffer&&) = delete;
+
+		// Delete copy and move assignment operators
+		CommandBuffer& operator=(CommandBuffer&) = delete;
+		CommandBuffer& operator=(CommandBuffer&&) = delete;
 
 		/// <summary>
 		/// Submit the command buffer
@@ -31,7 +51,26 @@ namespace DDM
 		// Commands
 		// ------------------------------------------------------------------------------
 
+		/// <summary>
+		/// Record a pipeline barrier to the commandbuffer
+		/// </summary>
+		/// <param name="pBarrier">Pointer to the pipeline barrier object</param>
 		void CmdPipelineBarrier(VulkanPipelineBarrier* pBarrier);
+
+		/// <summary>
+		/// Copy a vulkan buffer to a vulkan image
+		/// </summary>
+		/// <param name="pImage">Pointer to the image object</param>
+		/// <param name="pBuffer">Pointer to the buffer object</param>
+		void CmdCopyBufferToImage(VulkanImage* pImage, VulkanBuffer* pBuffer);
+
+		/// <summary>
+		/// Copy a vulkan buffer to a vulkan image
+		/// </summary>
+		/// <param name="pImage">Pointer to the image object</param>
+		/// <param name="pBuffer">Pointer to the buffer object</param>
+		/// <param name="region">Region info for the copy command</param>
+		void CmdCopyBufferToImage(VulkanImage* pImage, VulkanBuffer* pBuffer, VkBufferImageCopy& region);
 	private:
 		// The owning commandpool
 		const CommandPool* m_pPool;

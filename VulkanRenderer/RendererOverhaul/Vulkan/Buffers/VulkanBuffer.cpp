@@ -72,6 +72,13 @@ void DDM::VulkanBuffer::WriteToBuffer(void* data)
 	}
 }
 
+void DDM::VulkanBuffer::FillCopyRegionInfo(VkBufferImageCopy& region)
+{
+	region.bufferOffset = 0;
+	region.bufferRowLength = 0;
+	region.bufferImageHeight = 0;
+}
+
 void DDM::VulkanBuffer::AllocateMemory()
 {
 	VkMemoryAllocateInfo allocateInfo{};

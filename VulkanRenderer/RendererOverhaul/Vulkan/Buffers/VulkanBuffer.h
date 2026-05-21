@@ -16,15 +16,42 @@ namespace DDM
 	class VulkanBuffer final
 	{
 	public:
+		/// <summary>
+		/// Constructor
+		/// </summary>
+		/// <param name="pAllocator">pointer to the custom allocator</param>
+		/// <param name="pCore">pointer to VulkanCore object</param>
 		VulkanBuffer(const VulkanAllocator* pAllocator, const VulkanCore* pCore);
 
+		// Destructor
 		~VulkanBuffer();
 
+		// Delete default constructor
+		VulkanBuffer() = delete;
 
+		// Delete copy and move constructors
+		VulkanBuffer(VulkanBuffer&) = delete;
+		VulkanBuffer(VulkanBuffer&&) = delete;
+
+		// Delete copy and move assignment operators
+		VulkanBuffer& operator=(VulkanBuffer&) = delete;
+		VulkanBuffer& operator=(VulkanBuffer&&) = delete;
+
+		/// <summary>
+		/// Create the buffer object
+		/// </summary>
+		/// <param name="size">Size of the buffer in size</param>
 		void CreateBuffer(VkDeviceSize size);
 
+		/// <summary>
+		/// Write data to the buffer
+		/// </summary>
+		/// <param name="data">Pointer to the data to write</param>
 		void WriteToBuffer(void* data);
 
+		void FillCopyRegionInfo(VkBufferImageCopy& region);
+
+		VkBuffer GetBuffer() const { return m_VkBuffer; }
 	private:
 		// Pointer to the custom allocator
 		const VulkanAllocator* m_pAllocator;

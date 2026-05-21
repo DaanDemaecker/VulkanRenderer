@@ -7,6 +7,8 @@
 #include "Vulkan/CommandBuffers/CommandPool.h"
 #include "Vulkan/Queues/VulkanQueue.h"
 #include "Vulkan/Barriers/VulkanPipelineBarrier.h"
+#include "Vulkan/Images/VulkanImage.h"
+#include "Vulkan/Buffers/VulkanBuffer.h"
 
 // Standard library includes
 #include <stdexcept>
@@ -82,6 +84,40 @@ void DDM::CommandBuffer::CmdPipelineBarrier(VulkanPipelineBarrier* pBarrier)
 	m_CommandRecorded = true;
 }
 
+void DDM::CommandBuffer::CmdCopyBufferToImage(VulkanImage* pImage, VulkanBuffer* pBuffer)
+{
+	// Check if commandbuffer can record commands
+	if (!CanRecord())
+	{
+		return;
+	}
+
+	VkBufferImageCopy region{};
+
+	pImage->FillCopyRegionInfo(region);
+
+	pBuffer->FillCopyRegionInfo(region);
+
+	CmdCopyBufferToImage(pImage, pBuffer, region);
+}
+
+void DDM::CommandBuffer::CmdCopyBufferToImage(VulkanImage* pImage, VulkanBuffer* pBuffer, VkBufferImageCopy& region)
+{
+	// Check if commandbuffer can record commands
+	if (!CanRecord())
+	{
+		return;
+	}
+
+	vkCmdCopyBufferToImage(m_VkCommandBuffer, pBuffer->GetBuffer(), pImage->GetImage(), pImage->GetLayout(), 1, &region);
+
+	m_CommandRecorded = true;
+}
+
+// ------------------------------------------------------------------------------
+// Internal functions
+// ------------------------------------------------------------------------------
+
 void DDM::CommandBuffer::BeginCommandBuffer()
 {
 	// Don't begin command buffer if already in use or commandbuffer is unuseable
@@ -153,8 +189,7 @@ bool DDM::CommandBuffer::CanRecord()
 	if (!m_InUse)
 	{
 		BeginCommandBuffer();
-		return true;
 	}
 
-	return false;
+	return true;
 }

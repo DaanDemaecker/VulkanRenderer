@@ -44,7 +44,7 @@ void DDM::VulkanImage::LoadImage(const std::string& filePath)
 	CreateImage(pSTBImage.get());
 }
 
-void DDM::VulkanImage::SetBarrierInfo(VkImageMemoryBarrier& barrier)
+void DDM::VulkanImage::FillBarrierInfo(VkImageMemoryBarrier& barrier)
 {
 	barrier.oldLayout = m_VkLayout;
 	barrier.image = m_VkImage;
@@ -57,15 +57,28 @@ void DDM::VulkanImage::SetBarrierInfo(VkImageMemoryBarrier& barrier)
 	barrier.subresourceRange.levelCount = 1;
 }
 
+void DDM::VulkanImage::FillCopyRegionInfo(VkBufferImageCopy& region)
+{
+	region.imageOffset = VkOffset3D{ 0,0,0 };
+	region.imageExtent = m_VkExtent;
+
+	region.imageSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+	region.imageSubresource.mipLevel = 0;
+	region.imageSubresource.baseArrayLayer = 0;
+	region.imageSubresource.layerCount = 1;
+}
+
 void DDM::VulkanImage::CreateImage(STBImage* pSTBImage)
 {
+	m_VkExtent = pSTBImage->GetExtent();
+
 	VkImageCreateInfo createInfo{};
 	createInfo.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
 	createInfo.pNext = nullptr;
 	createInfo.flags = 0;
 	createInfo.imageType = VK_IMAGE_TYPE_2D;
 	createInfo.format = VK_FORMAT_R8G8B8A8_SRGB;
-	createInfo.extent = pSTBImage->GetExtent();
+	createInfo.extent = m_VkExtent;
 	createInfo.mipLevels = 1;
 	createInfo.arrayLayers = 1;
 	createInfo.samples = VK_SAMPLE_COUNT_1_BIT;
@@ -139,7 +152,7 @@ void DDM::VulkanImage::CopyBufferToImage(VulkanBuffer* pBuffer)
 
 	m_VkLayout = VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL;
 
-	commandBuffer->CmdPipelineBarrier(pBarrier.get());
+	commandBuffer->CmdCopyBufferToImage(this, pBuffer);
 
 	commandBuffer->Submit();
 }

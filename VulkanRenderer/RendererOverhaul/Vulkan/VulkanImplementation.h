@@ -16,6 +16,8 @@ namespace DDM
 	class VulkanCore;
 	class CommandPool;
 
+	class VulkanImage;
+
 	class VulkanImplementation final
 	{
 	public:
@@ -46,6 +48,8 @@ namespace DDM
 
 		// Vulkan commandpool used for single commands (transient commandbuffers)
 		std::unique_ptr<CommandPool> m_pTransferCommandPool{};
+
+		std::unique_ptr<VulkanImage> m_pTestImage{};
 	};
 }
 

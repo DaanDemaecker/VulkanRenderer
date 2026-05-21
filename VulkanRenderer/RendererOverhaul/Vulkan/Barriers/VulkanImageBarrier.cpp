@@ -16,7 +16,7 @@ DDM::VulkanImageBarrier::VulkanImageBarrier(VulkanImage* pImage, VkImageLayout n
 
 	m_VkImageMemoryBarrier.newLayout = newLayout;
 
-	pImage->SetBarrierInfo(m_VkImageMemoryBarrier);
+	pImage->FillBarrierInfo(m_VkImageMemoryBarrier);
 }
 
 DDM::VulkanImageBarrier::~VulkanImageBarrier()
