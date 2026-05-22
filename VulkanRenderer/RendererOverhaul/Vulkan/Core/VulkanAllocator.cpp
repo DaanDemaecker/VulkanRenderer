@@ -52,12 +52,12 @@ void VKAPI_CALL DDM::VulkanAllocator::Free(void* pUserData, void* pMemory)
 // Nonstatic functions
 // ------------------------------------------------------------------------------
 
-void* DDM::VulkanAllocator::Allocation(size_t size, size_t alignment, VkSystemAllocationScope allocationScope)
+void* DDM::VulkanAllocator::Allocation(size_t size, size_t alignment, VkSystemAllocationScope /*allocationScope*/)
 {
 	return _aligned_malloc(size, alignment);
 }
 
-void* DDM::VulkanAllocator::Reallocation(void* pOriginal, size_t size, size_t alignment, VkSystemAllocationScope allocationScope)
+void* DDM::VulkanAllocator::Reallocation(void* pOriginal, size_t size, size_t alignment, VkSystemAllocationScope /*allocationScope*/)
 {
 	return _aligned_realloc(pOriginal, size, alignment);
 }

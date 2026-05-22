@@ -47,17 +47,17 @@ namespace DDM
 		DefaultFileSystem& operator=(DefaultFileSystem&) = delete;
 		DefaultFileSystem& operator=(DefaultFileSystem&&) = delete;
 
-		virtual bool OpenWrite(std::string& fileName) override { return false; }
+		virtual bool OpenWrite(std::string& /*filename*/) override { return false; }
 
-		virtual bool CloseWrite(std::string& fileName) override { return false; }
+		virtual bool CloseWrite(std::string& /*fileName*/) override { return false; }
 
-		virtual bool Write(std::string& fileName, const char* start, size_t size) override { return false; }
+		virtual bool Write(std::string& /*fileName*/, const char* /*start*/, size_t /*size*/) override { return false; }
 
-		virtual bool OpenRead(std::string& fileName) override { return false; }
+		virtual bool OpenRead(std::string& /*fileName*/) override { return false; }
 
-		virtual bool CloseRead(std::string& fileName) override { return false; }
+		virtual bool CloseRead(std::string& /*fileName*/) override { return false; }
 
-		virtual bool Read(std::string& fileName, char* start, size_t size) override { return false; }
+		virtual bool Read(std::string& /*fileName*/, char* /*start*/, size_t /*size*/) override { return false; }
 	};
 }
 

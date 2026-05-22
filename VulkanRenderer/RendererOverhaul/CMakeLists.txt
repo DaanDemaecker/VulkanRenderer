@@ -36,6 +36,11 @@ add_executable(RendererOverhaul
  "Vulkan/Barriers/VulkanPipelineBarrier.cpp"
  "Vulkan/Barriers/VulkanImageBarrier.cpp")
 
+if (MSVC)
+    target_compile_options(RendererOverhaul PRIVATE /W4 /WX /permissive-)
+else()
+    target_compile_options(RendererOverhaul PRIVATE -Wall -Wextra -Wpedantic)
+endif()
 # Include directories specific to this target
 target_include_directories(RendererOverhaul PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 

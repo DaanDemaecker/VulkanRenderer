@@ -150,12 +150,12 @@ namespace DDM
 			std::cout << "Glfw error: " << error << "\n" << description << "\n";
 		}
 
-		static void resize_callback(GLFWwindow* window, int width, int height)
+		static void resize_callback(GLFWwindow* /*window*/, int width, int height)
 		{
 			m_sInstance->Resized(width, height);
 		}
 
-		static void moved_callback(GLFWwindow* window, int x, int y)
+		static void moved_callback(GLFWwindow* /*window*/, int x, int y)
 		{
 			m_sInstance->Moved(x, y);
 		}
@@ -326,9 +326,9 @@ namespace DDM
 
 				const GLFWvidmode* modes = glfwGetVideoModes(monitor, &modeCount);
 
-				for (int i{}; i < modeCount; ++i)
+				for (int j{}; j < modeCount; ++j)
 				{
-					const auto currentMode = modes[i];
+					const auto currentMode = modes[j];
 
 					if (currentMode.width > monitorWidth)
 					{
