@@ -49,8 +49,16 @@ namespace DDM
 		/// <param name="data">Pointer to the data to write</param>
 		void WriteToBuffer(void* data);
 
+		/// <summary>
+		/// Enter the region info for a copy command
+		/// </summary>
+		/// <param name="region">Reference to the struct to fill in</param>
 		void FillCopyRegionInfo(VkBufferImageCopy& region);
 
+		/// <summary>
+		/// Get the handle of the vulkan buffer
+		/// </summary>
+		/// <returns>Buffer handle</returns>
 		VkBuffer GetBuffer() const { return m_VkBuffer; }
 	private:
 		// Pointer to the custom allocator
