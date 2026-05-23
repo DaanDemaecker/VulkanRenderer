@@ -135,6 +135,8 @@ namespace DDM
 
 		std::unique_ptr<VulkanQueue> m_pTransferQueue{};
 
+		std::unique_ptr<VulkanQueue> m_pPresentQueue{};
+
 		// ------------------------------------------------------------------------------
 		// Instance
 		//-------------------------------------------------------------------------------

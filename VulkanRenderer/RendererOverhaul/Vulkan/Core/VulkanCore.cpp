@@ -472,6 +472,7 @@ void DDM::VulkanCore::SetupQueueCreateInfos(std::vector<VkDeviceQueueCreateInfo>
 	std::vector<VulkanQueue*> queues{};
 	queues.push_back(m_pGraphicsQueue.get());
 	queues.push_back(m_pTransferQueue.get());
+	queues.push_back(m_pPresentQueue.get());
 
 	m_pPhysicalDeviceInfo->SetupQueueCreateInfos(queues, infos, priorities);
 }
@@ -499,10 +500,20 @@ void DDM::VulkanCore::SetupQueues()
 	}
 
 	m_pTransferQueue = std::make_unique<VulkanQueue>(familyIndex, queueIndex);
+
+	const std::vector<uint32_t> presentQueueFlags = {  };
+
+	if (!m_pPhysicalDeviceInfo->GetPresentQueue(presentQueueFlags, m_VkSurface, familyIndex, queueIndex))
+	{
+		throw std::runtime_error("Failed to find a suitable present queue");
+	}
+
+	m_pPresentQueue = std::make_unique<VulkanQueue>(familyIndex, queueIndex);
 }
 
 void DDM::VulkanCore::RetrieveQueues()
 {
 	m_pGraphicsQueue->RetrieveQueue(m_VkDevice);
 	m_pTransferQueue->RetrieveQueue(m_VkDevice);
+	m_pPresentQueue->RetrieveQueue(m_VkDevice);
 }

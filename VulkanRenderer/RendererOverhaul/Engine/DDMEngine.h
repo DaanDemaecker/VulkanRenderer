@@ -8,13 +8,20 @@ namespace DDM
 	class DDMEngine final
 	{
 	public:
+		/// <summary>
+		/// Constructor
+		/// </summary>
 		DDMEngine();
 
+		/// <summary>
+		/// Destructor
+		/// </summary>
 		~DDMEngine();
 
+		/// <summary>
+		/// Run the engine
+		/// </summary>
 		void Run();
-	private:
-
 	};
 }
 #endif // !_DDM_DDM_ENGINE_

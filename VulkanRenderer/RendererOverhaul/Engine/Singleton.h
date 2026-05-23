@@ -11,7 +11,10 @@ namespace DDM
 	class Singleton
 	{
 	public:
-		// Get the single instance of the class
+		/// <summary>
+		/// Get a reference to the instance of the singleton
+		/// </summary>
+		/// <returns></returns>
 		static T& GetInstance()
 		{
 			// Create static instance, because the variable is static, this will only be done once

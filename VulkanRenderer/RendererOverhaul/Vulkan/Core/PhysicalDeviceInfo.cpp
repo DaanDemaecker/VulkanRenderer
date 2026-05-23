@@ -95,6 +95,47 @@ bool DDM::PhysicalDeviceInfo::GetQueue(const std::vector<uint32_t>& requiredQueu
 	return false;
 }
 
+
+
+bool DDM::PhysicalDeviceInfo::GetPresentQueue(const std::vector<uint32_t>& requiredQueueFlags, VkSurfaceKHR surface, uint32_t& familyIndex, uint32_t& queueIndex)
+{
+	for (const auto& queueFamily : m_QueueFamilies)
+	{
+		bool validFamily = true;
+
+		VkBool32 presentSupported{};
+		
+		if (vkGetPhysicalDeviceSurfaceSupportKHR(m_VkPhysicalDevice, queueFamily->GetIndex(), surface, &presentSupported) != VK_SUCCESS)
+		{
+			throw std::runtime_error("Failed to query surface support for physical device");
+		}
+
+		if (presentSupported != VK_TRUE)
+		{
+			continue;
+		}
+
+
+		for (auto flag : requiredQueueFlags)
+		{
+			if (!queueFamily->IsFlagSet(flag))
+			{
+				validFamily = false;
+				break;
+			}
+		}
+
+		if (validFamily)
+		{
+			familyIndex = queueFamily->GetIndex();
+			queueFamily->GetNextQueue(queueIndex);
+			return true;
+		}
+	}
+
+	return false;
+}
+
 void DDM::PhysicalDeviceInfo::SetupQueueCreateInfos(std::vector<VulkanQueue*> pQueues, std::vector<VkDeviceQueueCreateInfo>& infos, std::map<uint32_t, std::vector<float>>& priorities)
 {
 	std::map<uint32_t, uint32_t> queuesPerFamily{};

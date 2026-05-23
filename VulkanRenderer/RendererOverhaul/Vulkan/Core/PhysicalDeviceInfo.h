@@ -83,6 +83,16 @@ namespace DDM
 		bool GetQueue(const std::vector<uint32_t>& requiredQueueFlags, uint32_t& familyIndex, uint32_t& queueIndex);
 
 		/// <summary>
+		/// Get a queue family index an queue index that can present given a number of specified flags
+		/// </summary>
+		/// <param name="requiredQueueFlags">Minimum required flags for requested queue</param>
+		/// <param name="surface">Surface to query support for</param>
+		/// <param name="familyIndex">Will be filled in with index of the queuefamily with requested capabilities</param>
+		/// <param name="queueIndex">Will be filled in with index of queue within the family</param>
+		/// <returns>Boolean indicating succes</returns>
+		bool GetPresentQueue(const std::vector<uint32_t>& requiredQueueFlags, VkSurfaceKHR surface, uint32_t& familyIndex, uint32_t& queueIndex);
+
+		/// <summary>
 		/// Set up a list of VkDeviceQueueCreateInfo structs with the correct values
 		/// </summary>
 		/// <param name="pQueues">list of all used queues</param>
