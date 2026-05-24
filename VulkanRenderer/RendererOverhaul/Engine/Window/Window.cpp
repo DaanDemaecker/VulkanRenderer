@@ -59,6 +59,8 @@ namespace DDM
 
 			InitData initData = ReadInitData();
 
+			glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
+
 			auto handle = glfwCreateWindow(initData.width, initData.height, ConfigManager::GetInstance().GetString("WindowName"), nullptr, nullptr);
 
 
