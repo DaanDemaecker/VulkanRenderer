@@ -23,5 +23,6 @@
     "LogValidationError": true,
     "LogValidationWarning": true,
     "LogValidationInfo": false,
-    "LogValidationVerbose":  false
+    "LogValidationVerbose": false,
+    "SwapchainImageCount": 3
 }

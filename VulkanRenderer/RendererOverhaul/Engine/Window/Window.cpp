@@ -59,7 +59,7 @@ namespace DDM
 
 			InitData initData = ReadInitData();
 
-			glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
+			//glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
 
 			auto handle = glfwCreateWindow(initData.width, initData.height, ConfigManager::GetInstance().GetString("WindowName"), nullptr, nullptr);
 
@@ -120,6 +120,11 @@ namespace DDM
 			m_Window.height = y;
 
 			SetWindowPosAndSize();
+		}
+
+		void GetFrameBufferSize(int& width, int& height)
+		{
+			glfwGetFramebufferSize(GetGLFWHandle(), &width, &height);
 		}
 
 	private:
@@ -407,6 +412,11 @@ void DDM::Window::ToggleFullscreenMode()
 void DDM::Window::SetDimensions(int x, int y)
 {
 	m_pImpl->SetDimensions(x, y);
+}
+
+void DDM::Window::GetFrameBufferSize(int& width, int& height)
+{
+	m_pImpl->GetFrameBufferSize(width, height);
 }
 
 void DDM::Window::InitializeWindow()

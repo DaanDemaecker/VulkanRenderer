@@ -106,6 +106,12 @@ namespace DDM
 		/// <param name="requirements">requirements for memory type</param>
 		/// <returns>Index of the memory type</returns>
 		uint32_t GetMemoryType(const VkMemoryRequirements& requirements) const;
+
+		 /// <summary>
+		 /// Set up the swapchain create info struct with the correct values
+		 /// </summary>
+		 /// <param name="createInfo">reference to the VkSwapchainCreateInfoKHR struct</param>
+		void ValidateSwapchainCreateInfo(VkSwapchainCreateInfoKHR& createInfo) const;
 	private:
 		// Vulkan physical device
 		VkPhysicalDevice m_VkPhysicalDevice{};

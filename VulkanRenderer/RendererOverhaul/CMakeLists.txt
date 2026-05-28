@@ -34,7 +34,9 @@ add_executable(RendererOverhaul
  "Vulkan/Buffers/VulkanBuffer.cpp"
  
  "Vulkan/Barriers/VulkanPipelineBarrier.cpp"
- "Vulkan/Barriers/VulkanImageBarrier.cpp")
+ "Vulkan/Barriers/VulkanImageBarrier.cpp"
+ 
+ "Vulkan/Swapchain/VulkanSwapchain.cpp")
 
 if (MSVC)
     target_compile_options(RendererOverhaul PRIVATE /W4 /WX /permissive-)

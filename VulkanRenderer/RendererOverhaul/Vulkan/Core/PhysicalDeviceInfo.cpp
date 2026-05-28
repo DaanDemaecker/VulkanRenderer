@@ -7,9 +7,13 @@
 #include "Vulkan/Queues/VulkanQueueFamily.h"
 #include "Vulkan/Queues/VulkanQueue.h"
 
+#include "Engine/ConfigManager.h"
+#include "Engine/Window/Window.h"
+
 // Standard library include
 #include <iostream>
 #include <set>
+#include <algorithm>
 
 DDM::PhysicalDeviceInfo::PhysicalDeviceInfo(VkPhysicalDevice device)
 {
@@ -194,6 +198,165 @@ uint32_t DDM::PhysicalDeviceInfo::GetMemoryType(const VkMemoryRequirements& requ
 	}
 
 	throw std::runtime_error("Failed to find suitable memory type");
+}
+
+void DDM::PhysicalDeviceInfo::ValidateSwapchainCreateInfo(VkSwapchainCreateInfoKHR& createInfo) const
+{
+	// ----------------------------------
+	// Mine image count
+	// ----------------------------------
+	uint32_t requestedImageAmount = createInfo.minImageCount;
+
+	VkSurfaceCapabilitiesKHR surfaceCapabilities{};
+
+	if (vkGetPhysicalDeviceSurfaceCapabilitiesKHR(m_VkPhysicalDevice, createInfo.surface, &surfaceCapabilities) != VK_SUCCESS)
+	{
+		throw std::runtime_error("Failed to query surface capabilities for physical device");
+	}
+
+	createInfo.minImageCount = std::clamp(requestedImageAmount, surfaceCapabilities.minImageCount, surfaceCapabilities.maxImageCount);
+
+	if (createInfo.minImageCount != requestedImageAmount)
+	{
+		std::cout << "Requested swapchain image amount of " << requestedImageAmount << " is not supported, using " << createInfo.minImageCount << " instead" << std::endl;
+	}
+
+	// ----------------------------------
+	// Image format
+	// ----------------------------------
+	VkFormat requestedFormat = createInfo.imageFormat;
+
+	createInfo.imageFormat = VK_FORMAT_MAX_ENUM;
+
+	uint32_t formatCount;
+	vkGetPhysicalDeviceSurfaceFormatsKHR(m_VkPhysicalDevice, createInfo.surface, &formatCount, nullptr);
+
+	if (formatCount == 0)
+	{
+		throw std::runtime_error("Failed to query surface formats for physical device, no formats found");
+	}
+
+	std::vector<VkSurfaceFormatKHR> formats(formatCount);
+
+	vkGetPhysicalDeviceSurfaceFormatsKHR(m_VkPhysicalDevice, createInfo.surface, &formatCount, formats.data());
+	
+	for (auto& availableFormat : formats)
+	{
+		if (availableFormat.format == requestedFormat)
+		{
+			createInfo.imageFormat = requestedFormat;
+			createInfo.imageColorSpace = availableFormat.colorSpace;
+			break;
+		}
+	}
+
+	if (createInfo.imageFormat == VK_FORMAT_MAX_ENUM)
+	{
+		createInfo.imageFormat = formats[0].format;
+		createInfo.imageColorSpace = formats[0].colorSpace;
+	}
+
+	if (createInfo.imageFormat != requestedFormat)
+	{
+		std::cout << "Requested swapchain format " << requestedFormat << " is not supported, using " << createInfo.imageFormat << " instead" << std::endl;
+	}
+
+	// ----------------------------------
+	// Present mode
+	// ----------------------------------
+	VkPresentModeKHR requestedPresentMode = createInfo.presentMode;
+
+	createInfo.presentMode = VK_PRESENT_MODE_MAX_ENUM_KHR;
+
+	uint32_t presentModeCount;
+	vkGetPhysicalDeviceSurfacePresentModesKHR(m_VkPhysicalDevice, createInfo.surface, &presentModeCount, nullptr);
+
+	if (presentModeCount == 0)
+	{
+		throw std::runtime_error("Failed to query present modes for physical device, no present modes found");
+	}
+
+	std::vector<VkPresentModeKHR> presentModes(presentModeCount);
+
+	vkGetPhysicalDeviceSurfacePresentModesKHR(m_VkPhysicalDevice, createInfo.surface, &presentModeCount, presentModes.data());
+
+	for (auto& presentMode : presentModes)
+	{
+		if (presentMode == requestedPresentMode)
+		{
+			createInfo.presentMode = requestedPresentMode;
+			break;
+		}
+	}
+
+	if (createInfo.presentMode == VK_PRESENT_MODE_MAX_ENUM_KHR)
+	{
+		createInfo.presentMode = presentModes[0];
+	}
+
+	if (createInfo.presentMode != requestedPresentMode)
+	{
+		std::cout << "Requested present mode " << requestedPresentMode << " is not supported, using " << createInfo.presentMode << " instead" << std::endl;
+	}
+
+	// ----------------------------------
+	// Image usage
+	// ----------------------------------
+
+	VkImageUsageFlags requestedUsageFlags = createInfo.imageUsage;
+
+	createInfo.imageUsage = surfaceCapabilities.supportedUsageFlags & requestedUsageFlags;
+
+	if (createInfo.imageUsage != requestedUsageFlags)
+	{
+		std::cout << "Requested image usage " << requestedUsageFlags << " is not supported, using " << createInfo.compositeAlpha << " instead" << std::endl;
+	}
+
+	// ----------------------------------
+	// Transform
+	// ----------------------------------
+	createInfo.preTransform = surfaceCapabilities.currentTransform;
+
+	// ----------------------------------
+	// Extent
+	// ----------------------------------
+	VkExtent2D requestedExtent = createInfo.imageExtent;
+
+	VkExtent2D minExtent = surfaceCapabilities.minImageExtent;
+	VkExtent2D maxExtent = surfaceCapabilities.maxImageExtent;
+
+	createInfo.imageExtent.width = std::clamp(requestedExtent.width, minExtent.width, maxExtent.width);
+	createInfo.imageExtent.height = std::clamp(requestedExtent.height, minExtent.height, maxExtent.height);
+
+	if (createInfo.imageExtent.width != requestedExtent.width || createInfo.imageExtent.height != requestedExtent.height)
+	{
+		std::cout << "Requested swapchain extent of (" << requestedExtent.width << ", " << requestedExtent.height << ") is not supported, using (" << createInfo.imageExtent.width << ", " << createInfo.imageExtent.height << ") instead" << std::endl;
+	}
+
+	// ----------------------------------
+	// Array layers
+	// ----------------------------------
+
+	uint32_t requestedArrayLayers = createInfo.imageArrayLayers;
+
+	createInfo.imageArrayLayers = std::clamp(requestedArrayLayers, 1u, surfaceCapabilities.maxImageArrayLayers);
+
+	if (createInfo.imageArrayLayers != requestedArrayLayers)
+	{
+		std::cout << "Requested swapchain array layer count of " << requestedArrayLayers << " is not supported, using " << createInfo.imageArrayLayers << " instead" << std::endl;
+	}
+
+	// ----------------------------------
+	// Composite alpha
+	// ----------------------------------
+	VkCompositeAlphaFlagBitsKHR requestedCompositeAlpha = createInfo.compositeAlpha;
+
+	createInfo.compositeAlpha = static_cast<VkCompositeAlphaFlagBitsKHR>(surfaceCapabilities.supportedCompositeAlpha & requestedCompositeAlpha);
+
+	if (createInfo.compositeAlpha != requestedCompositeAlpha)
+	{
+		std::cout << "Requested composite alpha " << requestedCompositeAlpha << " is not supported, using " << createInfo.compositeAlpha << " instead" << std::endl;
+	}
 }
 
 void DDM::PhysicalDeviceInfo::SetupFeatures()

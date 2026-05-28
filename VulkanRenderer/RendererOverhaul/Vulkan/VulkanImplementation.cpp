@@ -10,6 +10,8 @@
 #include "Vulkan/CommandBuffers/CommandPool.h"
 #include "Vulkan/CommandBuffers/CommandBuffer.h"
 
+#include "Vulkan/Swapchain/VulkanSwapchain.h"
+
 #include "Vulkan/Images/STBImage.h"
 #include "Vulkan/Images/VulkanImage.h"
 
@@ -20,6 +22,8 @@ DDM::VulkanImplementation::VulkanImplementation()
 	m_pCore = std::make_unique<VulkanCore>(m_pAllocator.get());
 
 	m_pTransferCommandPool = std::make_unique<CommandPool>(m_pAllocator.get(), m_pCore.get(), m_pCore->GetTransferQueue(), true, true);
+
+	m_pSwapchain = std::make_unique<VulkanSwapchain>(m_pAllocator.get(), m_pCore.get());
 
 	m_pTestImage = std::make_unique<VulkanImage>(m_pAllocator.get(), m_pCore.get(), m_pTransferCommandPool.get());
 

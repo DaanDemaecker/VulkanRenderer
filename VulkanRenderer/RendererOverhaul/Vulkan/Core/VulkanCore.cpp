@@ -63,6 +63,13 @@ DDM::VulkanCore::~VulkanCore()
 	vkDestroyInstance(m_VkInstance, allocatorStruct);
 }
 
+void DDM::VulkanCore::ValidateSwapchainCreateInfo(VkSwapchainCreateInfoKHR& createInfo) const
+{
+	createInfo.surface = m_VkSurface;
+
+	m_pPhysicalDeviceInfo->ValidateSwapchainCreateInfo(createInfo);
+}
+
 // ------------------------------------------------------------------------------
 // Instance
 //-------------------------------------------------------------------------------
@@ -211,12 +218,9 @@ void DDM::VulkanCore::SetupDebugMessenger()
 
 	m_LogError = config.GetBool("LogValidationError");
 
-
 	m_LogWarning = config.GetBool("LogValidationWarning");
 
-
 	m_LogInfo = config.GetBool("LogValidationInfo");
-
 
 	m_LogVerbose = config.GetBool("LogValidationVerbose");
 

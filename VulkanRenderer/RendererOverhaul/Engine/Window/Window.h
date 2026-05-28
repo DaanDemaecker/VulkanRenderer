@@ -40,6 +40,8 @@ namespace DDM
 		void ToggleFullscreenMode();
 
 		void SetDimensions(int x, int y);
+
+		void GetFrameBufferSize(int& width, int& height);
 	private:
 		friend class Singleton<Window>;
 		Window();

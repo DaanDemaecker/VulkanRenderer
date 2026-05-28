@@ -59,6 +59,12 @@ namespace DDM
 		/// </summary>
 		/// <returns>Pointer to requested queue</returns>
 		const VulkanQueue* GetTransferQueue() const { return m_pTransferQueue.get(); }
+
+		/// <summary>
+		/// Set up the swapchain create info struct with the correct values
+		/// </summary>
+		/// <param name="createInfo">Swapchain create info struct to be set up</param>
+		void ValidateSwapchainCreateInfo(VkSwapchainCreateInfoKHR& createInfo) const;
 	private:
 		// ------------------------------------------------------------------------------
 		// Allocator
