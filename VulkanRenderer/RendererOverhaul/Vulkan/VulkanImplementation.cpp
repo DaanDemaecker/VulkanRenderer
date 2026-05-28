@@ -14,6 +14,7 @@
 
 #include "Vulkan/Images/STBImage.h"
 #include "Vulkan/Images/VulkanImage.h"
+#include "Vulkan/Images/ImageTypes/VulkanFileImage.h"
 
 DDM::VulkanImplementation::VulkanImplementation()
 {
@@ -25,7 +26,7 @@ DDM::VulkanImplementation::VulkanImplementation()
 
 	m_pSwapchain = std::make_unique<VulkanSwapchain>(m_pAllocator.get(), m_pCore.get());
 
-	m_pTestImage = std::make_unique<VulkanImage>(m_pAllocator.get(), m_pCore.get(), m_pTransferCommandPool.get());
+	m_pTestImage = std::make_unique<VulkanFileImage>(m_pAllocator.get(), m_pCore.get(), m_pTransferCommandPool.get());
 
 	m_pTestImage->LoadImage("Resources/DefaultResources/DefaultTexture.png");
 }

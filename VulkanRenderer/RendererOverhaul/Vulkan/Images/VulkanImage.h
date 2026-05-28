@@ -15,11 +15,10 @@ namespace DDM
 	// Class forward declaration
 	class VulkanCore;
 	class VulkanAllocator;
-	class STBImage;
 	class CommandPool;
 	class VulkanBuffer;
 
-	class VulkanImage final
+	class VulkanImage
 	{
 	public:
 		/// <summary>
@@ -29,9 +28,7 @@ namespace DDM
 		/// <param name="pCore">pointer to VulkanCore object</param>
 		VulkanImage(const VulkanAllocator* pAllocator, const VulkanCore* pCore, const CommandPool* pCommandPool);
 
-		~VulkanImage();
-
-		void LoadImage(const std::string& filePath);
+		virtual ~VulkanImage();
 
 		void FillBarrierInfo(VkImageMemoryBarrier& barrier);
 
@@ -40,7 +37,8 @@ namespace DDM
 		VkImage GetImage() const { return m_VkImage; }
 
 		VkImageLayout GetLayout() const { return m_VkLayout; }
-	private:
+
+	protected:
 		// Pointer to the custom allocator
 		const VulkanAllocator* m_pAllocator;
 
@@ -69,21 +67,9 @@ namespace DDM
 		bool m_MemoryAllocated{ false };
 
 		/// <summary>
-		/// Create the VkImage object
-		/// </summary>
-		/// <param name="pSTBImage">Pointer to the stb image with data</param>
-		void CreateImage(STBImage* pSTBImage);
-
-		/// <summary>
 		/// Allocate memory for the image
 		/// </summary>
 		void AllocateMemory();
-
-		/// <summary>
-		/// Copy the data from the temp buffer to the image
-		/// </summary>
-		/// <param name="pBuffer">Pointer to the buffer to copy from</param>
-		void CopyBufferToImage(VulkanBuffer* pBuffer);
 	};
 }
 

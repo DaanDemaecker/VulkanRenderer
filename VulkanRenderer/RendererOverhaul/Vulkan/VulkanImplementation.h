@@ -18,6 +18,7 @@ namespace DDM
 	class VulkanSwapchain;
 
 	class VulkanImage;
+	class VulkanFileImage;
 
 	class VulkanImplementation final
 	{
@@ -53,7 +54,7 @@ namespace DDM
 		// Vulkan swapchain object
 		std::unique_ptr<VulkanSwapchain> m_pSwapchain{};
 
-		std::unique_ptr<VulkanImage> m_pTestImage{};
+		std::unique_ptr<VulkanFileImage> m_pTestImage{};
 	};
 }
 
