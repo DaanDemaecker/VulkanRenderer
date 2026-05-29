@@ -6,7 +6,7 @@
 // File includes
 #include "Vulkan/Core/VulkanCore.h"
 #include "Vulkan/Core/VulkanAllocator.h"
-#include "Vulkan/CommandBuffers/CommandPool.h"
+#include "Vulkan/CommandBuffers/VulkanCommandPool.h"
 #include "Vulkan/Images/STBImage.h"
 #include "Vulkan/Buffers/VulkanBuffer.h"
 
@@ -16,7 +16,7 @@
 // Standard library includes
 #include <stdexcept>
 
-DDM::VulkanImage::VulkanImage(const VulkanAllocator* pAllocator, const VulkanCore* pCore, const CommandPool* pCommandPool)
+DDM::VulkanImage::VulkanImage(const VulkanAllocator* pAllocator, const VulkanCore* pCore, const VulkanCommandPool* pCommandPool)
 	:m_pAllocator{ pAllocator },
 	m_pCore{ pCore },
 	m_pCommandPool{ pCommandPool }

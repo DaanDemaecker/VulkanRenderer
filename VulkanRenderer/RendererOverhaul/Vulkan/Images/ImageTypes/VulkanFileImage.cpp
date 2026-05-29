@@ -14,13 +14,13 @@
 #include "Vulkan/Barriers/VulkanImageBarrier.h"
 #include "Vulkan/Barriers/VulkanPipelineBarrier.h"
 
-#include "Vulkan/CommandBuffers/CommandPool.h"
+#include "Vulkan/CommandBuffers/VulkanCommandPool.h"
 
 // Standard library includes
 #include <memory>
 #include <stdexcept>
 
-DDM::VulkanFileImage::VulkanFileImage(const VulkanAllocator* pAllocator, const VulkanCore* pCore, const CommandPool* pCommandPool)
+DDM::VulkanFileImage::VulkanFileImage(const VulkanAllocator* pAllocator, const VulkanCore* pCore, const VulkanCommandPool* pCommandPool)
 	:VulkanImage(pAllocator, pCore, pCommandPool)
 {
 }

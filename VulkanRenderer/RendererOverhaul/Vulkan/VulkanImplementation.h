@@ -14,7 +14,7 @@ namespace DDM
 	// Class forward declarations
 	class VulkanAllocator;
 	class VulkanCore;
-	class CommandPool;
+	class VulkanCommandPool;
 	class VulkanSwapchain;
 
 	class VulkanImage;
@@ -49,7 +49,7 @@ namespace DDM
 		std::unique_ptr<VulkanCore> m_pCore{};
 
 		// Vulkan commandpool used for single commands (transient commandbuffers)
-		std::unique_ptr<CommandPool> m_pTransferCommandPool{};
+		std::unique_ptr<VulkanCommandPool> m_pTransferCommandPool{};
 
 		// Vulkan swapchain object
 		std::unique_ptr<VulkanSwapchain> m_pSwapchain{};

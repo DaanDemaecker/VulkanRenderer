@@ -20,13 +20,13 @@ add_executable(RendererOverhaul
 
  "Vulkan/Core/VulkanCore.cpp"
  "Vulkan/Core/VulkanAllocator.cpp"
- "Vulkan/Core/PhysicalDeviceInfo.cpp"
+ "Vulkan/Core/VulkanPhysicalDeviceInfo.cpp"
 
  "Vulkan/Queues/VulkanQueue.cpp"
  "Vulkan/Queues/VulkanQueueFamily.cpp"
 
- "Vulkan/CommandBuffers/CommandPool.cpp"
- "Vulkan/CommandBuffers/CommandBuffer.cpp"
+ "Vulkan/CommandBuffers/VulkanCommandPool.cpp"
+ "Vulkan/CommandBuffers/VulkanCommandBuffer.cpp"
  
  "Vulkan/Images/STBImage.cpp"
  "Vulkan/Images/VulkanImage.cpp"

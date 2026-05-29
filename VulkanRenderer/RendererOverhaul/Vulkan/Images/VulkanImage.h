@@ -15,7 +15,7 @@ namespace DDM
 	// Class forward declaration
 	class VulkanCore;
 	class VulkanAllocator;
-	class CommandPool;
+	class VulkanCommandPool;
 	class VulkanBuffer;
 
 	class VulkanImage
@@ -26,7 +26,7 @@ namespace DDM
 		/// </summary>
 		/// <param name="pAllocator">pointer to the custom allocator</param>
 		/// <param name="pCore">pointer to VulkanCore object</param>
-		VulkanImage(const VulkanAllocator* pAllocator, const VulkanCore* pCore, const CommandPool* pCommandPool);
+		VulkanImage(const VulkanAllocator* pAllocator, const VulkanCore* pCore, const VulkanCommandPool* pCommandPool);
 
 		virtual ~VulkanImage();
 
@@ -46,7 +46,7 @@ namespace DDM
 		const VulkanCore* m_pCore;
 
 		// Pointer to the commandpool object to use for barrier transitions and copying
-		const CommandPool* m_pCommandPool;
+		const VulkanCommandPool* m_pCommandPool;
 
 		// Vulkan image object
 		VkImage m_VkImage{};

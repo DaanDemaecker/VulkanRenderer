@@ -20,7 +20,7 @@ namespace DDM
 		/// </summary>
 		/// <param name="pAllocator">pointer to the custom allocator</param>
 		/// <param name="pCore">pointer to VulkanCore object</param>
-		VulkanFileImage(const VulkanAllocator* pAllocator, const VulkanCore* pCore, const CommandPool* pCommandPool);
+		VulkanFileImage(const VulkanAllocator* pAllocator, const VulkanCore* pCore, const VulkanCommandPool* pCommandPool);
 		
 		/// <summary>
 		 /// Destructor

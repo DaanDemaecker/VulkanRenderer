@@ -1,8 +1,8 @@
 // PhysicalDeviceInfo.h
 // This class serves as a wrapper for the Vulkan physical device and holds info about the device such as properties and enabled features
 
-#ifndef _DDM_PHYSICAL_DEVICE_INFO_
-#define _DDM_PHYSICAL_DEVICE_INFO_
+#ifndef _DDM_VULKAN_PHYSICAL_DEVICE_INFO_
+#define _DDM_VULKAN_PHYSICAL_DEVICE_INFO_
 
 // File includes
 #include "Includes/VulkanIncludes.h"
@@ -18,29 +18,29 @@ namespace DDM
 	class VulkanQueueFamily;
 	class VulkanQueue;
 
-	class PhysicalDeviceInfo final
+	class VulkanPhysicalDeviceInfo final
 	{
 	public:
 		/// <summary>
 		/// Constructor
 		/// </summary>
 		/// <param name="device">physical device to wrap</param>
-		PhysicalDeviceInfo(VkPhysicalDevice device);
+		VulkanPhysicalDeviceInfo(VkPhysicalDevice device);
 
 		// Delete default constructor
-		PhysicalDeviceInfo() = delete;
+		VulkanPhysicalDeviceInfo() = delete;
 
 		/// <summary>
 		/// Destructor
 		/// </summary>
-		~PhysicalDeviceInfo();
+		~VulkanPhysicalDeviceInfo();
 
 		// Delete copy and move operations
-		PhysicalDeviceInfo(const PhysicalDeviceInfo&) = delete;
-		PhysicalDeviceInfo(PhysicalDeviceInfo&&) = delete;
+		VulkanPhysicalDeviceInfo(const VulkanPhysicalDeviceInfo&) = delete;
+		VulkanPhysicalDeviceInfo(VulkanPhysicalDeviceInfo&&) = delete;
 
-		PhysicalDeviceInfo& operator=(const PhysicalDeviceInfo&) = delete;
-		PhysicalDeviceInfo& operator=(PhysicalDeviceInfo&&) = delete;
+		VulkanPhysicalDeviceInfo& operator=(const VulkanPhysicalDeviceInfo&) = delete;
+		VulkanPhysicalDeviceInfo& operator=(VulkanPhysicalDeviceInfo&&) = delete;
 
 		/// <summary>
 		/// Get the handle of the vulkan physical device
@@ -177,4 +177,4 @@ namespace DDM
 	};
 }
 
-#endif // !_DDM_PHYSICAL_DEVICE_INFO_
+#endif // !_DDM_VULKAN_PHYSICAL_DEVICE_INFO_

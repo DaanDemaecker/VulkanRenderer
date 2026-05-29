@@ -380,7 +380,7 @@ void DDM::VulkanCore::SetupPhysicalDevice()
 	}
 }
 
-std::unique_ptr<DDM::PhysicalDeviceInfo> DDM::VulkanCore::PickPhysicalDevice()
+std::unique_ptr<DDM::VulkanPhysicalDeviceInfo> DDM::VulkanCore::PickPhysicalDevice()
 {
 	// Enumerate all devices
 	uint32_t deviceCount{};
@@ -401,11 +401,11 @@ std::unique_ptr<DDM::PhysicalDeviceInfo> DDM::VulkanCore::PickPhysicalDevice()
 		throw std::runtime_error("failed to enumerate physical devices!");
 	}
 
-	std::vector<std::unique_ptr<DDM::PhysicalDeviceInfo>> devices{};
+	std::vector<std::unique_ptr<DDM::VulkanPhysicalDeviceInfo>> devices{};
 
 	for (auto physicalDevice : physicalDevices)
 	{
-		devices.push_back(std::make_unique<DDM::PhysicalDeviceInfo>(physicalDevice));
+		devices.push_back(std::make_unique<DDM::VulkanPhysicalDeviceInfo>(physicalDevice));
 	}
 
 

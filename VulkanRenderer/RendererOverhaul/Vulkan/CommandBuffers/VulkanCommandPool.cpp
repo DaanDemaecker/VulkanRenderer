@@ -1,7 +1,7 @@
 // CommandPool.cpp
 
 // Header include
-#include "CommandPool.h"
+#include "VulkanCommandPool.h"
 
 // Standard library includes
 #include <stdexcept>
@@ -11,7 +11,7 @@
 #include "Vulkan/Core/VulkanCore.h"
 #include "Vulkan/Queues/VulkanQueue.h"
 
-DDM::CommandPool::CommandPool(const VulkanAllocator* pAllocator, const VulkanCore* pCore, const VulkanQueue* pQueue, bool transient, bool reset)
+DDM::VulkanCommandPool::VulkanCommandPool(const VulkanAllocator* pAllocator, const VulkanCore* pCore, const VulkanQueue* pQueue, bool transient, bool reset)
 	:
 	m_pAllocator{pAllocator},
 	m_pCore{pCore},
@@ -29,17 +29,17 @@ DDM::CommandPool::CommandPool(const VulkanAllocator* pAllocator, const VulkanCor
 	}
 }
 
-DDM::CommandPool::~CommandPool()
+DDM::VulkanCommandPool::~VulkanCommandPool()
 {
 	vkDestroyCommandPool(m_pCore->GetDeviceHandle(), m_VkCommandPool, m_pAllocator->GetAllocator());
 }
 
-std::unique_ptr<DDM::CommandBuffer> DDM::CommandPool::GetCommandBuffer() const
+std::unique_ptr<DDM::VulkanCommandBuffer> DDM::VulkanCommandPool::GetCommandBuffer() const
 {
-	return std::make_unique<CommandBuffer>(this, m_pQueue, m_ResetBitSet);
+	return std::make_unique<VulkanCommandBuffer>(this, m_pQueue, m_ResetBitSet);
 }
 
-void DDM::CommandPool::SetupCreateInfo(VkCommandPoolCreateInfo& createInfo)
+void DDM::VulkanCommandPool::SetupCreateInfo(VkCommandPoolCreateInfo& createInfo)
 {
 	createInfo.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
 	createInfo.pNext = nullptr;
@@ -50,7 +50,7 @@ void DDM::CommandPool::SetupCreateInfo(VkCommandPoolCreateInfo& createInfo)
 	createInfo.queueFamilyIndex = m_pQueue->GetFamilyIndex();
 }
 
-void DDM::CommandPool::AllocateCommandBuffer(VkCommandBuffer* pCommandBuffer) const
+void DDM::VulkanCommandPool::AllocateCommandBuffer(VkCommandBuffer* pCommandBuffer) const
 {
 	VkCommandBufferAllocateInfo info{};
 
@@ -67,7 +67,7 @@ void DDM::CommandPool::AllocateCommandBuffer(VkCommandBuffer* pCommandBuffer) co
 	}
 }
 
-void DDM::CommandPool::FreeCommandBuffer(VkCommandBuffer* pCommandBuffer) const
+void DDM::VulkanCommandPool::FreeCommandBuffer(VkCommandBuffer* pCommandBuffer) const
 {
 	vkFreeCommandBuffers(m_pCore->GetDeviceHandle(), m_VkCommandPool, 1, pCommandBuffer);
 }

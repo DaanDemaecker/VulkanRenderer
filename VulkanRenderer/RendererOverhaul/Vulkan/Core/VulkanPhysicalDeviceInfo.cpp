@@ -1,7 +1,7 @@
 // PhysicalDeviceInfo.cpp
 
 // Header include
-#include "PhysicalDeviceInfo.h"
+#include "VulkanPhysicalDeviceInfo.h"
 
 // File includes
 #include "Vulkan/Queues/VulkanQueueFamily.h"
@@ -15,7 +15,7 @@
 #include <set>
 #include <algorithm>
 
-DDM::PhysicalDeviceInfo::PhysicalDeviceInfo(VkPhysicalDevice device)
+DDM::VulkanPhysicalDeviceInfo::VulkanPhysicalDeviceInfo(VkPhysicalDevice device)
 {
 	m_VkPhysicalDevice = device;
 
@@ -28,22 +28,22 @@ DDM::PhysicalDeviceInfo::PhysicalDeviceInfo(VkPhysicalDevice device)
 	SetupDeviceMemoryProperties();
 }
 
-DDM::PhysicalDeviceInfo::~PhysicalDeviceInfo()
+DDM::VulkanPhysicalDeviceInfo::~VulkanPhysicalDeviceInfo()
 {
 }
 
-void DDM::PhysicalDeviceInfo::SetupExtensions(VkDeviceCreateInfo& createInfo)
+void DDM::VulkanPhysicalDeviceInfo::SetupExtensions(VkDeviceCreateInfo& createInfo)
 {
 	createInfo.enabledExtensionCount = static_cast<uint32_t>(m_RequiredExtensions.size());
 	createInfo.ppEnabledExtensionNames = m_RequiredExtensions.data();
 }
 
-const VkPhysicalDeviceFeatures& DDM::PhysicalDeviceInfo::GetEnabledFeatures() const
+const VkPhysicalDeviceFeatures& DDM::VulkanPhysicalDeviceInfo::GetEnabledFeatures() const
 {
 	return m_VkEnabledFeatures;
 }
 
-int DDM::PhysicalDeviceInfo::GetScore(const std::vector<uint32_t>& requiredQueueFlags)
+int DDM::VulkanPhysicalDeviceInfo::GetScore(const std::vector<uint32_t>& requiredQueueFlags)
 {
 	if(!IsDeviceValid(requiredQueueFlags))
 	{
@@ -73,7 +73,7 @@ int DDM::PhysicalDeviceInfo::GetScore(const std::vector<uint32_t>& requiredQueue
 	return score;
 }
 
-bool DDM::PhysicalDeviceInfo::GetQueue(const std::vector<uint32_t>& requiredQueueFlags, uint32_t& familyIndex, uint32_t& queueIndex)
+bool DDM::VulkanPhysicalDeviceInfo::GetQueue(const std::vector<uint32_t>& requiredQueueFlags, uint32_t& familyIndex, uint32_t& queueIndex)
 {
 	for (const auto& queueFamily : m_QueueFamilies)
 	{
@@ -101,7 +101,7 @@ bool DDM::PhysicalDeviceInfo::GetQueue(const std::vector<uint32_t>& requiredQueu
 
 
 
-bool DDM::PhysicalDeviceInfo::GetPresentQueue(const std::vector<uint32_t>& requiredQueueFlags, VkSurfaceKHR surface, uint32_t& familyIndex, uint32_t& queueIndex)
+bool DDM::VulkanPhysicalDeviceInfo::GetPresentQueue(const std::vector<uint32_t>& requiredQueueFlags, VkSurfaceKHR surface, uint32_t& familyIndex, uint32_t& queueIndex)
 {
 	for (const auto& queueFamily : m_QueueFamilies)
 	{
@@ -140,7 +140,7 @@ bool DDM::PhysicalDeviceInfo::GetPresentQueue(const std::vector<uint32_t>& requi
 	return false;
 }
 
-void DDM::PhysicalDeviceInfo::SetupQueueCreateInfos(std::vector<VulkanQueue*> pQueues, std::vector<VkDeviceQueueCreateInfo>& infos, std::map<uint32_t, std::vector<float>>& priorities)
+void DDM::VulkanPhysicalDeviceInfo::SetupQueueCreateInfos(std::vector<VulkanQueue*> pQueues, std::vector<VkDeviceQueueCreateInfo>& infos, std::map<uint32_t, std::vector<float>>& priorities)
 {
 	std::map<uint32_t, uint32_t> queuesPerFamily{};
 
@@ -187,7 +187,7 @@ void DDM::PhysicalDeviceInfo::SetupQueueCreateInfos(std::vector<VulkanQueue*> pQ
 	}
 }
 
-uint32_t DDM::PhysicalDeviceInfo::GetMemoryType(const VkMemoryRequirements& requirements) const
+uint32_t DDM::VulkanPhysicalDeviceInfo::GetMemoryType(const VkMemoryRequirements& requirements) const
 {
 	for (uint32_t index{ 0 }; index < m_VkMemoryPropeties.memoryTypeCount; ++index)
 	{
@@ -200,7 +200,7 @@ uint32_t DDM::PhysicalDeviceInfo::GetMemoryType(const VkMemoryRequirements& requ
 	throw std::runtime_error("Failed to find suitable memory type");
 }
 
-void DDM::PhysicalDeviceInfo::ValidateSwapchainCreateInfo(VkSwapchainCreateInfoKHR& createInfo) const
+void DDM::VulkanPhysicalDeviceInfo::ValidateSwapchainCreateInfo(VkSwapchainCreateInfoKHR& createInfo) const
 {
 	// ----------------------------------
 	// Mine image count
@@ -359,13 +359,13 @@ void DDM::PhysicalDeviceInfo::ValidateSwapchainCreateInfo(VkSwapchainCreateInfoK
 	}
 }
 
-void DDM::PhysicalDeviceInfo::SetupFeatures()
+void DDM::VulkanPhysicalDeviceInfo::SetupFeatures()
 {
 	// Enable all available features
 	vkGetPhysicalDeviceFeatures(m_VkPhysicalDevice, &m_VkEnabledFeatures);
 }
 
-void DDM::PhysicalDeviceInfo::SetupQueueFamilies()
+void DDM::VulkanPhysicalDeviceInfo::SetupQueueFamilies()
 {
 	uint32_t queueFamilyCount{};
 
@@ -384,12 +384,12 @@ void DDM::PhysicalDeviceInfo::SetupQueueFamilies()
 	}
 }
 
-void DDM::PhysicalDeviceInfo::SetupProperties()
+void DDM::VulkanPhysicalDeviceInfo::SetupProperties()
 {
 	vkGetPhysicalDeviceProperties(m_VkPhysicalDevice, &m_VkProperties);
 }
 
-bool DDM::PhysicalDeviceInfo::IsDeviceValid(const std::vector<uint32_t>& requiredQueueFlags)
+bool DDM::VulkanPhysicalDeviceInfo::IsDeviceValid(const std::vector<uint32_t>& requiredQueueFlags)
 {
 	if (!HasRequiredExtensions())
 	{
@@ -404,7 +404,7 @@ bool DDM::PhysicalDeviceInfo::IsDeviceValid(const std::vector<uint32_t>& require
 	return true;
 }
 
-bool DDM::PhysicalDeviceInfo::HasRequiredExtensions()
+bool DDM::VulkanPhysicalDeviceInfo::HasRequiredExtensions()
 {
 	uint32_t extensionCount;
 	vkEnumerateDeviceExtensionProperties(m_VkPhysicalDevice, nullptr, &extensionCount, nullptr);
@@ -423,7 +423,7 @@ bool DDM::PhysicalDeviceInfo::HasRequiredExtensions()
 	return requiredExtensions.empty();
 }
 
-bool DDM::PhysicalDeviceInfo::HasRequiredQueueFamily(const std::vector<uint32_t>& requiredQueueFlags)
+bool DDM::VulkanPhysicalDeviceInfo::HasRequiredQueueFamily(const std::vector<uint32_t>& requiredQueueFlags)
 {
 	std::set<uint32_t> requiredFlagsSet(requiredQueueFlags.begin(), requiredQueueFlags.end());
 
@@ -445,7 +445,7 @@ bool DDM::PhysicalDeviceInfo::HasRequiredQueueFamily(const std::vector<uint32_t>
 	return false;
 }
 
-void DDM::PhysicalDeviceInfo::SetupDeviceMemoryProperties()
+void DDM::VulkanPhysicalDeviceInfo::SetupDeviceMemoryProperties()
 {
 	vkGetPhysicalDeviceMemoryProperties(m_VkPhysicalDevice, &m_VkMemoryPropeties);
 

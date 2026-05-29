@@ -6,7 +6,7 @@
 // File includes
 #include "Vulkan/Core/VulkanCore.h"
 #include "Vulkan/Core/VulkanAllocator.h"
-#include "Vulkan/Core/PhysicalDeviceInfo.h"
+#include "Vulkan/Core/VulkanPhysicalDeviceInfo.h"
 
 // Standard library includes
 #include <stdexcept>

@@ -1,12 +1,12 @@
 // CommandPool.h
 // This class will serve as a wrapper for a VkCommandPool object
 
-#ifndef _DDM_COMMAND_POOL_
-#define _DDM_COMMAND_POOL_
+#ifndef _DDM_VULKAN_COMMAND_POOL_
+#define _DDM_VULKAN_COMMAND_POOL_
 
 // File includes
 #include "Includes/VulkanIncludes.h"
-#include "Vulkan/CommandBuffers/CommandBuffer.h"
+#include "Vulkan/CommandBuffers/VulkanCommandBuffer.h"
 
 // Standard library includes
 #include <memory>
@@ -18,19 +18,19 @@ namespace DDM
 	class VulkanCore;
 	class VulkanQueue;
 
-	class CommandPool final
+	class VulkanCommandPool final
 	{
 	public:
 		// Delete default constructor
-		CommandPool() = delete;
+		VulkanCommandPool() = delete;
 
 		// Delete copy and move constructors
-		CommandPool(CommandPool&) = delete;
-		CommandPool(CommandPool&&) = delete;
+		VulkanCommandPool(VulkanCommandPool&) = delete;
+		VulkanCommandPool(VulkanCommandPool&&) = delete;
 
 		// Delete copy and move assignment operators
-		CommandPool& operator=(CommandPool&) = delete;
-		CommandPool& operator=(CommandPool&&) = delete;
+		VulkanCommandPool& operator=(VulkanCommandPool&) = delete;
+		VulkanCommandPool& operator=(VulkanCommandPool&&) = delete;
 		
 		/// <summary>
 		/// Constructor
@@ -40,20 +40,20 @@ namespace DDM
 		/// <param name="pQueue">pointer to the VkQueue wrapper</param>
 		/// <param name="transient">set to true if commandbuffers are for short duration</param>
 		/// <param name="reset">set to true if commandbuffers should be reused</param>
-		CommandPool(const VulkanAllocator* pAllocator, const VulkanCore* pCore, const VulkanQueue* pQueue, bool transient, bool reset);
+		VulkanCommandPool(const VulkanAllocator* pAllocator, const VulkanCore* pCore, const VulkanQueue* pQueue, bool transient, bool reset);
 
 		/// <summary>
 		/// Destructor
 		/// </summary>
-		~CommandPool();
+		~VulkanCommandPool();
 
 		/// <summary>
 		/// Create and retrieve a new commandbuffer
 		/// </summary>
 		/// <returns></returns>
-		std::unique_ptr<CommandBuffer> GetCommandBuffer() const;
+		std::unique_ptr<VulkanCommandBuffer> GetCommandBuffer() const;
 	private:
-		friend class CommandBuffer;
+		friend class VulkanCommandBuffer;
 
 		// Pointer to the custom allocator
 		const VulkanAllocator* m_pAllocator;
@@ -93,4 +93,4 @@ namespace DDM
 	};
 }
 
-#endif // !_DDM_COMMAND_POOL_
+#endif // !_DDM_VULKAN_COMMAND_POOL_

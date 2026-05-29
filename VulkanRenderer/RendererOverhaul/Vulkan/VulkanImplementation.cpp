@@ -7,8 +7,8 @@
 #include "Vulkan/Core/VulkanAllocator.h"
 #include "Vulkan/Core/VulkanCore.h"
 
-#include "Vulkan/CommandBuffers/CommandPool.h"
-#include "Vulkan/CommandBuffers/CommandBuffer.h"
+#include "Vulkan/CommandBuffers/VulkanCommandPool.h"
+#include "Vulkan/CommandBuffers/VulkanCommandBuffer.h"
 
 #include "Vulkan/Swapchain/VulkanSwapchain.h"
 
@@ -22,7 +22,7 @@ DDM::VulkanImplementation::VulkanImplementation()
 
 	m_pCore = std::make_unique<VulkanCore>(m_pAllocator.get());
 
-	m_pTransferCommandPool = std::make_unique<CommandPool>(m_pAllocator.get(), m_pCore.get(), m_pCore->GetTransferQueue(), true, true);
+	m_pTransferCommandPool = std::make_unique<VulkanCommandPool>(m_pAllocator.get(), m_pCore.get(), m_pCore->GetTransferQueue(), true, true);
 
 	m_pSwapchain = std::make_unique<VulkanSwapchain>(m_pAllocator.get(), m_pCore.get());
 

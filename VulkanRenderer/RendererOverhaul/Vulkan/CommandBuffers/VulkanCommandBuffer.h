@@ -1,8 +1,8 @@
 // CommandBuffer.h
 // This class will serve as a wrapper for a Vulkan CommanBuffer
 
-#ifndef _DDM_COMMAND_BUFFER_
-#define _DDM_COMMAND_BUFFER_
+#ifndef _DDM_VULKAN_COMMAND_BUFFER_
+#define _DDM_VULKAN_COMMAND_BUFFER_
 
 // File includes
 #include "Includes/VulkanIncludes.h"
@@ -11,13 +11,13 @@ namespace DDM
 {
 	// Class forward declarations
 	class VulkanCore;
-	class CommandPool;
+	class VulkanCommandPool;
 	class VulkanQueue;
 	class VulkanPipelineBarrier;
 	class VulkanBuffer;
 	class VulkanImage;
 
-	class CommandBuffer final
+	class VulkanCommandBuffer final
 	{
 	public:
 		/// <summary>
@@ -26,21 +26,21 @@ namespace DDM
 		/// <param name="pPool">Owning commandpool</param>
 		/// <param name="pQueue">Queue to execute on</param>
 		/// <param name="resetBitSet">Indicates whether commandbuffer can be reset</param>
-		CommandBuffer(const CommandPool* pPool, const VulkanQueue* pQueue, const bool resetBitSet);
+		VulkanCommandBuffer(const VulkanCommandPool* pPool, const VulkanQueue* pQueue, const bool resetBitSet);
 
 		// Destructor
-		~CommandBuffer();
+		~VulkanCommandBuffer();
 
 		// Delete default constructor
-		CommandBuffer() = delete;
+		VulkanCommandBuffer() = delete;
 
 		// Delete copy and move constructors
-		CommandBuffer(CommandBuffer&) = delete;
-		CommandBuffer(CommandBuffer&&) = delete;
+		VulkanCommandBuffer(VulkanCommandBuffer&) = delete;
+		VulkanCommandBuffer(VulkanCommandBuffer&&) = delete;
 
 		// Delete copy and move assignment operators
-		CommandBuffer& operator=(CommandBuffer&) = delete;
-		CommandBuffer& operator=(CommandBuffer&&) = delete;
+		VulkanCommandBuffer& operator=(VulkanCommandBuffer&) = delete;
+		VulkanCommandBuffer& operator=(VulkanCommandBuffer&&) = delete;
 
 		/// <summary>
 		/// Submit the command buffer
@@ -73,7 +73,7 @@ namespace DDM
 		void CmdCopyBufferToImage(VulkanImage* pImage, VulkanBuffer* pBuffer, VkBufferImageCopy& region);
 	private:
 		// The owning commandpool
-		const CommandPool* m_pPool;
+		const VulkanCommandPool* m_pPool;
 
 		// The queue to submit to
 		const VulkanQueue* m_pQueue;
@@ -120,4 +120,4 @@ namespace DDM
 	};
 }
 
-#endif // !_DDM_COMMAND_BUFFER_
+#endif // !_DDM_VULKAN_COMMAND_BUFFER_

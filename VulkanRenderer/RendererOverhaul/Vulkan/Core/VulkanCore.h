@@ -6,7 +6,7 @@
 
 // File includes
 #include "Includes/VulkanIncludes.h"
-#include "Vulkan/Core/PhysicalDeviceInfo.h"
+#include "Vulkan/Core/VulkanPhysicalDeviceInfo.h"
 
 // Standard library includes
 #include <vector>
@@ -52,7 +52,7 @@ namespace DDM
 		/// Get a pointer to the object holding all physical device info
 		/// </summary>
 		/// <returns>Pointer to physical device info object</returns>
-		const PhysicalDeviceInfo* GetPhysicalDeviceInfo() const { return m_pPhysicalDeviceInfo.get(); }
+		const VulkanPhysicalDeviceInfo* GetPhysicalDeviceInfo() const { return m_pPhysicalDeviceInfo.get(); }
 
 		/// <summary>
 		/// Get the VulkanQueue object used for transfering data
@@ -117,7 +117,7 @@ namespace DDM
 		// ------------------------------------------------------------------------------
 
 		// Physical device info
-		std::unique_ptr<PhysicalDeviceInfo> m_pPhysicalDeviceInfo{};
+		std::unique_ptr<VulkanPhysicalDeviceInfo> m_pPhysicalDeviceInfo{};
 
 		// ------------------------------------------------------------------------------
 		// Logical device
@@ -260,7 +260,7 @@ namespace DDM
 		/// Pick the physical device to use for rendering
 		/// </summary>
 		/// <returns>Unique pointer to physical device wrapper</returns>
-		std::unique_ptr<PhysicalDeviceInfo> PickPhysicalDevice();
+		std::unique_ptr<VulkanPhysicalDeviceInfo> PickPhysicalDevice();
 
 
 		// ------------------------------------------------------------------------------
