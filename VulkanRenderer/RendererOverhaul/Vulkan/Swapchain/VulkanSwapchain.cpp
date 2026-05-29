@@ -22,7 +22,10 @@ DDM::Vulkan::VulkanSwapchain::VulkanSwapchain(const VulkanAllocator* pAllocator,
 
 DDM::Vulkan::VulkanSwapchain::~VulkanSwapchain()
 {
-	vkDestroySwapchainKHR(m_pCore->GetDeviceHandle(), m_VkSwapchain, m_pAllocator->GetAllocator());
+	if (m_Initialized)
+	{
+		vkDestroySwapchainKHR(m_pCore->GetDeviceHandle(), m_VkSwapchain, m_pAllocator->GetAllocator());
+	}
 }
 
 void DDM::Vulkan::VulkanSwapchain::CreateSwapchain()
@@ -63,6 +66,10 @@ void DDM::Vulkan::VulkanSwapchain::CreateSwapchain()
 	}
 
 	RetrieveImages();
+
+	GetNextImage();
+
+	m_Initialized = true;
 }
 
 void DDM::Vulkan::VulkanSwapchain::RetrieveImages()
@@ -86,5 +93,15 @@ void DDM::Vulkan::VulkanSwapchain::RetrieveImages()
 	for (const auto& image : images)
 	{
 		m_SwapchainImages.push_back(VulkanSwapchainImage::Create(m_pAllocator, m_pCore, image));
+	}
+}
+
+void DDM::Vulkan::VulkanSwapchain::GetNextImage()
+{
+	VkResult result = vkAcquireNextImageKHR(m_pCore->GetDeviceHandle(), m_VkSwapchain, UINT64_MAX, VK_NULL_HANDLE, VK_NULL_HANDLE, &m_CurrentImageIndex);
+
+	if (result != VK_SUCCESS)
+	{
+		throw std::runtime_error("Failed to acquire next swapchain image!");
 	}
 }

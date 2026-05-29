@@ -54,6 +54,11 @@ namespace DDM::Vulkan
 		// Swapchain images
 		std::vector<std::unique_ptr<VulkanSwapchainImage>> m_SwapchainImages;
 
+		// Indicates whether the swapchain was correctly initialized
+		bool m_Initialized{ false };
+
+		uint32_t m_CurrentImageIndex{UINT32_MAX};
+
 		/// <summary>
 		/// Create the swapchain object
 		/// </summary>
@@ -63,6 +68,11 @@ namespace DDM::Vulkan
 		/// Retrieve the VKImage objects from the swapchain
 		/// </summary>
 		void RetrieveImages();
+
+		/// <summary>
+		/// Retrieve the next image from the swapchain
+		/// </summary>
+		void GetNextImage();
 	};
 }
 
