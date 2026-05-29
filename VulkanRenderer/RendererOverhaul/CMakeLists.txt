@@ -30,8 +30,9 @@ add_executable(RendererOverhaul
  
  "Vulkan/Images/STBImage.cpp"
  "Vulkan/Images/VulkanImage.cpp"
-
-  "Vulkan/Images/ImageTypes/VulkanFileImage.cpp"
+ 
+ "Vulkan/Images/ImageTypes/VulkanFileImage.cpp"
+ "Vulkan/Images/ImageTypes/VulkanSwapchainImage.cpp"
 
  "Vulkan/Buffers/VulkanBuffer.cpp"
  
@@ -39,7 +40,6 @@ add_executable(RendererOverhaul
  "Vulkan/Barriers/VulkanImageBarrier.cpp"
  
  "Vulkan/Swapchain/VulkanSwapchain.cpp"
-
 
 )
 

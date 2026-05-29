@@ -6,6 +6,11 @@
 
 // File includes
 #include "Includes/VulkanIncludes.h"
+#include "Vulkan/Images/ImageTypes/VulkanSwapchainImage.h"
+
+// Standard library includes
+#include <memory>
+#include <vector>
 
 namespace DDM
 {
@@ -46,10 +51,18 @@ namespace DDM
 		// Swapchain handle
 		VkSwapchainKHR m_VkSwapchain{VK_NULL_HANDLE};
 
+		// Swapchain images
+		std::vector<std::unique_ptr<VulkanSwapchainImage>> m_SwapchainImages;
+
 		/// <summary>
 		/// Create the swapchain object
 		/// </summary>
 		void CreateSwapchain();
+
+		/// <summary>
+		/// Retrieve the VKImage objects from the swapchain
+		/// </summary>
+		void RetrieveImages();
 	};
 }
 

@@ -61,4 +61,30 @@ void DDM::VulkanSwapchain::CreateSwapchain()
 	{
 		throw std::runtime_error("Failed to create Vulkan swapchain!");
 	}
+
+	RetrieveImages();
+}
+
+void DDM::VulkanSwapchain::RetrieveImages()
+{
+	uint32_t imageCount{};
+
+	if (vkGetSwapchainImagesKHR(m_pCore->GetDeviceHandle(), m_VkSwapchain, &imageCount, nullptr) != VK_SUCCESS)
+	{
+		throw std::runtime_error("Failed to get the number of swapchain images!");
+	}
+
+	std::vector<VkImage> images(imageCount);
+
+	if (vkGetSwapchainImagesKHR(m_pCore->GetDeviceHandle(), m_VkSwapchain, &imageCount, images.data()) != VK_SUCCESS)
+	{
+		throw std::runtime_error("Failed to get the swapchain images!");
+	}
+
+	m_SwapchainImages.reserve(imageCount);
+
+	for (const auto& image : images)
+	{
+		m_SwapchainImages.push_back(VulkanSwapchainImage::Create(m_pAllocator, m_pCore, image));
+	}
 }
