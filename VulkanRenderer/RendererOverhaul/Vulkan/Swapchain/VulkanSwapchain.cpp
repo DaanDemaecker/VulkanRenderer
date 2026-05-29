@@ -13,19 +13,19 @@
 // Standard library includes
 #include <stdexcept>
 
-DDM::VulkanSwapchain::VulkanSwapchain(const VulkanAllocator* pAllocator, const VulkanCore* pCore)
+DDM::Vulkan::VulkanSwapchain::VulkanSwapchain(const VulkanAllocator* pAllocator, const VulkanCore* pCore)
 	:m_pAllocator(pAllocator),
 	m_pCore(pCore)
 {
 	CreateSwapchain();
 }
 
-DDM::VulkanSwapchain::~VulkanSwapchain()
+DDM::Vulkan::VulkanSwapchain::~VulkanSwapchain()
 {
 	vkDestroySwapchainKHR(m_pCore->GetDeviceHandle(), m_VkSwapchain, m_pAllocator->GetAllocator());
 }
 
-void DDM::VulkanSwapchain::CreateSwapchain()
+void DDM::Vulkan::VulkanSwapchain::CreateSwapchain()
 {
 	auto& window = Window::GetInstance();
 
@@ -65,7 +65,7 @@ void DDM::VulkanSwapchain::CreateSwapchain()
 	RetrieveImages();
 }
 
-void DDM::VulkanSwapchain::RetrieveImages()
+void DDM::Vulkan::VulkanSwapchain::RetrieveImages()
 {
 	uint32_t imageCount{};
 

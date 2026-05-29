@@ -18,12 +18,12 @@
 // Standard library includes
 #include <set>
 
-bool DDM::VulkanCore::m_LogError{ false };
-bool DDM::VulkanCore::m_LogWarning{ false };
-bool DDM::VulkanCore::m_LogInfo{ false };
-bool DDM::VulkanCore::m_LogVerbose{ false };
+bool DDM::Vulkan::VulkanCore::m_LogError{ false };
+bool DDM::Vulkan::VulkanCore::m_LogWarning{ false };
+bool DDM::Vulkan::VulkanCore::m_LogInfo{ false };
+bool DDM::Vulkan::VulkanCore::m_LogVerbose{ false };
 
-DDM::VulkanCore::VulkanCore(VulkanAllocator* pAllocator)
+DDM::Vulkan::VulkanCore::VulkanCore(VulkanAllocator* pAllocator)
 {
 	m_pAllocator = pAllocator;
 
@@ -45,7 +45,7 @@ DDM::VulkanCore::VulkanCore(VulkanAllocator* pAllocator)
 	RetrieveQueues();
 }
 
-DDM::VulkanCore::~VulkanCore()
+DDM::Vulkan::VulkanCore::~VulkanCore()
 {
 	auto allocatorStruct = m_pAllocator->GetAllocator();
 
@@ -63,7 +63,7 @@ DDM::VulkanCore::~VulkanCore()
 	vkDestroyInstance(m_VkInstance, allocatorStruct);
 }
 
-void DDM::VulkanCore::ValidateSwapchainCreateInfo(VkSwapchainCreateInfoKHR& createInfo) const
+void DDM::Vulkan::VulkanCore::ValidateSwapchainCreateInfo(VkSwapchainCreateInfoKHR& createInfo) const
 {
 	createInfo.surface = m_VkSurface;
 
@@ -74,7 +74,7 @@ void DDM::VulkanCore::ValidateSwapchainCreateInfo(VkSwapchainCreateInfoKHR& crea
 // Instance
 //-------------------------------------------------------------------------------
 
-void DDM::VulkanCore::CreateInstance()
+void DDM::Vulkan::VulkanCore::CreateInstance()
 {
 	VkInstanceCreateInfo createInfo{};
 
@@ -109,7 +109,7 @@ void DDM::VulkanCore::CreateInstance()
 	}
 }
 
-VkApplicationInfo DDM::VulkanCore::GetApplicationInfo()
+VkApplicationInfo DDM::Vulkan::VulkanCore::GetApplicationInfo()
 {
 	auto& configManager = DDM::ConfigManager::GetInstance();
 
@@ -138,7 +138,7 @@ VkApplicationInfo DDM::VulkanCore::GetApplicationInfo()
 	return info;
 }
 
-void DDM::VulkanCore::SetupValidationLayers(VkInstanceCreateInfo& createInfo)
+void DDM::Vulkan::VulkanCore::SetupValidationLayers(VkInstanceCreateInfo& createInfo)
 {
 #ifdef NDEBUG
 	m_EnableValidationLayers = false;
@@ -163,7 +163,7 @@ void DDM::VulkanCore::SetupValidationLayers(VkInstanceCreateInfo& createInfo)
 	createInfo.ppEnabledLayerNames = m_ValidationLayers.data();
 }
 
-bool DDM::VulkanCore::QueryValidationLayerSupport()
+bool DDM::Vulkan::VulkanCore::QueryValidationLayerSupport()
 {
 	uint32_t layerCount;
 
@@ -191,7 +191,7 @@ bool DDM::VulkanCore::QueryValidationLayerSupport()
 	return true;
 }
 
-std::vector<const char*> DDM::VulkanCore::GetExtensions()
+std::vector<const char*> DDM::Vulkan::VulkanCore::GetExtensions()
 {
 	uint32_t glfwExtensionCount = 0;
 
@@ -207,7 +207,7 @@ std::vector<const char*> DDM::VulkanCore::GetExtensions()
 	return extensions;
 }
 
-void DDM::VulkanCore::SetupDebugMessenger()
+void DDM::Vulkan::VulkanCore::SetupDebugMessenger()
 {
 	if (!m_EnableValidationLayers)
 	{
@@ -234,7 +234,7 @@ void DDM::VulkanCore::SetupDebugMessenger()
 	}
 }
 
-void DDM::VulkanCore::PopulateDebugMessenger(VkDebugUtilsMessengerCreateInfoEXT& createInfo)
+void DDM::Vulkan::VulkanCore::PopulateDebugMessenger(VkDebugUtilsMessengerCreateInfoEXT& createInfo)
 {
 	createInfo.sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT;
 	createInfo.pNext = nullptr;
@@ -249,7 +249,7 @@ void DDM::VulkanCore::PopulateDebugMessenger(VkDebugUtilsMessengerCreateInfoEXT&
 	createInfo.pUserData = nullptr;
 }
 
-void DDM::VulkanCore::SetupDebugMessengerSeverities(VkDebugUtilsMessengerCreateInfoEXT& createInfo)
+void DDM::Vulkan::VulkanCore::SetupDebugMessengerSeverities(VkDebugUtilsMessengerCreateInfoEXT& createInfo)
 {
 	createInfo.messageSeverity = 0;
 	
@@ -276,14 +276,14 @@ void DDM::VulkanCore::SetupDebugMessengerSeverities(VkDebugUtilsMessengerCreateI
 	}
 }
 
-void DDM::VulkanCore::SetupDebugMessengerTypes(VkDebugUtilsMessengerCreateInfoEXT& createInfo)
+void DDM::Vulkan::VulkanCore::SetupDebugMessengerTypes(VkDebugUtilsMessengerCreateInfoEXT& createInfo)
 {
 	createInfo.messageType = VK_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT |
 		VK_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT |
 		VK_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT;
 }
 
-VkResult DDM::VulkanCore::CreateDebugMessenger(VkInstance instance, const VkDebugUtilsMessengerCreateInfoEXT* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkDebugUtilsMessengerEXT* pDebugMessenger)
+VkResult DDM::Vulkan::VulkanCore::CreateDebugMessenger(VkInstance instance, const VkDebugUtilsMessengerCreateInfoEXT* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkDebugUtilsMessengerEXT* pDebugMessenger)
 {
 	auto func = (PFN_vkCreateDebugUtilsMessengerEXT)vkGetInstanceProcAddr(instance, "vkCreateDebugUtilsMessengerEXT");
 
@@ -297,7 +297,7 @@ VkResult DDM::VulkanCore::CreateDebugMessenger(VkInstance instance, const VkDebu
 	}
 }
 
-void DDM::VulkanCore::DestroyDebugMessenger(VkInstance instance, VkDebugUtilsMessengerEXT debugMessenger, const VkAllocationCallbacks* pAllocator)
+void DDM::Vulkan::VulkanCore::DestroyDebugMessenger(VkInstance instance, VkDebugUtilsMessengerEXT debugMessenger, const VkAllocationCallbacks* pAllocator)
 {
 	auto func = (PFN_vkDestroyDebugUtilsMessengerEXT)vkGetInstanceProcAddr(instance, "vkDestroyDebugUtilsMessengerEXT");
 
@@ -308,7 +308,7 @@ void DDM::VulkanCore::DestroyDebugMessenger(VkInstance instance, VkDebugUtilsMes
 }
 
 
-VKAPI_ATTR VkBool32 VKAPI_CALL DDM::VulkanCore::debugCallback(VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity, VkDebugUtilsMessageTypeFlagsEXT /*messageType*/, const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData, void* /*pUserData*/)
+VKAPI_ATTR VkBool32 VKAPI_CALL DDM::Vulkan::VulkanCore::debugCallback(VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity, VkDebugUtilsMessageTypeFlagsEXT /*messageType*/, const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData, void* /*pUserData*/)
 {
 	switch (messageSeverity)
 	{
@@ -348,7 +348,7 @@ VKAPI_ATTR VkBool32 VKAPI_CALL DDM::VulkanCore::debugCallback(VkDebugUtilsMessag
 // Surface
 // ------------------------------------------------------------------------------
 
-void DDM::VulkanCore::CreateSurface()
+void DDM::Vulkan::VulkanCore::CreateSurface()
 {
 	if (!glfwVulkanSupported())
 	{
@@ -370,7 +370,7 @@ void DDM::VulkanCore::CreateSurface()
 // Physical device
 //-------------------------------------------------------------------------------
 
-void DDM::VulkanCore::SetupPhysicalDevice()
+void DDM::Vulkan::VulkanCore::SetupPhysicalDevice()
 {
 	m_pPhysicalDeviceInfo = PickPhysicalDevice();
 
@@ -380,7 +380,7 @@ void DDM::VulkanCore::SetupPhysicalDevice()
 	}
 }
 
-std::unique_ptr<DDM::VulkanPhysicalDeviceInfo> DDM::VulkanCore::PickPhysicalDevice()
+std::unique_ptr<DDM::Vulkan::VulkanPhysicalDeviceInfo> DDM::Vulkan::VulkanCore::PickPhysicalDevice()
 {
 	// Enumerate all devices
 	uint32_t deviceCount{};
@@ -401,11 +401,11 @@ std::unique_ptr<DDM::VulkanPhysicalDeviceInfo> DDM::VulkanCore::PickPhysicalDevi
 		throw std::runtime_error("failed to enumerate physical devices!");
 	}
 
-	std::vector<std::unique_ptr<DDM::VulkanPhysicalDeviceInfo>> devices{};
+	std::vector<std::unique_ptr<DDM::Vulkan::VulkanPhysicalDeviceInfo>> devices{};
 
 	for (auto physicalDevice : physicalDevices)
 	{
-		devices.push_back(std::make_unique<DDM::VulkanPhysicalDeviceInfo>(physicalDevice));
+		devices.push_back(std::make_unique<DDM::Vulkan::VulkanPhysicalDeviceInfo>(physicalDevice));
 	}
 
 
@@ -439,7 +439,7 @@ std::unique_ptr<DDM::VulkanPhysicalDeviceInfo> DDM::VulkanCore::PickPhysicalDevi
 // Logical device
 //-------------------------------------------------------------------------------
 
-void DDM::VulkanCore::CreateLogicalDevice()
+void DDM::Vulkan::VulkanCore::CreateLogicalDevice()
 {
 	VkDeviceCreateInfo deviceCreateInfo{};
 
@@ -471,7 +471,7 @@ void DDM::VulkanCore::CreateLogicalDevice()
 	vkCreateDevice(m_pPhysicalDeviceInfo->GetDeviceHandle(), &deviceCreateInfo, m_pAllocator->GetAllocator(), &m_VkDevice);
 }
 
-void DDM::VulkanCore::SetupQueueCreateInfos(std::vector<VkDeviceQueueCreateInfo>& infos, std::map<uint32_t, std::vector<float>>& priorities)
+void DDM::Vulkan::VulkanCore::SetupQueueCreateInfos(std::vector<VkDeviceQueueCreateInfo>& infos, std::map<uint32_t, std::vector<float>>& priorities)
 {
 	std::vector<VulkanQueue*> queues{};
 	queues.push_back(m_pGraphicsQueue.get());
@@ -481,7 +481,7 @@ void DDM::VulkanCore::SetupQueueCreateInfos(std::vector<VkDeviceQueueCreateInfo>
 	m_pPhysicalDeviceInfo->SetupQueueCreateInfos(queues, infos, priorities);
 }
 
-void DDM::VulkanCore::SetupQueues()
+void DDM::Vulkan::VulkanCore::SetupQueues()
 {
 	const std::vector<uint32_t> graphicsQueueFlags = { VK_QUEUE_GRAPHICS_BIT };
 
@@ -515,7 +515,7 @@ void DDM::VulkanCore::SetupQueues()
 	m_pPresentQueue = std::make_unique<VulkanQueue>(familyIndex, queueIndex);
 }
 
-void DDM::VulkanCore::RetrieveQueues()
+void DDM::Vulkan::VulkanCore::RetrieveQueues()
 {
 	m_pGraphicsQueue->RetrieveQueue(m_VkDevice);
 	m_pTransferQueue->RetrieveQueue(m_VkDevice);

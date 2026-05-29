@@ -14,7 +14,7 @@
 #include <stdexcept>
 #include <iostream>
 
-DDM::VulkanCommandBuffer::VulkanCommandBuffer(const VulkanCommandPool* pPool, const VulkanQueue* pQueue, const bool resetBitSet)
+DDM::Vulkan::VulkanCommandBuffer::VulkanCommandBuffer(const VulkanCommandPool* pPool, const VulkanQueue* pQueue, const bool resetBitSet)
 	:m_pPool{pPool},
 	m_pQueue{pQueue},
 	m_ResetBitSet{resetBitSet}
@@ -22,12 +22,12 @@ DDM::VulkanCommandBuffer::VulkanCommandBuffer(const VulkanCommandPool* pPool, co
 	m_pPool->AllocateCommandBuffer(&m_VkCommandBuffer);
 }
 
-DDM::VulkanCommandBuffer::~VulkanCommandBuffer()
+DDM::Vulkan::VulkanCommandBuffer::~VulkanCommandBuffer()
 {
 	m_pPool->FreeCommandBuffer(&m_VkCommandBuffer);
 }
 
-void DDM::VulkanCommandBuffer::Submit()
+void DDM::Vulkan::VulkanCommandBuffer::Submit()
 {
 	if (m_InUse)
 	{
@@ -71,7 +71,7 @@ void DDM::VulkanCommandBuffer::Submit()
 // ------------------------------------------------------------------------------
 
 
-void DDM::VulkanCommandBuffer::CmdPipelineBarrier(VulkanPipelineBarrier* pBarrier)
+void DDM::Vulkan::VulkanCommandBuffer::CmdPipelineBarrier(VulkanPipelineBarrier* pBarrier)
 {
 	// Check if commandbuffer can record commands
 	if (!CanRecord())
@@ -84,7 +84,7 @@ void DDM::VulkanCommandBuffer::CmdPipelineBarrier(VulkanPipelineBarrier* pBarrie
 	m_CommandRecorded = true;
 }
 
-void DDM::VulkanCommandBuffer::CmdCopyBufferToImage(VulkanImage* pImage, VulkanBuffer* pBuffer)
+void DDM::Vulkan::VulkanCommandBuffer::CmdCopyBufferToImage(VulkanImage* pImage, VulkanBuffer* pBuffer)
 {
 	// Check if commandbuffer can record commands
 	if (!CanRecord())
@@ -101,7 +101,7 @@ void DDM::VulkanCommandBuffer::CmdCopyBufferToImage(VulkanImage* pImage, VulkanB
 	CmdCopyBufferToImage(pImage, pBuffer, region);
 }
 
-void DDM::VulkanCommandBuffer::CmdCopyBufferToImage(VulkanImage* pImage, VulkanBuffer* pBuffer, VkBufferImageCopy& region)
+void DDM::Vulkan::VulkanCommandBuffer::CmdCopyBufferToImage(VulkanImage* pImage, VulkanBuffer* pBuffer, VkBufferImageCopy& region)
 {
 	// Check if commandbuffer can record commands
 	if (!CanRecord())
@@ -118,7 +118,7 @@ void DDM::VulkanCommandBuffer::CmdCopyBufferToImage(VulkanImage* pImage, VulkanB
 // Internal functions
 // ------------------------------------------------------------------------------
 
-void DDM::VulkanCommandBuffer::BeginCommandBuffer()
+void DDM::Vulkan::VulkanCommandBuffer::BeginCommandBuffer()
 {
 	// Don't begin command buffer if already in use or commandbuffer is unuseable
 	if (m_InUse || m_Unuseable)
@@ -140,7 +140,7 @@ void DDM::VulkanCommandBuffer::BeginCommandBuffer()
 	m_InUse = true;
 }
 
-void DDM::VulkanCommandBuffer::EndCommandBuffer()
+void DDM::Vulkan::VulkanCommandBuffer::EndCommandBuffer()
 {
 	// Don't end command buffer if not in use or if commandbuffer is unuseable
 	if (!m_InUse || m_Unuseable)
@@ -156,7 +156,7 @@ void DDM::VulkanCommandBuffer::EndCommandBuffer()
 	m_InUse = false;
 }
 
-void DDM::VulkanCommandBuffer::ResetCommandBuffer()
+void DDM::Vulkan::VulkanCommandBuffer::ResetCommandBuffer()
 {
 	// Only reset a commandbuffer after it has been submitted, it is useable and the reset bit has been set
 	if (!m_ResetBitSet && !m_Submitted)
@@ -173,7 +173,7 @@ void DDM::VulkanCommandBuffer::ResetCommandBuffer()
 	m_Submitted = false;
 }
 
-bool DDM::VulkanCommandBuffer::CanRecord()
+bool DDM::Vulkan::VulkanCommandBuffer::CanRecord()
 {
 	if (m_Unuseable)
 	{

@@ -36,13 +36,13 @@ namespace DDM
 		/// Register a new IFileSystem interface
 		/// </summary>
 		/// <param name="pFileSystem">unique pointer to the new IFileSystem interface</param>
-		static void RegisterFileSystem(std::unique_ptr<IFileSystem> pFileSystem);
+		static void RegisterFileSystem(std::unique_ptr<Filesystem::IFileSystem> pFileSystem);
 
 		/// <summary>
 		/// Get a reference to the IFileSystem interface
 		/// </summary>
 		/// <returns>Reference to the IFileSystem interface</returns>
-		static IFileSystem& GetFileSystem();
+		static Filesystem::IFileSystem& GetFileSystem();
 
 
 		//------------------
@@ -53,24 +53,24 @@ namespace DDM
 		/// Register a new IRenderer interface
 		/// </summary>
 		/// <param name="pRenderer">unique pointer to the new IRenderer interface</param>
-		static void RegisterRenderer(std::unique_ptr<IRenderer> pRenderer);
+		static void RegisterRenderer(std::unique_ptr<Rendering::IRenderer> pRenderer);
 
 		/// <summary>
 		/// Get a reference to the IRenderer interface
 		/// </summary>
 		/// <returns>Reference to the IRenderer interface</returns>
-		static IRenderer& GetRenderer();
+		static Rendering::IRenderer& GetRenderer();
 
 	private:
 		// Default file system instance
-		static std::unique_ptr<DefaultFileSystem> m_pDefaultFileSystemInstance;
+		static std::unique_ptr<Filesystem::DefaultFileSystem> m_pDefaultFileSystemInstance;
 		// Current file system instance
-		static std::unique_ptr<IFileSystem> m_pFileSystemInstance;
+		static std::unique_ptr<Filesystem::IFileSystem> m_pFileSystemInstance;
 
 		// Default renderer instance
-		static std::unique_ptr<DefaultRenderer> m_pDefaultRendererInstance;
+		static std::unique_ptr<Rendering::DefaultRenderer> m_pDefaultRendererInstance;
 		// Current renderer instance
-		static std::unique_ptr<IRenderer> m_pRendererInstance;
+		static std::unique_ptr<Rendering::IRenderer> m_pRendererInstance;
 	};
 }
 

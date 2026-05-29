@@ -11,14 +11,14 @@
 // Standard library includes
 #include <stdexcept>
 
-DDM::VulkanBuffer::VulkanBuffer(const VulkanAllocator* pAllocator, const VulkanCore* pCore)
+DDM::Vulkan::VulkanBuffer::VulkanBuffer(const VulkanAllocator* pAllocator, const VulkanCore* pCore)
 	:m_pAllocator{ pAllocator },
 	m_pCore{ pCore }
 {
 
 }
 
-DDM::VulkanBuffer::~VulkanBuffer()
+DDM::Vulkan::VulkanBuffer::~VulkanBuffer()
 {
 	if (m_MemoryMapped)
 	{
@@ -36,7 +36,7 @@ DDM::VulkanBuffer::~VulkanBuffer()
 	}
 }
 
-void DDM::VulkanBuffer::CreateBuffer(VkDeviceSize size)
+void DDM::Vulkan::VulkanBuffer::CreateBuffer(VkDeviceSize size)
 {
 	m_BufferSize = size;
 
@@ -64,7 +64,7 @@ void DDM::VulkanBuffer::CreateBuffer(VkDeviceSize size)
 	BindMemory();
 }
 
-void DDM::VulkanBuffer::WriteToBuffer(void* data)
+void DDM::Vulkan::VulkanBuffer::WriteToBuffer(void* data)
 {
 	if (m_Initialized && m_MemoryAllocated && m_MemoryMapped)
 	{
@@ -72,14 +72,14 @@ void DDM::VulkanBuffer::WriteToBuffer(void* data)
 	}
 }
 
-void DDM::VulkanBuffer::FillCopyRegionInfo(VkBufferImageCopy& region)
+void DDM::Vulkan::VulkanBuffer::FillCopyRegionInfo(VkBufferImageCopy& region)
 {
 	region.bufferOffset = 0;
 	region.bufferRowLength = 0;
 	region.bufferImageHeight = 0;
 }
 
-void DDM::VulkanBuffer::AllocateMemory()
+void DDM::Vulkan::VulkanBuffer::AllocateMemory()
 {
 	VkMemoryAllocateInfo allocateInfo{};
 	allocateInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
@@ -95,7 +95,7 @@ void DDM::VulkanBuffer::AllocateMemory()
 	m_MemoryAllocated = true;
 }
 
-void DDM::VulkanBuffer::MapMemory()
+void DDM::Vulkan::VulkanBuffer::MapMemory()
 {
 	if (vkMapMemory(m_pCore->GetDeviceHandle(), m_VkMemory, 0, m_BufferSize, 0, &m_MappedMemory) != VK_SUCCESS)
 	{
@@ -105,7 +105,7 @@ void DDM::VulkanBuffer::MapMemory()
 	m_MemoryMapped = true;
 }
 
-void DDM::VulkanBuffer::BindMemory()
+void DDM::Vulkan::VulkanBuffer::BindMemory()
 {
 	vkBindBufferMemory(m_pCore->GetDeviceHandle(), m_VkBuffer, m_VkMemory, 0);
 }

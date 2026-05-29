@@ -11,7 +11,7 @@
 #include <fstream>
 #include <unordered_map>
 
-namespace DDM
+namespace DDM::Filesystem
 {
 	class DDMFileSystem final : public IFileSystem
 	{

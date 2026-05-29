@@ -16,7 +16,7 @@
 // Standard library includes
 #include <stdexcept>
 
-DDM::VulkanImage::VulkanImage(const VulkanAllocator* pAllocator, const VulkanCore* pCore, const VulkanCommandPool* pCommandPool)
+DDM::Vulkan::VulkanImage::VulkanImage(const VulkanAllocator* pAllocator, const VulkanCore* pCore, const VulkanCommandPool* pCommandPool)
 	:m_pAllocator{ pAllocator },
 	m_pCore{ pCore },
 	m_pCommandPool{ pCommandPool }
@@ -24,7 +24,7 @@ DDM::VulkanImage::VulkanImage(const VulkanAllocator* pAllocator, const VulkanCor
 
 }
 
-DDM::VulkanImage::~VulkanImage()
+DDM::Vulkan::VulkanImage::~VulkanImage()
 {
 	if (m_Initialized)
 	{
@@ -37,7 +37,7 @@ DDM::VulkanImage::~VulkanImage()
 	}
 }
 
-void DDM::VulkanImage::FillBarrierInfo(VkImageMemoryBarrier& barrier)
+void DDM::Vulkan::VulkanImage::FillBarrierInfo(VkImageMemoryBarrier& barrier)
 {
 	barrier.oldLayout = m_VkLayout;
 	barrier.image = m_VkImage;
@@ -50,7 +50,7 @@ void DDM::VulkanImage::FillBarrierInfo(VkImageMemoryBarrier& barrier)
 	barrier.subresourceRange.levelCount = 1;
 }
 
-void DDM::VulkanImage::FillCopyRegionInfo(VkBufferImageCopy& region)
+void DDM::Vulkan::VulkanImage::FillCopyRegionInfo(VkBufferImageCopy& region)
 {
 	region.imageOffset = VkOffset3D{ 0,0,0 };
 	region.imageExtent = m_VkExtent;
@@ -61,7 +61,7 @@ void DDM::VulkanImage::FillCopyRegionInfo(VkBufferImageCopy& region)
 	region.imageSubresource.layerCount = 1;
 }
 
-void DDM::VulkanImage::AllocateMemory()
+void DDM::Vulkan::VulkanImage::AllocateMemory()
 {
 	// Create memory requirements object
 	VkMemoryRequirements memRequirements;

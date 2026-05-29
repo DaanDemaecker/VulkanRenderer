@@ -7,7 +7,7 @@
 #include <iostream>
 
 
-DDM::VulkanAllocator::VulkanAllocator()
+DDM::Vulkan::VulkanAllocator::VulkanAllocator()
 {
 	m_VkAllocationCallbacks.pUserData = static_cast<void*>(this);
 	m_VkAllocationCallbacks.pfnAllocation = Allocation;
@@ -17,12 +17,12 @@ DDM::VulkanAllocator::VulkanAllocator()
 	m_VkAllocationCallbacks.pfnInternalFree = nullptr;
 }
 
-DDM::VulkanAllocator::~VulkanAllocator()
+DDM::Vulkan::VulkanAllocator::~VulkanAllocator()
 {
 
 }
 
-const VkAllocationCallbacks* DDM::VulkanAllocator::GetAllocator() const
+const VkAllocationCallbacks* DDM::Vulkan::VulkanAllocator::GetAllocator() const
 {
 	return &m_VkAllocationCallbacks;
 }
@@ -32,37 +32,37 @@ const VkAllocationCallbacks* DDM::VulkanAllocator::GetAllocator() const
 // ------------------------------------------------------------------------------
 
 
-void* VKAPI_CALL DDM::VulkanAllocator::Allocation(void* pUserData, size_t size, size_t alignment, VkSystemAllocationScope allocationScope)
+void* VKAPI_CALL DDM::Vulkan::VulkanAllocator::Allocation(void* pUserData, size_t size, size_t alignment, VkSystemAllocationScope allocationScope)
 {
-	return static_cast<DDM::VulkanAllocator*>(pUserData)->Allocation(size, alignment, allocationScope);
+	return static_cast<DDM::Vulkan::VulkanAllocator*>(pUserData)->Allocation(size, alignment, allocationScope);
 }
 
-void* VKAPI_CALL DDM::VulkanAllocator::Reallocation(void* pUserData, void* pOriginal, size_t size, size_t alignment, VkSystemAllocationScope allocationScope)
+void* VKAPI_CALL DDM::Vulkan::VulkanAllocator::Reallocation(void* pUserData, void* pOriginal, size_t size, size_t alignment, VkSystemAllocationScope allocationScope)
 {
-	return static_cast<DDM::VulkanAllocator*>(pUserData)->Reallocation(pOriginal, size, alignment, allocationScope);
+	return static_cast<DDM::Vulkan::VulkanAllocator*>(pUserData)->Reallocation(pOriginal, size, alignment, allocationScope);
 }
 
 
-void VKAPI_CALL DDM::VulkanAllocator::Free(void* pUserData, void* pMemory)
+void VKAPI_CALL DDM::Vulkan::VulkanAllocator::Free(void* pUserData, void* pMemory)
 {
-	static_cast<DDM::VulkanAllocator*>(pUserData)->Free(pMemory);
+	static_cast<DDM::Vulkan::VulkanAllocator*>(pUserData)->Free(pMemory);
 }
 
 // ------------------------------------------------------------------------------
 // Nonstatic functions
 // ------------------------------------------------------------------------------
 
-void* DDM::VulkanAllocator::Allocation(size_t size, size_t alignment, VkSystemAllocationScope /*allocationScope*/)
+void* DDM::Vulkan::VulkanAllocator::Allocation(size_t size, size_t alignment, VkSystemAllocationScope /*allocationScope*/)
 {
 	return _aligned_malloc(size, alignment);
 }
 
-void* DDM::VulkanAllocator::Reallocation(void* pOriginal, size_t size, size_t alignment, VkSystemAllocationScope /*allocationScope*/)
+void* DDM::Vulkan::VulkanAllocator::Reallocation(void* pOriginal, size_t size, size_t alignment, VkSystemAllocationScope /*allocationScope*/)
 {
 	return _aligned_realloc(pOriginal, size, alignment);
 }
 
-void DDM::VulkanAllocator::Free(void* pMemory)
+void DDM::Vulkan::VulkanAllocator::Free(void* pMemory)
 {
 	_aligned_free(pMemory);
 }

@@ -4,7 +4,7 @@
 #ifndef _DDM_I_RENDERER_
 #define _DDM_I_RENDERER_
 
-namespace DDM
+namespace DDM::Rendering
 {
 	class IRenderer
 	{

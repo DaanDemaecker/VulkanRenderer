@@ -11,6 +11,11 @@ namespace DDM
 {
 	// Class forward declarations
 	class STBImage;
+}
+
+namespace DDM::Vulkan
+{
+	
 
 	class VulkanFileImage final : public VulkanImage
 	{

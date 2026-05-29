@@ -7,7 +7,7 @@
 // File includes
 #include "Includes/VulkanIncludes.h"
 
-namespace DDM
+namespace DDM::Vulkan
 {
 	class VulkanAllocator final
 	{

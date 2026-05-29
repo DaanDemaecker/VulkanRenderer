@@ -8,7 +8,7 @@
 // File includes
 #include <string>
 
-namespace DDM
+namespace DDM::Filesystem
 {
 	class IFileSystem
 	{

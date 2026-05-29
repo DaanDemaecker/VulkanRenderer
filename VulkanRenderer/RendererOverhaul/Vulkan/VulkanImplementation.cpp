@@ -16,7 +16,7 @@
 #include "Vulkan/Images/VulkanImage.h"
 #include "Vulkan/Images/ImageTypes/VulkanFileImage.h"
 
-DDM::VulkanImplementation::VulkanImplementation()
+DDM::Vulkan::VulkanImplementation::VulkanImplementation()
 {
 	m_pAllocator = std::make_unique<VulkanAllocator>();
 
@@ -31,7 +31,7 @@ DDM::VulkanImplementation::VulkanImplementation()
 	m_pTestImage->LoadImage("Resources/DefaultResources/DefaultTexture.png");
 }
 
-DDM::VulkanImplementation::~VulkanImplementation()
+DDM::Vulkan::VulkanImplementation::~VulkanImplementation()
 {
 
 }

@@ -7,14 +7,14 @@
 //------------------------------------------------------------------------
 // VulkanImpl
 //------------------------------------------------------------------------
-namespace DDM
+namespace DDM::Rendering
 {
 	class VulkanImpl
 	{
 	public:
 		VulkanImpl()
 		{
-			m_pVulkanObject = std::make_unique<VulkanImplementation>();
+			m_pVulkanObject = std::make_unique<DDM::Vulkan::VulkanImplementation>();
 		}
 
 		~VulkanImpl()
@@ -44,7 +44,7 @@ namespace DDM
 		}
 
 	private:
-		std::unique_ptr<VulkanImplementation> m_pVulkanObject{};
+		std::unique_ptr<DDM::Vulkan::VulkanImplementation> m_pVulkanObject{};
 	};
 }
 //------------------------------------------------------------------------
@@ -53,26 +53,26 @@ namespace DDM
 //------------------------------------------------------------------------
 // VulkanRenderer
 //------------------------------------------------------------------------
-DDM::VulkanRenderer::VulkanRenderer()
+DDM::Rendering::VulkanRenderer::VulkanRenderer()
 {
 	m_pImpl = std::make_unique<VulkanImpl>();
 }
 
-DDM::VulkanRenderer::~VulkanRenderer()
+DDM::Rendering::VulkanRenderer::~VulkanRenderer()
 {
 }
 
-void DDM::VulkanRenderer::Init()
+void DDM::Rendering::VulkanRenderer::Init()
 {
 	m_pImpl->Init();
 }
 
-void DDM::VulkanRenderer::Render()
+void DDM::Rendering::VulkanRenderer::Render()
 {
 	m_pImpl->Render();
 }
 
-void DDM::VulkanRenderer::Terminate()
+void DDM::Rendering::VulkanRenderer::Terminate()
 {
 	m_pImpl->Terminate();
 }

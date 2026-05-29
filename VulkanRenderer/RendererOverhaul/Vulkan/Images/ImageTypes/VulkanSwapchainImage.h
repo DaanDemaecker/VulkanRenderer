@@ -10,7 +10,7 @@
 // Standard library includes
 #include <memory>
 
-namespace DDM
+namespace DDM::Vulkan
 {
 	class VulkanSwapchainImage final : public VulkanImage
 	{

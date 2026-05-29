@@ -6,11 +6,11 @@
 // Standard library includes
 #include <filesystem>
 
-DDM::DDMFileSystem::DDMFileSystem()
+DDM::Filesystem::DDMFileSystem::DDMFileSystem()
 {
 }
 
-DDM::DDMFileSystem::~DDMFileSystem()
+DDM::Filesystem::DDMFileSystem::~DDMFileSystem()
 {
 	for (auto& file : m_WriteFiles)
 	{
@@ -21,7 +21,7 @@ DDM::DDMFileSystem::~DDMFileSystem()
 	}
 }
 
-bool DDM::DDMFileSystem::OpenWrite(std::string& fileName)
+bool DDM::Filesystem::DDMFileSystem::OpenWrite(std::string& fileName)
 {
 	if (m_ReadFiles.contains(fileName) || (m_WriteFiles.contains(fileName) && m_WriteFiles[fileName].is_open()))
 	{
@@ -41,7 +41,7 @@ bool DDM::DDMFileSystem::OpenWrite(std::string& fileName)
 	return m_WriteFiles[fileName].is_open();
 }
 
-bool DDM::DDMFileSystem::CloseWrite(std::string& fileName)
+bool DDM::Filesystem::DDMFileSystem::CloseWrite(std::string& fileName)
 {
 	if (!m_WriteFiles.contains(fileName) || !m_WriteFiles[fileName].is_open())
 	{
@@ -55,7 +55,7 @@ bool DDM::DDMFileSystem::CloseWrite(std::string& fileName)
 	return true;
 }
 
-bool DDM::DDMFileSystem::Write(std::string& fileName, const char* start, size_t size)
+bool DDM::Filesystem::DDMFileSystem::Write(std::string& fileName, const char* start, size_t size)
 {
 	if (!m_WriteFiles.contains(fileName) || !m_WriteFiles[fileName].is_open())
 	{
@@ -70,7 +70,7 @@ bool DDM::DDMFileSystem::Write(std::string& fileName, const char* start, size_t 
 	return true;
 }
 
-bool DDM::DDMFileSystem::OpenRead(std::string& fileName)
+bool DDM::Filesystem::DDMFileSystem::OpenRead(std::string& fileName)
 {
 	if (m_WriteFiles.contains(fileName) || (m_ReadFiles.contains(fileName) && m_ReadFiles[fileName].is_open()))
 	{
@@ -88,7 +88,7 @@ bool DDM::DDMFileSystem::OpenRead(std::string& fileName)
 	return true;
 }
 
-bool DDM::DDMFileSystem::CloseRead(std::string& fileName)
+bool DDM::Filesystem::DDMFileSystem::CloseRead(std::string& fileName)
 {
 	if (!m_ReadFiles.contains(fileName) || !m_ReadFiles[fileName].is_open())
 	{
@@ -102,7 +102,7 @@ bool DDM::DDMFileSystem::CloseRead(std::string& fileName)
 	return true;
 }
 
-bool DDM::DDMFileSystem::Read(std::string& fileName, char* start, size_t size)
+bool DDM::Filesystem::DDMFileSystem::Read(std::string& fileName, char* start, size_t size)
 {
 	if (!m_ReadFiles.contains(fileName) || !m_ReadFiles[fileName].is_open())
 	{

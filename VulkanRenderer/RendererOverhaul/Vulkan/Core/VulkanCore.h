@@ -13,7 +13,7 @@
 #include <memory>
 #include <map>
 
-namespace DDM
+namespace DDM::Vulkan
 {
 	// Class forward declarations
 	class VulkanAllocator;

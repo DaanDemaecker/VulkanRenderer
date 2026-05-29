@@ -11,8 +11,8 @@
 int main()
 {
 	// Register services
-	DDM::ServiceLocator::RegisterFileSystem(std::make_unique<DDM::DDMFileSystem>());
-	DDM::ServiceLocator::RegisterRenderer(std::make_unique<DDM::VulkanRenderer>());
+	DDM::ServiceLocator::RegisterFileSystem(std::make_unique<DDM::Filesystem::DDMFileSystem>());
+	DDM::ServiceLocator::RegisterRenderer(std::make_unique<DDM::Rendering::VulkanRenderer>());
 
 	DDM::DDMEngine engine{};
 	engine.Run();

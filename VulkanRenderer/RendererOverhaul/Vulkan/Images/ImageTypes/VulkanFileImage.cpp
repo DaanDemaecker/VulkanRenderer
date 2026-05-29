@@ -20,23 +20,23 @@
 #include <memory>
 #include <stdexcept>
 
-DDM::VulkanFileImage::VulkanFileImage(const VulkanAllocator* pAllocator, const VulkanCore* pCore, const VulkanCommandPool* pCommandPool)
+DDM::Vulkan::VulkanFileImage::VulkanFileImage(const VulkanAllocator* pAllocator, const VulkanCore* pCore, const VulkanCommandPool* pCommandPool)
 	:VulkanImage(pAllocator, pCore, pCommandPool)
 {
 }
 
-DDM::VulkanFileImage::~VulkanFileImage()
+DDM::Vulkan::VulkanFileImage::~VulkanFileImage()
 {
 }
 
-void DDM::VulkanFileImage::LoadImage(const std::string& filePath)
+void DDM::Vulkan::VulkanFileImage::LoadImage(const std::string& filePath)
 {
 	auto pSTBImage = std::make_unique<STBImage>(filePath);
 
 	CreateImage(pSTBImage.get());
 }
 
-void DDM::VulkanFileImage::CreateImage(STBImage* pSTBImage)
+void DDM::Vulkan::VulkanFileImage::CreateImage(STBImage* pSTBImage)
 {
 	m_VkExtent = pSTBImage->GetExtent();
 
@@ -76,7 +76,7 @@ void DDM::VulkanFileImage::CreateImage(STBImage* pSTBImage)
 	CopyBufferToImage(tempBuffer.get());
 }
 
-void DDM::VulkanFileImage::CopyBufferToImage(VulkanBuffer* pBuffer)
+void DDM::Vulkan::VulkanFileImage::CopyBufferToImage(VulkanBuffer* pBuffer)
 {
 	// Create a barrier to transition image from undefined layout to transfer destination layout
 	std::unique_ptr<VulkanPipelineBarrier> pBarrier = std::make_unique<VulkanPipelineBarrier>(VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, VK_PIPELINE_STAGE_TRANSFER_BIT, 0);

@@ -11,7 +11,7 @@
 #include <vector>
 #include <memory>
 
-namespace DDM
+namespace DDM::Vulkan
 {
 	// Class forward declarations
 	class VulkanImageBarrier;

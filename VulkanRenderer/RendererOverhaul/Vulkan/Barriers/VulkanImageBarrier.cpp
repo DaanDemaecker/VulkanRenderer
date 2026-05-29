@@ -6,7 +6,7 @@
 // File includes
 #include "Vulkan/Images/VulkanImage.h"
 
-DDM::VulkanImageBarrier::VulkanImageBarrier(VulkanImage* pImage, VkImageLayout newLayout)
+DDM::Vulkan::VulkanImageBarrier::VulkanImageBarrier(VulkanImage* pImage, VkImageLayout newLayout)
 {
 	m_VkImageMemoryBarrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
 	m_VkImageMemoryBarrier.pNext = nullptr;
@@ -19,7 +19,7 @@ DDM::VulkanImageBarrier::VulkanImageBarrier(VulkanImage* pImage, VkImageLayout n
 	pImage->FillBarrierInfo(m_VkImageMemoryBarrier);
 }
 
-DDM::VulkanImageBarrier::~VulkanImageBarrier()
+DDM::Vulkan::VulkanImageBarrier::~VulkanImageBarrier()
 {
 
 }

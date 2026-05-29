@@ -7,7 +7,7 @@
 // File includes
 #include "Includes/VulkanIncludes.h"
 
-namespace DDM
+namespace DDM::Vulkan
 {
 	// Class forward declarations
 	class VulkanCore;

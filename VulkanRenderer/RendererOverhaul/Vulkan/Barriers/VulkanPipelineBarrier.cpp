@@ -6,7 +6,7 @@
 // File includes
 #include "Vulkan/Barriers/VulkanImageBarrier.h"
 
-DDM::VulkanPipelineBarrier::VulkanPipelineBarrier(VkPipelineStageFlags srcStageMask, VkPipelineStageFlags dstStageMask, VkDependencyFlags flags)
+DDM::Vulkan::VulkanPipelineBarrier::VulkanPipelineBarrier(VkPipelineStageFlags srcStageMask, VkPipelineStageFlags dstStageMask, VkDependencyFlags flags)
 	:m_SrcStageMask{srcStageMask},
 	m_DstStageMask{dstStageMask},
 	m_DependencyFlags{flags}
@@ -14,12 +14,12 @@ DDM::VulkanPipelineBarrier::VulkanPipelineBarrier(VkPipelineStageFlags srcStageM
 
 }
 
-DDM::VulkanPipelineBarrier::~VulkanPipelineBarrier()
+DDM::Vulkan::VulkanPipelineBarrier::~VulkanPipelineBarrier()
 {
 
 }
 
-void DDM::VulkanPipelineBarrier::Execute(VkCommandBuffer commandBuffer)
+void DDM::Vulkan::VulkanPipelineBarrier::Execute(VkCommandBuffer commandBuffer)
 {
 	std::vector<VkImageMemoryBarrier> imageBarriers(m_ImageBarriers.size());
 
@@ -38,7 +38,7 @@ void DDM::VulkanPipelineBarrier::Execute(VkCommandBuffer commandBuffer)
 		static_cast<uint32_t>(imageBarriers.size()), imageBarriers.size() > 0 ? imageBarriers.data() : nullptr);
 }
 
-void DDM::VulkanPipelineBarrier::AddImageBarriers(std::unique_ptr<VulkanImageBarrier> pImageBarrier)
+void DDM::Vulkan::VulkanPipelineBarrier::AddImageBarriers(std::unique_ptr<VulkanImageBarrier> pImageBarrier)
 {
 	m_ImageBarriers.push_back(std::move(pImageBarrier));
 }

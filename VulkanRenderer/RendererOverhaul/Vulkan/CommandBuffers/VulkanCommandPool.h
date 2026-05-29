@@ -11,7 +11,7 @@
 // Standard library includes
 #include <memory>
 
-namespace DDM
+namespace DDM::Vulkan
 {
 	// Class forward declarations
 	class VulkanAllocator;

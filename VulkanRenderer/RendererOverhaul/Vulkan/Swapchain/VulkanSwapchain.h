@@ -12,7 +12,7 @@
 #include <memory>
 #include <vector>
 
-namespace DDM
+namespace DDM::Vulkan
 {
 	class VulkanCore;
 	class VulkanAllocator;

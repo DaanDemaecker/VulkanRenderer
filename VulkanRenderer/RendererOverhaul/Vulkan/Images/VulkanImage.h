@@ -10,7 +10,7 @@
 // Standard library includes
 #include <string>
 
-namespace DDM
+namespace DDM::Vulkan
 {
 	// Class forward declaration
 	class VulkanCore;
