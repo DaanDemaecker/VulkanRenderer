@@ -41,6 +41,12 @@ namespace DDM::Vulkan
 		VulkanSwapchain& operator=(const VulkanSwapchain&) = delete;
 		VulkanSwapchain& operator=(VulkanSwapchain&&) = delete;
 
+		/// <summary>
+		/// Present the swapchain
+		/// </summary>
+		void Present();
+
+		VulkanImage* GetCurrentImage() const { return m_SwapchainImages[m_CurrentImageIndex].get(); }
 	private:
 		// Pointer to the Vulkan core
 		const VulkanCore* m_pCore;
@@ -57,7 +63,11 @@ namespace DDM::Vulkan
 		// Indicates whether the swapchain was correctly initialized
 		bool m_Initialized{ false };
 
+		// Index of the current swapchain image
 		uint32_t m_CurrentImageIndex{UINT32_MAX};
+
+		// Present info struct used for presenting the swapchain
+		VkPresentInfoKHR m_PresentInfo{};
 
 		/// <summary>
 		/// Create the swapchain object
@@ -73,6 +83,17 @@ namespace DDM::Vulkan
 		/// Retrieve the next image from the swapchain
 		/// </summary>
 		void GetNextImage();
+
+		/// <summary>
+		/// Initialize the presentinfo struct
+		/// </summary>
+		void SetupPresentInfo();
+
+
+
+		VkSemaphore m_TestSemaphore{};
+
+		void SetupTestSemaphore();
 	};
 }
 

@@ -71,6 +71,21 @@ namespace DDM::Vulkan
 		/// <param name="pBuffer">Pointer to the buffer object</param>
 		/// <param name="region">Region info for the copy command</param>
 		void CmdCopyBufferToImage(VulkanImage* pImage, VulkanBuffer* pBuffer, VkBufferImageCopy& region);
+
+		/// <summary>
+		/// Copy a vulkan image to another vulkan image
+		/// </summary>
+		/// <param name="pSrcImage">Image to copy from</param>
+		/// <param name="pDstImage">Image to copy to</param>
+		void CmdCopyImageToImage(VulkanImage* pSrcImage, VulkanImage* pDstImage);
+
+		/// <summary>
+		/// Copy a vulkan image to another vulkan image
+		/// </summary>
+		/// <param name="pSrcImage">Image to copy from</param>
+		/// <param name="pDstImage">Image to copy to</param>
+		/// <param name="region">Region info for the copy command</param>
+		void CmdCopyImageToImage(VulkanImage* pSrcImage, VulkanImage* pDstImage, VkImageCopy& region);
 	private:
 		// The owning commandpool
 		const VulkanCommandPool* m_pPool;

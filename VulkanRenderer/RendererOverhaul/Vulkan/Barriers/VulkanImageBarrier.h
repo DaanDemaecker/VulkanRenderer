@@ -34,10 +34,13 @@ namespace DDM::Vulkan
 		/// </summary>
 		/// <returns>Struct by value</returns>
 		VkImageMemoryBarrier GetHandle() const { return m_VkImageMemoryBarrier; }
+
+		void Executed();
 	private:
 		// Image barrier struct
 		VkImageMemoryBarrier m_VkImageMemoryBarrier{};
 
+		VulkanImage* m_pImage{ nullptr };
 	};
 }
 

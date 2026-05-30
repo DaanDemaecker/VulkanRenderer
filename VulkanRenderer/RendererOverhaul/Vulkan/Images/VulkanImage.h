@@ -34,9 +34,15 @@ namespace DDM::Vulkan
 
 		void FillCopyRegionInfo(VkBufferImageCopy& region);
 
+		void FillImageToImageSourceRegionInfo(VkImageCopy& region);
+
+		void FIllImageToImageDestinationRegionInfo(VkImageCopy& region);
+
 		VkImage GetImage() const { return m_VkImage; }
 
 		VkImageLayout GetLayout() const { return m_VkLayout; }
+
+		void SetLayout(VkImageLayout newLayout) { m_VkLayout = newLayout; }
 
 	protected:
 		// Pointer to the custom allocator

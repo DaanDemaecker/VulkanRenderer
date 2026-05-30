@@ -114,6 +114,36 @@ void DDM::Vulkan::VulkanCommandBuffer::CmdCopyBufferToImage(VulkanImage* pImage,
 	m_CommandRecorded = true;
 }
 
+void DDM::Vulkan::VulkanCommandBuffer::CmdCopyImageToImage(VulkanImage* pSrcImage, VulkanImage* pDstImage)
+{
+	// Check if commandbuffer can record commands
+	if (!CanRecord())
+	{
+		return;
+	}
+
+	VkImageCopy region{};
+
+	pSrcImage->FillImageToImageSourceRegionInfo(region);
+
+	pDstImage->FIllImageToImageDestinationRegionInfo(region);
+
+	CmdCopyImageToImage(pSrcImage, pDstImage, region);
+}
+
+void DDM::Vulkan::VulkanCommandBuffer::CmdCopyImageToImage(VulkanImage* pSrcImage, VulkanImage* pDstImage, VkImageCopy& region)
+{
+	// Check if commandbuffer can record commands
+	if (!CanRecord())
+	{
+		return;
+	}
+
+	vkCmdCopyImage(m_VkCommandBuffer, pSrcImage->GetImage(), pSrcImage->GetLayout(), pDstImage->GetImage(), pDstImage->GetLayout(), 1, &region);
+
+	m_CommandRecorded = true;
+}
+
 // ------------------------------------------------------------------------------
 // Internal functions
 // ------------------------------------------------------------------------------

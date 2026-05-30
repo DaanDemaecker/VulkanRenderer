@@ -23,11 +23,11 @@ namespace DDM::Vulkan
 		VulkanPipelineBarrier() = delete;
 
 		/// <summary>
-		/// 
+		/// Constructor
 		/// </summary>
-		/// <param name="srcStageMask"></param>
-		/// <param name="dstStageMask"></param>
-		/// <param name="flags"></param>
+		/// <param name="srcStageMask">Source stage mask</param>
+		/// <param name="dstStageMask">Destination stage mask</param>
+		/// <param name="flags">Dependency flags</param>
 		VulkanPipelineBarrier(VkPipelineStageFlags srcStageMask, VkPipelineStageFlags dstStageMask, VkDependencyFlags flags);
 
 		// Delete copy and move constructors
@@ -54,6 +54,7 @@ namespace DDM::Vulkan
 		/// </summary>
 		/// <param name="pImageBarrier">Image barrier to add</param>
 		void AddImageBarriers(std::unique_ptr<VulkanImageBarrier> pImageBarrier);
+
 	private:
 		// Source stage mask
 		const VkPipelineStageFlags m_SrcStageMask;
@@ -65,6 +66,9 @@ namespace DDM::Vulkan
 		const VkDependencyFlags m_DependencyFlags;
 
 		std::vector<std::unique_ptr<VulkanImageBarrier>> m_ImageBarriers{};
+
+
+		void Executed();
 	};
 }
 

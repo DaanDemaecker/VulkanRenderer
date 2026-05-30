@@ -8,6 +8,8 @@
 
 DDM::Vulkan::VulkanImageBarrier::VulkanImageBarrier(VulkanImage* pImage, VkImageLayout newLayout)
 {
+	m_pImage = pImage;
+
 	m_VkImageMemoryBarrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
 	m_VkImageMemoryBarrier.pNext = nullptr;
 
@@ -16,10 +18,15 @@ DDM::Vulkan::VulkanImageBarrier::VulkanImageBarrier(VulkanImage* pImage, VkImage
 
 	m_VkImageMemoryBarrier.newLayout = newLayout;
 
-	pImage->FillBarrierInfo(m_VkImageMemoryBarrier);
+	m_pImage->FillBarrierInfo(m_VkImageMemoryBarrier);
 }
 
 DDM::Vulkan::VulkanImageBarrier::~VulkanImageBarrier()
 {
 
+}
+
+void DDM::Vulkan::VulkanImageBarrier::Executed()
+{
+	m_pImage->SetLayout(m_VkImageMemoryBarrier.newLayout);
 }

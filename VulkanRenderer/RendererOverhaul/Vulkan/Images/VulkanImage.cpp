@@ -61,6 +61,25 @@ void DDM::Vulkan::VulkanImage::FillCopyRegionInfo(VkBufferImageCopy& region)
 	region.imageSubresource.layerCount = 1;
 }
 
+void DDM::Vulkan::VulkanImage::FillImageToImageSourceRegionInfo(VkImageCopy& region)
+{
+	region.extent = m_VkExtent;
+	region.srcOffset = VkOffset3D{ 0,0,0 };
+	region.srcSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+	region.srcSubresource.mipLevel = 0;
+	region.srcSubresource.baseArrayLayer = 0;
+	region.srcSubresource.layerCount = 1;
+}
+
+void DDM::Vulkan::VulkanImage::FIllImageToImageDestinationRegionInfo(VkImageCopy& region)
+{
+	region.dstOffset = VkOffset3D{ 0,0,0 };
+	region.dstSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+	region.dstSubresource.mipLevel = 0;
+	region.dstSubresource.baseArrayLayer = 0;
+	region.dstSubresource.layerCount = 1;
+}
+
 void DDM::Vulkan::VulkanImage::AllocateMemory()
 {
 	// Create memory requirements object

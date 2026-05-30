@@ -55,6 +55,8 @@ namespace DDM::Vulkan
 		std::unique_ptr<VulkanSwapchain> m_pSwapchain{};
 
 		std::unique_ptr<VulkanFileImage> m_pTestImage{};
+
+		void TestFunction();
 	};
 }
 

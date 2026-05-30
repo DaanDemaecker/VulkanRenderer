@@ -51,7 +51,12 @@ void DDM::Vulkan::VulkanFileImage::CreateImage(STBImage* pSTBImage)
 	createInfo.arrayLayers = 1;
 	createInfo.samples = VK_SAMPLE_COUNT_1_BIT;
 	createInfo.tiling = VK_IMAGE_TILING_OPTIMAL;
-	createInfo.usage = VK_IMAGE_USAGE_SAMPLED_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT;
+
+	createInfo.usage =
+		VK_IMAGE_USAGE_TRANSFER_DST_BIT |
+		VK_IMAGE_USAGE_TRANSFER_SRC_BIT |
+		VK_IMAGE_USAGE_SAMPLED_BIT;
+
 	createInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
 	createInfo.queueFamilyIndexCount = 0;
 	createInfo.pQueueFamilyIndices = nullptr;

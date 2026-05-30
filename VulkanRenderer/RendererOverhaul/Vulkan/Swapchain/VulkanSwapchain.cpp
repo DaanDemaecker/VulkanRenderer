@@ -6,6 +6,7 @@
 // File includes
 #include "Vulkan/Core/VulkanCore.h"
 #include "Vulkan/Core/VulkanAllocator.h"
+#include "Vulkan/Queues/VulkanQueue.h"
 
 #include "Engine/Window/Window.h"
 #include "Engine/ConfigManager.h"
@@ -22,10 +23,22 @@ DDM::Vulkan::VulkanSwapchain::VulkanSwapchain(const VulkanAllocator* pAllocator,
 
 DDM::Vulkan::VulkanSwapchain::~VulkanSwapchain()
 {
+	vkDeviceWaitIdle(m_pCore->GetDeviceHandle());
+
 	if (m_Initialized)
 	{
 		vkDestroySwapchainKHR(m_pCore->GetDeviceHandle(), m_VkSwapchain, m_pAllocator->GetAllocator());
 	}
+
+	vkDestroySemaphore(m_pCore->GetDeviceHandle(), m_TestSemaphore, m_pAllocator->GetAllocator());
+}
+
+void DDM::Vulkan::VulkanSwapchain::Present()
+{
+	m_PresentInfo.waitSemaphoreCount = 1;
+	m_PresentInfo.pWaitSemaphores = &m_TestSemaphore;
+
+	vkQueuePresentKHR(m_pCore->GetTransferQueue()->GetQueueHandle(), &m_PresentInfo);
 }
 
 void DDM::Vulkan::VulkanSwapchain::CreateSwapchain()
@@ -48,7 +61,7 @@ void DDM::Vulkan::VulkanSwapchain::CreateSwapchain()
 	createInfo.imageExtent = { static_cast<uint32_t>(width), static_cast<uint32_t>(height) };
 
 	createInfo.imageArrayLayers = 1;
-	createInfo.imageUsage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
+	createInfo.imageUsage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT;
 	createInfo.imageSharingMode = VK_SHARING_MODE_EXCLUSIVE;
 	createInfo.queueFamilyIndexCount = 0;
 	createInfo.pQueueFamilyIndices = nullptr;
@@ -67,9 +80,14 @@ void DDM::Vulkan::VulkanSwapchain::CreateSwapchain()
 
 	RetrieveImages();
 
+	SetupTestSemaphore();
+
 	GetNextImage();
 
+	SetupPresentInfo();
+
 	m_Initialized = true;
+
 }
 
 void DDM::Vulkan::VulkanSwapchain::RetrieveImages()
@@ -98,10 +116,34 @@ void DDM::Vulkan::VulkanSwapchain::RetrieveImages()
 
 void DDM::Vulkan::VulkanSwapchain::GetNextImage()
 {
-	VkResult result = vkAcquireNextImageKHR(m_pCore->GetDeviceHandle(), m_VkSwapchain, UINT64_MAX, VK_NULL_HANDLE, VK_NULL_HANDLE, &m_CurrentImageIndex);
+	VkResult result = vkAcquireNextImageKHR(m_pCore->GetDeviceHandle(), m_VkSwapchain, UINT64_MAX, m_TestSemaphore, VK_NULL_HANDLE, &m_CurrentImageIndex);
 
 	if (result != VK_SUCCESS)
 	{
 		throw std::runtime_error("Failed to acquire next swapchain image!");
 	}
+}
+
+void DDM::Vulkan::VulkanSwapchain::SetupPresentInfo()
+{
+	m_PresentInfo.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
+	m_PresentInfo.pNext = nullptr;
+	m_PresentInfo.waitSemaphoreCount = 0;
+	m_PresentInfo.pWaitSemaphores = nullptr;
+	m_PresentInfo.swapchainCount = 1;
+	m_PresentInfo.pSwapchains = &m_VkSwapchain;
+	m_PresentInfo.pImageIndices = &m_CurrentImageIndex;
+	m_PresentInfo.pResults = nullptr;
+}
+
+void DDM::Vulkan::VulkanSwapchain::SetupTestSemaphore()
+{
+	// Create semaphore create info
+	VkSemaphoreCreateInfo semaphoreInfo{};
+	// Set type to semaphore create info
+	semaphoreInfo.sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;
+	semaphoreInfo.pNext = nullptr;
+	semaphoreInfo.flags = 0;
+
+	vkCreateSemaphore(m_pCore->GetDeviceHandle(), &semaphoreInfo, m_pAllocator->GetAllocator(), &m_TestSemaphore);
 }
