@@ -18,8 +18,6 @@ function(add_shaders TARGET_NAME)
 
         set(NEW_PATH "${CMAKE_CURRENT_BINARY_DIR}/../${TARGET_NAME}/resources/${NEW_PATH}.spv")
 
-        message(WARNING "${SHADER_SOURCE} -> ${NEW_PATH}")
-
         # build command
         list(APPEND SHADER_COMMANDS COMMAND
         ${Vulkan_GLSLC_EXECUTABLE}

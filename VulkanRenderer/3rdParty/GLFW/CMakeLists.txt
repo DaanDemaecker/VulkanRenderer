@@ -16,6 +16,6 @@ option(GLFW_DOCUMENT_INTERNALS "Include internals in documentation" OFF)
 FetchContent_MakeAvailable(glfw)
 
 
-target_link_libraries(VulkanRenderer3D PRIVATE glfw)
+target_link_libraries(VulkanRenderer3D PRIVATE general glfw)
 
-target_link_libraries(RendererOverhaul PRIVATE glfw)
+target_link_libraries(RendererOverhaul PRIVATE general glfw)

@@ -10,6 +10,6 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(glm)
 
 
-target_link_libraries(VulkanRenderer3D PRIVATE glm::glm)
+target_link_libraries(VulkanRenderer3D PRIVATE debug glm::glm)
 
-target_link_libraries(RendererOverhaul PRIVATE glm::glm)
+target_link_libraries(RendererOverhaul PRIVATE debug glm::glm)

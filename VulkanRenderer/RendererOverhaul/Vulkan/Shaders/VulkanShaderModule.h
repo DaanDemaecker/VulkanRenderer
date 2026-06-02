@@ -61,6 +61,9 @@ namespace DDM::Vulkan
 		// Buffer to hold the shader code read from the file
 		std::vector<char> m_ShaderCode{};
 
+		// Indicates whether the shader code has been read from the file
+		bool m_ShaderCodeRead{ false };
+
 		/// <summary>
 		/// Read in the shader code from a file and create a VkShaderModule object
 		/// </summary>

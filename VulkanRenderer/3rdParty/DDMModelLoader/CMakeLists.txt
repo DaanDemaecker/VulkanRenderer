@@ -9,4 +9,4 @@ FetchContent_Declare(
 
 FetchContent_MakeAvailable(DDMModelLoader)
 
-target_link_libraries(VulkanRenderer3D PUBLIC DDMModelLoader)
+target_link_libraries(VulkanRenderer3D PUBLIC general DDMModelLoader)
