@@ -1,7 +1,8 @@
-add_library(rapidjson INTERFACE)
+add_library(rapidjson INTERFACE IMPORTED)
 
-target_include_directories(rapidjson INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/include)
-
+set_target_properties(rapidjson PROPERTIES
+    INTERFACE_INCLUDE_DIRECTORIES "${CMAKE_CURRENT_SOURCE_DIR}/include"
+)
 
 target_link_libraries(VulkanRenderer3D PRIVATE general rapidjson)
 target_link_libraries(RendererOverhaul PRIVATE general rapidjson)

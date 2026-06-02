@@ -1,3 +1,5 @@
-add_library(ImGuizmo INTERFACE)
+add_library(ImGuizmo INTERFACE IMPORTED)
 
-target_include_directories(ImGuizmo INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/include)
+set_target_properties(ImGuizmo PROPERTIES
+	INTERFACE_INCLUDE_DIRECTORIES "${CMAKE_CURRENT_SOURCE_DIR}/include"
+)
