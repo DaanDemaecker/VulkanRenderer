@@ -12,11 +12,11 @@
 
 #include "Vulkan/Swapchain/VulkanSwapchain.h"
 
-#include "Vulkan/Images/STBImage.h"
 #include "Vulkan/Images/VulkanImage.h"
 #include "Vulkan/Images/ImageTypes/VulkanFileImage.h"
 #include "Vulkan/Barriers/VulkanImageBarrier.h"
 #include "Vulkan/Barriers/VulkanPipelineBarrier.h"
+#include "Vulkan/Shaders/VulkanShaderModule.h"
 
 DDM::Vulkan::VulkanImplementation::VulkanImplementation()
 {
@@ -28,7 +28,9 @@ DDM::Vulkan::VulkanImplementation::VulkanImplementation()
 
 	m_pSwapchain = std::make_unique<VulkanSwapchain>(m_pAllocator.get(), m_pCore.get());
 
-	TestFunction();
+	PresentTestFunction();
+
+	ShaderTestFunction();
 }
 
 DDM::Vulkan::VulkanImplementation::~VulkanImplementation()
@@ -36,7 +38,7 @@ DDM::Vulkan::VulkanImplementation::~VulkanImplementation()
 
 }
 
-void DDM::Vulkan::VulkanImplementation::TestFunction()
+void DDM::Vulkan::VulkanImplementation::PresentTestFunction()
 {
 	m_pTestImage = std::make_unique<VulkanFileImage>(m_pAllocator.get(), m_pCore.get(), m_pTransferCommandPool.get());
 
@@ -72,4 +74,11 @@ void DDM::Vulkan::VulkanImplementation::TestFunction()
 	commandBuffer->Submit();
 
 	m_pSwapchain->Present();
+}
+
+void DDM::Vulkan::VulkanImplementation::ShaderTestFunction()
+{
+	auto shaderModule = std::make_unique<VulkanShaderModule>(m_pCore.get(), m_pAllocator.get());
+
+	shaderModule->CreateShaderModule("Resources/Shaders/Overhaul/Test.vert.spv");
 }

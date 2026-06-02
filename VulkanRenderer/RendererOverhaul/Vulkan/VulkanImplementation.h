@@ -56,7 +56,9 @@ namespace DDM::Vulkan
 
 		std::unique_ptr<VulkanFileImage> m_pTestImage{};
 
-		void TestFunction();
+		void PresentTestFunction();
+
+		void ShaderTestFunction();
 	};
 }
 
