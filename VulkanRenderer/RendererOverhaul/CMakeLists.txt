@@ -41,7 +41,7 @@ add_executable(RendererOverhaul
  
  "Vulkan/Swapchain/VulkanSwapchain.cpp"
 
-)
+ "Vulkan/Shaders/VulkanShaderModule.cpp")
 
 if (MSVC)
     target_compile_options(RendererOverhaul PRIVATE /W4 /WX /permissive-)

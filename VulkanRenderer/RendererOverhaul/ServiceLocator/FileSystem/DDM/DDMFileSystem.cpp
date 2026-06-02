@@ -21,7 +21,7 @@ DDM::Filesystem::DDMFileSystem::~DDMFileSystem()
 	}
 }
 
-bool DDM::Filesystem::DDMFileSystem::OpenWrite(std::string& fileName)
+bool DDM::Filesystem::DDMFileSystem::OpenWrite(const std::string& fileName)
 {
 	if (m_ReadFiles.contains(fileName) || (m_WriteFiles.contains(fileName) && m_WriteFiles[fileName].is_open()))
 	{
@@ -41,7 +41,7 @@ bool DDM::Filesystem::DDMFileSystem::OpenWrite(std::string& fileName)
 	return m_WriteFiles[fileName].is_open();
 }
 
-bool DDM::Filesystem::DDMFileSystem::CloseWrite(std::string& fileName)
+bool DDM::Filesystem::DDMFileSystem::CloseWrite(const std::string& fileName)
 {
 	if (!m_WriteFiles.contains(fileName) || !m_WriteFiles[fileName].is_open())
 	{
@@ -55,7 +55,7 @@ bool DDM::Filesystem::DDMFileSystem::CloseWrite(std::string& fileName)
 	return true;
 }
 
-bool DDM::Filesystem::DDMFileSystem::Write(std::string& fileName, const char* start, size_t size)
+bool DDM::Filesystem::DDMFileSystem::Write(const std::string& fileName, const char* start, size_t size)
 {
 	if (!m_WriteFiles.contains(fileName) || !m_WriteFiles[fileName].is_open())
 	{
@@ -70,7 +70,7 @@ bool DDM::Filesystem::DDMFileSystem::Write(std::string& fileName, const char* st
 	return true;
 }
 
-bool DDM::Filesystem::DDMFileSystem::OpenRead(std::string& fileName)
+bool DDM::Filesystem::DDMFileSystem::OpenRead(const std::string& fileName)
 {
 	if (m_WriteFiles.contains(fileName) || (m_ReadFiles.contains(fileName) && m_ReadFiles[fileName].is_open()))
 	{
@@ -88,7 +88,7 @@ bool DDM::Filesystem::DDMFileSystem::OpenRead(std::string& fileName)
 	return true;
 }
 
-bool DDM::Filesystem::DDMFileSystem::CloseRead(std::string& fileName)
+bool DDM::Filesystem::DDMFileSystem::CloseRead(const std::string& fileName)
 {
 	if (!m_ReadFiles.contains(fileName) || !m_ReadFiles[fileName].is_open())
 	{
@@ -102,7 +102,7 @@ bool DDM::Filesystem::DDMFileSystem::CloseRead(std::string& fileName)
 	return true;
 }
 
-bool DDM::Filesystem::DDMFileSystem::Read(std::string& fileName, char* start, size_t size)
+bool DDM::Filesystem::DDMFileSystem::Read(const std::string& fileName, char* start, size_t size)
 {
 	if (!m_ReadFiles.contains(fileName) || !m_ReadFiles[fileName].is_open())
 	{
@@ -113,6 +113,30 @@ bool DDM::Filesystem::DDMFileSystem::Read(std::string& fileName, char* start, si
 	}
 
 	m_ReadFiles[fileName].read(start, size);
+
+	return true;
+}
+
+bool DDM::Filesystem::DDMFileSystem::ReadAll(const std::string& fileName, std::vector<char>& buffer)
+{
+	if (!m_ReadFiles.contains(fileName) || !m_ReadFiles[fileName].is_open())
+	{
+		if (!OpenRead(fileName))
+		{
+			return false;
+		}
+	}
+	
+	auto& currentFile = m_ReadFiles[fileName];
+
+	currentFile.seekg(0, currentFile.end);
+
+	size_t fileSize = currentFile.tellg();
+
+	currentFile.seekg(0, currentFile.beg);
+
+	buffer.resize(fileSize);
+	currentFile.read(buffer.data(), fileSize);
 
 	return true;
 }

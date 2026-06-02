@@ -7,6 +7,8 @@
 
 // File includes
 #include <string>
+#include <vector>
+#include <sstream>
 
 namespace DDM::Filesystem
 {
@@ -22,17 +24,19 @@ namespace DDM::Filesystem
 		IFileSystem& operator=(IFileSystem&) = delete;
 		IFileSystem& operator=(IFileSystem&&) = delete;
 
-		virtual bool OpenWrite(std::string& fileName) = 0;
+		virtual bool OpenWrite(const std::string& fileName) = 0;
 
-		virtual bool CloseWrite(std::string& fileName) = 0;
+		virtual bool CloseWrite(const std::string& fileName) = 0;
 
-		virtual bool Write(std::string& fileName, const char* start, size_t size) = 0;
+		virtual bool Write(const std::string& fileName, const char* start, size_t size) = 0;
 
-		virtual bool OpenRead(std::string& fileName) = 0;
+		virtual bool OpenRead(const std::string& fileName) = 0;
 
-		virtual bool CloseRead(std::string& fileName) = 0;
+		virtual bool CloseRead(const std::string& fileName) = 0;
 
-		virtual bool Read(std::string& fileName, char* start, size_t size) = 0;
+		virtual bool Read(const std::string& fileName, char* start, size_t size) = 0;
+
+		virtual bool ReadAll(const std::string& fileName, std::vector<char>& buffer) = 0;
 	};
 
 	class DefaultFileSystem final : public IFileSystem
@@ -47,17 +51,19 @@ namespace DDM::Filesystem
 		DefaultFileSystem& operator=(DefaultFileSystem&) = delete;
 		DefaultFileSystem& operator=(DefaultFileSystem&&) = delete;
 
-		virtual bool OpenWrite(std::string& /*filename*/) override { return false; }
+		virtual bool OpenWrite(const std::string& /*filename*/) override { return false; }
 
-		virtual bool CloseWrite(std::string& /*fileName*/) override { return false; }
+		virtual bool CloseWrite(const std::string& /*fileName*/) override { return false; }
 
-		virtual bool Write(std::string& /*fileName*/, const char* /*start*/, size_t /*size*/) override { return false; }
+		virtual bool Write(const std::string& /*fileName*/, const char* /*start*/, size_t /*size*/) override { return false; }
 
-		virtual bool OpenRead(std::string& /*fileName*/) override { return false; }
+		virtual bool OpenRead(const std::string& /*fileName*/) override { return false; }
 
-		virtual bool CloseRead(std::string& /*fileName*/) override { return false; }
+		virtual bool CloseRead(const std::string& /*fileName*/) override { return false; }
 
-		virtual bool Read(std::string& /*fileName*/, char* /*start*/, size_t /*size*/) override { return false; }
+		virtual bool Read(const std::string& /*fileName*/, char* /*start*/, size_t /*size*/) override { return false; }
+
+		virtual bool ReadAll(const std::string& /*fileName*/, std::vector<char>& /*buffer*/) override { return false; }
 	};
 }
 

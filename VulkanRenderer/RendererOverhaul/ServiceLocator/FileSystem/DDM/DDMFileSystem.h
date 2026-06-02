@@ -25,17 +25,19 @@ namespace DDM::Filesystem
 		DDMFileSystem& operator=(DDMFileSystem&) = delete;
 		DDMFileSystem& operator=(DDMFileSystem&&) = delete;
 
-		virtual bool OpenWrite(std::string& fileName) override;
+		virtual bool OpenWrite(const std::string& fileName) override;
 
-		virtual bool CloseWrite(std::string& fileName) override;
+		virtual bool CloseWrite(const std::string& fileName) override;
 
-		virtual bool Write(std::string& fileName, const char* start, size_t size) override;
+		virtual bool Write(const std::string& fileName, const char* start, size_t size) override;
 
-		virtual bool OpenRead(std::string& fileName) override;
+		virtual bool OpenRead(const std::string& fileName) override;
 
-		virtual bool CloseRead(std::string& fileName) override;
+		virtual bool CloseRead(const std::string& fileName) override;
 
-		virtual bool Read(std::string& fileName, char* start, size_t size) override;
+		virtual bool Read(const std::string& fileName, char* start, size_t size) override;
+
+		virtual bool ReadAll(const std::string& fileName, std::vector<char>& buffer) override;
 	private:
 		std::unordered_map<std::string, std::ofstream> m_WriteFiles{};
 
