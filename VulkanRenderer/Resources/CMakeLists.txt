@@ -38,7 +38,7 @@ function(add_shaders TARGET_NAME)
 
 endfunction()
 
-file(GLOB_RECURSE SHADERS "*.frag" "*.vert")
+file(GLOB_RECURSE SHADERS "*.vert" "*.tesc" "*.tese" "*.geom" "*.frag" "*.comp")
 
 add_shaders(RendererOverhaul
     ${SHADERS} 
