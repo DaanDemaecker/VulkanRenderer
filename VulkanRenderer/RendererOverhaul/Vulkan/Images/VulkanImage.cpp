@@ -17,8 +17,7 @@
 #include <stdexcept>
 
 DDM::Vulkan::VulkanImage::VulkanImage(const VulkanAllocator* pAllocator, const VulkanCore* pCore, const VulkanCommandPool* pCommandPool)
-	:m_pAllocator{ pAllocator },
-	m_pCore{ pCore },
+	:VulkanObject(pCore, pAllocator),
 	m_pCommandPool{ pCommandPool }
 {
 

@@ -12,8 +12,7 @@
 #include <stdexcept>
 
 DDM::Vulkan::VulkanBuffer::VulkanBuffer(const VulkanAllocator* pAllocator, const VulkanCore* pCore)
-	:m_pAllocator{ pAllocator },
-	m_pCore{ pCore }
+	:VulkanObject(pCore, pAllocator)
 {
 
 }

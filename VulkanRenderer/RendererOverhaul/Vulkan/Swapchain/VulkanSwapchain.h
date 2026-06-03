@@ -4,6 +4,9 @@
 #ifndef _DDM_VULKAN_SWAPCHAIN_
 #define _DDM_VULKAN_SWAPCHAIN_
 
+// Parent include
+#include "Vulkan/Core/VulkanCore.h"
+
 // File includes
 #include "Includes/VulkanIncludes.h"
 #include "Vulkan/Images/ImageTypes/VulkanSwapchainImage.h"
@@ -14,10 +17,7 @@
 
 namespace DDM::Vulkan
 {
-	class VulkanCore;
-	class VulkanAllocator;
-
-	class VulkanSwapchain final
+	class VulkanSwapchain final : public VulkanObject
 	{
 	public:
 		// Delete default constructor
@@ -33,7 +33,7 @@ namespace DDM::Vulkan
 		/// <summary>
 		/// Destructor
 		/// </summary>
-		~VulkanSwapchain();
+		virtual ~VulkanSwapchain();
 
 		// Delete copy and move operations
 		VulkanSwapchain(const VulkanSwapchain&) = delete;
@@ -48,12 +48,6 @@ namespace DDM::Vulkan
 
 		VulkanImage* GetCurrentImage() const { return m_SwapchainImages[m_CurrentImageIndex].get(); }
 	private:
-		// Pointer to the Vulkan core
-		const VulkanCore* m_pCore;
-
-		// Pointer to the Vulkan allocator
-		const VulkanAllocator* m_pAllocator;
-
 		// Swapchain handle
 		VkSwapchainKHR m_VkSwapchain{VK_NULL_HANDLE};
 

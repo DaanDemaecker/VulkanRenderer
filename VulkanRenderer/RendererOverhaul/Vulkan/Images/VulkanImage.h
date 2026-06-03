@@ -4,6 +4,9 @@
 #ifndef _DDM_VULKAN_IMAGE_
 #define _DDM_VULKAN_IMAGE_
 
+// Parent include
+#include "Vulkan/Core/VulkanObject.h"
+
 // File includes
 #include "Includes/VulkanIncludes.h"
 
@@ -13,14 +16,15 @@
 namespace DDM::Vulkan
 {
 	// Class forward declaration
-	class VulkanCore;
-	class VulkanAllocator;
 	class VulkanCommandPool;
 	class VulkanBuffer;
 
-	class VulkanImage
+	class VulkanImage : public VulkanObject
 	{
 	public:
+		// Delete default constructor
+		VulkanImage() = delete;
+
 		/// <summary>
 		/// Constructor
 		/// </summary>
@@ -45,12 +49,6 @@ namespace DDM::Vulkan
 		void SetLayout(VkImageLayout newLayout) { m_VkLayout = newLayout; }
 
 	protected:
-		// Pointer to the custom allocator
-		const VulkanAllocator* m_pAllocator;
-
-		// Pointer to the core object
-		const VulkanCore* m_pCore;
-
 		// Pointer to the commandpool object to use for barrier transitions and copying
 		const VulkanCommandPool* m_pCommandPool;
 

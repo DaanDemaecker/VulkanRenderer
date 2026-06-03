@@ -12,9 +12,7 @@
 #include "Vulkan/Queues/VulkanQueue.h"
 
 DDM::Vulkan::VulkanCommandPool::VulkanCommandPool(const VulkanAllocator* pAllocator, const VulkanCore* pCore, const VulkanQueue* pQueue, bool transient, bool reset)
-	:
-	m_pAllocator{pAllocator},
-	m_pCore{pCore},
+	:VulkanObject(pCore, pAllocator),
 	m_pQueue{pQueue},
 	m_TransientBitSet{ transient },
 	m_ResetBitSet{ reset }

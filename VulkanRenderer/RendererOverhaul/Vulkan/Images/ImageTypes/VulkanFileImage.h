@@ -15,8 +15,6 @@ namespace DDM
 
 namespace DDM::Vulkan
 {
-	
-
 	class VulkanFileImage final : public VulkanImage
 	{
 	public:

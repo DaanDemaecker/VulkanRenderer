@@ -15,8 +15,7 @@
 #include <stdexcept>
 
 DDM::Vulkan::VulkanSwapchain::VulkanSwapchain(const VulkanAllocator* pAllocator, const VulkanCore* pCore)
-	:m_pAllocator(pAllocator),
-	m_pCore(pCore)
+	:VulkanObject(pCore, pAllocator)
 {
 	CreateSwapchain();
 }

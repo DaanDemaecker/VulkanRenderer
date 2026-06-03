@@ -14,8 +14,7 @@
 #include <stdexcept>
 
 DDM::Vulkan::VulkanShaderModule::VulkanShaderModule(const VulkanCore* pCore, const VulkanAllocator* pAllocator)
-	:m_pCore{ pCore },
-	m_pAllocator{ pAllocator }
+	:VulkanObject(pCore, pAllocator)
 {
 
 }

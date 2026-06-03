@@ -4,6 +4,9 @@
 #ifndef _DDM_VULKAN_COMMAND_POOL_
 #define _DDM_VULKAN_COMMAND_POOL_
 
+// Parent include
+#include "Vulkan/Core/VulkanObject.h"
+
 // File includes
 #include "Includes/VulkanIncludes.h"
 #include "Vulkan/CommandBuffers/VulkanCommandBuffer.h"
@@ -14,11 +17,9 @@
 namespace DDM::Vulkan
 {
 	// Class forward declarations
-	class VulkanAllocator;
-	class VulkanCore;
 	class VulkanQueue;
 
-	class VulkanCommandPool final
+	class VulkanCommandPool final : public VulkanObject
 	{
 	public:
 		// Delete default constructor
@@ -54,12 +55,6 @@ namespace DDM::Vulkan
 		std::unique_ptr<VulkanCommandBuffer> GetCommandBuffer() const;
 	private:
 		friend class VulkanCommandBuffer;
-
-		// Pointer to the custom allocator
-		const VulkanAllocator* m_pAllocator;
-
-		// Pointer to the core object
-		const VulkanCore* m_pCore;
 
 		// Pointer to the queue object
 		const VulkanQueue* m_pQueue;

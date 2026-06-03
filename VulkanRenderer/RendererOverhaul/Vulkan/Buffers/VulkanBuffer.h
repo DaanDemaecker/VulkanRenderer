@@ -4,16 +4,15 @@
 #ifndef _DDM_VULKAN_BUFFER_
 #define _DDM_VULKAN_BUFFER_
 
+// Parent include
+#include "Vulkan/Core/VulkanObject.h"
+
 // File includes
 #include "Includes/VulkanIncludes.h"
 
 namespace DDM::Vulkan
 {
-	// Class forward declarations
-	class VulkanAllocator;
-	class VulkanCore;
-
-	class VulkanBuffer final
+	class VulkanBuffer final : public VulkanObject
 	{
 	public:
 		/// <summary>
@@ -24,7 +23,7 @@ namespace DDM::Vulkan
 		VulkanBuffer(const VulkanAllocator* pAllocator, const VulkanCore* pCore);
 
 		// Destructor
-		~VulkanBuffer();
+		virtual ~VulkanBuffer();
 
 		// Delete default constructor
 		VulkanBuffer() = delete;
@@ -61,12 +60,6 @@ namespace DDM::Vulkan
 		/// <returns>Buffer handle</returns>
 		VkBuffer GetBuffer() const { return m_VkBuffer; }
 	private:
-		// Pointer to the custom allocator
-		const VulkanAllocator* m_pAllocator;
-
-		// Pointer to the core object
-		const VulkanCore* m_pCore;
-
 		// Vulkan buffer object
 		VkBuffer m_VkBuffer{};
 

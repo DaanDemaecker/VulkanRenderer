@@ -4,6 +4,9 @@
 #ifndef _DDM_VULKAN_SHADER_MODULE_
 #define _DDM_VULKAN_SHADER_MODULE_
 
+// Header include
+#include "Vulkan/Core/VulkanObject.h"
+
 // File includes
 #include "Includes/VulkanIncludes.h"
 
@@ -13,11 +16,7 @@
 
 namespace DDM::Vulkan
 {
-	// Class forward declarations
-	class VulkanCore;
-	class VulkanAllocator;
-
-	class VulkanShaderModule final
+	class VulkanShaderModule final : public VulkanObject
 	{
 	public:
 		// Delete default constructor
@@ -33,7 +32,7 @@ namespace DDM::Vulkan
 		/// <summary>
 		/// Destructor
 		/// </summary>
-		~VulkanShaderModule();
+		virtual ~VulkanShaderModule();
 
 		// Delete copy and move constructors
 		VulkanShaderModule(VulkanShaderModule&) = delete;
@@ -49,12 +48,6 @@ namespace DDM::Vulkan
 		/// <param name="filePath">Relative or absolute path to the shader file</param>
 		void CreateShaderModule(const std::string& filePath);
 	private:
-		// Pointer to the Vulkan core
-		const VulkanCore* m_pCore;
-
-		// Pointer to the Vulkan allocator
-		const VulkanAllocator* m_pAllocator;
-
 		// Vulkan shader module
 		VkShaderModule m_VkShaderModule{ VK_NULL_HANDLE };
 
