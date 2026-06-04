@@ -17,6 +17,7 @@
 #include "Vulkan/Barriers/VulkanImageBarrier.h"
 #include "Vulkan/Barriers/VulkanPipelineBarrier.h"
 #include "Vulkan/Shaders/VulkanShaderModule.h"
+#include "Vulkan/Pipelines/VulkanComputePipeline.h"
 
 DDM::Vulkan::VulkanImplementation::VulkanImplementation()
 {
@@ -30,7 +31,7 @@ DDM::Vulkan::VulkanImplementation::VulkanImplementation()
 
 	PresentTestFunction();
 
-	ShaderTestFunction();
+	PipelineTestFunction();
 }
 
 DDM::Vulkan::VulkanImplementation::~VulkanImplementation()
@@ -76,9 +77,11 @@ void DDM::Vulkan::VulkanImplementation::PresentTestFunction()
 	m_pSwapchain->Present();
 }
 
-void DDM::Vulkan::VulkanImplementation::ShaderTestFunction()
+void DDM::Vulkan::VulkanImplementation::PipelineTestFunction()
 {
-	auto shaderModule = std::make_unique<VulkanShaderModule>(m_pCore.get(), m_pAllocator.get());
+	auto computePipeline = std::make_unique<VulkanComputePipeline>(m_pCore.get(), m_pAllocator.get());
 
-	shaderModule->CreateShaderModule("Resources/Shaders/Overhaul/Test.vert.spv");
+	computePipeline->AddShader("Resources/Shaders/Overhaul/Test.comp.spv");
+
+	//computePipeline->CreatePipeline();
 }

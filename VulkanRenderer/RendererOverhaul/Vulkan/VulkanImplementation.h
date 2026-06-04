@@ -58,7 +58,7 @@ namespace DDM::Vulkan
 
 		void PresentTestFunction();
 
-		void ShaderTestFunction();
+		void PipelineTestFunction();
 	};
 }
 
