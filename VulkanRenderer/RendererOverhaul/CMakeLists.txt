@@ -42,9 +42,14 @@ add_executable(RendererOverhaul
  "Vulkan/Swapchain/VulkanSwapchain.cpp"
 
  "Vulkan/Shaders/VulkanShaderModule.cpp"
+ "Vulkan/Shaders/SpirVReflect/spirv_reflect.c"
  
  "Vulkan/Pipelines/VulkanComputePipeline.cpp"
- "Vulkan/Pipelines/VulkanPipelineLayout.cpp")
+ "Vulkan/Pipelines/VulkanPipelineLayout.cpp"
+ "Vulkan/Pipelines/VulkanSpecInfo.cpp"
+
+ "Vulkan/Descriptors/VulkanDescriptorSetLayout.cpp"
+)
 
 if (MSVC)
     target_compile_options(RendererOverhaul PRIVATE /W4 /WX /permissive-)

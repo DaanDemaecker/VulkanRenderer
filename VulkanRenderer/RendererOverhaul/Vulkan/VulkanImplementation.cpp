@@ -18,6 +18,7 @@
 #include "Vulkan/Barriers/VulkanPipelineBarrier.h"
 #include "Vulkan/Shaders/VulkanShaderModule.h"
 #include "Vulkan/Pipelines/VulkanComputePipeline.h"
+#include "Vulkan/Pipelines/VulkanSpecInfo.h"
 
 DDM::Vulkan::VulkanImplementation::VulkanImplementation()
 {
@@ -79,9 +80,19 @@ void DDM::Vulkan::VulkanImplementation::PresentTestFunction()
 
 void DDM::Vulkan::VulkanImplementation::PipelineTestFunction()
 {
+	auto specInfo = std::make_unique<VulkanSpecInfo>();
+
+	int intTest = 20;
+	VkBool32 boolTest = VK_TRUE;
+
+	specInfo->SetEntry(0, sizeof(intTest), &intTest);
+	specInfo->SetEntry(2, sizeof(boolTest), &boolTest);
+
 	auto computePipeline = std::make_unique<VulkanComputePipeline>(m_pCore.get(), m_pAllocator.get());
 
 	computePipeline->AddShader("Resources/Shaders/Overhaul/Test.comp.spv");
 
-	//computePipeline->CreatePipeline();
+	computePipeline->SetSpecInfo(std::move(specInfo));
+
+	computePipeline->CreatePipeline();
 }

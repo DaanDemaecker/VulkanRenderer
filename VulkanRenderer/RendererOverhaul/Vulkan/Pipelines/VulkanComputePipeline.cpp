@@ -5,6 +5,8 @@
 
 // File includes
 #include "Vulkan/Shaders/VulkanShaderModule.h"
+#include "Vulkan/Pipelines/VulkanPipelineLayout.h"
+#include "Vulkan/Pipelines/VulkanSpecInfo.h"
 
 // Standard library includes
 #include <algorithm>
@@ -26,32 +28,30 @@ DDM::Vulkan::VulkanComputePipeline::~VulkanComputePipeline()
 
 void DDM::Vulkan::VulkanComputePipeline::AddShader(const std::string& shaderPath)
 {
-	if(std::find(m_ShaderPaths.begin(), m_ShaderPaths.end(), shaderPath) == m_ShaderPaths.end())
+	if (shaderPath.empty())
 	{
-		m_ShaderPaths.push_back(shaderPath);
+		std::cout << "No shaderpath given \n";
+		return;
 	}
-	else
+	else if (m_ShaderPath.compare(""))
 	{
-		std::cout << "Shader: " << shaderPath << " already added to compute pipeline" << std::endl;
+		std::cout << "Overriding shaderpath: " << m_ShaderPath << " with: " << shaderPath << std::endl;
 	}
+	m_ShaderPath = shaderPath;
 }
 
 void DDM::Vulkan::VulkanComputePipeline::CreatePipeline()
 {
-	if (m_ShaderPaths.empty())
+	if (m_ShaderPath.empty())
 	{
 		throw std::runtime_error("No shaders added to the compute pipeline!");
 	}
 
-	std::vector<std::unique_ptr<VulkanShaderModule>> shaderModules{ };
-
-	shaderModules.reserve(m_ShaderPaths.size());
-
-	for (auto& shaderPath : m_ShaderPaths)
-	{
-		shaderModules.push_back(std::make_unique<VulkanShaderModule>(m_pCore, m_pAllocator));
-		shaderModules.back()->CreateShaderModule(shaderPath);
-	}
+	std::vector<std::unique_ptr<VulkanShaderModule>> shaderModules(1);
+	shaderModules[0] = std::make_unique<VulkanShaderModule>(m_pCore, m_pAllocator);
+	shaderModules[0]->CreateShaderModule(m_ShaderPath);
+	
+	std::unique_ptr<VulkanPipelineLayout> layout{ std::make_unique<VulkanPipelineLayout>(m_pCore, m_pAllocator, shaderModules)};
 
 	VkComputePipelineCreateInfo createInfo{};
 
@@ -59,6 +59,18 @@ void DDM::Vulkan::VulkanComputePipeline::CreatePipeline()
 	createInfo.pNext = nullptr;
 	createInfo.flags = 0;
 
+	VkSpecializationInfo specializationInfo{};
+
+	if (m_pSpecializationInfo != nullptr)
+	{
+		m_pSpecializationInfo->FillSpecInfo(specializationInfo);
+	}
+
+	createInfo.stage.pSpecializationInfo = &specializationInfo;
+
+	SetupStageInfo(shaderModules[0].get(), createInfo.stage);
+
+	createInfo.layout = layout->GetPipelineLayout();
 	createInfo.basePipelineHandle = VK_NULL_HANDLE;
 	createInfo.basePipelineIndex = -1;
 
@@ -67,4 +79,16 @@ void DDM::Vulkan::VulkanComputePipeline::CreatePipeline()
 	{
 		throw std::runtime_error("failed to create compute pipeline!");
 	}
+}
+
+void DDM::Vulkan::VulkanComputePipeline::SetSpecInfo(std::unique_ptr<VulkanSpecInfo> specInfo)
+{
+	m_pSpecializationInfo = std::move(specInfo);
+}
+
+void DDM::Vulkan::VulkanComputePipeline::SetupStageInfo(VulkanShaderModule* shaderModule, VkPipelineShaderStageCreateInfo& stageInfo)
+{
+	stageInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
+	stageInfo.pNext = nullptr;
+	shaderModule->SetupShaderStageInfo(stageInfo);
 }

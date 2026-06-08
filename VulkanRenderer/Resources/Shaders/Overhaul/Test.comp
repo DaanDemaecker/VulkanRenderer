@@ -1,5 +1,9 @@
 #version 450 core
 
+layout (constant_id = 0) const int numThings = 42;
+layout (constant_id = 1) const float thingScale = 4.2f;
+layout (constant_id = 2) const bool doTHat = false;
+
 layout(local_size_x = 4, local_size_y = 5, local_size_z = 6) in;
 
 void main(void)
