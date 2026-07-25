@@ -1,73 +1,70 @@
 // ConfigManager.h
-// This singleton will read, write and manage the config file
+// This singleton will read the config file
 
 #ifndef _DDM_CONFIG_MANAGER_
 #define _DDM_CONFIG_MANAGER_
 
-// File includes
+// Parent include
 #include "Singleton.h"
-#include "Includes/RapidJSONIncludes.h"
 
 // Standard library includes
-#include <iostream>
+#include <string>
+#include <memory>
 
 namespace DDM
 {
-	class ConfigManager : public DDM::Singleton<ConfigManager>
+	// Class forward declarations
+	class ConfigManagerImpl;
+
+	class ConfigManager final : public Singleton<ConfigManager>
 	{
 	public:
-		// Get string object from json
-		// Parameters:
-		//     propertyName: name of the property
+		// Delete copy and move operations
+		ConfigManager(ConfigManager&) = delete;
+		ConfigManager(ConfigManager&&) = delete;
+
+		ConfigManager& operator=(ConfigManager&) = delete;
+		ConfigManager& operator=(ConfigManager&&) = delete;
+
+		// Destructor
+		~ConfigManager();
+
+		/// <summary>
+		/// Retrieve a string property from the config file
+		/// </summary>
+		/// <param name="propertyName">Name of the property</param>
+		/// <returns>C-String holding property</returns>
 		const char* GetString(const std::string& propertyName);
 
-		// Get string object from json
-		// Parameters:
-		//     propertyName: name of the property
-		const char* GetString(const std::string&& propertyName);
-
-		// Get int object from json
-		// Parameters:
-		//     propertyName: name of the property
+		/// <summary>
+		/// Retrieve an int property from the config file
+		/// </summary>
+		/// <param name="propertyName">Name of the property</param>
+		/// <returns>Int holding property</returns>
 		int GetInt(const std::string& propertyName);
 
-		// Get int object from json
-		// Parameters:
-		//     propertyName: name of the property
-		int GetInt(const std::string&& propertyName);
-
-		// Get bool object from json
-		// Parameters:
-		//     propertyName: name of the property
+		/// <summary>
+		/// Retrieve a bool property from the config file
+		/// </summary>
+		/// <param name="propertyName">Name of the property</param>
+		/// <returns>Bool holding property</returns>
 		bool GetBool(const std::string& propertyName);
 
-		// Get bool object from json
-		// Parameters:
-		//     propertyName: name of the property
-		bool GetBool(const std::string&& propertyName);
-
-		// Get float object from json
-		// Parameters:
-		//     propertyName: name of the property
+		/// <summary>
+		/// Retrieve a float property from the config file
+		/// </summary>
+		/// <param name="propertyName">Name of the property</param>
+		/// <returns>Float holding property</returns>
 		float GetFloat(const std::string& propertyName);
 
-		// Get float object from json
-		// Parameters:
-		//     propertyName: name of the property
-		float GetFloat(const std::string&& propertyName);
-
 	private:
+		// Private constructor to avoid multiple instances of singleton
 		friend class Singleton<ConfigManager>;
 		ConfigManager();
 
-		// File name of the config file
-		const std::string m_FileName{ "Config.json" };
+		std::unique_ptr<ConfigManagerImpl> m_pImpl{};
 
-		// The default string when none is found
-		const std::string m_DefaultString{ "Not availabe" };
-
-		// The json file object
-		rapidjson::Document m_JsonFile{};
+		std::string m_FileName{ "Config.json" };
 	};
 }
 

@@ -17,6 +17,8 @@
 
 // Standard library includes
 #include <set>
+#include <stdexcept>
+#include <iostream>
 
 bool DDM::Vulkan::VulkanCore::m_LogError{ false };
 bool DDM::Vulkan::VulkanCore::m_LogWarning{ false };
