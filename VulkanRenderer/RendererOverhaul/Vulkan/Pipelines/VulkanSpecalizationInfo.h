@@ -1,8 +1,8 @@
-// VulkanSpecInfo.h
+// VulkanSpecalizationInfo.h
 // This class will serve as a helper to initialize specialization info during pipeline creations
 
-#ifndef _DDM_VULKAN_SPEC_INFO_
-#define _DDM_VULKAN_SPEC_INFO_
+#ifndef _DDM_VULKAN_SPECALIZATION_INFO_
+#define _DDM_VULKAN_SPECALIZATION_INFO_
 
 // File includes
 #include "Includes/VulkanIncludes.h"
@@ -12,14 +12,14 @@
 
 namespace DDM::Vulkan
 {
-	class VulkanSpecInfo final
+	class VulkanSpecalizationInfo final
 	{
 	public:
 		// Default constructor
-		VulkanSpecInfo() = default;
+		VulkanSpecalizationInfo() = default;
 
 		// Default destructor
-		~VulkanSpecInfo() = default;
+		~VulkanSpecalizationInfo() = default;
 
 		/// <summary>
 		/// Add a single entry to specify in the shader
@@ -58,4 +58,4 @@ namespace DDM::Vulkan
 	};
 }
 
-#endif // !_DDM_VULKAN_SPEC_INFO_
+#endif // !_DDM_VULKAN_SPECALIZATION_INFO_

@@ -6,7 +6,7 @@
 // File includes
 #include "Vulkan/Shaders/VulkanShaderModule.h"
 #include "Vulkan/Pipelines/VulkanPipelineLayout.h"
-#include "Vulkan/Pipelines/VulkanSpecInfo.h"
+#include "Vulkan/Pipelines/VulkanSpecalizationInfo.h"
 
 // Standard library includes
 #include <algorithm>
@@ -81,7 +81,7 @@ void DDM::Vulkan::VulkanComputePipeline::CreatePipeline()
 	}
 }
 
-void DDM::Vulkan::VulkanComputePipeline::SetSpecInfo(std::unique_ptr<VulkanSpecInfo> specInfo)
+void DDM::Vulkan::VulkanComputePipeline::SetSpecInfo(std::unique_ptr<VulkanSpecalizationInfo> specInfo)
 {
 	m_pSpecializationInfo = std::move(specInfo);
 }

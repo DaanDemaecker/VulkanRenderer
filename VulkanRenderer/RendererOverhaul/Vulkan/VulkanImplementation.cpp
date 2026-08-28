@@ -18,7 +18,7 @@
 #include "Vulkan/Barriers/VulkanPipelineBarrier.h"
 #include "Vulkan/Shaders/VulkanShaderModule.h"
 #include "Vulkan/Pipelines/VulkanComputePipeline.h"
-#include "Vulkan/Pipelines/VulkanSpecInfo.h"
+#include "Vulkan/Pipelines/VulkanSpecalizationInfo.h"
 
 DDM::Vulkan::VulkanImplementation::VulkanImplementation()
 {
@@ -80,7 +80,7 @@ void DDM::Vulkan::VulkanImplementation::PresentTestFunction()
 
 void DDM::Vulkan::VulkanImplementation::PipelineTestFunction()
 {
-	auto specInfo = std::make_unique<VulkanSpecInfo>();
+	auto specInfo = std::make_unique<VulkanSpecalizationInfo>();
 
 	int intTest = 20;
 	VkBool32 boolTest = VK_TRUE;

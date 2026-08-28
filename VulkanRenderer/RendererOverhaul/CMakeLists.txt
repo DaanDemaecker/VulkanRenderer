@@ -46,7 +46,7 @@ add_executable(RendererOverhaul
  
  "Vulkan/Pipelines/VulkanComputePipeline.cpp"
  "Vulkan/Pipelines/VulkanPipelineLayout.cpp"
- "Vulkan/Pipelines/VulkanSpecInfo.cpp"
+ "Vulkan/Pipelines/VulkanSpecalizationInfo.cpp"
 
  "Vulkan/Descriptors/VulkanDescriptorSetLayout.cpp"
 )

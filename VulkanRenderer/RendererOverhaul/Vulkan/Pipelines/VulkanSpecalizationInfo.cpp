@@ -1,12 +1,12 @@
-// VulkanSpecInfo.cpp
+// VulkanSpecalizationInfo.cpp
 
 // Header include
-#include "VulkanSpecInfo.h"
+#include "VulkanSpecalizationInfo.h"
 
 // Standard library includes
 #include <iostream>
 
-void DDM::Vulkan::VulkanSpecInfo::SetEntry(uint32_t id, size_t size, void* pData)
+void DDM::Vulkan::VulkanSpecalizationInfo::SetEntry(uint32_t id, size_t size, void* pData)
 {
 	uint32_t currentEntryIndex{static_cast<uint32_t>(m_Entries.size())};
 
@@ -31,7 +31,7 @@ void DDM::Vulkan::VulkanSpecInfo::SetEntry(uint32_t id, size_t size, void* pData
 	memcpy(currentEntry.data.data(), pData, size);
 }
 
-void DDM::Vulkan::VulkanSpecInfo::FillSpecInfo(VkSpecializationInfo& specInfo)
+void DDM::Vulkan::VulkanSpecalizationInfo::FillSpecInfo(VkSpecializationInfo& specInfo)
 {
 	CalculateFinalData();
 
@@ -42,7 +42,7 @@ void DDM::Vulkan::VulkanSpecInfo::FillSpecInfo(VkSpecializationInfo& specInfo)
 	specInfo.pMapEntries = m_VkEntries.data();
 }
 
-void DDM::Vulkan::VulkanSpecInfo::CalculateFinalData()
+void DDM::Vulkan::VulkanSpecalizationInfo::CalculateFinalData()
 {
 	uint32_t sizeInBytes{};
 

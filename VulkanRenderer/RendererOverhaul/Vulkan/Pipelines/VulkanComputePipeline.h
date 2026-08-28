@@ -18,7 +18,7 @@ namespace DDM::Vulkan
 {
 	// Class forward declarations
 	class VulkanShaderModule;
-	class VulkanSpecInfo;
+	class VulkanSpecalizationInfo;
 
 	class VulkanComputePipeline final : public VulkanObject
 	{
@@ -53,7 +53,7 @@ namespace DDM::Vulkan
 		/// Set the specialization info for this pipeline
 		/// </summary>
 		/// <param name="specInfo">Unique pointer to specinfo object</param>
-		void SetSpecInfo(std::unique_ptr<VulkanSpecInfo> specInfo);
+		void SetSpecInfo(std::unique_ptr<VulkanSpecalizationInfo> specInfo);
 	private:
 		// Handle of the pipeline object
 		VkPipeline m_VkPipeline{ VK_NULL_HANDLE };
@@ -62,7 +62,7 @@ namespace DDM::Vulkan
 		std::string m_ShaderPath{};
 
 		// Pointer to the 
-		std::unique_ptr<VulkanSpecInfo> m_pSpecializationInfo{};
+		std::unique_ptr<VulkanSpecalizationInfo> m_pSpecializationInfo{};
 
 		/// <summary>
 		/// Set up the embedded shader stage create info struct
