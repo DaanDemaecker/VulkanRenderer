@@ -8,8 +8,11 @@
 
 void DDM::Vulkan::VulkanSpecalizationInfo::SetEntry(uint32_t id, size_t size, void* pData)
 {
+	// Set the current entry index to the size of the entries vector
+	// This will be used to check if the entry already exists
 	uint32_t currentEntryIndex{static_cast<uint32_t>(m_Entries.size())};
 
+	// Check if entry with this id already exists, if so, set the current entry index to that entry's index
 	for (uint32_t i{}; i < m_Entries.size(); ++i)
 	{
 		if (m_Entries[i].id == id)
@@ -19,11 +22,13 @@ void DDM::Vulkan::VulkanSpecalizationInfo::SetEntry(uint32_t id, size_t size, vo
 		}
 	}
 
+	// If no entry with this id exists, create a new entry and set the current entry index to that entry's index
 	if (currentEntryIndex == m_Entries.size())
 	{
 		m_Entries.push_back(VulkanSpecInfoEntry());
 	}
 
+	// Retrieve a reference to the current entry and set its id and data
 	auto& currentEntry = m_Entries[currentEntryIndex];
 
 	currentEntry.id = id;
@@ -44,6 +49,7 @@ void DDM::Vulkan::VulkanSpecalizationInfo::FillSpecInfo(VkSpecializationInfo& sp
 
 void DDM::Vulkan::VulkanSpecalizationInfo::CalculateFinalData()
 {
+	// Calculate the total size of the data to be sent to the shader
 	uint32_t sizeInBytes{};
 
 	for (auto& entry : m_Entries)
@@ -51,10 +57,12 @@ void DDM::Vulkan::VulkanSpecalizationInfo::CalculateFinalData()
 		sizeInBytes += static_cast<uint32_t>(entry.data.size());
 	}
 
+	// Resize the final data vector to the total size
 	m_FinalData.resize(sizeInBytes);
 
-	uint32_t offset{};
 
+	// Copy the data from each entry into the final data vector
+	uint32_t offset{};
 	for (auto& entry : m_Entries)
 	{
 		memcpy(m_FinalData.data() + offset, entry.data.data(), entry.data.size());
@@ -62,10 +70,12 @@ void DDM::Vulkan::VulkanSpecalizationInfo::CalculateFinalData()
 	}
 
 
+	// Resize vkentries to the same size as the entries vector
 	m_VkEntries.resize(m_Entries.size());
 
 	offset = 0;
 
+	// Fill in the vkentries with the data from the entries vector
 	for (uint32_t i{}; i < m_Entries.size(); ++i)
 	{
 		m_VkEntries[i].constantID = m_Entries[i].id;
